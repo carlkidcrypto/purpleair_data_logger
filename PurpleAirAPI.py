@@ -40,7 +40,9 @@ class PurpleAirAPI():
         self.__api_key_last_checked = 0
         self.__api_key_type = ""
 
-        self.__check_an_api_key()
+        retval = self.__check_an_api_key()
+        if retval:
+            print("Successfully authenticated with the PurpleAirAPI")
 
     def __check_an_api_key(self):
         """
