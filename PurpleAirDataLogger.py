@@ -188,7 +188,7 @@ class PurpleAirDataLogger():
             um_count_b_1_0 FLOAT,
             um_count_2_5 FLOAT,
             um_count_a_2_5 FLOAT,
-            um_count_a_2_5 FLOAT,
+            um_count_b_2_5 FLOAT,
             um_count_5_0 FLOAT,
             um_count_a_5_0 FLOAT,
             um_count_b_5_0 FLOAT,
