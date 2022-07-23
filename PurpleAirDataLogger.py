@@ -225,9 +225,9 @@ class PurpleAirDataLogger():
         """
 
         self.__db_conn.run(
-            """SELECT create_hypertable('station_information_and_status_fields_table', 'data_time_stamp')""")
+            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp')""")
         self.__db_conn.run(
-            """SELECT create_hypertable('evironmental_fields_table', 'data_time_stamp')""")
+            """SELECT create_hypertable('evironmental_fields', 'data_time_stamp')""")
         self.__db_conn.run(
             """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp')""")
         self.__db_conn.run(
