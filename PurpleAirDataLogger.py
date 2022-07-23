@@ -34,6 +34,12 @@ class PurpleAirDataLogger():
         # Make our psql database connection
         self.__db_conn = psql_db_conn
 
+        # Make our PSQL Tables
+        self.__create_psql_db_tables()
+
+        # Convert our PSQL tables to hyper tables
+        self.__convert_psql_tables_to_hyper_tables()
+
     def __create_psql_db_tables(self):
         """
             Create the PSQL database tables if they don't exist already
@@ -189,7 +195,7 @@ class PurpleAirDataLogger():
             FLOAT 10_0_um_count_a,
             FLOAT 10_0_um_count_b)"""
 
-        # NOTE TO SELF MAY END OF GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
+        # NOTE TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
         create_thingspeak_fields = """
         CREATE TABLE IF NOT EXISTS thingspeak_fields (
             INT64 PRIMARY KEY data_time_stamp,
@@ -201,6 +207,40 @@ class PurpleAirDataLogger():
             TEXT primary_key_b,
             INT secondary_id_b,
             TEXT secondary_key_b)"""
+
+        self.__db_conn.run(create_station_information_and_status_fields_table)
+        self.__db_conn.run(create_evironmental_fields_table)
+        self.__db_conn.run(create_miscellaneous_fields)
+        self.__db_conn.run(create_pm10_fields)
+        self.__db_conn.run(create_pm25_fields)
+        self.__db_conn.run(create_pm25_pseudo_average_fields)
+        self.__db_conn.run(create_pm100_fields)
+        self.__db_conn.run(create_particle_count_fields)
+        self.__db_conn.run(create_thingspeak_fields)
+
+    def __convert_psql_tables_to_hyper_tables(self):
+        """
+            A method to convert our PSQL tables to TimeScaleDB hyper tables.
+        """
+
+        self.__db_conn.run(
+            """SELECT create_hypertable('station_information_and_status_fields_table', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('evironmental_fields_table', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('pm10_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('pm25_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('pm25_pseudo_average_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('pm100_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp')""")
+        self.__db_conn.run(
+            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp')""")
 
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
@@ -245,8 +285,17 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    #the_psql_db_conn = pg8000.connect()
-    the_paa_data_logger = PurpleAirDataLogger(args.paa_read_key, None)
+    # Make the PSQL DB connection with CML args
+    the_psql_db_conn = pg8000.connect(
+        user=args.db_usr,
+        host=args.db_host,
+        database=args.db,
+        port=args.db_port,
+        password=args.db_pwd)
+
+    # Make an instance our our data logger
+    the_paa_data_logger = PurpleAirDataLogger(
+        args.paa_read_key, the_psql_db_conn)
 
     while True:
         # We will request data once every 65 seconds.
