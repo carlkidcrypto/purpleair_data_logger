@@ -49,33 +49,33 @@ class PurpleAirDataLogger():
         create_station_information_and_status_fields_table = """
         CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
             data_time_stamp,
-            name,
-            icon,
-            model,
-            hardware,
-            location_type,
-            private,
-            latitude,
-            longitude,
-            altitude,
-            position_rating,
-            led_brightness,
-            firmware_version,
-            firmware_upgrade,
-            rssi,
-            uptime,
-            pa_latency,
-            memory,
-            last_seen,
-            last_modified,
-            date_created,
-            channel_state,
-            channel_flags,
-            channel_flags_manual,
-            channel_flags_auto,
-            confidence,
-            confidence_manual,
-            confidence_auto"""
+            TEXT name,
+            INT icon,
+            TEXT model,
+            TEXT hardware,
+            INT location_type,
+            INT private,
+            FLOAT latitude,
+            FLOAT longitude,
+            FLOAT altitude,
+            INT position_rating,
+            INT led_brightness,
+            TEXT firmware_version,
+            TEXT firmware_upgrade,
+            INT rssi,
+            INT uptime,
+            INT pa_latency,
+            INT memory,
+            TIMESTAMP last_seen,
+            TIMESTAMP last_modified,
+            TIMESTAMP date_created,
+            INT channel_state,
+            INT channel_flags,
+            INT channel_flags_manual,
+            INT channel_flags_auto,
+            INT confidence,
+            INT confidence_manual,
+            INT confidence_auto"""
 
         create_evironmental_fields_table = """
         CREATE TABLE IF NOT EXISTS evironmental_fields (
@@ -97,90 +97,90 @@ class PurpleAirDataLogger():
             ozone1,
             analog_input)"""
 
-        # Since we can't have decimals in variable names, we do pm10 instead of pm1.0
+        # Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
         create_pm10_fields = """
         CREATE TABLE IF NOT EXISTS pm10_fields(
-            pm1.0,
-            pm1.0_a,
-            pm1.0_b,
-            pm1.0_atm,
-            pm1.0_atm_a,
-            pm1.0_atm_b,
-            pm1.0_cf_1,
-            pm1.0_cf_1_a,
-            pm1.0_cf_1_b)"""
+            pm1_0,
+            pm1_0_a,
+            pm1_0_b,
+            pm1_0_atm,
+            pm1_0_atm_a,
+            pm1_0_atm_b,
+            pm1_0_cf_1,
+            pm1_0_cf_1_a,
+            pm1_0_cf_1_b)"""
 
-        # Since we can't have decimals in variable names, we do pm25 instead of pm2.5
+        # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
         create_pm25_fields = """
         CREATE TABLE IF NOT EXISTS pm25_fields (
-            pm2.5_alt,
-            pm2.5_alt_a,
-            pm2.5_alt_b,
-            pm2.5,
-            pm2.5_a,
-            pm2.5_b,
-            pm2.5_atm,
-            pm2.5_atm_a,
-            pm2.5_atm_b,
-            pm2.5_cf_1,
-            pm2.5_cf_1_a,
-            pm2.5_cf_1_b)"""
+            pm2_5_alt,
+            pm2_5_alt_a,
+            pm2_5_alt_b,
+            pm2_5,
+            pm2_5_a,
+            pm2_5_b,
+            pm2_5_atm,
+            pm2_5_atm_a,
+            pm2_5_atm_b,
+            pm2_5_cf_1,
+            pm2_5_cf_1_a,
+            pm2_5_cf_1_b)"""
 
-        # Since we can't have decimals in variable names, we do pm25 instead of pm2.5
+        # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
         create_pm25_pseudo_average_fields = """
         CREATE TABLE IF NOT EXISTS pm25_pseudo_average_fields (
-            pm2.5_10minute,
-            pm2.5_10minute_a,
-            pm2.5_10minute_b,
-            pm2.5_30minute,
-            pm2.5_30minute_a,
-            pm2.5_30minute_b,
-            pm2.5_60minute,
-            pm2.5_60minute_a,
-            pm2.5_60minute_b,
-            pm2.5_6hour,
-            pm2.5_6hour_a,
-            pm2.5_6hour_b,
-            pm2.5_24hour,
-            pm2.5_24hour_a,
-            pm2.5_24hour_b,
-            pm2.5_1week,
-            pm2.5_1week_a,
-            pm2.5_1week_b)"""
+            pm2_5_10minute,
+            pm2_5_10minute_a,
+            pm2_5_10minute_b,
+            pm2_5_30minute,
+            pm2_5_30minute_a,
+            pm2_5_30minute_b,
+            pm2_5_60minute,
+            pm2_5_60minute_a,
+            pm2_5_60minute_b,
+            pm2_5_6hour,
+            pm2_5_6hour_a,
+            pm2_5_6hour_b,
+            pm2_5_24hour,
+            pm2_5_24hour_a,
+            pm2_5_24hour_b,
+            pm2_5_1week,
+            pm2_5_1week_a,
+            pm2_5_1week_b)"""
 
-        # Since we can't have decimals in variable names, we do pm100 instead of pm10.0
+        # Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
         create_pm100_fields = """
         CREATE TABLE IF NOT EXISTS pm100_fields (
-            pm10.0,
-            pm10.0_a,
-            pm10.0_b,
-            pm10.0_atm,
-            pm10.0_atm_a,
-            pm10.0_atm_b,
-            pm10.0_cf_1,
-            pm10.0_cf_1_a,
-            pm10.0_cf_1_b)"""
+            pm10_0,
+            pm10_0_a,
+            pm10_0_b,
+            pm10_0_atm,
+            pm10_0_atm_a,
+            pm10_0_atm_b,
+            pm10_0_cf_1,
+            pm10_0_cf_1_a,
+            pm10_0_cf_1_b)"""
 
         create_particle_count_fields = """
         CREATE TABLE IF NOT EXISTS particle_count_fields (
-            0.3_um_count,
-            0.3_um_count_a,
-            0.3_um_count_b,
-            0.5_um_count,
-            0.5_um_count_a,
-            0.5_um_count_b,
-            1.0_um_count,
-            1.0_um_count_a,
-            1.0_um_count_b,
-            2.5_um_count,
-            2.5_um_count_a,
-            2.5_um_count_b,
-            5.0_um_count,
-            5.0_um_count_a,
-            5.0_um_count_b,
-            10.0_um_count,
-            10.0_um_count_a,
-            10.0_um_count_b)"""
+            0_3_um_count,
+            0_3_um_count_a,
+            0_3_um_count_b,
+            0_5_um_count,
+            0_5_um_count_a,
+            0_5_um_count_b,
+            1_0_um_count,
+            1_0_um_count_a,
+            1_0_um_count_b,
+            2_5_um_count,
+            2_5_um_count_a,
+            2_5_um_count_b,
+            5_0_um_count,
+            5_0_um_count_a,
+            5_0_um_count_b,
+            10_0_um_count,
+            10_0_um_count_a,
+            10_0_um_count_b)"""
 
         # NOTE TO SELF MAY END OF GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
         create_thingspeak_fields = """
