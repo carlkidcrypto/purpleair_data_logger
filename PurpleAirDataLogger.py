@@ -81,7 +81,7 @@ class PurpleAirDataLogger():
             channel_flags_auto INT,
             confidence INT,
             confidence_manual INT,
-            confidence_auto INT"""
+            confidence_auto INT)"""
 
         create_evironmental_fields_table = """
         CREATE TABLE IF NOT EXISTS evironmental_fields (
