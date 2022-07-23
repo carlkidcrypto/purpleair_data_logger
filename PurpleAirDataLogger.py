@@ -48,7 +48,7 @@ class PurpleAirDataLogger():
         # what the PurpleAir documentation says. We will do the same for table column names.
         create_station_information_and_status_fields_table = """
         CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
-            data_time_stamp,
+            INT64 PRIMARY KEY data_time_stamp,
             TEXT name,
             INT icon,
             TEXT model,
@@ -79,120 +79,128 @@ class PurpleAirDataLogger():
 
         create_evironmental_fields_table = """
         CREATE TABLE IF NOT EXISTS evironmental_fields (
-            humidity,
-            humidity_a,
-            humidity_b,
-            temperature,
-            temperature_a,
-            temperature_b,
-            pressure,
-            pressure_a,
-            pressure_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            INT humidity,
+            INT humidity_a,
+            INT humidity_b,
+            INT temperature,
+            INT temperature_a,
+            INT temperature_b,
+            FLOAT pressure,
+            FLOAT pressure_a,
+            FLOAT pressure_b)"""
 
         create_miscellaneous_fields = """
         CREATE TABLE IF NOT EXISTS miscellaneous_fields (
-            voc,
-            voc_a,
-            voc_b,
-            ozone1,
-            analog_input)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT voc,
+            FLOAT voc_a,
+            FLOAT voc_b,
+            FLOAT ozone1,
+            FLOAT analog_input)"""
 
         # Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
         create_pm10_fields = """
         CREATE TABLE IF NOT EXISTS pm10_fields(
-            pm1_0,
-            pm1_0_a,
-            pm1_0_b,
-            pm1_0_atm,
-            pm1_0_atm_a,
-            pm1_0_atm_b,
-            pm1_0_cf_1,
-            pm1_0_cf_1_a,
-            pm1_0_cf_1_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT pm1_0,
+            FLOAT pm1_0_a,
+            FLOAT pm1_0_b,
+            FLOAT pm1_0_atm,
+            FLOAT pm1_0_atm_a,
+            FLOAT pm1_0_atm_b,
+            FLOAT pm1_0_cf_1,
+            FLOAT pm1_0_cf_1_a,
+            FLOAT pm1_0_cf_1_b)"""
 
         # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
         create_pm25_fields = """
         CREATE TABLE IF NOT EXISTS pm25_fields (
-            pm2_5_alt,
-            pm2_5_alt_a,
-            pm2_5_alt_b,
-            pm2_5,
-            pm2_5_a,
-            pm2_5_b,
-            pm2_5_atm,
-            pm2_5_atm_a,
-            pm2_5_atm_b,
-            pm2_5_cf_1,
-            pm2_5_cf_1_a,
-            pm2_5_cf_1_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT pm2_5_alt,
+            FLOAT pm2_5_alt_a,
+            FLOAT pm2_5_alt_b,
+            FLOAT pm2_5,
+            FLOAT pm2_5_a,
+            FLOAT pm2_5_b,
+            FLOAT pm2_5_atm,
+            FLOAT pm2_5_atm_a,
+            FLOAT pm2_5_atm_b,
+            FLOAT pm2_5_cf_1,
+            FLOAT pm2_5_cf_1_a,
+            FLOAT pm2_5_cf_1_b)"""
 
         # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
         create_pm25_pseudo_average_fields = """
         CREATE TABLE IF NOT EXISTS pm25_pseudo_average_fields (
-            pm2_5_10minute,
-            pm2_5_10minute_a,
-            pm2_5_10minute_b,
-            pm2_5_30minute,
-            pm2_5_30minute_a,
-            pm2_5_30minute_b,
-            pm2_5_60minute,
-            pm2_5_60minute_a,
-            pm2_5_60minute_b,
-            pm2_5_6hour,
-            pm2_5_6hour_a,
-            pm2_5_6hour_b,
-            pm2_5_24hour,
-            pm2_5_24hour_a,
-            pm2_5_24hour_b,
-            pm2_5_1week,
-            pm2_5_1week_a,
-            pm2_5_1week_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT pm2_5_10minute,
+            FLOAT pm2_5_10minute_a,
+            FLOAT pm2_5_10minute_b,
+            FLOAT pm2_5_30minute,
+            FLOAT pm2_5_30minute_a,
+            FLOAT pm2_5_30minute_b,
+            FLOAT pm2_5_60minute,
+            FLOAT pm2_5_60minute_a,
+            FLOAT pm2_5_60minute_b,
+            FLOAT pm2_5_6hour,
+            FLOAT pm2_5_6hour_a,
+            FLOAT pm2_5_6hour_b,
+            FLOAT pm2_5_24hour,
+            FLOAT pm2_5_24hour_a,
+            FLOAT pm2_5_24hour_b,
+            FLOAT pm2_5_1week,
+            FLOAT pm2_5_1week_a,
+            FLOAT pm2_5_1week_b)"""
 
         # Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
         create_pm100_fields = """
         CREATE TABLE IF NOT EXISTS pm100_fields (
-            pm10_0,
-            pm10_0_a,
-            pm10_0_b,
-            pm10_0_atm,
-            pm10_0_atm_a,
-            pm10_0_atm_b,
-            pm10_0_cf_1,
-            pm10_0_cf_1_a,
-            pm10_0_cf_1_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT pm10_0,
+            FLOAT pm10_0_a,
+            FLOAT pm10_0_b,
+            FLOAT pm10_0_atm,
+            FLOAT pm10_0_atm_a,
+            FLOAT pm10_0_atm_b,
+            FLOAT pm10_0_cf_1,
+            FLOAT pm10_0_cf_1_a,
+            FLOAT pm10_0_cf_1_b)"""
 
         create_particle_count_fields = """
         CREATE TABLE IF NOT EXISTS particle_count_fields (
-            0_3_um_count,
-            0_3_um_count_a,
-            0_3_um_count_b,
-            0_5_um_count,
-            0_5_um_count_a,
-            0_5_um_count_b,
-            1_0_um_count,
-            1_0_um_count_a,
-            1_0_um_count_b,
-            2_5_um_count,
-            2_5_um_count_a,
-            2_5_um_count_b,
-            5_0_um_count,
-            5_0_um_count_a,
-            5_0_um_count_b,
-            10_0_um_count,
-            10_0_um_count_a,
-            10_0_um_count_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            FLOAT 0_3_um_count,
+            FLOAT 0_3_um_count_a,
+            FLOAT 0_3_um_count_b,
+            FLOAT 0_5_um_count,
+            FLOAT 0_5_um_count_a,
+            FLOAT 0_5_um_count_b,
+            FLOAT 1_0_um_count,
+            FLOAT 1_0_um_count_a,
+            FLOAT 1_0_um_count_b,
+            FLOAT 2_5_um_count,
+            FLOAT 2_5_um_count_a,
+            FLOAT 2_5_um_count_b,
+            FLOAT 5_0_um_count,
+            FLOAT 5_0_um_count_a,
+            FLOAT 5_0_um_count_b,
+            FLOAT 10_0_um_count,
+            FLOAT 10_0_um_count_a,
+            FLOAT 10_0_um_count_b)"""
 
         # NOTE TO SELF MAY END OF GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
         create_thingspeak_fields = """
         CREATE TABLE IF NOT EXISTS thingspeak_fields (
-            primary_id_a,
-            primary_key_a,
-            secondary_id_a,
-            secondary_key_a,
-            primary_id_b,
-            primary_key_b,
-            secondary_id_b,
-            secondary_key_b)"""
+            INT64 PRIMARY KEY data_time_stamp,
+            INT primary_id_a,
+            TEXT primary_key_a,
+            INT secondary_id_a,
+            TEXT secondary_key_a,
+            INT primary_id_b,
+            TEXT primary_key_b,
+            INT secondary_id_b,
+            TEXT secondary_key_b)"""
 
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
