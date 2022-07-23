@@ -173,27 +173,28 @@ class PurpleAirDataLogger():
             pm10_0_cf_1_a FLOAT,
             pm10_0_cf_1_b FLOAT)"""
 
+        # Note we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
         create_particle_count_fields = """
         CREATE TABLE IF NOT EXISTS particle_count_fields (
             data_time_stamp TIMESTAMP PRIMARY KEY,
-            0_3_um_count FLOAT,
-            0_3_um_count_a FLOAT,
-            0_3_um_count_b FLOAT,
-            0_5_um_count FLOAT,
-            0_5_um_count_a FLOAT,
-            0_5_um_count_b FLOAT,
-            1_0_um_count FLOAT,
-            1_0_um_count_a FLOAT,
-            1_0_um_count_b FLOAT,
-            2_5_um_count FLOAT,
-            2_5_um_count_a FLOAT,
-            2_5_um_count_b FLOAT,
-            5_0_um_count FLOAT,
-            5_0_um_count_a FLOAT,
-            5_0_um_count_b FLOAT,
-            10_0_um_count FLOAT,
-            10_0_um_count_a FLOAT,
-            10_0_um_count_b FLOAT)"""
+            um_count_0_3 FLOAT,
+            um_count_a_0_3 FLOAT,
+            um_count_b_0_3 FLOAT,
+            um_count_0_5 FLOAT,
+            um_count_a_0_5 FLOAT,
+            um_count_b_0_5 FLOAT,
+            um_count_1_0 FLOAT,
+            um_count_a_1_0 FLOAT,
+            um_count_b_1_0 FLOAT,
+            um_count_2_5 FLOAT,
+            um_count_a_2_5 FLOAT,
+            um_count_a_2_5 FLOAT,
+            um_count_5_0 FLOAT,
+            um_count_a_5_0 FLOAT,
+            um_count_b_5_0 FLOAT,
+            um_count_10_0 FLOAT,
+            um_count_a_10_0 FLOAT,
+            um_count_b_10_0 FLOAT)"""
 
         # NOTE TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
         create_thingspeak_fields = """
