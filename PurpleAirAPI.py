@@ -120,6 +120,7 @@ class PurpleAirAPI():
                                           Refer to PurpleAir documentation for more
                                           information:
                                           https://api.purpleair.com/#api-sensors-get-sensor-data
+            :return A python dictionary containing the payload response
         """
 
         request_url = self.__base_api_request_string + \
