@@ -5,7 +5,6 @@
     https://api.purpleair.com/#api-welcome
 """
 
-# Python Built In Libs
 import requests
 import json
 
@@ -98,7 +97,7 @@ class PurpleAirAPI():
 
         return self.__api_key_type
 
-    def get_sensor_data(self, sensor_index, read_key=None, fields=None):
+    def request_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
             A method to retrieve sensor data from one sensor. Will return the 
             response payload as a python dictionary.
