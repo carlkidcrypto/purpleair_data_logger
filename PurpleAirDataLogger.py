@@ -263,23 +263,23 @@ class PurpleAirDataLogger():
         """
 
         self.__db_conn.run(
-            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('environmental_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('environmental_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
 
     def get_accepted_field_names_list(self):
         """
