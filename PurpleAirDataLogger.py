@@ -466,7 +466,9 @@ if __name__ == "__main__":
         the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
         for key, val in sensor_data["sensor"].items():
             if key == "stats":
-                the_modified_sensor_data["pm2.5"] = val["pm2.5"]
+                # For now name this one stats_pm2.5 until I understand the difference
+                # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"]
+                the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
                 the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
                 the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
                 the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
@@ -479,14 +481,12 @@ if __name__ == "__main__":
                 print(f"Not going to use sensor['{key}']")
 
             else:
-                the_modified_sensor_data["key"] = val
+                the_modified_sensor_data[key] = val
 
         # Not all sensors support all field names, so we check that the keys exist
         # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
         for key_str in field_names_list:
-            if key_str in the_modified_sensor_data.keys():
-                print(f"I AM HERE FOR NOW {key_str}")
-            else:
+            if key_str not in the_modified_sensor_data.keys():
                 print(f"I AM NOT HERE FOR NOW: {key_str}")
 
         print("Waiting 65 seconds before requesting new data again...")
