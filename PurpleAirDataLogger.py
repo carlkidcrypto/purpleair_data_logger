@@ -401,7 +401,25 @@ class PurpleAirDataLogger():
                 CAST(:pressure_b AS FLOAT)
                 )"""
 
-        psql_insert_statement_miscellaneous_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_miscellaneous_fields = """INSERT INTO miscellaneous_fields
+            (
+             data_time_stamp,
+             voc,
+             voc_a,
+             voc_b,
+             ozone1,
+             analog_input
+            ) 
+            VALUES
+            (
+             CAST(:data_time_stamp AS TIMESTAMP),
+             CAST(:voc AS FLOAT),
+             CAST(:voc_a AS FLOAT),
+             CAST(:voc_b AS FLOAT),
+             CAST(:ozone1 AS FLOAT),
+             CAST(:analog_input AS FLOAT)
+            )"""
+
         psql_insert_statement_pm1_0_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_pm2_5_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_pm2_5_pseudo_average_fields = """INSERT INTO () VALUES ()"""
@@ -454,6 +472,16 @@ class PurpleAirDataLogger():
             pressure=single_sensor_data_dict["pressure"],
             pressure_a=single_sensor_data_dict["pressure_a"],
             pressure_b=single_sensor_data_dict["pressure_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_miscellaneous_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            voc=single_sensor_data_dict["voc"],
+            voc_a=single_sensor_data_dict["voc_a"],
+            voc_b=single_sensor_data_dict["voc_b"],
+            ozone1=single_sensor_data_dict["ozone1"],
+            analog_input=single_sensor_data_dict["analog_input"]
         )
 
     def get_multiple_sensors_data(self):
