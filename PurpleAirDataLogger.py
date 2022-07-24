@@ -133,9 +133,13 @@ class PurpleAirDataLogger():
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
             Request data from a single sensor.
+
             :param int sensor_index: A valid PurpleAirAPI sensor index.
+
             :param str read_key: A valid PurpleAirAPI private read key.
+
             :param str fields: A comma delmited string of valid field names.
+
             :return A python dictionary with data.
         """
 
@@ -144,6 +148,7 @@ class PurpleAirDataLogger():
     def store_sensor_data(self, single_sensor_data_dict):
         """
             Insert the sensor data into the database.
+
             :param dict single_sensor_data_dict: A python dictionary containing all fields
                                                  for insertion. If a sensor doesn't support
                                                  a certain field make sure it is NULL and part
