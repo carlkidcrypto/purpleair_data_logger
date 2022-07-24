@@ -44,7 +44,8 @@ class PurpleAirDataLogger():
             "voc", "voc_a", "voc_b", "ozone1", "analog_input",
 
             # PM1.0 fields:
-            "pm1.0", "pm1.0_a", "pm1.0_b", "pm1.0_atm", "pm1.0_atm_a", "pm1.0_atm_b", "pm1.0_cf_1", "pm1.0_cf_1_a", "pm10_cf_1_b",
+            "pm1.0", "pm1.0_a", "pm1.0_b", "pm1.0_atm", "pm1.0_atm_a", "pm1.0_atm_b", "pm1.0_cf_1", "pm1.0_cf_1_a",
+            "pm1.0_cf_1_b",
 
             # PM2.5 fields:
             "pm2.5_alt", "pm2.5_alt_a", "pm2.5_alt_b", "pm2.5", "pm2.5_a", "pm2.5_b", "pm2.5_atm", "pm2.5_atm_a", "pm2.5_atm_b", "pm2.5_cf_1", "pm2.5_cf_1_a", "pm2.5_cf_1_b",
@@ -71,6 +72,10 @@ class PurpleAirDataLogger():
 
         # Convert our PSQL tables to hyper tables
         self.__convert_psql_tables_to_hyper_tables()
+
+        # Commit then set auto commit to true
+        self.__db_conn.commit()
+        the_psql_db_conn.autocommit = True
 
     def __create_psql_db_tables(self):
         """
@@ -138,8 +143,8 @@ class PurpleAirDataLogger():
                 analog_input FLOAT)"""
 
         # Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
-        create_pm10_fields = """
-            CREATE TABLE IF NOT EXISTS pm10_fields(
+        create_pm1_0_fields = """
+            CREATE TABLE IF NOT EXISTS pm1_0_fields(
                 data_time_stamp TIMESTAMP PRIMARY KEY,
                 pm1_0 FLOAT,
                 pm1_0_a FLOAT,
@@ -152,8 +157,8 @@ class PurpleAirDataLogger():
                 pm1_0_cf_1_b FLOAT)"""
 
         # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-        create_pm25_fields = """
-            CREATE TABLE IF NOT EXISTS pm25_fields (
+        create_pm2_5_fields = """
+            CREATE TABLE IF NOT EXISTS pm2_5_fields (
                 data_time_stamp TIMESTAMP PRIMARY KEY,
                 pm2_5_alt FLOAT,
                 pm2_5_alt_a FLOAT,
@@ -169,8 +174,8 @@ class PurpleAirDataLogger():
                 pm2_5_cf_1_b FLOAT)"""
 
         # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-        create_pm25_pseudo_average_fields = """
-            CREATE TABLE IF NOT EXISTS pm25_pseudo_average_fields (
+        create_pm2_5_pseudo_average_fields = """
+            CREATE TABLE IF NOT EXISTS pm2_5_pseudo_average_fields (
                 data_time_stamp TIMESTAMP PRIMARY KEY,
                 pm2_5_10minute FLOAT,
                 pm2_5_10minute_a FLOAT,
@@ -192,8 +197,8 @@ class PurpleAirDataLogger():
                 pm2_5_1week_b FLOAT)"""
 
         # Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
-        create_pm100_fields = """
-            CREATE TABLE IF NOT EXISTS pm100_fields (
+        create_pm10_0_fields = """
+            CREATE TABLE IF NOT EXISTS pm10_0_fields (
                 data_time_stamp TIMESTAMP PRIMARY KEY,
                 pm10_0 FLOAT,
                 pm10_0_a FLOAT,
@@ -244,10 +249,10 @@ class PurpleAirDataLogger():
         self.__db_conn.run(create_station_information_and_status_fields_table)
         self.__db_conn.run(create_evironmental_fields_table)
         self.__db_conn.run(create_miscellaneous_fields)
-        self.__db_conn.run(create_pm10_fields)
-        self.__db_conn.run(create_pm25_fields)
-        self.__db_conn.run(create_pm25_pseudo_average_fields)
-        self.__db_conn.run(create_pm100_fields)
+        self.__db_conn.run(create_pm1_0_fields)
+        self.__db_conn.run(create_pm2_5_fields)
+        self.__db_conn.run(create_pm2_5_pseudo_average_fields)
+        self.__db_conn.run(create_pm10_0_fields)
         self.__db_conn.run(create_particle_count_fields)
         self.__db_conn.run(create_thingspeak_fields)
 
@@ -263,13 +268,13 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp')""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm10_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp')""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm25_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp')""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm25_pseudo_average_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp')""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm100_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp')""")
         self.__db_conn.run(
             """SELECT create_hypertable('particle_count_fields', 'data_time_stamp')""")
         self.__db_conn.run(
@@ -396,10 +401,10 @@ class PurpleAirDataLogger():
                 )"""
 
         psql_insert_statement_miscellaneous_fields = """INSERT INTO () VALUES ()"""
-        psql_insert_statement_pm10_fields = """INSERT INTO () VALUES ()"""
-        psql_insert_statement_pm25_fields = """INSERT INTO () VALUES ()"""
-        psql_insert_statement_pm25_pseudo_average_fields = """INSERT INTO () VALUES ()"""
-        psql_insert_statement_pm100_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_pm1_0_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_pm2_5_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_pm2_5_pseudo_average_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_pm10_0_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_particle_count_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_thingspeak_fields = """INSERT INTO () VALUES ()"""
 
@@ -458,10 +463,8 @@ if __name__ == "__main__":
         field_names_list = the_paa_data_logger.get_accepted_field_names_list()
 
         # Let's make it easier on ourselves by making the sensor data one level deep.
-        # Instead of json["sensor"]["KEYS.. KEYS"] and json["sensor"]["stats"]["stats"]["KEYS KEYS"]
-        # We turn it into just json["KEYS KEYS"].
-        # Note: For now we omit the stats for json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
-        # since they are averaged into json["sensor"]["stats"].
+        # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
+        # We turn it into just json["KEYS..."].
         the_modified_sensor_data = {}
         the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
         for key, val in sensor_data["sensor"].items():
@@ -478,7 +481,13 @@ if __name__ == "__main__":
                 the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
 
             elif key in ["stats_a", "stats_b"]:
-                print(f"Not going to use sensor['{key}']")
+                the_modified_sensor_data["stats_a_pm2.5"] = val["pm2.5"]
+                the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
+                the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
+                the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
+                the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
+                the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
+                the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
 
             else:
                 the_modified_sensor_data[key] = val
