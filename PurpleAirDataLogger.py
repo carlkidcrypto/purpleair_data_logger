@@ -420,7 +420,33 @@ class PurpleAirDataLogger():
              CAST(:analog_input AS FLOAT)
             )"""
 
-        psql_insert_statement_pm1_0_fields = """INSERT INTO () VALUES ()"""
+        psql_insert_statement_pm1_0_fields = """INSERT INTO pm1_0_fields
+            (
+            data_time_stamp,
+            pm1_0,
+            pm1_0_a,
+            pm1_0_b,
+            pm1_0_atm,
+            pm1_0_atm_a,
+            pm1_0_atm_b,
+            pm1_0_cf_1,
+            pm1_0_cf_1_a,
+            pm1_0_cf_1_b
+            )
+            VALUES
+            (
+             CAST(:data_time_stamp AS TIMESTAMP),
+             CAST(:pm1_0 AS FLOAT),
+             CAST(:pm1_0_a AS FLOAT),
+             CAST(:pm1_0_b AS FLOAT),
+             CAST(:pm1_0_atm AS FLOAT),
+             CAST(:pm1_0_atm_a AS FLOAT),
+             CAST(:pm1_0_atm_b AS FLOAT),
+             CAST(:pm1_0_cf_1 AS FLOAT),
+             CAST(:pm1_0_cf_1_a AS FLOAT),
+             CAST(:pm1_0_cf_1_b AS FLOAT)
+            )"""
+
         psql_insert_statement_pm2_5_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_pm2_5_pseudo_average_fields = """INSERT INTO () VALUES ()"""
         psql_insert_statement_pm10_0_fields = """INSERT INTO () VALUES ()"""
@@ -482,6 +508,20 @@ class PurpleAirDataLogger():
             voc_b=single_sensor_data_dict["voc_b"],
             ozone1=single_sensor_data_dict["ozone1"],
             analog_input=single_sensor_data_dict["analog_input"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_pm1_0_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            pm1_0=single_sensor_data_dict["pm1_0"],
+            pm1_0_a=single_sensor_data_dict["pm1_0_a"],
+            pm1_0_b=single_sensor_data_dict["pm1_0_b"],
+            pm1_0_atm=single_sensor_data_dict["pm1_0_atm"],
+            pm1_0_atm_a=single_sensor_data_dict["pm1_0_atm_a"],
+            pm1_0_atm_b=single_sensor_data_dict["pm1_0_atm_b"],
+            pm1_0_cf_1=single_sensor_data_dict["pm1_0_cf_1"],
+            pm1_0_cf_1_a=single_sensor_data_dict["pm1_0_cf_1_a"],
+            pm1_0_cf_1_b=single_sensor_data_dict["pm1_0_cf_1_b"]
         )
 
     def get_multiple_sensors_data(self):
