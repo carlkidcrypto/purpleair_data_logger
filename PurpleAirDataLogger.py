@@ -11,6 +11,7 @@
 """
 
 from PurpleAirAPI import PurpleAirAPI
+from PurpleAirDataLoggerPSQLStatements import *
 import pg8000
 import argparse
 from time import sleep
@@ -31,6 +32,40 @@ class PurpleAirDataLogger():
         # Make one instance of our PurpleAirAPI class
         self.__paa_obj = PurpleAirAPI(PurpleAirAPIReadKey)
 
+        # Store the dict/json keys to access data fields.
+        # These keys are derived from the PurpleAir documentation: https://api.purpleair.com/#api-sensors-get-sensor-data
+        self.__accepted_field_names_list = [
+            # Station information and status fields:
+            "name", "icon", "model", "hardware", "location_type", "private", "latitude", "longitude", "altitude", "position_rating", "led_brightness", "firmware_version", "firmware_upgrade", "rssi", "uptime", "pa_latency", "memory", "last_seen", "last_modified", "date_created", "channel_state", "channel_flags", "channel_flags_manual", "channel_flags_auto", "confidence", "confidence_manual", "confidence_auto",
+
+            # Environmental fields:
+            "humidity", "humidity_a", "humidity_b", "temperature", "temperature_a", "temperature_b", "pressure", "pressure_a", "pressure_b",
+
+            # Miscellaneous fields:
+            "voc", "voc_a", "voc_b", "ozone1", "analog_input",
+
+            # PM1.0 fields:
+            "pm1.0", "pm1.0_a", "pm1.0_b", "pm1.0_atm", "pm1.0_atm_a", "pm1.0_atm_b", "pm1.0_cf_1", "pm1.0_cf_1_a",
+            "pm1.0_cf_1_b",
+
+            # PM2.5 fields:
+            "pm2.5_alt", "pm2.5_alt_a", "pm2.5_alt_b", "pm2.5", "pm2.5_a", "pm2.5_b", "pm2.5_atm", "pm2.5_atm_a", "pm2.5_atm_b", "pm2.5_cf_1", "pm2.5_cf_1_a", "pm2.5_cf_1_b",
+
+            # PM2.5 pseudo (simple running) average fields:
+            # Note: These are inside the return json as json["sensor"]["stats"]. They are averages of the two sensors.
+            # sensor 'a' and 'b' sensor be. Each sensors data is inside json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
+            "pm2.5_10minute", "pm2.5_10minute_a", "pm2.5_10minute_b", "pm2.5_30minute", "pm2.5_30minute_a", "pm2.5_30minute_b", "pm2.5_60minute", "pm2.5_60minute_a", "pm2.5_60minute_b", "pm2.5_6hour", "pm2.5_6hour_a", "pm2.5_6hour_b",
+            "pm2.5_24hour", "pm2.5_24hour_a", "pm2.5_24hour_b", "pm2.5_1week", "pm2.5_1week_a", "pm2.5_1week_b",
+
+            # PM10.0 fields:
+            "pm10.0", "pm10.0_a", "pm10.0_b", "pm10.0_atm", "pm10.0_atm_a", "pm10.0_atm_b", "pm10.0_cf_1", "pm10.0_cf_1_a", "pm10.0_cf_1_b",
+
+            # Particle count fields:
+            "0.3_um_count", "0.3_um_count_a", "0.3_um_count_b", "0.5_um_count", "0.5_um_count_a", "0.5_um_count_b", "1.0_um_count", "1.0_um_count_a", "1.0_um_count_b", "2.5_um_count", "2.5_um_count_a", "2.5_um_count_b", "5.0_um_count", "5.0_um_count_a", "5.0_um_count_b", "10.0_um_count", "10.0_um_count_a", "10.0_um_count_b",
+
+            # ThingSpeak fields, used to retrieve data from api.thingspeak.com:
+            "primary_id_a", "primary_key_a", "secondary_id_a", "secondary_key_a", "primary_id_b", "primary_key_b", "secondary_id_b", "secondary_key_b"
+        ]
         # Make our psql database connection
         self.__db_conn = psql_db_conn
 
@@ -39,6 +74,10 @@ class PurpleAirDataLogger():
 
         # Convert our PSQL tables to hyper tables
         self.__convert_psql_tables_to_hyper_tables()
+
+        # Commit then set auto commit to true
+        self.__db_conn.commit()
+        the_psql_db_conn.autocommit = True
 
     def __create_psql_db_tables(self):
         """
@@ -50,172 +89,13 @@ class PurpleAirDataLogger():
         # Environmental fields, etc. See website for more informaiton.
         # https://api.purpleair.com/#api-sensors-get-sensor-data
 
-        # Generate the PSQL query strings. For simplicity our table names will match
-        # what the PurpleAir documentation says. We will do the same for table column names.
-        create_station_information_and_status_fields_table = """
-        CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            name TEXT,
-            icon INT,
-            model TEXT,
-            hardware TEXT,
-            location_type INT,
-            private INT,
-            latitude FLOAT,
-            longitude FLOAT,
-            altitude FLOAT,
-            position_rating INT,
-            led_brightness INT,
-            firmware_version TEXT,
-            firmware_upgrade TEXT,
-            rssi INT,
-            uptime INT,
-            pa_latency INT,
-            memory INT,
-            last_seen TIMESTAMP,
-            last_modified TIMESTAMP,
-            date_created TIMESTAMP,
-            channel_state INT,
-            channel_flags INT,
-            channel_flags_manual INT,
-            channel_flags_auto INT,
-            confidence INT,
-            confidence_manual INT,
-            confidence_auto INT)"""
-
-        create_evironmental_fields_table = """
-        CREATE TABLE IF NOT EXISTS evironmental_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            humidity INT,
-            humidity_a INT,
-            humidity_b INT,
-            temperature INT,
-            temperature_a INT,
-            temperature_b INT,
-            pressure FLOAT,
-            pressure_a FLOAT,
-            pressure_b FLOAT)"""
-
-        create_miscellaneous_fields = """
-        CREATE TABLE IF NOT EXISTS miscellaneous_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            voc FLOAT,
-            voc_a FLOAT,
-            voc_b FLOAT,
-            ozone1 FLOAT,
-            analog_input FLOAT)"""
-
-        # Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
-        create_pm10_fields = """
-        CREATE TABLE IF NOT EXISTS pm10_fields(
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            pm1_0 FLOAT,
-            pm1_0_a FLOAT,
-            pm1_0_b FLOAT,
-            pm1_0_atm FLOAT,
-            pm1_0_atm_a FLOAT,
-            pm1_0_atm_b FLOAT,
-            pm1_0_cf_1 FLOAT,
-            pm1_0_cf_1_a FLOAT,
-            pm1_0_cf_1_b FLOAT)"""
-
-        # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-        create_pm25_fields = """
-        CREATE TABLE IF NOT EXISTS pm25_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            pm2_5_alt FLOAT,
-            pm2_5_alt_a FLOAT,
-            pm2_5_alt_b FLOAT,
-            pm2_5 FLOAT,
-            pm2_5_a FLOAT,
-            pm2_5_b FLOAT,
-            pm2_5_atm FLOAT,
-            pm2_5_atm_a FLOAT,
-            pm2_5_atm_b FLOAT,
-            pm2_5_cf_1 FLOAT,
-            pm2_5_cf_1_a FLOAT,
-            pm2_5_cf_1_b FLOAT)"""
-
-        # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-        create_pm25_pseudo_average_fields = """
-        CREATE TABLE IF NOT EXISTS pm25_pseudo_average_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            pm2_5_10minute FLOAT,
-            pm2_5_10minute_a FLOAT,
-            pm2_5_10minute_b FLOAT,
-            pm2_5_30minute FLOAT,
-            pm2_5_30minute_a FLOAT,
-            pm2_5_30minute_b FLOAT,
-            pm2_5_60minute FLOAT,
-            pm2_5_60minute_a FLOAT,
-            pm2_5_60minute_b FLOAT,
-            pm2_5_6hour FLOAT,
-            pm2_5_6hour_a FLOAT,
-            pm2_5_6hour_b FLOAT,
-            pm2_5_24hour FLOAT,
-            pm2_5_24hour_a FLOAT,
-            pm2_5_24hour_b FLOAT,
-            pm2_5_1week FLOAT,
-            pm2_5_1week_a FLOAT,
-            pm2_5_1week_b FLOAT)"""
-
-        # Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
-        create_pm100_fields = """
-        CREATE TABLE IF NOT EXISTS pm100_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            pm10_0 FLOAT,
-            pm10_0_a FLOAT,
-            pm10_0_b FLOAT,
-            pm10_0_atm FLOAT,
-            pm10_0_atm_a FLOAT,
-            pm10_0_atm_b FLOAT,
-            pm10_0_cf_1 FLOAT,
-            pm10_0_cf_1_a FLOAT,
-            pm10_0_cf_1_b FLOAT)"""
-
-        # Note we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
-        create_particle_count_fields = """
-        CREATE TABLE IF NOT EXISTS particle_count_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            um_count_0_3 FLOAT,
-            um_count_a_0_3 FLOAT,
-            um_count_b_0_3 FLOAT,
-            um_count_0_5 FLOAT,
-            um_count_a_0_5 FLOAT,
-            um_count_b_0_5 FLOAT,
-            um_count_1_0 FLOAT,
-            um_count_a_1_0 FLOAT,
-            um_count_b_1_0 FLOAT,
-            um_count_2_5 FLOAT,
-            um_count_a_2_5 FLOAT,
-            um_count_b_2_5 FLOAT,
-            um_count_5_0 FLOAT,
-            um_count_a_5_0 FLOAT,
-            um_count_b_5_0 FLOAT,
-            um_count_10_0 FLOAT,
-            um_count_a_10_0 FLOAT,
-            um_count_b_10_0 FLOAT)"""
-
-        # NOTE TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
-        create_thingspeak_fields = """
-        CREATE TABLE IF NOT EXISTS thingspeak_fields (
-            data_time_stamp TIMESTAMP PRIMARY KEY,
-            primary_id_a INT,
-            primary_key_a TEXT,
-            secondary_id_a INT,
-            secondary_key_a TEXT,
-            primary_id_b INT,
-            primary_key_b TEXT,
-            secondary_id_b INT,
-            secondary_key_b TEXT)"""
-
         self.__db_conn.run(create_station_information_and_status_fields_table)
-        self.__db_conn.run(create_evironmental_fields_table)
+        self.__db_conn.run(create_environmental_fields_table)
         self.__db_conn.run(create_miscellaneous_fields)
-        self.__db_conn.run(create_pm10_fields)
-        self.__db_conn.run(create_pm25_fields)
-        self.__db_conn.run(create_pm25_pseudo_average_fields)
-        self.__db_conn.run(create_pm100_fields)
+        self.__db_conn.run(create_pm1_0_fields)
+        self.__db_conn.run(create_pm2_5_fields)
+        self.__db_conn.run(create_pm2_5_pseudo_average_fields)
+        self.__db_conn.run(create_pm10_0_fields)
         self.__db_conn.run(create_particle_count_fields)
         self.__db_conn.run(create_thingspeak_fields)
 
@@ -225,36 +105,212 @@ class PurpleAirDataLogger():
         """
 
         self.__db_conn.run(
-            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('evironmental_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('environmental_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm10_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm25_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm25_pseudo_average_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('pm100_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
-            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp')""")
+            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
+
+    def get_accepted_field_names_list(self):
+        """
+            Get the accepted field data names (keys) in a string list.
+        """
+
+        return self.__accepted_field_names_list
 
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
             Request data from a single sensor.
+            :param int sensor_index: A valid PurpleAirAPI sensor index.
+            :param str read_key: A valid PurpleAirAPI private read key.
+            :param str fields: A comma delmited string of valid field names.
+            :return A python dictionary with data.
         """
 
         return self.__paa_obj.request_sensor_data(sensor_index, read_key, fields)
 
-    def store_sensor_data(self):
+    def store_sensor_data(self, single_sensor_data_dict):
         """
             Insert the sensor data into the database.
+            :param dict single_sensor_data_dict: A python dictionary containing all fields
+                                                 for insertion. If a sensor doesn't support
+                                                 a certain field make sure it is NULL and part
+                                                 of the dictionary. This method does no type
+                                                 or error checking. That is upto the caller.
         """
-        pass
+
+        # Run the queries
+        self.__db_conn.run(
+            psql_insert_statement_station_information_and_status_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            name=single_sensor_data_dict["name"],
+            icon=single_sensor_data_dict["icon"],
+            model=single_sensor_data_dict["model"],
+            hardware=single_sensor_data_dict["hardware"],
+            location_type=single_sensor_data_dict["location_type"],
+            private=single_sensor_data_dict["private"],
+            latitude=single_sensor_data_dict["latitude"],
+            longitude=single_sensor_data_dict["longitude"],
+            altitude=single_sensor_data_dict["altitude"],
+            position_rating=single_sensor_data_dict["position_rating"],
+            led_brightness=single_sensor_data_dict["led_brightness"],
+            firmware_version=single_sensor_data_dict["firmware_version"],
+            firmware_upgrade=single_sensor_data_dict["firmware_upgrade"],
+            rssi=single_sensor_data_dict["rssi"],
+            uptime=single_sensor_data_dict["uptime"],
+            pa_latency=single_sensor_data_dict["pa_latency"],
+            memory=single_sensor_data_dict["memory"],
+            last_seen=single_sensor_data_dict["last_seen"],
+            last_modified=single_sensor_data_dict["last_modified"],
+            date_created=single_sensor_data_dict["date_created"],
+            channel_state=single_sensor_data_dict["channel_state"],
+            channel_flags=single_sensor_data_dict["channel_flags"],
+            channel_flags_manual=single_sensor_data_dict["channel_flags_manual"],
+            channel_flags_auto=single_sensor_data_dict["channel_flags_auto"],
+            confidence=single_sensor_data_dict["confidence"],
+            confidence_manual=single_sensor_data_dict["confidence_manual"],
+            confidence_auto=single_sensor_data_dict["confidence_auto"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_environmental_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            humidity=single_sensor_data_dict["humidity"],
+            humidity_a=single_sensor_data_dict["humidity_a"],
+            humidity_b=single_sensor_data_dict["humidity_b"],
+            temperature=single_sensor_data_dict["temperature"],
+            temperature_a=single_sensor_data_dict["temperature_a"],
+            temperature_b=single_sensor_data_dict["temperature_b"],
+            pressure=single_sensor_data_dict["pressure"],
+            pressure_a=single_sensor_data_dict["pressure_a"],
+            pressure_b=single_sensor_data_dict["pressure_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_miscellaneous_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            voc=single_sensor_data_dict["voc"],
+            voc_a=single_sensor_data_dict["voc_a"],
+            voc_b=single_sensor_data_dict["voc_b"],
+            ozone1=single_sensor_data_dict["ozone1"],
+            analog_input=single_sensor_data_dict["analog_input"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_pm1_0_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            pm1_0=single_sensor_data_dict["pm1_0"],
+            pm1_0_a=single_sensor_data_dict["pm1_0_a"],
+            pm1_0_b=single_sensor_data_dict["pm1_0_b"],
+            pm1_0_atm=single_sensor_data_dict["pm1_0_atm"],
+            pm1_0_atm_a=single_sensor_data_dict["pm1_0_atm_a"],
+            pm1_0_atm_b=single_sensor_data_dict["pm1_0_atm_b"],
+            pm1_0_cf_1=single_sensor_data_dict["pm1_0_cf_1"],
+            pm1_0_cf_1_a=single_sensor_data_dict["pm1_0_cf_1_a"],
+            pm1_0_cf_1_b=single_sensor_data_dict["pm1_0_cf_1_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_pm2_5_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            pm2_5_alt=single_sensor_data_dict["pm2_5_alt"],
+            pm2_5_alt_a=single_sensor_data_dict["pm2_5_alt_a"],
+            pm2_5_alt_b=single_sensor_data_dict["pm2_5_alt_b"],
+            pm2_5=single_sensor_data_dict["pm2_5"],
+            pm2_5_a=single_sensor_data_dict["pm2_5_a"],
+            pm2_5_b=single_sensor_data_dict["pm2_5_b"],
+            pm2_5_atm=single_sensor_data_dict["pm2_5_atm"],
+            pm2_5_atm_a=single_sensor_data_dict["pm2_5_atm_a"],
+            pm2_5_atm_b=single_sensor_data_dict["pm2_5_atm_b"],
+            pm2_5_cf_1=single_sensor_data_dict["pm2_5_cf_1"],
+            pm2_5_cf_1_a=single_sensor_data_dict["pm2_5_cf_1_a"],
+            pm2_5_cf_1_b=single_sensor_data_dict["pm2_5_cf_1_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_pm2_5_pseudo_average_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            pm2_5_10minute=single_sensor_data_dict["pm2_5_10minute"],
+            pm2_5_10minute_a=single_sensor_data_dict["pm2_5_10minute_a"],
+            pm2_5_10minute_b=single_sensor_data_dict["pm2_5_10minute_b"],
+            pm2_5_30minute=single_sensor_data_dict["pm2_5_30minute"],
+            pm2_5_30minute_a=single_sensor_data_dict["pm2_5_30minute_a"],
+            pm2_5_30minute_b=single_sensor_data_dict["pm2_5_30minute_b"],
+            pm2_5_60minute=single_sensor_data_dict["pm2_5_60minute"],
+            pm2_5_60minute_a=single_sensor_data_dict["pm2_5_60minute_a"],
+            pm2_5_60minute_b=single_sensor_data_dict["pm2_5_60minute_b"],
+            pm2_5_6hour=single_sensor_data_dict["pm2_5_6hour"],
+            pm2_5_6hour_a=single_sensor_data_dict["pm2_5_6hour_a"],
+            pm2_5_6hour_b=single_sensor_data_dict["pm2_5_6hour_b"],
+            pm2_5_24hour=single_sensor_data_dict["pm2_5_24hour"],
+            pm2_5_24hour_a=single_sensor_data_dict["pm2_5_24hour_a"],
+            pm2_5_24hour_b=single_sensor_data_dict["pm2_5_24hour_b"],
+            pm2_5_1week=single_sensor_data_dict["pm2_5_1week"],
+            pm2_5_1week_a=single_sensor_data_dict["pm2_5_1week_a"],
+            pm2_5_1week_b=single_sensor_data_dict["pm2_5_1week_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_pm10_0_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            pm10_0=single_sensor_data_dict["pm10_0"],
+            pm10_0_a=single_sensor_data_dict["pm10_0_a"],
+            pm10_0_b=single_sensor_data_dict["pm10_0_b"],
+            pm10_0_atm=single_sensor_data_dict["pm10_0_atm"],
+            pm10_0_atm_a=single_sensor_data_dict["pm10_0_atm_a"],
+            pm10_0_atm_b=single_sensor_data_dict["pm10_0_atm_b"],
+            pm10_0_cf_1=single_sensor_data_dict["pm10_0_cf_1"],
+            pm10_0_cf_1_a=single_sensor_data_dict["pm10_0_cf_1_a"],
+            pm10_0_cf_1_b=single_sensor_data_dict["pm10_0_cf_1_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_particle_count_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            um_count_0_3=single_sensor_data_dict["0.3_um_count"],
+            um_count_a_0_3=single_sensor_data_dict["0.3_um_count_a"],
+            um_count_b_0_3=single_sensor_data_dict["0.3_um_count_b"],
+            um_count_0_5=single_sensor_data_dict["0.5_um_count"],
+            um_count_a_0_5=single_sensor_data_dict["0.5_um_count_a"],
+            um_count_b_0_5=single_sensor_data_dict["0.5_um_count_b"],
+            um_count_1_0=single_sensor_data_dict["1.0_um_count"],
+            um_count_a_1_0=single_sensor_data_dict["1.0_um_count_a"],
+            um_count_b_1_0=single_sensor_data_dict["1.0_um_count_b"],
+            um_count_2_5=single_sensor_data_dict["2.5_um_count"],
+            um_count_a_2_5=single_sensor_data_dict["2.5_um_count_a"],
+            um_count_b_2_5=single_sensor_data_dict["2.5_um_count_b"],
+            um_count_5_0=single_sensor_data_dict["5.0_um_count"],
+            um_count_a_5_0=single_sensor_data_dict["5.0_um_count_a"],
+            um_count_b_5_0=single_sensor_data_dict["5.0_um_count_b"],
+            um_count_10_0=single_sensor_data_dict["10.0_um_count"],
+            um_count_a_10_0=single_sensor_data_dict["10.0_um_count_a"],
+            um_count_b_10_0=single_sensor_data_dict["10.0_um_count_b"]
+        )
+
+        self.__db_conn.run(
+            psql_insert_statement_thingspeak_fields,
+            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            primary_id_a=single_sensor_data_dict["primary_id_a"],
+            primary_key_a=single_sensor_data_dict["primary_key_a"],
+            secondary_id_a=single_sensor_data_dict["secondary_id_a"],
+            secondary_key_a=single_sensor_data_dict["secondary_key_a"],
+            primary_id_b=single_sensor_data_dict["primary_id_b"],
+            primary_key_b=single_sensor_data_dict["primary_key_b"],
+            secondary_id_b=single_sensor_data_dict["secondary_id_b"],
+            secondary_key_b=single_sensor_data_dict["secondary_key_b"]
+        )
 
     def get_multiple_sensors_data(self):
         """
@@ -270,7 +326,8 @@ class PurpleAirDataLogger():
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Process some integers.")
+    parser = argparse.ArgumentParser(
+        description="Collect data from PurpleAir sensors and insert into a database!")
     parser.add_argument("-db_usr",  required=True, dest="db_usr",
                         type=str, help="The PSQL database user")
     parser.add_argument("-db_host", required=False, default="localhost",
@@ -283,6 +340,8 @@ if __name__ == "__main__":
                         dest="db_pwd", type=str, help="The PSQL database password")
     parser.add_argument("-paa_read_key",  required=True,
                         dest="paa_read_key", type=str, help="The PurpleAirAPI Read key")
+    parser.add_argument("-paa_sensor_index",  required=True,
+                        dest="paa_sensor_index", type=int, help="The PurpleAirAPI sensor index")
 
     args = parser.parse_args()
 
@@ -301,8 +360,53 @@ if __name__ == "__main__":
     while True:
         # We will request data once every 65 seconds.
         print("Requesting new data...")
+        sensor_data = the_paa_data_logger.get_sensor_data(
+            args.paa_sensor_index)
 
-        # For now a random sensor in Greenland
-        sensor_data = the_paa_data_logger.get_sensor_data(14867)
+        # Do some validation work.
+        field_names_list = the_paa_data_logger.get_accepted_field_names_list()
+
+        # Let's make it easier on ourselves by making the sensor data one level deep.
+        # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
+        # We turn it into just json["KEYS..."].
+        the_modified_sensor_data = {}
+        the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
+        for key, val in sensor_data["sensor"].items():
+            if key == "stats":
+                # For now name this one stats_pm2.5 until I understand the difference
+                # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"]
+                the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
+                the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
+                the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
+                the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
+                the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
+                the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
+                the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
+                the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
+
+            elif key in ["stats_a", "stats_b"]:
+                the_modified_sensor_data["stats_a_pm2.5"] = val["pm2.5"]
+                the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
+                the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
+                the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
+                the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
+                the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
+                the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
+
+            else:
+                the_modified_sensor_data[key] = val
+
+        # Not all sensors support all field names, so we check that the keys exist
+        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
+        for key_str in field_names_list:
+            if key_str not in the_modified_sensor_data.keys():
+                if key_str == "firmware_upgrade":
+                    # Add it to our data dict, but make it an empty string since its a TEXT psql type.
+                    the_modified_sensor_data[key_str] = ""
+
+                elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
+                    # Add it to our data dict, but make it an 0.0 since its a FLOAT psql type.
+                    the_modified_sensor_data[key_str] = 0.0
+
         print("Waiting 65 seconds before requesting new data again...")
         sleep(65)
