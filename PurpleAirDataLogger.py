@@ -35,7 +35,7 @@ class PurpleAirDataLogger():
         # These keys are derived from the PurpleAir documentation: https://api.purpleair.com/#api-sensors-get-sensor-data
         self.__accepted_field_names_list = [
             # Station information and status fields:
-            "name", "icon", "model", "hardware", "location_type", "private", "latitude", "longitude", "altitude", "position_rating", "led_brightness", "firmware_version", "firmware_upgrade", "rssi, uptime", "pa_latency", "memory", "last_seen", "last_modified", "date_created", "channel_state", "channel_flags", "channel_flags_manual", "channel_flags_auto", "confidence", "confidence_manual", "confidence_auto",
+            "name", "icon", "model", "hardware", "location_type", "private", "latitude", "longitude", "altitude", "position_rating", "led_brightness", "firmware_version", "firmware_upgrade", "rssi", "uptime", "pa_latency", "memory", "last_seen", "last_modified", "date_created", "channel_state", "channel_flags", "channel_flags_manual", "channel_flags_auto", "confidence", "confidence_manual", "confidence_auto",
 
             # Environmental fields:
             "humidity", "humidity_a", "humidity_b", "temperature", "temperature_a", "temperature_b", "pressure", "pressure_a", "pressure_b",
@@ -50,6 +50,8 @@ class PurpleAirDataLogger():
             "pm2.5_alt", "pm2.5_alt_a", "pm2.5_alt_b", "pm2.5", "pm2.5_a", "pm2.5_b", "pm2.5_atm", "pm2.5_atm_a", "pm2.5_atm_b", "pm2.5_cf_1", "pm2.5_cf_1_a", "pm2.5_cf_1_b",
 
             # PM2.5 pseudo (simple running) average fields:
+            # Note: These are inside the return json as json["sensor"]["stats"]. They are averages of the two sensors.
+            # sensor 'a' and 'b' sensor be. Each sensors data is inside json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
             "pm2.5_10minute", "pm2.5_10minute_a", "pm2.5_10minute_b", "pm2.5_30minute", "pm2.5_30minute_a", "pm2.5_30minute_b", "pm2.5_60minute", "pm2.5_60minute_a", "pm2.5_60minute_b", "pm2.5_6hour", "pm2.5_6hour_a", "pm2.5_6hour_b", "pm25_24hour", "pm2.5_24hour_a", "pm2.5_24hour_b", "pm2.5_1week", "pm2.5_1week_a", "pm2.5_1week_b",
 
             # PM10.0 fields:
@@ -455,13 +457,37 @@ if __name__ == "__main__":
         # Do some validation work.
         field_names_list = the_paa_data_logger.get_accepted_field_names_list()
 
+        # Let's make it easier on ourselves by making the sensor data one level deep.
+        # Instead of json["sensor"]["KEYS.. KEYS"] and json["sensor"]["stats"]["stats"]["KEYS KEYS"]
+        # We turn it into just json["KEYS KEYS"].
+        # Note: For now we omit the stats for json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
+        # since they are averaged into json["sensor"]["stats"].
+        the_modified_sensor_data = {}
+        the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
+        for key, val in sensor_data["sensor"].items():
+            if key == "stats":
+                the_modified_sensor_data["pm2.5"] = val["pm2.5"]
+                the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
+                the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
+                the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
+                the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
+                the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
+                the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
+                the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
+
+            elif key in ["stats_a", "stats_b"]:
+                print(f"Not going to use sensor['{key}']")
+
+            else:
+                the_modified_sensor_data["key"] = val
+
         # Not all sensors support all field names, so we check that the keys exist
-        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.    
+        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
         for key_str in field_names_list:
-            if key_str in sensor_data["sensor"].keys():
+            if key_str in the_modified_sensor_data.keys():
                 print(f"I AM HERE FOR NOW {key_str}")
             else:
                 print(f"I AM NOT HERE FOR NOW: {key_str}")
-        
+
         print("Waiting 65 seconds before requesting new data again...")
         sleep(65)
