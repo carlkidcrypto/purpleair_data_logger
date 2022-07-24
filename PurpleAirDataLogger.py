@@ -456,13 +456,12 @@ if __name__ == "__main__":
         field_names_list = the_paa_data_logger.get_accepted_field_names_list()
 
         # Not all sensors support all field names, so we check that the keys exist
-        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
-
+        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.    
         for key_str in field_names_list:
-            if key_str in sensor_data.keys():
+            if key_str in sensor_data["sensor"].keys():
                 print(f"I AM HERE FOR NOW {key_str}")
             else:
                 print(f"I AM NOT HERE FOR NOW: {key_str}")
-
+        
         print("Waiting 65 seconds before requesting new data again...")
         sleep(65)
