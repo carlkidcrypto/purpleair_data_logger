@@ -358,10 +358,10 @@ class PurpleAirDataLogger():
             # We will request data once every 65 seconds.
             print(
                 f"Requesting new data from a sensor with index {sensor_index}...")
-            sensor_data = the_paa_data_logger.get_sensor_data(sensor_index)
+            sensor_data = self.get_sensor_data(sensor_index)
 
             # Do some validation work.
-            field_names_list = the_paa_data_logger.get_accepted_field_names_list()
+            field_names_list = self.get_accepted_field_names_list()
 
             # Let's make it easier on ourselves by making the sensor data one level deep.
             # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
@@ -405,6 +405,7 @@ class PurpleAirDataLogger():
                         # Add it to our data dict, but make it an 0.0 since its a FLOAT psql type.
                         the_modified_sensor_data[key_str] = 0.0
 
+            self.store_sensor_data(the_modified_sensor_data)
             print("Waiting 65 seconds before requesting new data again...")
             sleep(65)
 
