@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 """
-A file containing PSQL statements defined as constants.
+    Copyright 2022 carlkid1499, All rights reserved.
+    A file containing PSQL statements defined as constants.
 """
 
 # Generate the PSQL query strings. For simplicity our table names will match

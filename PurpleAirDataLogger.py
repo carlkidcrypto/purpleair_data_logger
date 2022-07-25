@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 """
-    A python class designed to use the PurpleAirAPI for sensor data.
+    Copyright 2022 carlkid1499, All rights reserved.
+    A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+    
     For best practice from PurpleAir:
     "The data from individual sensors will update no less than every 30 seconds.
     As a courtesy, we ask that you limit the number of requests to no more than
@@ -75,9 +77,8 @@ class PurpleAirDataLogger():
         # Convert our PSQL tables to hyper tables
         self.__convert_psql_tables_to_hyper_tables()
 
-        # Commit then set auto commit to true
+        # Commit to the db
         self.__db_conn.commit()
-        the_psql_db_conn.autocommit = True
 
     def __create_psql_db_tables(self):
         """
@@ -326,6 +327,9 @@ class PurpleAirDataLogger():
             secondary_key_b=single_sensor_data_dict["secondary_key_b"]
         )
 
+        # Commit to the db
+        self.__db_conn.commit()
+
     def get_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
             Request data from a multiple sensors. Uses the same parameters as
@@ -340,7 +344,78 @@ class PurpleAirDataLogger():
         """
             Insert the multiple sensors data into the database.
         """
-        pass
+
+        raise NotImplementedError
+
+    def run_loop_for_storing_single_sensor_data(self, sensor_index):
+        """
+            A method containing the run loop for inserting a single sensors' data into the db.
+
+            :param int sensor_index: A valid PurpleAirAPI sensor index.
+        """
+
+        while True:
+            # We will request data once every 65 seconds.
+            print(
+                f"Requesting new data from a sensor with index {sensor_index}...")
+            sensor_data = the_paa_data_logger.get_sensor_data(sensor_index)
+
+            # Do some validation work.
+            field_names_list = the_paa_data_logger.get_accepted_field_names_list()
+
+            # Let's make it easier on ourselves by making the sensor data one level deep.
+            # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
+            # We turn it into just json["KEYS..."].
+            the_modified_sensor_data = {}
+            the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
+            for key, val in sensor_data["sensor"].items():
+                if key == "stats":
+                    # For now name this one stats_pm2.5 until I understand the difference
+                    # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"]
+                    the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
+                    the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
+                    the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
+                    the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
+                    the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
+                    the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
+                    the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
+                    the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
+
+                elif key in ["stats_a", "stats_b"]:
+                    the_modified_sensor_data["stats_a_pm2.5"] = val["pm2.5"]
+                    the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
+                    the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
+                    the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
+                    the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
+                    the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
+                    the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
+
+                else:
+                    the_modified_sensor_data[key] = val
+
+            # Not all sensors support all field names, so we check that the keys exist
+            # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
+            for key_str in field_names_list:
+                if key_str not in the_modified_sensor_data.keys():
+                    if key_str == "firmware_upgrade":
+                        # Add it to our data dict, but make it an empty string since its a TEXT psql type.
+                        the_modified_sensor_data[key_str] = ""
+
+                    elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
+                        # Add it to our data dict, but make it an 0.0 since its a FLOAT psql type.
+                        the_modified_sensor_data[key_str] = 0.0
+
+            print("Waiting 65 seconds before requesting new data again...")
+            sleep(65)
+
+    def run_loop_for_storing_multiple_sensors_data(self, fields):
+        """
+            A method containing the run loop for inserting a single sensors' data into the db.
+
+            :param str fields: A comma delmited string of valid field names.
+        """
+
+        raise NotImplementedError
 
 
 if __name__ == "__main__":
@@ -375,56 +450,5 @@ if __name__ == "__main__":
     the_paa_data_logger = PurpleAirDataLogger(
         args.paa_read_key, the_psql_db_conn)
 
-    while True:
-        # We will request data once every 65 seconds.
-        print("Requesting new data...")
-        sensor_data = the_paa_data_logger.get_sensor_data(
-            args.paa_sensor_index)
-
-        # Do some validation work.
-        field_names_list = the_paa_data_logger.get_accepted_field_names_list()
-
-        # Let's make it easier on ourselves by making the sensor data one level deep.
-        # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
-        # We turn it into just json["KEYS..."].
-        the_modified_sensor_data = {}
-        the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
-        for key, val in sensor_data["sensor"].items():
-            if key == "stats":
-                # For now name this one stats_pm2.5 until I understand the difference
-                # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"]
-                the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
-                the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
-                the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
-                the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
-                the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
-                the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
-                the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
-                the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
-
-            elif key in ["stats_a", "stats_b"]:
-                the_modified_sensor_data["stats_a_pm2.5"] = val["pm2.5"]
-                the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
-                the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
-                the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
-                the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
-                the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
-                the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
-
-            else:
-                the_modified_sensor_data[key] = val
-
-        # Not all sensors support all field names, so we check that the keys exist
-        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
-        for key_str in field_names_list:
-            if key_str not in the_modified_sensor_data.keys():
-                if key_str == "firmware_upgrade":
-                    # Add it to our data dict, but make it an empty string since its a TEXT psql type.
-                    the_modified_sensor_data[key_str] = ""
-
-                elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
-                    # Add it to our data dict, but make it an 0.0 since its a FLOAT psql type.
-                    the_modified_sensor_data[key_str] = 0.0
-
-        print("Waiting 65 seconds before requesting new data again...")
-        sleep(65)
+    the_paa_data_logger.run_loop_for_storing_single_sensor_data(
+        args.paa_sensor_index)

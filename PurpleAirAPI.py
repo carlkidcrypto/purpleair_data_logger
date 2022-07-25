@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 """
+    Copyright 2022 carlkid1499, All rights reserved.
     A python3 class designed to fetch data from Purple Air's new API.
     https://api.purpleair.com/#api-welcome
 """
