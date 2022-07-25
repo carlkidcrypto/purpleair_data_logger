@@ -160,6 +160,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             name=single_sensor_data_dict["name"],
             icon=single_sensor_data_dict["icon"],
             model=single_sensor_data_dict["model"],
@@ -192,6 +193,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             humidity=single_sensor_data_dict["humidity"],
             humidity_a=single_sensor_data_dict["humidity_a"],
             humidity_b=single_sensor_data_dict["humidity_b"],
@@ -206,6 +208,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             voc=single_sensor_data_dict["voc"],
             voc_a=single_sensor_data_dict["voc_a"],
             voc_b=single_sensor_data_dict["voc_b"],
@@ -216,6 +219,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             pm1_0=single_sensor_data_dict["pm1_0"],
             pm1_0_a=single_sensor_data_dict["pm1_0_a"],
             pm1_0_b=single_sensor_data_dict["pm1_0_b"],
@@ -230,6 +234,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_alt=single_sensor_data_dict["pm2_5_alt"],
             pm2_5_alt_a=single_sensor_data_dict["pm2_5_alt_a"],
             pm2_5_alt_b=single_sensor_data_dict["pm2_5_alt_b"],
@@ -247,6 +252,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_10minute=single_sensor_data_dict["pm2_5_10minute"],
             pm2_5_10minute_a=single_sensor_data_dict["pm2_5_10minute_a"],
             pm2_5_10minute_b=single_sensor_data_dict["pm2_5_10minute_b"],
@@ -270,6 +276,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             pm10_0=single_sensor_data_dict["pm10_0"],
             pm10_0_a=single_sensor_data_dict["pm10_0_a"],
             pm10_0_b=single_sensor_data_dict["pm10_0_b"],
@@ -284,6 +291,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             um_count_0_3=single_sensor_data_dict["0.3_um_count"],
             um_count_a_0_3=single_sensor_data_dict["0.3_um_count_a"],
             um_count_b_0_3=single_sensor_data_dict["0.3_um_count_b"],
@@ -307,6 +315,7 @@ class PurpleAirDataLogger():
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
             data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            sensor_index=single_sensor_data_dict["sensor_index"],
             primary_id_a=single_sensor_data_dict["primary_id_a"],
             primary_key_a=single_sensor_data_dict["primary_key_a"],
             secondary_id_a=single_sensor_data_dict["secondary_id_a"],
@@ -317,11 +326,15 @@ class PurpleAirDataLogger():
             secondary_key_b=single_sensor_data_dict["secondary_key_b"]
         )
 
-    def get_multiple_sensors_data(self):
+    def get_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
-            Request data from a multiple sensors.
+            Request data from a multiple sensors. Uses the same parameters as
+            PurpleAirAPI.request_multiple_sensors_data()
+
+            :return A python dictionary with data.
         """
-        pass
+
+        return self.__paa_obj.request_multiple_sensors_data(self, fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
 
     def store_multiple_sensors_data(self):
         """
