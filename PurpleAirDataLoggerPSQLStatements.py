@@ -1,14 +1,16 @@
 #!/usr/bin/env python3
 
 """
-A file containing PSQL statements defined as constants.
+    Copyright 2022 carlkid1499, All rights reserved.
+    A file containing PSQL statements defined as constants.
 """
 
 # Generate the PSQL query strings. For simplicity our table names will match
 # what the PurpleAir documentation says. We will do the same for table column names.
-create_station_information_and_status_fields_table = """
+CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         name TEXT,
         icon INT,
         model TEXT,
@@ -26,9 +28,9 @@ create_station_information_and_status_fields_table = """
         uptime INT,
         pa_latency INT,
         memory INT,
-        last_seen TIMESTAMP,
-        last_modified TIMESTAMP,
-        date_created TIMESTAMP,
+        last_seen TIMESTAMPTZ,
+        last_modified TIMESTAMPTZ,
+        date_created TIMESTAMPTZ,
         channel_state INT,
         channel_flags INT,
         channel_flags_manual INT,
@@ -37,9 +39,10 @@ create_station_information_and_status_fields_table = """
         confidence_manual INT,
         confidence_auto INT)"""
 
-create_environmental_fields_table = """
+CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS environmental_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         humidity INT,
         humidity_a INT,
         humidity_b INT,
@@ -50,9 +53,10 @@ create_environmental_fields_table = """
         pressure_a FLOAT,
         pressure_b FLOAT)"""
 
-create_miscellaneous_fields = """
+CREATE_MISCELLANEOUS_FIELDS = """
     CREATE TABLE IF NOT EXISTS miscellaneous_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         voc FLOAT,
         voc_a FLOAT,
         voc_b FLOAT,
@@ -60,9 +64,10 @@ create_miscellaneous_fields = """
         analog_input FLOAT)"""
 
 # Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
-create_pm1_0_fields = """
+CREATE_PM1_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm1_0_fields(
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         pm1_0 FLOAT,
         pm1_0_a FLOAT,
         pm1_0_b FLOAT,
@@ -74,9 +79,10 @@ create_pm1_0_fields = """
         pm1_0_cf_1_b FLOAT)"""
 
 # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-create_pm2_5_fields = """
+CREATE_PM2_5_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         pm2_5_alt FLOAT,
         pm2_5_alt_a FLOAT,
         pm2_5_alt_b FLOAT,
@@ -91,9 +97,10 @@ create_pm2_5_fields = """
         pm2_5_cf_1_b FLOAT)"""
 
 # Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-create_pm2_5_pseudo_average_fields = """
+CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_pseudo_average_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         pm2_5_10minute FLOAT,
         pm2_5_10minute_a FLOAT,
         pm2_5_10minute_b FLOAT,
@@ -114,9 +121,10 @@ create_pm2_5_pseudo_average_fields = """
         pm2_5_1week_b FLOAT)"""
 
 # Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
-create_pm10_0_fields = """
+CREATE_PM10_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm10_0_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         pm10_0 FLOAT,
         pm10_0_a FLOAT,
         pm10_0_b FLOAT,
@@ -128,9 +136,10 @@ create_pm10_0_fields = """
         pm10_0_cf_1_b FLOAT)"""
 
 # Note we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
-create_particle_count_fields = """
+CREATE_PARTICLE_COUNT_FIELDS = """
     CREATE TABLE IF NOT EXISTS particle_count_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         um_count_0_3 FLOAT,
         um_count_a_0_3 FLOAT,
         um_count_b_0_3 FLOAT,
@@ -151,9 +160,10 @@ create_particle_count_fields = """
         um_count_b_10_0 FLOAT)"""
 
 # NOTE TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
-create_thingspeak_fields = """
+CREATE_THINGSPEAK_FIELDS = """
     CREATE TABLE IF NOT EXISTS thingspeak_fields (
-        data_time_stamp TIMESTAMP PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        sensor_index INT,
         primary_id_a INT,
         primary_key_a TEXT,
         secondary_id_a INT,
@@ -164,10 +174,11 @@ create_thingspeak_fields = """
         secondary_key_b TEXT)"""
 
 # As of 07/23/2022 we have 9 tables to insert data into.
-psql_insert_statement_station_information_and_status_fields = """
+PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
     INSERT INTO station_information_and_status_fields
         (
             data_time_stamp,
+            sensor_index,
             name,
             icon,
             model,
@@ -198,7 +209,8 @@ psql_insert_statement_station_information_and_status_fields = """
         )
         VALUES 
         (
-            CAST(:data_time_stamp AS TIMESTAMP,
+            CAST(:data_time_stamp AS TIMESTAMPTZ),
+            CAST(:sensor_index AS INT),
             CAST(:name AS TEXT),
             CAST(:icon AS INT),
             CAST(:model AS TEXT),
@@ -216,9 +228,9 @@ psql_insert_statement_station_information_and_status_fields = """
             CAST(:uptime AS INT),
             CAST(:pa_latency AS INT),
             CAST(:memory AS INT),
-            CAST(:last_seen AS TIMESTAMP),
-            CAST(:last_modified AS TIMESTAMP),
-            CAST(:date_created AS TIMESTAMP),
+            CAST(:last_seen AS TIMESTAMPTZ),
+            CAST(:last_modified AS TIMESTAMPTZ),
+            CAST(:date_created AS TIMESTAMPTZ),
             CAST(:channel_state AS INT),
             CAST(:channel_flags AS INT),
             CAST(:channel_flags_manual AS INT),
@@ -228,10 +240,11 @@ psql_insert_statement_station_information_and_status_fields = """
             CAST(:confidence_auto AS INT)
         )"""
 
-psql_insert_statement_environmental_fields = """
+PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
     INSERT INTO environmental_fields
         (
             data_time_stamp,
+            sensor_index,
             humidity,
             humidity_a,
             humidity_b,
@@ -244,7 +257,8 @@ psql_insert_statement_environmental_fields = """
         ) 
         VALUES
         (
-            CAST(:data_time_stamp AS TIMESTAMP),
+            CAST(:data_time_stamp AS TIMESTAMPTZ),
+            CAST(:sensor_index AS INT),
             CAST(:humidity AS INT),
             CAST(:humidity_a AS INT),
             CAST(:humidity_b AS INT),
@@ -256,10 +270,11 @@ psql_insert_statement_environmental_fields = """
             CAST(:pressure_b AS FLOAT)
         )"""
 
-psql_insert_statement_miscellaneous_fields = """
+PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
     INSERT INTO miscellaneous_fields
         (
             data_time_stamp,
+            sensor_index,
             voc,
             voc_a,
             voc_b,
@@ -268,7 +283,8 @@ psql_insert_statement_miscellaneous_fields = """
         ) 
         VALUES
         (
-            CAST(:data_time_stamp AS TIMESTAMP),
+            CAST(:data_time_stamp AS TIMESTAMPTZ),
+            CAST(:sensor_index AS INT),
             CAST(:voc AS FLOAT),
             CAST(:voc_a AS FLOAT),
             CAST(:voc_b AS FLOAT),
@@ -276,10 +292,11 @@ psql_insert_statement_miscellaneous_fields = """
             CAST(:analog_input AS FLOAT)
         )"""
 
-psql_insert_statement_pm1_0_fields = """
+PSQL_INSERT_STATEMENT_PM1_0_FIELDS = """
     INSERT INTO pm1_0_fields
         (
             data_time_stamp,
+            sensor_index,
             pm1_0,
             pm1_0_a,
             pm1_0_b,
@@ -292,7 +309,8 @@ psql_insert_statement_pm1_0_fields = """
         )
         VALUES
         (
-            CAST(:data_time_stamp AS TIMESTAMP),
+            CAST(:data_time_stamp AS TIMESTAMPTZ),
+            CAST(:sensor_index AS INT),
             CAST(:pm1_0 AS FLOAT),
             CAST(:pm1_0_a AS FLOAT),
             CAST(:pm1_0_b AS FLOAT),
@@ -304,10 +322,11 @@ psql_insert_statement_pm1_0_fields = """
             CAST(:pm1_0_cf_1_b AS FLOAT)
         )"""
 
-psql_insert_statement_pm2_5_fields = """
+PSQL_INSERT_STATEMENT_PM2_5_FIELDS = """
     INSERT INTO pm2_5_fields
         (
             data_time_stamp,
+            sensor_index,
             pm2_5_alt,
             pm2_5_alt_a,
             pm2_5_alt_b,
@@ -323,7 +342,8 @@ psql_insert_statement_pm2_5_fields = """
         ) 
         VALUES
         (
-            CAST(:data_time_stamp AS TIMESTAMP),
+            CAST(:data_time_stamp AS TIMESTAMPTZ),
+            CAST(:sensor_index AS INT),
             CAST(:pm2_5_alt AS FLOAT),
             CAST(:pm2_5_alt_a AS FLOAT),
             CAST(:pm2_5_alt_b AS FLOAT),
@@ -338,10 +358,11 @@ psql_insert_statement_pm2_5_fields = """
             CAST(:pm2_5_cf_1_b AS FLOAT)
         )"""
 
-psql_insert_statement_pm2_5_pseudo_average_fields = """
+PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     INSERT INTO pm2_5_pseudo_average_fields 
     (
         data_time_stamp,
+        sensor_index,
         pm2_5_10minute,
         pm2_5_10minute_a,
         pm2_5_10minute_b,
@@ -363,7 +384,8 @@ psql_insert_statement_pm2_5_pseudo_average_fields = """
     )
     VALUES
     (
-        CAST(:data_time_stamp AS TIMESTAMP),
+        CAST(:data_time_stamp AS TIMESTAMPTZ),
+        CAST(:sensor_index AS INT),
         CAST(:pm2_5_10minute AS FLOAT),
         CAST(:pm2_5_10minute_a AS FLOAT),
         CAST(:pm2_5_10minute_b AS FLOAT),
@@ -384,10 +406,11 @@ psql_insert_statement_pm2_5_pseudo_average_fields = """
         CAST(:pm2_5_1week_b AS FLOAT)
     )"""
 
-psql_insert_statement_pm10_0_fields = """
+PSQL_INSERT_STATEMENT_PM10_0_FIELDS = """
     INSERT INTO pm10_0_fields
     (
         data_time_stamp,
+        sensor_index,
         pm10_0,
         pm10_0_a,
         pm10_0_b,
@@ -400,7 +423,8 @@ psql_insert_statement_pm10_0_fields = """
     ) 
     VALUES
     (
-        CAST(:data_time_stamp AS TIMESTAMP),
+        CAST(:data_time_stamp AS TIMESTAMPTZ),
+        CAST(:sensor_index AS INT),
         CAST(:pm10_0 AS FLOAT),
         CAST(:pm10_0_a AS FLOAT),
         CAST(:pm10_0_b AS FLOAT),
@@ -411,10 +435,11 @@ psql_insert_statement_pm10_0_fields = """
         CAST(:pm10_0_cf_1_a AS FLOAT),
         CAST(:pm10_0_cf_1_b AS FLOAT)
     )"""
-psql_insert_statement_particle_count_fields = """
+PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
     INSERT INTO particle_count_fields 
     (
         data_time_stamp,
+        sensor_index,
         um_count_0_3,
         um_count_a_0_3,
         um_count_b_0_3,
@@ -436,7 +461,8 @@ psql_insert_statement_particle_count_fields = """
     )
     VALUES
     (
-        CAST(:data_time_stamp AS TIMESTAMP),
+        CAST(:data_time_stamp AS TIMESTAMPTZ),
+        CAST(:sensor_index AS INT),
         CAST(:um_count_0_3 AS FLOAT),
         CAST(:um_count_a_0_3 AS FLOAT),
         CAST(:um_count_b_0_3 AS FLOAT),
@@ -457,10 +483,11 @@ psql_insert_statement_particle_count_fields = """
         CAST(:um_count_b_10_0 AS FLOAT)
     )"""
 
-psql_insert_statement_thingspeak_fields = """
+PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
     INSERT INTO thingspeak_fields
     (
         data_time_stamp,
+        sensor_index,
         primary_id_a,
         primary_key_a,
         secondary_id_a,
@@ -472,7 +499,8 @@ psql_insert_statement_thingspeak_fields = """
     )
     VALUES
     (
-        CAST(:data_time_stamp AS TIMESTAMP),
+        CAST(:data_time_stamp AS TIMESTAMPTZ),
+        CAST(:sensor_index AS INT),
         CAST(:primary_id_a AS INT),
         CAST(:primary_key_a AS TEXT),
         CAST(:secondary_id_a AS INT),
