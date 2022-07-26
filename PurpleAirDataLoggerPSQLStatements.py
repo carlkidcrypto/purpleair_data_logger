@@ -177,7 +177,7 @@ CREATE_THINGSPEAK_FIELDS = """
 PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
     INSERT INTO station_information_and_status_fields
         (
-            TO_TIMESTAMP(data_time_stamp),
+            data_time_stamp,
             sensor_index,
             name,
             icon,
@@ -243,7 +243,7 @@ PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
 PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
     INSERT INTO environmental_fields
         (
-            TO_TIMESTAMP(data_time_stamp),
+            data_time_stamp,
             sensor_index,
             humidity,
             humidity_a,
@@ -273,7 +273,7 @@ PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
 PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
     INSERT INTO miscellaneous_fields
         (
-            TO_TIMESTAMP(data_time_stamp),
+            data_time_stamp,
             sensor_index,
             voc,
             voc_a,
@@ -295,7 +295,7 @@ PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
 PSQL_INSERT_STATEMENT_PM1_0_FIELDS = """
     INSERT INTO pm1_0_fields
         (
-            TO_TIMESTAMP(data_time_stamp),
+            data_time_stamp,
             sensor_index,
             pm1_0,
             pm1_0_a,
@@ -325,7 +325,7 @@ PSQL_INSERT_STATEMENT_PM1_0_FIELDS = """
 PSQL_INSERT_STATEMENT_PM2_5_FIELDS = """
     INSERT INTO pm2_5_fields
         (
-            TO_TIMESTAMP(data_time_stamp),
+            data_time_stamp,
             sensor_index,
             pm2_5_alt,
             pm2_5_alt_a,
@@ -361,7 +361,7 @@ PSQL_INSERT_STATEMENT_PM2_5_FIELDS = """
 PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     INSERT INTO pm2_5_pseudo_average_fields 
     (
-        TO_TIMESTAMP(data_time_stamp),
+        data_time_stamp,
         sensor_index,
         pm2_5_10minute,
         pm2_5_10minute_a,
@@ -409,7 +409,7 @@ PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
 PSQL_INSERT_STATEMENT_PM10_0_FIELDS = """
     INSERT INTO pm10_0_fields
     (
-        TO_TIMESTAMP(data_time_stamp),
+        data_time_stamp,
         sensor_index,
         pm10_0,
         pm10_0_a,
@@ -438,7 +438,7 @@ PSQL_INSERT_STATEMENT_PM10_0_FIELDS = """
 PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
     INSERT INTO particle_count_fields 
     (
-        TO_TIMESTAMP(data_time_stamp),
+        data_time_stamp,
         sensor_index,
         um_count_0_3,
         um_count_a_0_3,
@@ -486,7 +486,7 @@ PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
 PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
     INSERT INTO thingspeak_fields
     (
-        TO_TIMESTAMP(data_time_stamp),
+        data_time_stamp,
         sensor_index,
         primary_id_a,
         primary_key_a,
