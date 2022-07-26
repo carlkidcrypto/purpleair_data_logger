@@ -134,7 +134,7 @@ class PurpleAirDataLogger():
             :return A valid psql UTC timestamp.
         """
 
-        return datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc)
+        return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
 
     def get_accepted_field_names_list(self):
         """
