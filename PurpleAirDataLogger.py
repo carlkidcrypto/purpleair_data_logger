@@ -17,6 +17,7 @@ from PurpleAirDataLoggerPSQLStatements import *
 import pg8000
 import argparse
 from time import sleep
+from datetime import datetime, timezone
 
 
 class PurpleAirDataLogger():
@@ -123,6 +124,17 @@ class PurpleAirDataLogger():
             """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
             """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
+
+    def __convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
+        """
+            A method to covert a unix epoch timestamp to a psql timestamp.
+
+            :param int unix_epoch_timestamp: A valid unix epoch timestamp
+
+            :return A valid psql UTC timestamp.
+        """
+
+        return datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc)
 
     def get_accepted_field_names_list(self):
         """
@@ -367,11 +379,13 @@ class PurpleAirDataLogger():
             # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
             # We turn it into just json["KEYS..."].
             the_modified_sensor_data = {}
-            the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
+            the_modified_sensor_data["data_time_stamp"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                sensor_data["data_time_stamp"])
             for key, val in sensor_data["sensor"].items():
                 if key == "stats":
                     # For now name this one stats_pm2.5 until I understand the difference
-                    # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"]
+                    # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"].
+                    # Update 07/25/2022: Heard back from PurpleAir. They are the same.
                     the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
                     the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
                     the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
@@ -379,16 +393,19 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
                     the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
                     the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
-                    the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
+                    the_modified_sensor_data["pm2.5_time_stamp"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                        val["time_stamp"])
 
                 elif key in ["stats_a", "stats_b"]:
-                    the_modified_sensor_data["stats_a_pm2.5"] = val["pm2.5"]
+                    the_modified_sensor_data[f"pm2.5_{key[-1]}"] = val["pm2.5"]
                     the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
                     the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
                     the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
                     the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
                     the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
                     the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
+                    the_modified_sensor_data[f"time_stamp_{key[-1]}"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                        val["time_stamp"])
 
                 else:
                     the_modified_sensor_data[key] = val
