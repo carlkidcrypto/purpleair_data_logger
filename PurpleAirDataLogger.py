@@ -172,7 +172,8 @@ class PurpleAirDataLogger():
         # Run the queries
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             name=single_sensor_data_dict["name"],
             icon=single_sensor_data_dict["icon"],
@@ -191,9 +192,12 @@ class PurpleAirDataLogger():
             uptime=single_sensor_data_dict["uptime"],
             pa_latency=single_sensor_data_dict["pa_latency"],
             memory=single_sensor_data_dict["memory"],
-            last_seen=single_sensor_data_dict["last_seen"],
-            last_modified=single_sensor_data_dict["last_modified"],
-            date_created=single_sensor_data_dict["date_created"],
+            last_seen=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["last_seen"]),
+            last_modified=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["last_modified"]),
+            date_created=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["date_created"]),
             channel_state=single_sensor_data_dict["channel_state"],
             channel_flags=single_sensor_data_dict["channel_flags"],
             channel_flags_manual=single_sensor_data_dict["channel_flags_manual"],
@@ -205,7 +209,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             humidity=single_sensor_data_dict["humidity"],
             humidity_a=single_sensor_data_dict["humidity_a"],
@@ -220,7 +225,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             voc=single_sensor_data_dict["voc"],
             voc_a=single_sensor_data_dict["voc_a"],
@@ -231,7 +237,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm1_0=single_sensor_data_dict["pm1_0"],
             pm1_0_a=single_sensor_data_dict["pm1_0_a"],
@@ -246,7 +253,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_alt=single_sensor_data_dict["pm2_5_alt"],
             pm2_5_alt_a=single_sensor_data_dict["pm2_5_alt_a"],
@@ -264,7 +272,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_10minute=single_sensor_data_dict["pm2_5_10minute"],
             pm2_5_10minute_a=single_sensor_data_dict["pm2_5_10minute_a"],
@@ -288,7 +297,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm10_0=single_sensor_data_dict["pm10_0"],
             pm10_0_a=single_sensor_data_dict["pm10_0_a"],
@@ -303,7 +313,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             um_count_0_3=single_sensor_data_dict["0.3_um_count"],
             um_count_a_0_3=single_sensor_data_dict["0.3_um_count_a"],
@@ -327,7 +338,8 @@ class PurpleAirDataLogger():
 
         self.__db_conn.run(
             PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
-            data_time_stamp=single_sensor_data_dict["data_time_stamp"],
+            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+                single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             primary_id_a=single_sensor_data_dict["primary_id_a"],
             primary_key_a=single_sensor_data_dict["primary_key_a"],
@@ -379,8 +391,7 @@ class PurpleAirDataLogger():
             # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
             # We turn it into just json["KEYS..."].
             the_modified_sensor_data = {}
-            the_modified_sensor_data["data_time_stamp"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
-                sensor_data["data_time_stamp"])
+            the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
             for key, val in sensor_data["sensor"].items():
                 if key == "stats":
                     # For now name this one stats_pm2.5 until I understand the difference
@@ -393,8 +404,7 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
                     the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
                     the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
-                    the_modified_sensor_data["pm2.5_time_stamp"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
-                        val["time_stamp"])
+                    the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
 
                 elif key in ["stats_a", "stats_b"]:
                     the_modified_sensor_data[f"pm2.5_{key[-1]}"] = val["pm2.5"]
@@ -404,8 +414,7 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
                     the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
                     the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
-                    the_modified_sensor_data[f"time_stamp_{key[-1]}"] = self.__convert_unix_epoch_timestamp_to_psql_timestamp(
-                        val["time_stamp"])
+                    the_modified_sensor_data[f"time_stamp_{key[-1]}"] = val["time_stamp"]
 
                 else:
                     the_modified_sensor_data[key] = val
