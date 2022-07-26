@@ -240,15 +240,15 @@ class PurpleAirDataLogger():
             data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
-            pm1_0=single_sensor_data_dict["pm1_0"],
-            pm1_0_a=single_sensor_data_dict["pm1_0_a"],
-            pm1_0_b=single_sensor_data_dict["pm1_0_b"],
-            pm1_0_atm=single_sensor_data_dict["pm1_0_atm"],
-            pm1_0_atm_a=single_sensor_data_dict["pm1_0_atm_a"],
-            pm1_0_atm_b=single_sensor_data_dict["pm1_0_atm_b"],
-            pm1_0_cf_1=single_sensor_data_dict["pm1_0_cf_1"],
-            pm1_0_cf_1_a=single_sensor_data_dict["pm1_0_cf_1_a"],
-            pm1_0_cf_1_b=single_sensor_data_dict["pm1_0_cf_1_b"]
+            pm1_0=single_sensor_data_dict["pm1.0"],
+            pm1_0_a=single_sensor_data_dict["pm1.0_a"],
+            pm1_0_b=single_sensor_data_dict["pm1.0_b"],
+            pm1_0_atm=single_sensor_data_dict["pm1.0_atm"],
+            pm1_0_atm_a=single_sensor_data_dict["pm1.0_atm_a"],
+            pm1_0_atm_b=single_sensor_data_dict["pm1.0_atm_b"],
+            pm1_0_cf_1=single_sensor_data_dict["pm1.0_cf_1"],
+            pm1_0_cf_1_a=single_sensor_data_dict["pm1.0_cf_1_a"],
+            pm1_0_cf_1_b=single_sensor_data_dict["pm1.0_cf_1_b"]
         )
 
         self.__db_conn.run(
@@ -256,18 +256,18 @@ class PurpleAirDataLogger():
             data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
-            pm2_5_alt=single_sensor_data_dict["pm2_5_alt"],
-            pm2_5_alt_a=single_sensor_data_dict["pm2_5_alt_a"],
-            pm2_5_alt_b=single_sensor_data_dict["pm2_5_alt_b"],
-            pm2_5=single_sensor_data_dict["pm2_5"],
-            pm2_5_a=single_sensor_data_dict["pm2_5_a"],
-            pm2_5_b=single_sensor_data_dict["pm2_5_b"],
-            pm2_5_atm=single_sensor_data_dict["pm2_5_atm"],
-            pm2_5_atm_a=single_sensor_data_dict["pm2_5_atm_a"],
-            pm2_5_atm_b=single_sensor_data_dict["pm2_5_atm_b"],
-            pm2_5_cf_1=single_sensor_data_dict["pm2_5_cf_1"],
-            pm2_5_cf_1_a=single_sensor_data_dict["pm2_5_cf_1_a"],
-            pm2_5_cf_1_b=single_sensor_data_dict["pm2_5_cf_1_b"]
+            pm2_5_alt=single_sensor_data_dict["pm2.5_alt"],
+            pm2_5_alt_a=single_sensor_data_dict["pm2.5_alt_a"],
+            pm2_5_alt_b=single_sensor_data_dict["pm2.5_alt_b"],
+            pm2_5=single_sensor_data_dict["pm2.5"],
+            pm2_5_a=single_sensor_data_dict["pm2.5_a"],
+            pm2_5_b=single_sensor_data_dict["pm2.5_b"],
+            pm2_5_atm=single_sensor_data_dict["pm2.5_atm"],
+            pm2_5_atm_a=single_sensor_data_dict["pm2.5_atm_a"],
+            pm2_5_atm_b=single_sensor_data_dict["pm2.5_atm_b"],
+            pm2_5_cf_1=single_sensor_data_dict["pm2.5_cf_1"],
+            pm2_5_cf_1_a=single_sensor_data_dict["pm2.5_cf_1_a"],
+            pm2_5_cf_1_b=single_sensor_data_dict["pm2.5_cf_1_b"]
         )
 
         self.__db_conn.run(
@@ -275,24 +275,24 @@ class PurpleAirDataLogger():
             data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
-            pm2_5_10minute=single_sensor_data_dict["pm2_5_10minute"],
-            pm2_5_10minute_a=single_sensor_data_dict["pm2_5_10minute_a"],
-            pm2_5_10minute_b=single_sensor_data_dict["pm2_5_10minute_b"],
-            pm2_5_30minute=single_sensor_data_dict["pm2_5_30minute"],
-            pm2_5_30minute_a=single_sensor_data_dict["pm2_5_30minute_a"],
-            pm2_5_30minute_b=single_sensor_data_dict["pm2_5_30minute_b"],
-            pm2_5_60minute=single_sensor_data_dict["pm2_5_60minute"],
-            pm2_5_60minute_a=single_sensor_data_dict["pm2_5_60minute_a"],
-            pm2_5_60minute_b=single_sensor_data_dict["pm2_5_60minute_b"],
-            pm2_5_6hour=single_sensor_data_dict["pm2_5_6hour"],
-            pm2_5_6hour_a=single_sensor_data_dict["pm2_5_6hour_a"],
-            pm2_5_6hour_b=single_sensor_data_dict["pm2_5_6hour_b"],
-            pm2_5_24hour=single_sensor_data_dict["pm2_5_24hour"],
-            pm2_5_24hour_a=single_sensor_data_dict["pm2_5_24hour_a"],
-            pm2_5_24hour_b=single_sensor_data_dict["pm2_5_24hour_b"],
-            pm2_5_1week=single_sensor_data_dict["pm2_5_1week"],
-            pm2_5_1week_a=single_sensor_data_dict["pm2_5_1week_a"],
-            pm2_5_1week_b=single_sensor_data_dict["pm2_5_1week_b"]
+            pm2_5_10minute=single_sensor_data_dict["pm2.5_10minute"],
+            pm2_5_10minute_a=single_sensor_data_dict["pm2.5_10minute_a"],
+            pm2_5_10minute_b=single_sensor_data_dict["pm2.5_10minute_b"],
+            pm2_5_30minute=single_sensor_data_dict["pm2.5_30minute"],
+            pm2_5_30minute_a=single_sensor_data_dict["pm2.5_30minute_a"],
+            pm2_5_30minute_b=single_sensor_data_dict["pm2.5_30minute_b"],
+            pm2_5_60minute=single_sensor_data_dict["pm2.5_60minute"],
+            pm2_5_60minute_a=single_sensor_data_dict["pm2.5_60minute_a"],
+            pm2_5_60minute_b=single_sensor_data_dict["pm2.5_60minute_b"],
+            pm2_5_6hour=single_sensor_data_dict["pm2.5_6hour"],
+            pm2_5_6hour_a=single_sensor_data_dict["pm2.5_6hour_a"],
+            pm2_5_6hour_b=single_sensor_data_dict["pm2.5_6hour_b"],
+            pm2_5_24hour=single_sensor_data_dict["pm2.5_24hour"],
+            pm2_5_24hour_a=single_sensor_data_dict["pm2.5_24hour_a"],
+            pm2_5_24hour_b=single_sensor_data_dict["pm2.5_24hour_b"],
+            pm2_5_1week=single_sensor_data_dict["pm2.5_1week"],
+            pm2_5_1week_a=single_sensor_data_dict["pm2.5_1week_a"],
+            pm2_5_1week_b=single_sensor_data_dict["pm2.5_1week_b"]
         )
 
         self.__db_conn.run(
@@ -300,15 +300,15 @@ class PurpleAirDataLogger():
             data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
-            pm10_0=single_sensor_data_dict["pm10_0"],
-            pm10_0_a=single_sensor_data_dict["pm10_0_a"],
-            pm10_0_b=single_sensor_data_dict["pm10_0_b"],
-            pm10_0_atm=single_sensor_data_dict["pm10_0_atm"],
-            pm10_0_atm_a=single_sensor_data_dict["pm10_0_atm_a"],
-            pm10_0_atm_b=single_sensor_data_dict["pm10_0_atm_b"],
-            pm10_0_cf_1=single_sensor_data_dict["pm10_0_cf_1"],
-            pm10_0_cf_1_a=single_sensor_data_dict["pm10_0_cf_1_a"],
-            pm10_0_cf_1_b=single_sensor_data_dict["pm10_0_cf_1_b"]
+            pm10_0=single_sensor_data_dict["pm10.0"],
+            pm10_0_a=single_sensor_data_dict["pm10.0_a"],
+            pm10_0_b=single_sensor_data_dict["pm10.0_b"],
+            pm10_0_atm=single_sensor_data_dict["pm10.0_atm"],
+            pm10_0_atm_a=single_sensor_data_dict["pm10.0_atm_a"],
+            pm10_0_atm_b=single_sensor_data_dict["pm10.0_atm_b"],
+            pm10_0_cf_1=single_sensor_data_dict["pm10.0_cf_1"],
+            pm10_0_cf_1_a=single_sensor_data_dict["pm10.0_cf_1_a"],
+            pm10_0_cf_1_b=single_sensor_data_dict["pm10.0_cf_1_b"]
         )
 
         self.__db_conn.run(
