@@ -3038,7 +3038,7 @@
           ],
           "metricColumn": "none",
           "rawQuery": false,
-          "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(humidity) AS \"humidity\",\n  max(humidity_a) AS \"humidity_a\",\n  max(humidity_b) AS \"humidity_b\",\n  max(pressure) AS \"pressure\",\n  max(pressure_a) AS \"pressure_a\",\n  max(pressure_b) AS \"pressure_b\"\nFROM environmental_fields\nWHERE\n  $__timeFilter(data_time_stamp)\nGROUP BY 1\nORDER BY 1",
+          "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(humidity) AS \"humidity\",\n  max(humidity_a) AS \"humidity_a\",\n  max(humidity_b) AS \"humidity_b\",\n  max(pressure) AS \"pressure\",\n  max(pressure_a) AS \"pressure_a\",\n  max(pressure_b) AS \"pressure_b\",\n  max(temperature) AS \"temperature\",\n  max(temperature_a) AS \"temperature_a\",\n  max(temperature_b) AS \"temperature_b\"\nFROM environmental_fields\nWHERE\n  $__timeFilter(data_time_stamp)\nGROUP BY 1\nORDER BY 1",
           "refId": "A",
           "select": [
             [
@@ -3160,6 +3160,66 @@
                 ],
                 "type": "alias"
               }
+            ],
+            [
+              {
+                "params": [
+                  "temperature"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "temperature"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "temperature_a"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "temperature_a"
+                ],
+                "type": "alias"
+              }
+            ],
+            [
+              {
+                "params": [
+                  "temperature_b"
+                ],
+                "type": "column"
+              },
+              {
+                "params": [
+                  "max"
+                ],
+                "type": "aggregate"
+              },
+              {
+                "params": [
+                  "temperature_b"
+                ],
+                "type": "alias"
+              }
             ]
           ],
           "table": "environmental_fields",
@@ -3205,6 +3265,6 @@
   "timezone": "",
   "title": "PurpleAirAPI (PAA) Data Logger Grafana Dashboard",
   "uid": "kZwKqWzVk",
-  "version": 21,
+  "version": 22,
   "weekStart": ""
 }
