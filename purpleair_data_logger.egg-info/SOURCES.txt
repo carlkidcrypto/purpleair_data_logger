@@ -1,9 +1,0 @@
-LICENSE
-README.md
-setup.cfg
-setup.py
-purpleair_data_logger.egg-info/PKG-INFO
-purpleair_data_logger.egg-info/SOURCES.txt
-purpleair_data_logger.egg-info/dependency_links.txt
-purpleair_data_logger.egg-info/requires.txt
-purpleair_data_logger.egg-info/top_level.txt
