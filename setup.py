@@ -1,5 +1,12 @@
 #!/usr/bin/env python3
 from setuptools import setup, find_packages
+import os
+
+
+def read_file(filename):
+    with open(os.path.join(os.path.dirname(__file__), filename)) as file:
+        return file.read()
+
 
 setup(
     name="purpleair_data_logger",
@@ -7,6 +14,8 @@ setup(
     license="MIT",
     author="Carlos Santos",
     author_email="email@example.com",
+    long_description=read_file('README.md'),
+    long_description_content_type='text/markdown',
     packages=find_packages("purpleair_data_logger"),
     url="https://github.com/carlkid1499/purpleair_data_logger",
     keywords=["purpleair_data_logger", "purpleair", "data logger"],
