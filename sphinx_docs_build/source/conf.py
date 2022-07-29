@@ -22,7 +22,7 @@ copyright = '2022, carlkid1499'
 author = 'carlkid1499'
 
 # The full version, including alpha/beta/rc tags
-release = 'v0.0.3-alpha'
+release = 'v0.0.5-alpha'
 
 
 # -- General configuration ---------------------------------------------------
@@ -30,7 +30,7 @@ release = 'v0.0.3-alpha'
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ["sphinx.ext.autodoc"]
+extensions = ["sphinx.ext.autodoc", "sphinx.ext.githubpages"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
