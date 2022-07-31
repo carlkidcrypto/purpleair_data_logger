@@ -8,24 +8,26 @@
 
 import requests
 import json
-from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST
-
-PRINT_DEBUG_MSGS = True
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST, PRINT_DEBUG_MSGS
 
 
 def debug_log(debug_msg_string):
     """
         A helper function to print out
-        debug messages only if DEBUG is defined
+        debug messages only if DEBUG is defined as True in
+        'PurpleAirAPIConstants.py'. Messages will be the color
+        red.
     """
 
     if PRINT_DEBUG_MSGS:
-        print(debug_msg_string)
+        # Make debug messages red using ANSI escape code.
+        print("\033[1;31m" + debug_msg_string)
 
 
 class PurpleAirAPI():
     """
-        The PurpleAirAPI class to send only read requests
+        The PurpleAirAPI class designed to send valid
+        PurpleAirAPI requests.
     """
 
     def __init__(self, your_api_read_key):
@@ -271,10 +273,10 @@ class PurpleAirAPI():
 
     def __sanitize_return_data_from_paa(paa_return_data):
         """
+            A method for: Not all sensors support all field names, so we check that the keys exist
+            in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
         """
 
-        # Not all sensors support all field names, so we check that the keys exist
-        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
         for key_str in ACCEPTED_FIELD_NAMES_LIST:
             if key_str not in paa_return_data.keys():
                 if key_str == "firmware_upgrade":

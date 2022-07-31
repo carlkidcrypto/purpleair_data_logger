@@ -6,5 +6,5 @@ purple_air_data_logger
 
    PurpleAirAPI
    PurpleAirAPIConstants
-   PurpleAirDataLogger
-   PurpleAirDataLoggerPSQLStatements
+   PurpleAirPSQLDataLogger
+   PurpleAirPSQLQueryStatements

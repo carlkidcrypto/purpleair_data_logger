@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PurpleAirDataLogger module" href="PurpleAirDataLogger.html" />
+    <link rel="next" title="PurpleAirPSQLDataLogger module" href="PurpleAirPSQLDataLogger.html" />
     <link rel="prev" title="PurpleAirAPI module" href="PurpleAirAPI.html" /> 
 </head>
 
@@ -43,8 +43,8 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">purple_air_data_logger</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirAPI.html">PurpleAirAPI module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirAPIConstants module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerPSQLStatements.html">PurpleAirDataLoggerPSQLStatements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 </ul>
 </li>
 </ul>
@@ -77,12 +77,18 @@
   <section id="module-PurpleAirAPIConstants">
 <span id="purpleairapiconstants-module"></span><h1>PurpleAirAPIConstants module<a class="headerlink" href="#module-PurpleAirAPIConstants" title="Permalink to this heading"></a></h1>
 <p>Copyright 2022 carlkid1499, All rights reserved.
-A python3 constants with constants for use in PurpleAirAPIConstants.</p>
+A python with constants with for use in PurpleAirAPI.py</p>
 <dl class="py data">
 <dt class="sig sig-object py" id="PurpleAirAPIConstants.ACCEPTED_FIELD_NAMES_LIST">
 <span class="sig-prename descclassname"><span class="pre">PurpleAirAPIConstants.</span></span><span class="sig-name descname"><span class="pre">ACCEPTED_FIELD_NAMES_LIST</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">['name',</span> <span class="pre">'icon',</span> <span class="pre">'model',</span> <span class="pre">'hardware',</span> <span class="pre">'location_type',</span> <span class="pre">'private',</span> <span class="pre">'latitude',</span> <span class="pre">'longitude',</span> <span class="pre">'altitude',</span> <span class="pre">'position_rating',</span> <span class="pre">'led_brightness',</span> <span class="pre">'firmware_version',</span> <span class="pre">'firmware_upgrade',</span> <span class="pre">'rssi',</span> <span class="pre">'uptime',</span> <span class="pre">'pa_latency',</span> <span class="pre">'memory',</span> <span class="pre">'last_seen',</span> <span class="pre">'last_modified',</span> <span class="pre">'date_created',</span> <span class="pre">'channel_state',</span> <span class="pre">'channel_flags',</span> <span class="pre">'channel_flags_manual',</span> <span class="pre">'channel_flags_auto',</span> <span class="pre">'confidence',</span> <span class="pre">'confidence_manual',</span> <span class="pre">'confidence_auto',</span> <span class="pre">'humidity',</span> <span class="pre">'humidity_a',</span> <span class="pre">'humidity_b',</span> <span class="pre">'temperature',</span> <span class="pre">'temperature_a',</span> <span class="pre">'temperature_b',</span> <span class="pre">'pressure',</span> <span class="pre">'pressure_a',</span> <span class="pre">'pressure_b',</span> <span class="pre">'voc',</span> <span class="pre">'voc_a',</span> <span class="pre">'voc_b',</span> <span class="pre">'ozone1',</span> <span class="pre">'analog_input',</span> <span class="pre">'pm1.0',</span> <span class="pre">'pm1.0_a',</span> <span class="pre">'pm1.0_b',</span> <span class="pre">'pm1.0_atm',</span> <span class="pre">'pm1.0_atm_a',</span> <span class="pre">'pm1.0_atm_b',</span> <span class="pre">'pm1.0_cf_1',</span> <span class="pre">'pm1.0_cf_1_a',</span> <span class="pre">'pm1.0_cf_1_b',</span> <span class="pre">'pm2.5_alt',</span> <span class="pre">'pm2.5_alt_a',</span> <span class="pre">'pm2.5_alt_b',</span> <span class="pre">'pm2.5',</span> <span class="pre">'pm2.5_a',</span> <span class="pre">'pm2.5_b',</span> <span class="pre">'pm2.5_atm',</span> <span class="pre">'pm2.5_atm_a',</span> <span class="pre">'pm2.5_atm_b',</span> <span class="pre">'pm2.5_cf_1',</span> <span class="pre">'pm2.5_cf_1_a',</span> <span class="pre">'pm2.5_cf_1_b',</span> <span class="pre">'pm2.5_10minute',</span> <span class="pre">'pm2.5_10minute_a',</span> <span class="pre">'pm2.5_10minute_b',</span> <span class="pre">'pm2.5_30minute',</span> <span class="pre">'pm2.5_30minute_a',</span> <span class="pre">'pm2.5_30minute_b',</span> <span class="pre">'pm2.5_60minute',</span> <span class="pre">'pm2.5_60minute_a',</span> <span class="pre">'pm2.5_60minute_b',</span> <span class="pre">'pm2.5_6hour',</span> <span class="pre">'pm2.5_6hour_a',</span> <span class="pre">'pm2.5_6hour_b',</span> <span class="pre">'pm2.5_24hour',</span> <span class="pre">'pm2.5_24hour_a',</span> <span class="pre">'pm2.5_24hour_b',</span> <span class="pre">'pm2.5_1week',</span> <span class="pre">'pm2.5_1week_a',</span> <span class="pre">'pm2.5_1week_b',</span> <span class="pre">'pm10.0',</span> <span class="pre">'pm10.0_a',</span> <span class="pre">'pm10.0_b',</span> <span class="pre">'pm10.0_atm',</span> <span class="pre">'pm10.0_atm_a',</span> <span class="pre">'pm10.0_atm_b',</span> <span class="pre">'pm10.0_cf_1',</span> <span class="pre">'pm10.0_cf_1_a',</span> <span class="pre">'pm10.0_cf_1_b',</span> <span class="pre">'0.3_um_count',</span> <span class="pre">'0.3_um_count_a',</span> <span class="pre">'0.3_um_count_b',</span> <span class="pre">'0.5_um_count',</span> <span class="pre">'0.5_um_count_a',</span> <span class="pre">'0.5_um_count_b',</span> <span class="pre">'1.0_um_count',</span> <span class="pre">'1.0_um_count_a',</span> <span class="pre">'1.0_um_count_b',</span> <span class="pre">'2.5_um_count',</span> <span class="pre">'2.5_um_count_a',</span> <span class="pre">'2.5_um_count_b',</span> <span class="pre">'5.0_um_count',</span> <span class="pre">'5.0_um_count_a',</span> <span class="pre">'5.0_um_count_b',</span> <span class="pre">'10.0_um_count',</span> <span class="pre">'10.0_um_count_a',</span> <span class="pre">'10.0_um_count_b',</span> <span class="pre">'primary_id_a',</span> <span class="pre">'primary_key_a',</span> <span class="pre">'secondary_id_a',</span> <span class="pre">'secondary_key_a',</span> <span class="pre">'primary_id_b',</span> <span class="pre">'primary_key_b',</span> <span class="pre">'secondary_id_b',</span> <span class="pre">'secondary_key_b']</span></em><a class="headerlink" href="#PurpleAirAPIConstants.ACCEPTED_FIELD_NAMES_LIST" title="Permalink to this definition"></a></dt>
 <dd><p>Store the dict/json keys to access data fields.
 These keys are derived from the PurpleAir documentation: <a class="reference external" href="https://api.purpleair.com/#api-sensors-get-sensor-data">https://api.purpleair.com/#api-sensors-get-sensor-data</a></p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="PurpleAirAPIConstants.PRINT_DEBUG_MSGS">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirAPIConstants.</span></span><span class="sig-name descname"><span class="pre">PRINT_DEBUG_MSGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#PurpleAirAPIConstants.PRINT_DEBUG_MSGS" title="Permalink to this definition"></a></dt>
+<dd><p>A constant to see if debug statements are enabled in the PurpleAirAPI module.</p>
 </dd></dl>
 
 </section>
@@ -92,7 +98,7 @@ These keys are derived from the PurpleAir documentation: <a class="reference ext
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="PurpleAirAPI.html" class="btn btn-neutral float-left" title="PurpleAirAPI module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="PurpleAirDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="PurpleAirPSQLDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirPSQLDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
