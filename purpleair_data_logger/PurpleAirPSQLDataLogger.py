@@ -14,13 +14,13 @@
 
 from .PurpleAirAPI import PurpleAirAPI
 from .PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
-                                          CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
-                                          CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                          CREATE_THINGSPEAK_FIELDS)
+                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+                                           PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+                                           PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
+                                           CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+                                           CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+                                           CREATE_THINGSPEAK_FIELDS)
 import pg8000
 import argparse
 from time import sleep
@@ -106,6 +106,34 @@ class PurpleAirDataLogger():
             A method to set TimescaleDB data compression policies. More information
             can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
+
+        self.__db_conn.run(
+            """ALTER TABLE station_information_and_status_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE environmental_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE miscellaneous_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE pm1_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE pm2_5_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE pm2_5_pseudo_average_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE pm10_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE particle_count_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
+        self.__db_conn.run(
+            """ALTER TABLE thingspeak_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                timescaledb.compress_segmentby = 'sensor_index'""")
 
         self.__db_conn.run(
             """SELECT add_compression_policy('station_information_and_status_fields', INTERVAL '14d', if_not_exists => TRUE)""")
