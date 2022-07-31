@@ -12,8 +12,8 @@
     single request rather than individual requests in succession."
 """
 
-from PurpleAirAPI import PurpleAirAPI
-from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+from .PurpleAirAPI import PurpleAirAPI
+from .PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
                                           PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
@@ -50,6 +50,9 @@ class PurpleAirDataLogger():
 
         # Convert our PSQL tables to hyper tables
         self.__convert_psql_tables_to_hyper_tables()
+
+        # Create compression policies
+        self.__configure_data_compression_policies()
 
         # Commit to the db
         self.__db_conn.commit()
@@ -97,7 +100,7 @@ class PurpleAirDataLogger():
             """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
         self.__db_conn.run(
             """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-    
+
     def __configure_data_compression_policies(self):
         """
             A method to set TimescaleDB data compression policies. More information
@@ -122,7 +125,6 @@ class PurpleAirDataLogger():
             """SELECT add_compression_policy('particle_count_fields', INTERVAL '14d', if_not_exists => TRUE)""")
         self.__db_conn.run(
             """SELECT add_compression_policy('thingspeak_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-
 
     def __convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """

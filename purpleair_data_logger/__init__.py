@@ -1,0 +1,1 @@
+from purpleair_data_logger import PurpleAirPSQLDataLogger
