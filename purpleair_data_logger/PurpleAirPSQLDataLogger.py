@@ -406,9 +406,6 @@ class PurpleAirDataLogger():
                 f"Requesting new data from a sensor with index {sensor_index}...")
             sensor_data = self.get_sensor_data(sensor_index)
 
-            # Do some validation work.
-            field_names_list = self.get_accepted_field_names_list()
-
             # Let's make it easier on ourselves by making the sensor data one level deep.
             # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
             # We turn it into just json["KEYS..."].
