@@ -2,8 +2,9 @@ purple_air_data_logger
 ======================
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 5
 
    PurpleAirAPI
+   PurpleAirAPIConstants
    PurpleAirDataLogger
    PurpleAirDataLoggerPSQLStatements

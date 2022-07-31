@@ -8,6 +8,7 @@
 
 import requests
 import json
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST
 
 PRINT_DEBUG_MSGS = True
 
@@ -149,7 +150,7 @@ class PurpleAirAPI():
             debug_log(the_request_text_as_json)
             my_request.close()
             del my_request
-            return the_request_text_as_json
+            return self.__sanitize_return_data_from_paa(the_request_text_as_json)
 
         elif my_request.status_code == 400:
             the_request_text_as_json = json.loads(my_request.text)
@@ -267,3 +268,21 @@ class PurpleAirAPI():
             my_request.close()
             raise ValueError(
                 f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
+
+    def __sanitize_return_data_from_paa(paa_return_data):
+        """
+        """
+
+        # Not all sensors support all field names, so we check that the keys exist
+        # in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
+        for key_str in ACCEPTED_FIELD_NAMES_LIST:
+            if key_str not in paa_return_data.keys():
+                if key_str == "firmware_upgrade":
+                    # Add it to our data dict, but make it an empty string since its a text type.
+                    paa_return_data[key_str] = ""
+
+                elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
+                    # Add it to our data dict, but make it an 0.0 since its a float type.
+                    paa_return_data[key_str] = 0.0
+
+        return paa_return_data

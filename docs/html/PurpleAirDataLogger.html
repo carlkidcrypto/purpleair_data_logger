@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="PurpleAirDataLoggerPSQLStatements module" href="PurpleAirDataLoggerPSQLStatements.html" />
-    <link rel="prev" title="PurpleAirAPI module" href="PurpleAirAPI.html" /> 
+    <link rel="prev" title="PurpleAirAPIConstants module" href="PurpleAirAPIConstants.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -42,6 +42,7 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">purple_air_data_logger</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirAPI.html">PurpleAirAPI module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPIConstants.html">PurpleAirAPIConstants module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerPSQLStatements.html">PurpleAirDataLoggerPSQLStatements module</a></li>
 </ul>
@@ -89,12 +90,6 @@ single request rather than individual requests in succession.”</p>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
 database. Then we will use Grafana to visualize said data.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.get_accepted_field_names_list">
-<span class="sig-name descname"><span class="pre">get_accepted_field_names_list</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.get_accepted_field_names_list" title="Permalink to this definition"></a></dt>
-<dd><p>Get the accepted field data names (keys) in a string list.</p>
-</dd></dl>
-
 <dl class="py method">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.get_multiple_sensors_data">
 <span class="sig-name descname"><span class="pre">get_multiple_sensors_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_since</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_age</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.get_multiple_sensors_data" title="Permalink to this definition"></a></dt>
@@ -170,7 +165,7 @@ or error checking. That is upto the caller.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="PurpleAirAPI.html" class="btn btn-neutral float-left" title="PurpleAirAPI module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PurpleAirAPIConstants.html" class="btn btn-neutral float-left" title="PurpleAirAPIConstants module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="PurpleAirDataLoggerPSQLStatements.html" class="btn btn-neutral float-right" title="PurpleAirDataLoggerPSQLStatements module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

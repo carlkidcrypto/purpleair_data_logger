@@ -35,40 +35,6 @@ class PurpleAirDataLogger():
         # Make one instance of our PurpleAirAPI class
         self.__paa_obj = PurpleAirAPI(PurpleAirAPIReadKey)
 
-        # Store the dict/json keys to access data fields.
-        # These keys are derived from the PurpleAir documentation: https://api.purpleair.com/#api-sensors-get-sensor-data
-        self.__accepted_field_names_list = [
-            # Station information and status fields:
-            "name", "icon", "model", "hardware", "location_type", "private", "latitude", "longitude", "altitude", "position_rating", "led_brightness", "firmware_version", "firmware_upgrade", "rssi", "uptime", "pa_latency", "memory", "last_seen", "last_modified", "date_created", "channel_state", "channel_flags", "channel_flags_manual", "channel_flags_auto", "confidence", "confidence_manual", "confidence_auto",
-
-            # Environmental fields:
-            "humidity", "humidity_a", "humidity_b", "temperature", "temperature_a", "temperature_b", "pressure", "pressure_a", "pressure_b",
-
-            # Miscellaneous fields:
-            "voc", "voc_a", "voc_b", "ozone1", "analog_input",
-
-            # PM1.0 fields:
-            "pm1.0", "pm1.0_a", "pm1.0_b", "pm1.0_atm", "pm1.0_atm_a", "pm1.0_atm_b", "pm1.0_cf_1", "pm1.0_cf_1_a",
-            "pm1.0_cf_1_b",
-
-            # PM2.5 fields:
-            "pm2.5_alt", "pm2.5_alt_a", "pm2.5_alt_b", "pm2.5", "pm2.5_a", "pm2.5_b", "pm2.5_atm", "pm2.5_atm_a", "pm2.5_atm_b", "pm2.5_cf_1", "pm2.5_cf_1_a", "pm2.5_cf_1_b",
-
-            # PM2.5 pseudo (simple running) average fields:
-            # Note: These are inside the return json as json["sensor"]["stats"]. They are averages of the two sensors.
-            # sensor 'a' and 'b' sensor be. Each sensors data is inside json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
-            "pm2.5_10minute", "pm2.5_10minute_a", "pm2.5_10minute_b", "pm2.5_30minute", "pm2.5_30minute_a", "pm2.5_30minute_b", "pm2.5_60minute", "pm2.5_60minute_a", "pm2.5_60minute_b", "pm2.5_6hour", "pm2.5_6hour_a", "pm2.5_6hour_b",
-            "pm2.5_24hour", "pm2.5_24hour_a", "pm2.5_24hour_b", "pm2.5_1week", "pm2.5_1week_a", "pm2.5_1week_b",
-
-            # PM10.0 fields:
-            "pm10.0", "pm10.0_a", "pm10.0_b", "pm10.0_atm", "pm10.0_atm_a", "pm10.0_atm_b", "pm10.0_cf_1", "pm10.0_cf_1_a", "pm10.0_cf_1_b",
-
-            # Particle count fields:
-            "0.3_um_count", "0.3_um_count_a", "0.3_um_count_b", "0.5_um_count", "0.5_um_count_a", "0.5_um_count_b", "1.0_um_count", "1.0_um_count_a", "1.0_um_count_b", "2.5_um_count", "2.5_um_count_a", "2.5_um_count_b", "5.0_um_count", "5.0_um_count_a", "5.0_um_count_b", "10.0_um_count", "10.0_um_count_a", "10.0_um_count_b",
-
-            # ThingSpeak fields, used to retrieve data from api.thingspeak.com:
-            "primary_id_a", "primary_key_a", "secondary_id_a", "secondary_key_a", "primary_id_b", "primary_key_b", "secondary_id_b", "secondary_key_b"
-        ]
         # Make our psql database connection
         self.__db_conn = psql_db_conn
 
@@ -135,13 +101,6 @@ class PurpleAirDataLogger():
         """
 
         return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
-
-    def get_accepted_field_names_list(self):
-        """
-            Get the accepted field data names (keys) in a string list.
-        """
-
-        return self.__accepted_field_names_list
 
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
@@ -418,18 +377,6 @@ class PurpleAirDataLogger():
 
                 else:
                     the_modified_sensor_data[key] = val
-
-            # Not all sensors support all field names, so we check that the keys exist
-            # in the sensor data. If not we add it in with a NULL equivalent. i.e 0, "", etc.
-            for key_str in field_names_list:
-                if key_str not in the_modified_sensor_data.keys():
-                    if key_str == "firmware_upgrade":
-                        # Add it to our data dict, but make it an empty string since its a TEXT psql type.
-                        the_modified_sensor_data[key_str] = ""
-
-                    elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
-                        # Add it to our data dict, but make it an 0.0 since its a FLOAT psql type.
-                        the_modified_sensor_data[key_str] = 0.0
 
             self.store_sensor_data(the_modified_sensor_data)
             print("Waiting 65 seconds before requesting new data again...")
