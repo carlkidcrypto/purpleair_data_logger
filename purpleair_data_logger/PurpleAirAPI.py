@@ -152,7 +152,7 @@ class PurpleAirAPI():
             debug_log(the_request_text_as_json)
             my_request.close()
             del my_request
-            return self.__sanitize_return_data_from_paa(the_request_text_as_json)
+            return self.__sanitize_sensor_data_from_paa(the_request_text_as_json["sensor"])
 
         elif my_request.status_code == 400:
             the_request_text_as_json = json.loads(my_request.text)
@@ -271,10 +271,11 @@ class PurpleAirAPI():
             raise ValueError(
                 f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
 
-    def __sanitize_return_data_from_paa(self, paa_return_data):
+    def __sanitize_sensor_data_from_paa(self, paa_return_data):
         """
             A method for: Not all sensors support all field names, so we check that the keys exist
             in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
+            We access the "sensor" key inside this method.
         """
 
         for key_str in ACCEPTED_FIELD_NAMES_LIST:
