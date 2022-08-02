@@ -8,7 +8,7 @@
 
 import requests
 import json
-from .PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST, PRINT_DEBUG_MSGS
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST, PRINT_DEBUG_MSGS
 
 
 def debug_log(debug_msg_string):

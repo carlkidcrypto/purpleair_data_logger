@@ -12,15 +12,15 @@
     single request rather than individual requests in succession."
 """
 
-from .PurpleAirAPI import PurpleAirAPI
-from .PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
-                                          CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
-                                          CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                          CREATE_THINGSPEAK_FIELDS)
+from PurpleAirAPI import PurpleAirAPI
+from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+                                           PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+                                           PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
+                                           CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+                                           CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+                                           CREATE_THINGSPEAK_FIELDS)
 import pg8000
 import argparse
 from time import sleep
@@ -456,19 +456,29 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Collect data from PurpleAir sensors and insert into a database!")
     parser.add_argument("-db_usr",  required=True, dest="db_usr",
-                        type=str, help="The PSQL database user")
+                        type=str, help="""The PSQL database user""")
     parser.add_argument("-db_host", required=False, default="localhost",
-                        dest="db_host", type=str, help="The PSQL database host")
+                        dest="db_host", type=str, help="""The PSQL database host""")
     parser.add_argument("-db", required=True, dest="db",
-                        type=str, help="The PSQL database name")
+                        type=str, help="""The PSQL database name""")
     parser.add_argument("-db_port", required=False, default=5432,
-                        dest="db_port", type=str, help="The PSQL database port number")
+                        dest="db_port", type=str, help="""The PSQL database port number""")
     parser.add_argument("-db_pwd",  required=False, default=None,
-                        dest="db_pwd", type=str, help="The PSQL database password")
+                        dest="db_pwd", type=str, help="""The PSQL database password""")
     parser.add_argument("-paa_read_key",  required=True,
-                        dest="paa_read_key", type=str, help="The PurpleAirAPI Read key")
-    parser.add_argument("-paa_sensor_index",  required=True,
-                        dest="paa_sensor_index", type=int, help="The PurpleAirAPI sensor index")
+                        dest="paa_read_key", type=str, help="""The PurpleAirAPI Read key""")
+    parser.add_argument("-paa_sensor_index",  required=False,
+                        dest="paa_sensor_index", type=int, help="""The PurpleAirAPI sensor index
+                        for sending a single sensor request""")
+    parser.add_argument("-paa_multiple_sensor_request_flag",  required=False, default=False,
+                        dest="paa_multiple_sensor_request_flag", type=bool, help="""This is a flag
+                        that by default is false. When set to true, we expect a json config file with
+                        parameters that will tell us how to format our multiple sensor request.""")
+    parser.add_argument("-paa_multiple_sensor_request_json_file",  required=False,
+                        dest="paa_multiple_sensor_request_json_file", type=str, help="""If
+                        paa_multiple_sensor_request_flag is defined then this parameter is required.
+                        It shall be the path to a json file containing the parameters to send a
+                        multiple sensor request.""")
 
     args = parser.parse_args()
 
