@@ -250,7 +250,7 @@ class PurpleAirAPI():
 
             # We haven't added any yet. The first one will look different that
             # the rest
-            if opt_param:
+            if opt_param is None:
                 request_url = request_url + \
                     f"&{opt_param}={str(val)}"
 
