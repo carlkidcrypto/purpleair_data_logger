@@ -489,8 +489,8 @@ if __name__ == "__main__":
     parser.add_argument("-paa_sensor_index",  required=False,
                         dest="paa_sensor_index", type=int, help="""The PurpleAirAPI sensor index
                         for sending a single sensor request""")
-    parser.add_argument("-paa_multiple_sensor_request_flag",  action="store_true", required=False, default=False,
-                        dest="paa_multiple_sensor_request_flag", type=bool, help="""This is a flag
+    parser.add_argument("-paa_multiple_sensor_request_flag",  action="store_true", required=False,
+                        dest="paa_multiple_sensor_request_flag", help="""This is a flag
                         that by default is false. When set to true, we expect a json config file with
                         parameters that will tell us how to format our multiple sensor request.""")
     parser.add_argument("-paa_multiple_sensor_request_json_file",  required=False,
