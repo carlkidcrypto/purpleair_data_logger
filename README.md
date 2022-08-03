@@ -31,10 +31,10 @@ options:
 
 ### PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE Example
 
-Out of the parameters listed below only "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation
+Out of the parameters listed below only "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
 ```json
 {
-    "fields": "A string comma delimited list of fields to retreive",
+    "fields": "A string comma delimited list of fields to retrieve",
     "location_type": null,
     "read_keys": null,
     "show_only": null,

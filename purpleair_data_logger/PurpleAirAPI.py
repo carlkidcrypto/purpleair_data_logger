@@ -133,14 +133,14 @@ class PurpleAirAPI():
 
         # Add to the request_url string depending on what optional parameters are
         # passed in
-        if read_key and fields:
+        if read_key is not None and fields is not None:
             request_url = request_url + \
                 f"?read_key={str(read_key)}&fields={str(fields)}"
 
-        elif not read_key and fields:
+        elif read_key is None and fields is not None:
             request_url = request_url + f"?fields={str(fields)}"
 
-        elif read_key and not fields:
+        elif read_key is not None and fields is None:
             request_url = request_url + f"?read_key={str(read_key)}"
 
         debug_log(request_url)

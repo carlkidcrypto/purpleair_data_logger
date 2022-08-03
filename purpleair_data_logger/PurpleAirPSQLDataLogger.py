@@ -469,6 +469,7 @@ class PurpleAirDataLogger():
                                                           selng=json_config_file["selng"],
                                                           selat=json_config_file["selat"])
             debug_log(f"""The sensors_data: {sensors_data}\n\n""")
+            sleep(self.__request_every_x)
 
 
 if __name__ == "__main__":
