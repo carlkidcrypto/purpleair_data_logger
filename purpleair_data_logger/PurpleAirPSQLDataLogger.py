@@ -14,17 +14,18 @@
 
 from PurpleAirAPI import PurpleAirAPI
 from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-                                           PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-                                           PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
-                                           CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
-                                           CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                           CREATE_THINGSPEAK_FIELDS)
+                                          PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+                                          PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+                                          PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+                                          PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
+                                          CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+                                          CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+                                          CREATE_THINGSPEAK_FIELDS)
 import pg8000
 import argparse
 from time import sleep
 from datetime import datetime, timezone
+import json
 
 
 class PurpleAirDataLogger():
@@ -56,6 +57,9 @@ class PurpleAirDataLogger():
 
         # Commit to the db
         self.__db_conn.commit()
+
+        # Define how often we send requests
+        self.__request_every_x = 65
 
     def __create_psql_db_tables(self):
         """
@@ -402,8 +406,9 @@ class PurpleAirDataLogger():
 
         while True:
             # We will request data once every 65 seconds.
-            print(
-                f"Requesting new data from a sensor with index {sensor_index}...")
+            print(f"""Requesting new data from a sensor with index
+                      {sensor_index}...""")
+
             sensor_data = self.get_sensor_data(sensor_index)
 
             # Let's make it easier on ourselves by making the sensor data one level deep.
@@ -439,17 +444,28 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[key] = val
 
             self.store_sensor_data(the_modified_sensor_data)
-            print("Waiting 65 seconds before requesting new data again...")
-            sleep(65)
+            print(f"""Waiting {self.__request_every_x} seconds before
+                  requesting new data again...""")
+            sleep(self.__request_every_x)
 
-    def run_loop_for_storing_multiple_sensors_data(self, fields):
+    def run_loop_for_storing_multiple_sensors_data(self, json_config_file):
         """
             A method containing the run loop for inserting a single sensors' data into the db.
 
-            :param str fields: A comma delmited string of valid field names.
+            :param dict json_config_file: A load dictionary object of the json config file using json load.
         """
 
-        raise NotImplementedError
+        while True:
+            sensors_data = self.get_multiple_sensors_data(fields=json_config_file["fields"],
+                                                          location_type=json_config_file["location_type"],
+                                                          read_keys=json_config_file["read_keys"],
+                                                          show_only=json_config_file["show_only"],
+                                                          modified_since=json_config_file["modified_since"],
+                                                          max_age=json_config_file["max_age"],
+                                                          nwlng=json_config_file["nwlng"],
+                                                          nwlat=json_config_file["nwlat"],
+                                                          selng=json_config_file["selng"],
+                                                          selat=json_config_file["selat"])
 
 
 if __name__ == "__main__":
@@ -482,7 +498,22 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # Make the PSQL DB connection with CML args
+    # Place holders that are used later down
+    the_json_file = None
+    file_obj = None
+
+    # First check for the paa_multiple_sensor_request_flag
+    if args.paa_multiple_sensor_request_flag:
+        # Then we must have paa_multiple_sensor_request_json_file as well
+        if not args.paa_multiple_sensor_request_json_file:
+            raise ValueError("""paa_multiple_sensor_request_json_file must be
+                                provided when paa_multiple_sensor_request_flag is provided""")
+
+        # Now load up that json file
+        file_obj = open(args.paa_multiple_sensor_request_json_file, "r")
+        the_json_file = json.load(file_obj)
+
+    # Second make the PSQL DB connection with CML args
     the_psql_db_conn = pg8000.connect(
         user=args.db_usr,
         host=args.db_host,
@@ -490,9 +521,15 @@ if __name__ == "__main__":
         port=args.db_port,
         password=args.db_pwd)
 
-    # Make an instance our our data logger
+    # Third make an instance our our data logger
     the_paa_data_logger = PurpleAirDataLogger(
         args.paa_read_key, the_psql_db_conn)
 
-    the_paa_data_logger.run_loop_for_storing_single_sensor_data(
-        args.paa_sensor_index)
+    # Fourth choose what run method to execute depending on paa_multiple_sensor_request_flag
+    if args.paa_multiple_sensor_request_flag:
+        the_paa_data_logger.run_loop_for_storing_multiple_sensors_data(
+            the_json_file)
+
+    else:
+        the_paa_data_logger.run_loop_for_storing_single_sensor_data(
+            args.paa_sensor_index)

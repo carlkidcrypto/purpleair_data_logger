@@ -35,15 +35,15 @@ Out of the parameters listed below only "fields" is required. The others are all
 ```json
 {
     "fields": "A string comma delimited list of fields to retreive",
-    "location_type": 0,
-    "read_keys": "",
-    "show_only": "",
-    "modified_since": 0,
-    "max_age": 0,
-    "nwlng" : 0,
-    "nwlat": 0,
-    "selng": 0,
-    "selat": 0
+    "location_type": null,
+    "read_keys": null,
+    "show_only": null,
+    "modified_since": null,
+    "max_age": null,
+    "nwlng" : null,
+    "nwlat": null,
+    "selng": null,
+    "selat": null
 }
 ```
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. https://api.purpleair.com/#api-sensors-get-sensors-data
