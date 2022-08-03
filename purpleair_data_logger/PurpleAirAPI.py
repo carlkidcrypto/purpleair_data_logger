@@ -143,9 +143,9 @@ class PurpleAirAPI():
         elif read_key and not fields:
             request_url = request_url + f"?read_key={str(read_key)}"
 
+        debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
-        debug_log(my_request)
 
         if my_request.status_code == 200:
             # We good :) get the request text
@@ -254,9 +254,9 @@ class PurpleAirAPI():
                 request_url = request_url + \
                     f"&{opt_param}={str(val)}"
 
+        debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
-        debug_log(my_request)
 
         if my_request.status_code == 200:
             # We good :) get the request text
