@@ -390,7 +390,7 @@ class PurpleAirDataLogger():
             :return A python dictionary with data.
         """
 
-        return self.__paa_obj.request_multiple_sensors_data(self, fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
+        return self.__paa_obj.request_multiple_sensors_data(fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
 
     def store_multiple_sensors_data(self):
         """
