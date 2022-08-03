@@ -145,6 +145,7 @@ class PurpleAirAPI():
 
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
+        debug_log(my_request)
 
         if my_request.status_code == 200:
             # We good :) get the request text
@@ -255,6 +256,7 @@ class PurpleAirAPI():
 
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
+        debug_log(my_request)
 
         if my_request.status_code == 200:
             # We good :) get the request text
