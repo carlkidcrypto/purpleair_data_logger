@@ -27,6 +27,8 @@ from time import sleep
 from datetime import datetime, timezone
 import json
 
+from purpleair_data_logger.PurpleAirAPI import debug_log
+
 
 class PurpleAirDataLogger():
     """
@@ -406,7 +408,7 @@ class PurpleAirDataLogger():
 
         while True:
             # We will request data once every 65 seconds.
-            print(f"""Requesting new data from a sensor with index
+            debug_log(f"""Requesting new data from a sensor with index
                       {sensor_index}...""")
 
             sensor_data = self.get_sensor_data(sensor_index)
@@ -444,7 +446,7 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[key] = val
 
             self.store_sensor_data(the_modified_sensor_data)
-            print(f"""Waiting {self.__request_every_x} seconds before
+            debug_log(f"""Waiting {self.__request_every_x} seconds before
                   requesting new data again...""")
             sleep(self.__request_every_x)
 
@@ -466,6 +468,7 @@ class PurpleAirDataLogger():
                                                           nwlat=json_config_file["nwlat"],
                                                           selng=json_config_file["selng"],
                                                           selat=json_config_file["selat"])
+            debug_log(f"""The sensors_data: {sensors_data}\n\n""")
 
 
 if __name__ == "__main__":
@@ -486,7 +489,7 @@ if __name__ == "__main__":
     parser.add_argument("-paa_sensor_index",  required=False,
                         dest="paa_sensor_index", type=int, help="""The PurpleAirAPI sensor index
                         for sending a single sensor request""")
-    parser.add_argument("-paa_multiple_sensor_request_flag",  required=False, default=False,
+    parser.add_argument("-paa_multiple_sensor_request_flag",  action="store_true", required=False, default=False,
                         dest="paa_multiple_sensor_request_flag", type=bool, help="""This is a flag
                         that by default is false. When set to true, we expect a json config file with
                         parameters that will tell us how to format our multiple sensor request.""")
