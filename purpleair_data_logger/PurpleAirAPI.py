@@ -21,7 +21,7 @@ def debug_log(debug_msg_string):
 
     if PRINT_DEBUG_MSGS:
         # Make debug messages red using ANSI escape code.
-        print("\033[1;31m" + str(debug_msg_string))
+        print("\033[1;31m" + str(debug_msg_string) + "\x1b[0m")
 
 
 class PurpleAirAPI():

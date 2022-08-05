@@ -12,7 +12,7 @@
     single request rather than individual requests in succession."
 """
 
-from PurpleAirAPI import PurpleAirAPI
+from PurpleAirAPI import PurpleAirAPI, debug_log
 from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
@@ -26,8 +26,6 @@ import argparse
 from time import sleep
 from datetime import datetime, timezone
 import json
-
-from purpleair_data_logger.PurpleAirAPI import debug_log
 
 
 class PurpleAirDataLogger():
@@ -452,9 +450,9 @@ class PurpleAirDataLogger():
 
     def run_loop_for_storing_multiple_sensors_data(self, json_config_file):
         """
-            A method containing the run loop for inserting a single sensors' data into the db.
+            A method containing the run loop for inserting a multiple sensors' data into the db.
 
-            :param dict json_config_file: A load dictionary object of the json config file using json load.
+            :param dict json_config_file: A dictionary object of the json config file using json load.
         """
 
         while True:
