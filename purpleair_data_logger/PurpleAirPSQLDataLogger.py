@@ -496,8 +496,13 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[str(extracted_fields[data_index])] = data_item
 
                 # Before we store the data, we must make sure all fields have been included
+                # Our psql store statements expect all fields regardless of what we request.
                 for field in ACCEPTED_FIELD_NAMES_DICT.keys():
                     if field not in the_modified_sensor_data.keys():
+                        the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[field]
+
+                    # Lastly, check for any json null values that we got back from the PurpleAirAPI
+                    if field is None:
                         the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[field]
 
                 # Store the current data
