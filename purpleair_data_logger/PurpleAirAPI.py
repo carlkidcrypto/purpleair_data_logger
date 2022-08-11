@@ -8,7 +8,7 @@
 
 import requests
 import json
-from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST, PRINT_DEBUG_MSGS
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS
 
 
 def debug_log(debug_msg_string):
@@ -280,14 +280,8 @@ class PurpleAirAPI():
             We access the "sensor" key inside this method.
         """
 
-        for key_str in ACCEPTED_FIELD_NAMES_LIST:
+        for key_str in ACCEPTED_FIELD_NAMES_DICT.keys():
             if key_str not in paa_return_data["sensor"].keys():
-                if key_str == "firmware_upgrade":
-                    # Add it to our data dict, but make it an empty string since its a text type.
-                    paa_return_data["sensor"][key_str] = ""
-
-                elif key_str in ["voc", "voc_a", "voc_b", "ozone1"]:
-                    # Add it to our data dict, but make it an 0.0 since its a float type.
-                    paa_return_data["sensor"][key_str] = 0.0
+                paa_return_data["sensor"][key_str] = ACCEPTED_FIELD_NAMES_DICT[key_str]
 
         return paa_return_data

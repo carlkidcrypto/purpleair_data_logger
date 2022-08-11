@@ -13,7 +13,7 @@
 """
 
 from PurpleAirAPI import PurpleAirAPI, debug_log
-from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
@@ -496,9 +496,9 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[str(extracted_fields[data_index])] = data_item
 
                 # Before we store the data, we must make sure all fields have been included
-                for field in ACCEPTED_FIELD_NAMES_LIST:
+                for field in ACCEPTED_FIELD_NAMES_DICT.keys():
                     if field not in the_modified_sensor_data.keys():
-                        the_modified_sensor_data[str(field)] = None
+                        the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[field]
 
                 # Store the current data
                 self.store_sensor_data(the_modified_sensor_data)
