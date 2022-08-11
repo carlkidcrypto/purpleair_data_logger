@@ -169,7 +169,7 @@ class PurpleAirDataLogger():
         """
 
         if unix_epoch_timestamp is None:
-            return ""
+            return "NULL"
 
         else:
             return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
