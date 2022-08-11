@@ -13,6 +13,7 @@
 """
 
 from PurpleAirAPI import PurpleAirAPI, debug_log
+from PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_LIST
 from PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
                                           PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
                                           PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
@@ -405,6 +406,7 @@ class PurpleAirDataLogger():
         """
 
         while True:
+            print("run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n")
             # We will request data once every 65 seconds.
             debug_log(f"""Requesting new data from a sensor with index
                       {sensor_index}...""")
@@ -456,6 +458,10 @@ class PurpleAirDataLogger():
         """
 
         while True:
+            print("run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
+            # We will request data once every 65 seconds.
+            debug_log(f"""Requesting new data from multiple sensors with fields
+                      {json_config_file["fields"]}...""")
             sensors_data = self.get_multiple_sensors_data(fields=json_config_file["fields"],
                                                           location_type=json_config_file["location_type"],
                                                           read_keys=json_config_file["read_keys"],
@@ -466,7 +472,39 @@ class PurpleAirDataLogger():
                                                           nwlat=json_config_file["nwlat"],
                                                           selng=json_config_file["selng"],
                                                           selat=json_config_file["selat"])
-            debug_log(f"""The sensors_data: {sensors_data}\n\n""")
+
+            # The sensors data will look something like this:
+            # {'api_version': 'V1.0.11-0.0.34', 'time_stamp': 1659710288, 'data_time_stamp': 1659710232,
+            # 'max_age': 604800, 'firmware_default_version': '7.00', 'fields': ['sensor_index', 'name'],
+            # 'data': [[131075, 'Mariners Bluff'], [131079, 'BRSKBV-outside'], [131077, 'BEE Patio'],
+            # ... ]}
+            # It is important to know that the order of 'fields' provided as an argument to get_multiple_sensors_data()
+            # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
+            # Now lets build and feed what the store_sensor_data() method expects.
+            
+            # Extract the 'fields' and 'data' parts to make it easier on ourselves
+            extracted_fields = sensors_data["fields"]
+            extracted_data = sensors_data["data"]
+
+            # Grab each list of data items from extracted data
+            for data_list in extracted_data:
+                # Start making our modified sensor data object that will be passed to the
+                # self.store_sensor_data() method
+                the_modified_sensor_data = {}
+                the_modified_sensor_data["data_time_stamp"] = sensors_data["data_time_stamp"]
+                for data_index, data_item in enumerate(data_list):
+                    the_modified_sensor_data[str(extracted_fields[data_index])] = data_item
+
+                # Before we store the data, we must make sure all fields have been included
+                for field in ACCEPTED_FIELD_NAMES_LIST:
+                    if field not in the_modified_sensor_data.keys():
+                        the_modified_sensor_data[str(field)] = None
+
+                # Store the current data
+                self.store_sensor_data(the_modified_sensor_data)
+
+            debug_log(f"""Waiting {self.__request_every_x} seconds before
+                  requesting new data again...""")
             sleep(self.__request_every_x)
 
 
