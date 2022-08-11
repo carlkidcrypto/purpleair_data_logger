@@ -168,7 +168,11 @@ class PurpleAirDataLogger():
             :return A valid psql UTC timestamp.
         """
 
-        return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
+        if unix_epoch_timestamp is None:
+            return ""
+
+        else:
+            return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
 
     def get_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
@@ -458,7 +462,8 @@ class PurpleAirDataLogger():
         """
 
         while True:
-            print("run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
+            print(
+                "run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
             # We will request data once every 65 seconds.
             debug_log(f"""Requesting new data from multiple sensors with fields
                       {json_config_file["fields"]}...""")
@@ -481,7 +486,7 @@ class PurpleAirDataLogger():
             # It is important to know that the order of 'fields' provided as an argument to get_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
-            
+
             # Extract the 'fields' and 'data' parts to make it easier on ourselves
             extracted_fields = sensors_data["fields"]
             extracted_data = sensors_data["data"]
@@ -493,17 +498,15 @@ class PurpleAirDataLogger():
                 the_modified_sensor_data = {}
                 the_modified_sensor_data["data_time_stamp"] = sensors_data["data_time_stamp"]
                 for data_index, data_item in enumerate(data_list):
-                    the_modified_sensor_data[str(extracted_fields[data_index])] = data_item
+                    the_modified_sensor_data[str(
+                        extracted_fields[data_index])] = data_item
 
                 # Before we store the data, we must make sure all fields have been included
                 # Our psql store statements expect all fields regardless of what we request.
                 for field in ACCEPTED_FIELD_NAMES_DICT.keys():
                     if field not in the_modified_sensor_data.keys():
-                        the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[field]
-
-                    # Lastly, check for any json null values that we got back from the PurpleAirAPI
-                    if field is None:
-                        the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[field]
+                        the_modified_sensor_data[str(
+                            field)] = ACCEPTED_FIELD_NAMES_DICT[field]
 
                 # Store the current data
                 self.store_sensor_data(the_modified_sensor_data)
