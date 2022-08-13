@@ -581,13 +581,13 @@ if __name__ == "__main__":
         ALL COLLECTED DATA WILL BE LOST!""")
         user_input = input("""Type yes or no to contune: """)
         if "no" in str(user_input):
-            sys.exit("""Stopping because you didn't want to continue...""", 0)
+            sys.exit("""Stopping because you didn't want to continue...""")
 
         elif "yes" in str(user_input):
             the_psql_db_conn.run(PSQL_DROP_ALL_TABLES)
             the_psql_db_conn.commit()
             sys.exit(
-                """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided...""", 0)
+                """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided...""")
 
     # Third make an instance our our data logger
     the_paa_data_logger = PurpleAirDataLogger(
