@@ -10,185 +10,185 @@
 #: PSQL statemnt for station_information_and_status_fields table
 CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        name TEXT,
-        icon INT,
-        model TEXT,
-        hardware TEXT,
-        location_type INT,
-        private INT,
-        latitude FLOAT,
-        longitude FLOAT,
-        altitude FLOAT,
-        position_rating INT,
-        led_brightness INT,
-        firmware_version TEXT,
-        firmware_upgrade TEXT,
-        rssi INT,
-        uptime INT,
-        pa_latency INT,
-        memory INT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        name TEXT NULL,
+        icon INT NULL,
+        model TEXT NULL,
+        hardware TEXT NULL,
+        location_type INT NULL,
+        private INT NULL,
+        latitude FLOAT NULL,
+        longitude FLOAT NULL,
+        altitude FLOAT NULL,
+        position_rating INT NULL,
+        led_brightness INT NULL,
+        firmware_version TEXT NULL,
+        firmware_upgrade TEXT NULL,
+        rssi INT NULL,
+        uptime INT NULL,
+        pa_latency INT NULL,
+        memory INT NULL,
         last_seen TIMESTAMPTZ NULL,
         last_modified TIMESTAMPTZ NULL,
         date_created TIMESTAMPTZ NULL,
-        channel_state INT,
-        channel_flags INT,
-        channel_flags_manual INT,
-        channel_flags_auto INT,
-        confidence INT,
-        confidence_manual INT,
-        confidence_auto INT,
+        channel_state INT NULL,
+        channel_flags INT NULL,
+        channel_flags_manual INT NULL,
+        channel_flags_auto INT NULL,
+        confidence INT NULL,
+        confidence_manual INT NULL,
+        confidence_auto INT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: PSQL statemnt for environmental_fields table
 CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS environmental_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        humidity INT,
-        humidity_a INT,
-        humidity_b INT,
-        temperature INT,
-        temperature_a INT,
-        temperature_b INT,
-        pressure FLOAT,
-        pressure_a FLOAT,
-        pressure_b FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        humidity INT NULL,
+        humidity_a INT NULL,
+        humidity_b INT NULL,
+        temperature INT NULL,
+        temperature_a INT NULL,
+        temperature_b INT NULL,
+        pressure FLOAT NULL,
+        pressure_a FLOAT NULL,
+        pressure_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: PSQL statemnt for miscellaneous_fields table
 CREATE_MISCELLANEOUS_FIELDS = """
     CREATE TABLE IF NOT EXISTS miscellaneous_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        voc FLOAT,
-        voc_a FLOAT,
-        voc_b FLOAT,
-        ozone1 FLOAT,
-        analog_input FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        voc FLOAT NULL,
+        voc_a FLOAT NULL,
+        voc_b FLOAT NULL,
+        ozone1 FLOAT NULL,
+        analog_input FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
 #: PSQL statemnt for pm1_0_fields table
 CREATE_PM1_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm1_0_fields(
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        pm1_0 FLOAT,
-        pm1_0_a FLOAT,
-        pm1_0_b FLOAT,
-        pm1_0_atm FLOAT,
-        pm1_0_atm_a FLOAT,
-        pm1_0_atm_b FLOAT,
-        pm1_0_cf_1 FLOAT,
-        pm1_0_cf_1_a FLOAT,
-        pm1_0_cf_1_b FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        pm1_0 FLOAT NULL,
+        pm1_0_a FLOAT NULL,
+        pm1_0_b FLOAT NULL,
+        pm1_0_atm FLOAT NULL,
+        pm1_0_atm_a FLOAT NULL,
+        pm1_0_atm_b FLOAT NULL,
+        pm1_0_cf_1 FLOAT NULL,
+        pm1_0_cf_1_a FLOAT NULL,
+        pm1_0_cf_1_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
 #: PSQL statemnt for pm2_5_fields table
 CREATE_PM2_5_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        pm2_5_alt FLOAT,
-        pm2_5_alt_a FLOAT,
-        pm2_5_alt_b FLOAT,
-        pm2_5 FLOAT,
-        pm2_5_a FLOAT,
-        pm2_5_b FLOAT,
-        pm2_5_atm FLOAT,
-        pm2_5_atm_a FLOAT,
-        pm2_5_atm_b FLOAT,
-        pm2_5_cf_1 FLOAT,
-        pm2_5_cf_1_a FLOAT,
-        pm2_5_cf_1_b FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        pm2_5_alt FLOAT NULL,
+        pm2_5_alt_a FLOAT NULL,
+        pm2_5_alt_b FLOAT NULL,
+        pm2_5 FLOAT NULL,
+        pm2_5_a FLOAT NULL,
+        pm2_5_b FLOAT NULL,
+        pm2_5_atm FLOAT NULL,
+        pm2_5_atm_a FLOAT NULL,
+        pm2_5_atm_b FLOAT NULL,
+        pm2_5_cf_1 FLOAT NULL,
+        pm2_5_cf_1_a FLOAT NULL,
+        pm2_5_cf_1_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
 #: PSQL statemnt for pm2_5_pseudo_average_fields table
 CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_pseudo_average_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        pm2_5_10minute FLOAT,
-        pm2_5_10minute_a FLOAT,
-        pm2_5_10minute_b FLOAT,
-        pm2_5_30minute FLOAT,
-        pm2_5_30minute_a FLOAT,
-        pm2_5_30minute_b FLOAT,
-        pm2_5_60minute FLOAT,
-        pm2_5_60minute_a FLOAT,
-        pm2_5_60minute_b FLOAT,
-        pm2_5_6hour FLOAT,
-        pm2_5_6hour_a FLOAT,
-        pm2_5_6hour_b FLOAT,
-        pm2_5_24hour FLOAT,
-        pm2_5_24hour_a FLOAT,
-        pm2_5_24hour_b FLOAT,
-        pm2_5_1week FLOAT,
-        pm2_5_1week_a FLOAT,
-        pm2_5_1week_b FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        pm2_5_10minute FLOAT NULL,
+        pm2_5_10minute_a FLOAT NULL,
+        pm2_5_10minute_b FLOAT NULL,
+        pm2_5_30minute FLOAT NULL,
+        pm2_5_30minute_a FLOAT NULL,
+        pm2_5_30minute_b FLOAT NULL,
+        pm2_5_60minute FLOAT NULL,
+        pm2_5_60minute_a FLOAT NULL,
+        pm2_5_60minute_b FLOAT NULL,
+        pm2_5_6hour FLOAT NULL,
+        pm2_5_6hour_a FLOAT NULL,
+        pm2_5_6hour_b FLOAT NULL,
+        pm2_5_24hour FLOAT NULL,
+        pm2_5_24hour_a FLOAT NULL,
+        pm2_5_24hour_b FLOAT NULL,
+        pm2_5_1week FLOAT NULL,
+        pm2_5_1week_a FLOAT NULL,
+        pm2_5_1week_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
 #: PSQL statemnt for pm10_0_fields table
 CREATE_PM10_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm10_0_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        pm10_0 FLOAT,
-        pm10_0_a FLOAT,
-        pm10_0_b FLOAT,
-        pm10_0_atm FLOAT,
-        pm10_0_atm_a FLOAT,
-        pm10_0_atm_b FLOAT,
-        pm10_0_cf_1 FLOAT,
-        pm10_0_cf_1_a FLOAT,
-        pm10_0_cf_1_b FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        pm10_0 FLOAT NULL,
+        pm10_0_a FLOAT NULL,
+        pm10_0_b FLOAT NULL,
+        pm10_0_atm FLOAT NULL,
+        pm10_0_atm_a FLOAT NULL,
+        pm10_0_atm_b FLOAT NULL,
+        pm10_0_cf_1 FLOAT NULL,
+        pm10_0_cf_1_a FLOAT NULL,
+        pm10_0_cf_1_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
 #: PSQL statemnt for particle_count_fields table
 CREATE_PARTICLE_COUNT_FIELDS = """
     CREATE TABLE IF NOT EXISTS particle_count_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        um_count_0_3 FLOAT,
-        um_count_a_0_3 FLOAT,
-        um_count_b_0_3 FLOAT,
-        um_count_0_5 FLOAT,
-        um_count_a_0_5 FLOAT,
-        um_count_b_0_5 FLOAT,
-        um_count_1_0 FLOAT,
-        um_count_a_1_0 FLOAT,
-        um_count_b_1_0 FLOAT,
-        um_count_2_5 FLOAT,
-        um_count_a_2_5 FLOAT,
-        um_count_b_2_5 FLOAT,
-        um_count_5_0 FLOAT,
-        um_count_a_5_0 FLOAT,
-        um_count_b_5_0 FLOAT,
-        um_count_10_0 FLOAT,
-        um_count_a_10_0 FLOAT,
-        um_count_b_10_0 FLOAT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        um_count_0_3 FLOAT NULL,
+        um_count_a_0_3 FLOAT NULL,
+        um_count_b_0_3 FLOAT NULL,
+        um_count_0_5 FLOAT NULL,
+        um_count_a_0_5 FLOAT NULL,
+        um_count_b_0_5 FLOAT NULL,
+        um_count_1_0 FLOAT NULL,
+        um_count_a_1_0 FLOAT NULL,
+        um_count_b_1_0 FLOAT NULL,
+        um_count_2_5 FLOAT NULL,
+        um_count_a_2_5 FLOAT NULL,
+        um_count_b_2_5 FLOAT NULL,
+        um_count_5_0 FLOAT NULL,
+        um_count_a_5_0 FLOAT NULL,
+        um_count_b_5_0 FLOAT NULL,
+        um_count_10_0 FLOAT NULL,
+        um_count_a_10_0 FLOAT NULL,
+        um_count_b_10_0 FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
 #: PSQL statemnt for thingspeak_fields table
 CREATE_THINGSPEAK_FIELDS = """
     CREATE TABLE IF NOT EXISTS thingspeak_fields (
-        data_time_stamp TIMESTAMPTZ,
-        sensor_index INT,
-        primary_id_a INT,
-        primary_key_a TEXT,
-        secondary_id_a INT,
-        secondary_key_a TEXT,
-        primary_id_b INT,
-        primary_key_b TEXT,
-        secondary_id_b INT,
-        secondary_key_b TEXT,
+        data_time_stamp TIMESTAMPTZ NOT NULL,
+        sensor_index INT NOT NULL,
+        primary_id_a INT NULL,
+        primary_key_a TEXT NULL,
+        secondary_id_a INT NULL,
+        secondary_key_a TEXT NULL,
+        primary_id_b INT NULL,
+        primary_key_b TEXT NULL,
+        secondary_id_b INT NULL,
+        secondary_key_b TEXT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 # As of 07/23/2022 we have 9 tables to insert data into.
@@ -538,3 +538,16 @@ PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
         CAST(:secondary_id_b AS INT),
         CAST(:secondary_key_b AS TEXT)
     )"""
+
+#: PSQL statement to drop all tables in the database
+PSQL_DROP_ALL_TABLES = """
+    DROP TABLE station_information_and_status_fields;
+    DROP TABLE environmental_fields;
+    DROP TABLE miscellaneous_fields;
+    DROP TABLE pm1_0_fields;
+    DROP TABLE pm2_5_fields;
+    DROP TABLE pm2_5_pseudo_average_fields;
+    DROP TABLE pm10_0_fields;
+    DROP TABLE particle_count_fields;
+    DROP TABLE thingspeak_fields;
+    """
