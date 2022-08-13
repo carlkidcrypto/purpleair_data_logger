@@ -538,3 +538,16 @@ PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
         CAST(:secondary_id_b AS INT),
         CAST(:secondary_key_b AS TEXT)
     )"""
+
+#: PSQL statement to drop all tables in the database
+PSQL_DROP_ALL_TABLES = """
+    DROP TABLE station_information_and_status_fields;
+    DROP TABLE environmental_fields;
+    DROP TABLE miscellaneous_fields;
+    DROP TABLE pm1_0_fields;
+    DROP TABLE pm2_5_fields;
+    DROP TABLE pm2_5_pseudo_average_fields;
+    DROP TABLE pm10_0_fields;
+    DROP TABLE particle_count_fields;
+    DROP TABLE thingspeak_fields;
+    """

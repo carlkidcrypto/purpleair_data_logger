@@ -15,18 +15,19 @@
 from purpleair_data_logger.PurpleAirAPI import PurpleAirAPI, debug_log
 from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-                                          PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-                                          PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
-                                          CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
-                                          CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                          CREATE_THINGSPEAK_FIELDS)
+                                                                PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+                                                                PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+                                                                PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+                                                                PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
+                                                                CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+                                                                CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES)
 import pg8000
 import argparse
 from time import sleep
 from datetime import datetime, timezone
 import json
+import sys
 
 
 class PurpleAirDataLogger():
@@ -519,6 +520,11 @@ class PurpleAirDataLogger():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Collect data from PurpleAir sensors and insert into a database!")
+    parser.add_argument("-db_drop_all_tables",  action="store_true", required=False,
+                        dest="db_drop_all_tables", help="""Set this flag if you wish to drop all
+                        tables before loading in new data. Useful if a database change has happened.
+                        Note: Make sure to provide a db_usr with DROP rights.
+                        WARNING: ALL COLLECTED DATA WILL BE LOST!""")
     parser.add_argument("-db_usr",  required=True, dest="db_usr",
                         type=str, help="""The PSQL database user""")
     parser.add_argument("-db_host", required=False, default="localhost",
@@ -568,6 +574,18 @@ if __name__ == "__main__":
         database=args.db,
         port=args.db_port,
         password=args.db_pwd)
+
+    # Before doing step three, check if we wish to drop all tables.
+    if args.db_drop_all_tables:
+        print("""Are you sure you wish to continue? This operation will drop all tables from the database!
+        ALL COLLECTED DATA WILL BE LOST!""")
+        user_input = input("""Type yes or no to contune: """)
+        if "no" in str(user_input):
+            sys.exit("Stopping because you didn't want to continue...", 0)
+
+        elif "yes" in str(user_input):
+            the_psql_db_conn.run(PSQL_DROP_ALL_TABLES)
+            the_psql_db_conn.commit()
 
     # Third make an instance our our data logger
     the_paa_data_logger = PurpleAirDataLogger(
