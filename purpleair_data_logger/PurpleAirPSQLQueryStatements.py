@@ -3,13 +3,14 @@
 """
     Copyright 2022 carlkid1499, All rights reserved.
     A file containing PSQL statements defined as constants.
+    Generate the PSQL query strings. For simplicity our table names will match
+    what the PurpleAir documentation says. We will do the same for table column names.
 """
 
-# Generate the PSQL query strings. For simplicity our table names will match
-# what the PurpleAir documentation says. We will do the same for table column names.
+#: PSQL statemnt for station_information_and_status_fields table
 CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         name TEXT,
         icon INT,
@@ -28,20 +29,22 @@ CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
         uptime INT,
         pa_latency INT,
         memory INT,
-        last_seen TIMESTAMPTZ,
-        last_modified TIMESTAMPTZ,
-        date_created TIMESTAMPTZ,
+        last_seen TIMESTAMPTZ NULL,
+        last_modified TIMESTAMPTZ NULL,
+        date_created TIMESTAMPTZ NULL,
         channel_state INT,
         channel_flags INT,
         channel_flags_manual INT,
         channel_flags_auto INT,
         confidence INT,
         confidence_manual INT,
-        confidence_auto INT)"""
+        confidence_auto INT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
+#: PSQL statemnt for environmental_fields table
 CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS environmental_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         humidity INT,
         humidity_a INT,
@@ -51,22 +54,26 @@ CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
         temperature_b INT,
         pressure FLOAT,
         pressure_a FLOAT,
-        pressure_b FLOAT)"""
+        pressure_b FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
+#: PSQL statemnt for miscellaneous_fields table
 CREATE_MISCELLANEOUS_FIELDS = """
     CREATE TABLE IF NOT EXISTS miscellaneous_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         voc FLOAT,
         voc_a FLOAT,
         voc_b FLOAT,
         ozone1 FLOAT,
-        analog_input FLOAT)"""
+        analog_input FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
+#: Note: Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
+#: PSQL statemnt for pm1_0_fields table
 CREATE_PM1_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm1_0_fields(
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         pm1_0 FLOAT,
         pm1_0_a FLOAT,
@@ -76,12 +83,14 @@ CREATE_PM1_0_FIELDS = """
         pm1_0_atm_b FLOAT,
         pm1_0_cf_1 FLOAT,
         pm1_0_cf_1_a FLOAT,
-        pm1_0_cf_1_b FLOAT)"""
+        pm1_0_cf_1_b FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
+#: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
+#: PSQL statemnt for pm2_5_fields table
 CREATE_PM2_5_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         pm2_5_alt FLOAT,
         pm2_5_alt_a FLOAT,
@@ -94,12 +103,14 @@ CREATE_PM2_5_FIELDS = """
         pm2_5_atm_b FLOAT,
         pm2_5_cf_1 FLOAT,
         pm2_5_cf_1_a FLOAT,
-        pm2_5_cf_1_b FLOAT)"""
+        pm2_5_cf_1_b FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
+#: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
+#: PSQL statemnt for pm2_5_pseudo_average_fields table
 CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_pseudo_average_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         pm2_5_10minute FLOAT,
         pm2_5_10minute_a FLOAT,
@@ -118,12 +129,14 @@ CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
         pm2_5_24hour_b FLOAT,
         pm2_5_1week FLOAT,
         pm2_5_1week_a FLOAT,
-        pm2_5_1week_b FLOAT)"""
+        pm2_5_1week_b FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
+#: Note: Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
+#: PSQL statemnt for pm10_0_fields table
 CREATE_PM10_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm10_0_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         pm10_0 FLOAT,
         pm10_0_a FLOAT,
@@ -133,12 +146,14 @@ CREATE_PM10_0_FIELDS = """
         pm10_0_atm_b FLOAT,
         pm10_0_cf_1 FLOAT,
         pm10_0_cf_1_a FLOAT,
-        pm10_0_cf_1_b FLOAT)"""
+        pm10_0_cf_1_b FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# Note we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
+#: Note: we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
+#: PSQL statemnt for particle_count_fields table
 CREATE_PARTICLE_COUNT_FIELDS = """
     CREATE TABLE IF NOT EXISTS particle_count_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         um_count_0_3 FLOAT,
         um_count_a_0_3 FLOAT,
@@ -157,12 +172,14 @@ CREATE_PARTICLE_COUNT_FIELDS = """
         um_count_b_5_0 FLOAT,
         um_count_10_0 FLOAT,
         um_count_a_10_0 FLOAT,
-        um_count_b_10_0 FLOAT)"""
+        um_count_b_10_0 FLOAT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-# NOTE TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
+#: Note TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
+#: PSQL statemnt for thingspeak_fields table
 CREATE_THINGSPEAK_FIELDS = """
     CREATE TABLE IF NOT EXISTS thingspeak_fields (
-        data_time_stamp TIMESTAMPTZ PRIMARY KEY,
+        data_time_stamp TIMESTAMPTZ,
         sensor_index INT,
         primary_id_a INT,
         primary_key_a TEXT,
@@ -171,9 +188,11 @@ CREATE_THINGSPEAK_FIELDS = """
         primary_id_b INT,
         primary_key_b TEXT,
         secondary_id_b INT,
-        secondary_key_b TEXT)"""
+        secondary_key_b TEXT,
+        PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 # As of 07/23/2022 we have 9 tables to insert data into.
+#: PSQL insert statement for station_information_and_status_fields
 PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
     INSERT INTO station_information_and_status_fields
         (
@@ -240,6 +259,7 @@ PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
             CAST(:confidence_auto AS INT)
         )"""
 
+#: PSQL insert statement for environmental_fields
 PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
     INSERT INTO environmental_fields
         (
@@ -270,6 +290,7 @@ PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
             CAST(:pressure_b AS FLOAT)
         )"""
 
+#: PSQL insert statement for miscellaneous_fields
 PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
     INSERT INTO miscellaneous_fields
         (
@@ -292,6 +313,7 @@ PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
             CAST(:analog_input AS FLOAT)
         )"""
 
+#: PSQL insert statement for pm1_0_fields
 PSQL_INSERT_STATEMENT_PM1_0_FIELDS = """
     INSERT INTO pm1_0_fields
         (
@@ -322,6 +344,7 @@ PSQL_INSERT_STATEMENT_PM1_0_FIELDS = """
             CAST(:pm1_0_cf_1_b AS FLOAT)
         )"""
 
+#: PSQL insert statement for pm2_5_fields
 PSQL_INSERT_STATEMENT_PM2_5_FIELDS = """
     INSERT INTO pm2_5_fields
         (
@@ -358,6 +381,7 @@ PSQL_INSERT_STATEMENT_PM2_5_FIELDS = """
             CAST(:pm2_5_cf_1_b AS FLOAT)
         )"""
 
+#: PSQL insert statement for pm2_5_pseudo_average_fields
 PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     INSERT INTO pm2_5_pseudo_average_fields 
     (
@@ -406,6 +430,7 @@ PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
         CAST(:pm2_5_1week_b AS FLOAT)
     )"""
 
+#: PSQL insert statement for pm10_0_fields
 PSQL_INSERT_STATEMENT_PM10_0_FIELDS = """
     INSERT INTO pm10_0_fields
     (
@@ -435,6 +460,8 @@ PSQL_INSERT_STATEMENT_PM10_0_FIELDS = """
         CAST(:pm10_0_cf_1_a AS FLOAT),
         CAST(:pm10_0_cf_1_b AS FLOAT)
     )"""
+
+#: PSQL insert statement for particle_count_fields
 PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
     INSERT INTO particle_count_fields 
     (
@@ -483,6 +510,7 @@ PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
         CAST(:um_count_b_10_0 AS FLOAT)
     )"""
 
+#: PSQL insert statement for thingspeak_fields
 PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
     INSERT INTO thingspeak_fields
     (

@@ -8,23 +8,26 @@
 
 import requests
 import json
-
-PRINT_DEBUG_MSGS = True
+from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS
 
 
 def debug_log(debug_msg_string):
     """
         A helper function to print out
-        debug messages only if DEBUG is defined
+        debug messages only if DEBUG is defined as True in
+        'PurpleAirAPIConstants.py'. Messages will be the color
+        red.
     """
 
     if PRINT_DEBUG_MSGS:
-        print(debug_msg_string)
+        # Make debug messages red using ANSI escape code.
+        print("\033[1;31m" + str(debug_msg_string) + "\x1b[0m")
 
 
 class PurpleAirAPI():
     """
-        The PurpleAirAPI class to send only read requests
+        The PurpleAirAPI class designed to send valid
+        PurpleAirAPI requests.
     """
 
     def __init__(self, your_api_read_key):
@@ -130,16 +133,17 @@ class PurpleAirAPI():
 
         # Add to the request_url string depending on what optional parameters are
         # passed in
-        if read_key and fields:
+        if read_key is not None and fields is not None:
             request_url = request_url + \
                 f"?read_key={str(read_key)}&fields={str(fields)}"
 
-        elif not read_key and fields:
+        elif read_key is None and fields is not None:
             request_url = request_url + f"?fields={str(fields)}"
 
-        elif read_key and not fields:
+        elif read_key is not None and fields is None:
             request_url = request_url + f"?read_key={str(read_key)}"
 
+        debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
 
@@ -149,7 +153,7 @@ class PurpleAirAPI():
             debug_log(the_request_text_as_json)
             my_request.close()
             del my_request
-            return the_request_text_as_json
+            return self.__sanitize_sensor_data_from_paa(the_request_text_as_json)
 
         elif my_request.status_code == 400:
             the_request_text_as_json = json.loads(my_request.text)
@@ -246,10 +250,11 @@ class PurpleAirAPI():
 
             # We haven't added any yet. The first one will look different that
             # the rest
-            if opt_param:
+            if opt_param is None:
                 request_url = request_url + \
                     f"&{opt_param}={str(val)}"
 
+        debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self.__your_api_read_key)})
 
@@ -267,3 +272,16 @@ class PurpleAirAPI():
             my_request.close()
             raise ValueError(
                 f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
+
+    def __sanitize_sensor_data_from_paa(self, paa_return_data):
+        """
+            A method for: Not all sensors support all field names, so we check that the keys exist
+            in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
+            We access the "sensor" key inside this method.
+        """
+
+        for key_str in ACCEPTED_FIELD_NAMES_DICT.keys():
+            if key_str not in paa_return_data["sensor"].keys():
+                paa_return_data["sensor"][key_str] = ACCEPTED_FIELD_NAMES_DICT[key_str]
+
+        return paa_return_data

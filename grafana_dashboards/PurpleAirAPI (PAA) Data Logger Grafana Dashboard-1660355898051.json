@@ -1,0 +1,3581 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_POSTGRESQL",
+      "label": "PostgreSQL",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "postgres",
+      "pluginName": "PostgreSQL"
+    }
+  ],
+  "__elements": {},
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "9.0.5"
+    },
+    {
+      "type": "datasource",
+      "id": "postgres",
+      "name": "PostgreSQL",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "table",
+      "name": "Table",
+      "version": ""
+    },
+    {
+      "type": "panel",
+      "id": "timeseries",
+      "name": "Time series",
+      "version": ""
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "PurpleAirAPI (PAA) Data Logger Grafana Dashboard",
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 36,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Miscellaneous Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": [
+              {
+                "__systemRef": "hideSeriesFrom",
+                "matcher": {
+                  "id": "byNames",
+                  "options": {
+                    "mode": "exclude",
+                    "names": [
+                      "analog_input"
+                    ],
+                    "prefix": "All except:",
+                    "readOnly": true
+                  }
+                },
+                "properties": [
+                  {
+                    "id": "custom.hideFrom",
+                    "value": {
+                      "legend": false,
+                      "tooltip": false,
+                      "viz": true
+                    }
+                  }
+                ]
+              }
+            ]
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 4,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(voc) AS \"voc\",\n  max(voc_a) AS \"voc_a\",\n  max(voc_b) AS \"voc_b\",\n  max(ozone1) AS \"ozone1\",\n  max(analog_input) AS \"analog_input\"\nFROM miscellaneous_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "voc"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "voc"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "voc_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "voc_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "voc_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "voc_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "ozone1"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "ozone1"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "analog_input"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "analog_input"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "miscellaneous_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Miscellaneous Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Miscellaneous Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 1
+      },
+      "id": 34,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Particle Ccount Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 6,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(um_count_0_3) AS \"um_count_0_3\",\n  max(um_count_a_0_3) AS \"um_count_a_0_3\",\n  max(um_count_b_0_3) AS \"um_count_b_0_3\",\n  max(um_count_0_5) AS \"um_count_0_5\",\n  max(um_count_a_0_5) AS \"um_count_a_0_5\",\n  max(um_count_b_0_5) AS \"um_count_b_0_5\",\n  max(um_count_1_0) AS \"um_count_1_0\",\n  max(um_count_a_1_0) AS \"um_count_a_1_0\",\n  max(um_count_b_1_0) AS \"um_count_b_1_0\",\n  max(um_count_2_5) AS \"um_count_2_5\",\n  max(um_count_a_2_5) AS \"um_count_a_2_5\",\n  max(um_count_b_2_5) AS \"um_count_b_2_5\",\n  max(um_count_5_0) AS \"um_count_5_0\",\n  max(um_count_a_5_0) AS \"um_count_a_5_0\",\n  max(um_count_b_5_0) AS \"um_count_b_5_0\",\n  max(um_count_10_0) AS \"um_count_10_0\",\n  max(um_count_a_10_0) AS \"um_count_a_10_0\",\n  max(um_count_b_10_0) AS \"um_count_b_10_0\"\nFROM particle_count_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "um_count_0_3"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_0_3"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_0_3"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_0_3"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_0_3"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_0_3"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_0_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_0_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_0_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_0_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_0_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_0_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_1_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_1_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_1_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_1_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_1_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_1_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_2_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_2_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_2_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_2_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_2_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_2_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_5_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_5_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_5_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_5_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_5_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_5_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_10_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_10_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_a_10_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_a_10_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "um_count_b_10_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "um_count_b_10_0"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "particle_count_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Particle Count Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Particle Count Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 2
+      },
+      "id": 32,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "PM10.0 Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 8,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(pm10_0) AS \"pm10_0\",\n  max(pm10_0_a) AS \"pm10_0_a\",\n  max(pm10_0_b) AS \"pm10_0_b\",\n  max(pm10_0_atm) AS \"pm10_0_atm\",\n  max(pm10_0_atm_a) AS \"pm10_0_atm_a\",\n  max(pm10_0_atm_b) AS \"pm10_0_atm_b\",\n  max(pm10_0_cf_1) AS \"pm10_0_cf_1\",\n  max(pm10_0_cf_1_a) AS \"pm10_0_cf_1_a\",\n  max(pm10_0_cf_1_b) AS \"pm10_0_cf_1_b\"\nFROM pm10_0_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "pm10_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_atm"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_atm"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_atm_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_atm_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_atm_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_atm_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_cf_1"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_cf_1"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_cf_1_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_cf_1_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm10_0_cf_1_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm10_0_cf_1_b"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "pm10_0_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "PM10.0 Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "PM10.0 Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 3
+      },
+      "id": 30,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Station Information And Status Fields: Text",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 24,
+            "x": 0,
+            "y": 4
+          },
+          "id": 13,
+          "options": {
+            "footer": {
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "pluginVersion": "9.0.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  data_time_stamp AS \"time\",\n  name AS \"name\",\n  model AS \"model\",\n  hardware AS \"hardware\",\n  last_seen AS \"last_seen\",\n  last_modified AS \"last_modified\",\n  date_created AS \"date_created\"\nFROM station_information_and_status_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "name"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "name"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "model"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "model"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "hardware"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "hardware"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "last_seen"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "last_seen"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "last_modified"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "last_modified"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "date_created"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "date_created"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "station_information_and_status_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Station Information And Status Fields: Text",
+          "transparent": true,
+          "type": "table"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Station Information And Status Fields: Text - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 4
+      },
+      "id": 28,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Environmental Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 2,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "asc"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(humidity) AS \"humidity\",\n  max(humidity_a) AS \"humidity_a\",\n  max(humidity_b) AS \"humidity_b\",\n  max(pressure) AS \"pressure\",\n  max(pressure_a) AS \"pressure_a\",\n  max(pressure_b) AS \"pressure_b\",\n  max(temperature) AS \"temperature\",\n  max(temperature_a) AS \"temperature_a\",\n  max(temperature_b) AS \"temperature_b\"\nFROM environmental_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "humidity"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "humidity"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "humidity_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "humidity_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "humidity_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "humidity_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pressure"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pressure"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pressure_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pressure_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pressure_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pressure_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "temperature"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "temperature"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "temperature_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "temperature_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "temperature_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "temperature_b"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "environmental_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamp",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Environmental Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Environmental Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 5
+      },
+      "id": 26,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "PM1.0 Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 9,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(pm1_0) AS \"pm1_0\",\n  max(pm1_0_a) AS \"pm1_0_a\",\n  max(pm1_0_b) AS \"pm1_0_b\",\n  max(pm1_0_atm) AS \"pm1_0_atm\",\n  max(pm1_0_atm_a) AS \"pm1_0_atm_a\",\n  max(pm1_0_atm_b) AS \"pm1_0_atm_b\",\n  max(pm1_0_cf_1) AS \"pm1_0_cf_1\",\n  max(pm1_0_cf_1_a) AS \"pm1_0_cf_1_a\",\n  max(pm1_0_cf_1_b) AS \"pm1_0_cf_1_b\"\nFROM pm1_0_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "pm1_0"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_atm"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_atm"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_atm_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_atm_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_atm_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_atm_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_cf_1"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_cf_1"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_cf_1_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_cf_1_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm1_0_cf_1_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm1_0_cf_1_b"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "pm1_0_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "PM1.0 Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "PM1.0 Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 6
+      },
+      "id": 24,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "PM2.5 Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 10,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(pm2_5_alt) AS \"pm2_5_alt\",\n  max(pm2_5_alt_a) AS \"pm2_5_alt_a\",\n  max(pm2_5_alt_b) AS \"pm2_5_alt_b\",\n  max(pm2_5) AS \"pm2_5\",\n  max(pm2_5_a) AS \"pm2_5_a\",\n  max(pm2_5_b) AS \"pm2_5_b\",\n  max(pm2_5_atm) AS \"pm2_5_atm\",\n  max(pm2_5_atm_a) AS \"pm2_5_atm_a\",\n  max(pm2_5_atm_b) AS \"pm2_5_atm_b\",\n  max(pm2_5_cf_1) AS \"pm2_5_cf_1\",\n  max(pm2_5_cf_1_a) AS \"pm2_5_cf_1_a\",\n  max(pm2_5_cf_1_b) AS \"pm2_5_cf_1_b\"\nFROM pm2_5_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "pm2_5_alt"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_alt"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_alt_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_alt_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_alt_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_alt_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_atm"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_atm"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_atm_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_atm_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_atm_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_atm_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_cf_1"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_cf_1"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_cf_1_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_cf_1_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_cf_1_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_cf_1_b"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "pm2_5_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "PM2.5 Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "PM2.5 Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 7
+      },
+      "id": 22,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "PM2.5 Pseudo Average Fields",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 1
+          },
+          "id": 11,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(pm2_5_10minute) AS \"pm2_5_10minute\",\n  max(pm2_5_10minute_a) AS \"pm2_5_10minute_a\",\n  max(pm2_5_10minute_b) AS \"pm2_5_10minute_b\",\n  max(pm2_5_30minute) AS \"pm2_5_30minute\",\n  max(pm2_5_30minute_a) AS \"pm2_5_30minute_a\",\n  max(pm2_5_30minute_b) AS \"pm2_5_30minute_b\",\n  max(pm2_5_60minute) AS \"pm2_5_60minute\",\n  max(pm2_5_60minute_a) AS \"pm2_5_60minute_a\",\n  max(pm2_5_60minute_b) AS \"pm2_5_60minute_b\",\n  max(pm2_5_6hour) AS \"pm2_5_6hour\",\n  max(pm2_5_6hour_a) AS \"pm2_5_6hour_a\",\n  max(pm2_5_6hour_b) AS \"pm2_5_6hour_b\",\n  max(pm2_5_24hour) AS \"pm2_5_24hour\",\n  max(pm2_5_24hour_a) AS \"pm2_5_24hour_a\",\n  max(pm2_5_24hour_b) AS \"pm2_5_24hour_b\",\n  max(pm2_5_1week) AS \"pm2_5_1week\",\n  max(pm2_5_1week_a) AS \"pm2_5_1week_a\",\n  max(pm2_5_1week_b) AS \"pm2_5_1week_b\"\nFROM pm2_5_pseudo_average_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "pm2_5_10minute"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_10minute"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_10minute_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_10minute_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_10minute_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_10minute_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_30minute"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_30minute"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_30minute_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_30minute_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_30minute_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_30minute_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_60minute"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_60minute"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_60minute_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_60minute_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_60minute_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_60minute_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_6hour"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_6hour"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_6hour_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_6hour_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_6hour_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_6hour_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_24hour"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_24hour"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_24hour_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_24hour_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_24hour_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_24hour_b"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_1week"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_1week"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_1week_a"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_1week_a"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pm2_5_1week_b"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pm2_5_1week_b"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "pm2_5_pseudo_average_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "PM2.5 Pseudo Average Fields",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "PM2.5 Pseudo Average Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 20,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Station Information And Status Fields: Numbers",
+          "fieldConfig": {
+            "defaults": {
+              "color": {
+                "mode": "palette-classic"
+              },
+              "custom": {
+                "axisLabel": "",
+                "axisPlacement": "auto",
+                "barAlignment": 0,
+                "drawStyle": "line",
+                "fillOpacity": 0,
+                "gradientMode": "none",
+                "hideFrom": {
+                  "legend": false,
+                  "tooltip": false,
+                  "viz": false
+                },
+                "lineInterpolation": "linear",
+                "lineWidth": 1,
+                "pointSize": 5,
+                "scaleDistribution": {
+                  "type": "linear"
+                },
+                "showPoints": "auto",
+                "spanNulls": false,
+                "stacking": {
+                  "group": "A",
+                  "mode": "none"
+                },
+                "thresholdsStyle": {
+                  "mode": "off"
+                }
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 9,
+            "w": 24,
+            "x": 0,
+            "y": 9
+          },
+          "id": 14,
+          "options": {
+            "legend": {
+              "calcs": [],
+              "displayMode": "list",
+              "placement": "bottom"
+            },
+            "tooltip": {
+              "mode": "multi",
+              "sort": "none"
+            }
+          },
+          "pluginVersion": "9.0.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "time_series",
+              "group": [
+                {
+                  "params": [
+                    "$__interval",
+                    "none"
+                  ],
+                  "type": "time"
+                }
+              ],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  $__timeGroupAlias(data_time_stamp,$__interval),\n  max(icon) AS \"icon\",\n  max(location_type) AS \"location_type\",\n  max(private) AS \"private\",\n  max(latitude) AS \"latitude\",\n  max(longitude) AS \"longitude\",\n  max(altitude) AS \"altitude\",\n  max(position_rating) AS \"position_rating\",\n  max(led_brightness) AS \"led_brightness\",\n  max(rssi) AS \"rssi\",\n  max(uptime) AS \"uptime\",\n  max(pa_latency) AS \"pa_latency\",\n  max(memory) AS \"memory\",\n  max(channel_state) AS \"channel_state\",\n  max(channel_flags) AS \"channel_flags\",\n  max(channel_flags_manual) AS \"channel_flags_manual\",\n  max(channel_flags_auto) AS \"channel_flags_auto\",\n  max(confidence) AS \"confidence\",\n  max(confidence_manual) AS \"confidence_manual\",\n  max(confidence_auto) AS \"confidence_auto\"\nFROM station_information_and_status_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nGROUP BY 1\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "icon"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "icon"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "location_type"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "location_type"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "private"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "private"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "latitude"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "latitude"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "longitude"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "longitude"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "altitude"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "altitude"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "position_rating"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "position_rating"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "led_brightness"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "led_brightness"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "rssi"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "rssi"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "uptime"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "uptime"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "pa_latency"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "pa_latency"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "memory"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "memory"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "channel_state"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "channel_state"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "channel_flags"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "channel_flags"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "channel_flags_manual"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "channel_flags_manual"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "channel_flags_auto"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "channel_flags_auto"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "confidence"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "confidence"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "confidence_manual"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "confidence_manual"
+                    ],
+                    "type": "alias"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "confidence_auto"
+                    ],
+                    "type": "column"
+                  },
+                  {
+                    "params": [
+                      "max"
+                    ],
+                    "type": "aggregate"
+                  },
+                  {
+                    "params": [
+                      "confidence_auto"
+                    ],
+                    "type": "alias"
+                  }
+                ]
+              ],
+              "table": "station_information_and_status_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Station Information And Status Fields: Numbers",
+          "transparent": true,
+          "type": "timeseries"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Station Information And Status Fields: Numbers - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    },
+    {
+      "collapsed": true,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 18,
+      "panels": [
+        {
+          "datasource": {
+            "type": "postgres",
+            "uid": "${DS_POSTGRESQL}"
+          },
+          "description": "Thingspeak Fields",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": "auto",
+                "displayMode": "auto",
+                "inspect": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green"
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 10,
+            "w": 24,
+            "x": 0,
+            "y": 10
+          },
+          "id": 16,
+          "options": {
+            "footer": {
+              "fields": "",
+              "reducer": [
+                "sum"
+              ],
+              "show": false
+            },
+            "showHeader": true
+          },
+          "pluginVersion": "9.0.5",
+          "targets": [
+            {
+              "datasource": {
+                "type": "postgres",
+                "uid": "${DS_POSTGRESQL}"
+              },
+              "format": "table",
+              "group": [],
+              "metricColumn": "none",
+              "rawQuery": false,
+              "rawSql": "SELECT\n  data_time_stamp AS \"time\",\n  primary_id_a,\n  secondary_id_a,\n  primary_id_b,\n  primary_key_b,\n  secondary_id_b,\n  secondary_key_b\nFROM thingspeak_fields\nWHERE\n  $__timeFilter(data_time_stamp) AND\n  sensor_index = $sensor_index\nORDER BY 1",
+              "refId": "A",
+              "select": [
+                [
+                  {
+                    "params": [
+                      "primary_id_a"
+                    ],
+                    "type": "column"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "secondary_id_a"
+                    ],
+                    "type": "column"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "primary_id_b"
+                    ],
+                    "type": "column"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "primary_key_b"
+                    ],
+                    "type": "column"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "secondary_id_b"
+                    ],
+                    "type": "column"
+                  }
+                ],
+                [
+                  {
+                    "params": [
+                      "secondary_key_b"
+                    ],
+                    "type": "column"
+                  }
+                ]
+              ],
+              "table": "thingspeak_fields",
+              "timeColumn": "data_time_stamp",
+              "timeColumnType": "timestamptz",
+              "where": [
+                {
+                  "name": "$__timeFilter",
+                  "params": [],
+                  "type": "macro"
+                },
+                {
+                  "datatype": "int4",
+                  "name": "",
+                  "params": [
+                    "sensor_index",
+                    "=",
+                    "$sensor_index"
+                  ],
+                  "type": "expression"
+                }
+              ]
+            }
+          ],
+          "title": "Thingspeak Fields",
+          "transparent": true,
+          "type": "table"
+        }
+      ],
+      "repeat": "sensor_index",
+      "repeatDirection": "h",
+      "title": "Thingspeal Fields - for: $sensor_index, $selected_sensor_name",
+      "type": "row"
+    }
+  ],
+  "refresh": false,
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "${DS_POSTGRESQL}"
+        },
+        "definition": "SELECT DISTINCT sensor_index FROM station_information_and_status_fields ORDER BY sensor_index ASC;",
+        "description": "sensor_index",
+        "hide": 0,
+        "includeAll": false,
+        "label": "sensor_index",
+        "multi": true,
+        "name": "sensor_index",
+        "options": [],
+        "query": "SELECT DISTINCT sensor_index FROM station_information_and_status_fields ORDER BY sensor_index ASC;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      },
+      {
+        "current": {},
+        "datasource": {
+          "type": "postgres",
+          "uid": "${DS_POSTGRESQL}"
+        },
+        "definition": "SELECT name from station_information_and_status_fields WHERE sensor_index = $sensor_index LIMIT 1;",
+        "description": "selected sensor name",
+        "hide": 0,
+        "includeAll": false,
+        "label": "selected sensor name",
+        "multi": false,
+        "name": "selected_sensor_name",
+        "options": [],
+        "query": "SELECT name from station_information_and_status_fields WHERE sensor_index = $sensor_index LIMIT 1;",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 0,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-5m",
+    "to": "now"
+  },
+  "timepicker": {
+    "nowDelay": "",
+    "refresh_intervals": [
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ]
+  },
+  "timezone": "",
+  "title": "PurpleAirAPI (PAA) Data Logger Grafana Dashboard",
+  "uid": "kZwKqWzVk",
+  "version": 32,
+  "weekStart": ""
+}

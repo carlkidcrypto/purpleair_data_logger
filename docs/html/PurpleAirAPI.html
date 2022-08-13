@@ -18,9 +18,7 @@
         <script src="_static/doctools.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PurpleAirDataLogger module" href="PurpleAirDataLogger.html" />
-    <link rel="prev" title="purple_air_data_logger" href="modules.html" /> 
+    <link rel="search" title="Search" href="search.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -39,13 +37,8 @@
 </div>
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1 current"><a class="reference internal" href="modules.html">purple_air_data_logger</a><ul class="current">
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirAPI module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerPSQLStatements.html">PurpleAirDataLoggerPSQLStatements module</a></li>
-</ul>
-</li>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">purple_air_data_logger</a></li>
 </ul>
 
         </div>
@@ -62,7 +55,6 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">purple_air_data_logger</a> &raquo;</li>
       <li>PurpleAirAPI module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/PurpleAirAPI.rst.txt" rel="nofollow"> View page source</a>
@@ -73,144 +65,14 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-PurpleAirAPI">
-<span id="purpleairapi-module"></span><h1>PurpleAirAPI module<a class="headerlink" href="#module-PurpleAirAPI" title="Permalink to this heading"></a></h1>
-<p>Copyright 2022 carlkid1499, All rights reserved.
-A python3 class designed to fetch data from Purple Air’s new API.
-<a class="reference external" href="https://api.purpleair.com/#api-welcome">https://api.purpleair.com/#api-welcome</a></p>
-<dl class="py class">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirAPI.</span></span><span class="sig-name descname"><span class="pre">PurpleAirAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">your_api_read_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>The PurpleAirAPI class to send only read requests</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_key_last_checked">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_key_last_checked</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_key_last_checked" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the timestamp of when the API Key was last checked.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_key_type">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_key_type</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_key_type" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the API version being used.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_version</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_version" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the API version being used.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.recheck_api_key">
-<span class="sig-name descname"><span class="pre">recheck_api_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.recheck_api_key" title="Permalink to this definition"></a></dt>
-<dd><p>A method to recheck the API Key provided.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.request_multiple_sensors_data">
-<span class="sig-name descname"><span class="pre">request_multiple_sensors_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_since</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_age</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.request_multiple_sensors_data" title="Permalink to this definition"></a></dt>
-<dd><p>A method to retrieve sensor data from multiple sensors. Will return the 
-response payload as a python dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>fields</strong> (<em>str</em>) – <p>The ‘Fields’ parameter specifies which ‘sensor data fields’ to include in the response. It is a comma separated list with one or more of the following:
-Station information and status fields:
-name, icon, model, hardware, location_type, private, latitude, longitude, altitude, position_rating, led_brightness, firmware_version, firmware_upgrade, rssi, uptime, pa_latency, memory, last_seen, last_modified, date_created, channel_state, channel_flags, channel_flags_manual, channel_flags_auto, confidence, confidence_manual, confidence_auto</p>
-<p>Environmental fields:
-humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b</p>
-<p>Miscellaneous fields:
-voc, voc_a, voc_b, ozone1, analog_input</p>
-<p>PM1.0 fields:
-pm1.0, pm1.0_a, pm1.0_b, pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a, pm1.0_cf_1_b</p>
-<p>PM2.5 fields:
-pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5, pm2.5_a, pm2.5_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b</p>
-<p>PM2.5 pseudo (simple running) average fields:
-pm2.5_10minute, pm2.5_10minute_a, pm2.5_10minute_b, pm2.5_30minute, pm2.5_30minute_a, pm2.5_30minute_b, pm2.5_60minute, pm2.5_60minute_a, pm2.5_60minute_b, pm2.5_6hour, pm2.5_6hour_a, pm2.5_6hour_b, pm2.5_24hour, pm2.5_24hour_a, pm2.5_24hour_b, pm2.5_1week, pm2.5_1week_a, pm2.5_1week_b</p>
-<p>PM10.0 fields:
-pm10.0, pm10.0_a, pm10.0_b, pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b</p>
-<p>Visibility fields:
-scattering_coefficient, scattering_coefficient_a, scattering_coefficient_b, deciviews, deciviews_a, deciviews_b, visual_range, visual_range_a, visual_range_b</p>
-<p>Particle count fields:
-0.3_um_count, 0.3_um_count_a, 0.3_um_count_b, 0.5_um_count, 0.5_um_count_a, 0.5_um_count_b, 1.0_um_count, 1.0_um_count_a, 1.0_um_count_b, 2.5_um_count, 2.5_um_count_a, 2.5_um_count_b, 5.0_um_count, 5.0_um_count_a, 5.0_um_count_b, 10.0_um_count 10.0_um_count_a, 10.0_um_count_b</p>
-<p>ThingSpeak fields, used to retrieve data from api.thingspeak.com:
-primary_id_a, primary_key_a, secondary_id_a, secondary_key_a, primary_id_b, primary_key_b, secondary_id_b, secondary_key_b</p>
-</p></li>
-<li><p><strong>location_type</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – The location_type of the sensors.
-Possible values are: 0 = Outside or 1 = Inside.</p></li>
-<li><p><strong>read_keys</strong> (<em>(</em><em>optional</em><em>) </em><em>str</em>) – A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key.
-Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three</p></li>
-<li><p><strong>show_only</strong> (<em>(</em><em>optional</em><em>) </em><em>str</em>) – A comma (,) separated list of sensor_index values. When provided, the results are limited only to
-the sensors included in this list.</p></li>
-<li><p><strong>modified_since</strong> (<em>(</em><em>optional</em><em>) </em><em>str</em>) – The modified_since parameter causes only sensors modified after
-the provided time stamp to be included in the results. Using the
-time_stamp value from a previous call (recommended) will limit results
-to those with new values since the last request. Using a value of 0
-will match sensors modified at any time</p></li>
-<li><p><strong>max_age</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – Filter results to only include sensors modified or updated within the last
-number of seconds. Using a value of 0 will match sensors of any age. 
-Default value: 604800</p></li>
-<li><p><strong>nwlng</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – A north west longitude for the bounding box. Use a bounding box to limit the sensors
-returned to a specific geographic area. The bounding box is defined by two points, a
-north west latitude/longitude and a south east latitude/longitude.</p></li>
-<li><p><strong>nwlat</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – A north west latitude for the bounding box.</p></li>
-<li><p><strong>selng</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – A south east longitude for the bounding box.</p></li>
-<li><p><strong>selat</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – A south east latitude for the bounding box.</p></li>
-</ul>
-</dd>
-</dl>
-<p>:return A python dictionary containing the payload response</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.request_sensor_data">
-<span class="sig-name descname"><span class="pre">request_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.request_sensor_data" title="Permalink to this definition"></a></dt>
-<dd><p>A method to retrieve sensor data from one sensor. Will return the 
-response payload as a python dictionary.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sensor_index</strong> (<em>int</em>) – The sensor_index as found in the JSON for
-this specific sensor.</p></li>
-<li><p><strong>read_key</strong> (<em>(</em><em>optional</em><em>) </em><em>str</em>) – This read_key is required for
-private devices. It is separate
-to the api_key and each sensor has
-its own read_key. Submit multiple
-keys by separating them with a
-comma (,) character for example:
-key-one,key-two,key-three.</p></li>
-<li><p><strong>fields</strong> (<em>(</em><em>optional</em><em>) </em><em>str</em>) – The ‘Fields’ parameter specifies which
-‘sensor data fields’ to include in the
-response. It is a comma separated list
-with one or more of the following:
-Refer to PurpleAir documentation for more
-information:
-<a class="reference external" href="https://api.purpleair.com/#api-sensors-get-sensor-data">https://api.purpleair.com/#api-sensors-get-sensor-data</a></p></li>
-</ul>
-</dd>
-</dl>
-<p>:return A python dictionary containing the payload response</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="PurpleAirAPI.debug_log">
-<span class="sig-prename descclassname"><span class="pre">PurpleAirAPI.</span></span><span class="sig-name descname"><span class="pre">debug_log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">debug_msg_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.debug_log" title="Permalink to this definition"></a></dt>
-<dd><p>A helper function to print out
-debug messages only if DEBUG is defined</p>
-</dd></dl>
-
+  <section id="purpleairapi-module">
+<h1>PurpleAirAPI module<a class="headerlink" href="#purpleairapi-module" title="Permalink to this heading"></a></h1>
 </section>
 
 
            </div>
           </div>
-          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-left" title="purple_air_data_logger" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="PurpleAirDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
-    </div>
+          <footer>
 
   <hr/>
 
