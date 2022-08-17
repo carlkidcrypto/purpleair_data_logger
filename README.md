@@ -6,7 +6,8 @@
 
 ```bash
 usage: PurpleAirPSQLDataLogger.py [-h] [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB [-db_port DB_PORT]
-                                  [-db_pwd DB_PWD] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]        
+                                  [-db_pwd DB_PWD] -paa_read_key PAA_READ_KEY
+                                  [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
                                   [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
 
 Collect data from PurpleAir sensors and insert into a database!
@@ -20,6 +21,8 @@ optional arguments:
   -db DB                The PSQL database name
   -db_port DB_PORT      The PSQL database port number
   -db_pwd DB_PWD        The PSQL database password
+  -paa_read_key PAA_READ_KEY
+                        The PurpleAirAPI Read key
   -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a single sensor request.
   -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE

@@ -536,6 +536,8 @@ if __name__ == "__main__":
                         dest="db_port", type=str, help="""The PSQL database port number""")
     parser.add_argument("-db_pwd",  required=False, default=None,
                         dest="db_pwd", type=str, help="""The PSQL database password""")
+    parser.add_argument("-paa_read_key",  required=True,
+                        dest="paa_read_key", type=str, help="""The PurpleAirAPI Read key""")
     parser.add_argument("-paa_single_sensor_request_json_file",  required=False, default=None,
                         dest="paa_single_sensor_request_json_file", type=str, help="""The
                         path to a json file containing the parameters to send a single
