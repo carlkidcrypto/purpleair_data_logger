@@ -10,7 +10,7 @@ def read_file(filename):
 
 setup(
     name="purpleair_data_logger",
-    version="0.0.6a1",
+    version="0.0.7a1",
     license="MIT",
     author="Carlos Santos",
     author_email="27721404+carlkid1499@users.noreply.github.com",
