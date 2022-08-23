@@ -144,4 +144,4 @@ Out of the parameters listed below only "fields" is required. The others are all
 2. Create two database users. One for Grafana with insert only privileges. The other for the data logger with only insert/create privileges. <https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e>, <https://www.techonthenet.com/postgresql/grant_revoke.php>
 3. Install and configure TimescaleDB. <https://docs.timescale.com/install/latest/self-hosted/>
 4. Install and configure Grafana. <https://grafana.com/docs/grafana/latest/setup-grafana/installation/>
-5. Import into your local Grafana instance the dashboard under [here](/grafana_dashboards/PurpleAirAPI (PAA) Data Logger Grafana Dashboard-1660355898051.json)
+5. Import into your local Grafana instance the dashboard file found [here](./grafana_dashboards/PurpleAirAPI%20(PAA)%20Data%20Logger%20Grafana%20Dashboard-1660355898051.json)
