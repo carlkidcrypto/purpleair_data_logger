@@ -64,8 +64,8 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # We will create one table for different data groups. Simply following the
-        # offical PurpleAir documentaiton. Think Station information and status fields,
-        # Environmental fields, etc. See website for more informaiton.
+        # official PurpleAir documentation. Think Station information and status fields,
+        # Environmental fields, etc. See website for more information.
         # https://api.purpleair.com/#api-sensors-get-sensor-data
 
         self._db_conn.run(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
@@ -414,7 +414,7 @@ if __name__ == "__main__":
     if args.db_drop_all_tables:
         print("""Are you sure you wish to continue? This operation will drop all tables from the database!
         ALL COLLECTED DATA WILL BE LOST!""")
-        user_input = input("""Type yes or no to contune: """)
+        user_input = input("""Type yes or no to continue: """)
         if "no" in str(user_input):
             sys.exit("""Stopping because you didn't want to continue...""")
 
@@ -445,4 +445,4 @@ if __name__ == "__main__":
 
     else:
         raise ValueError(
-            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provied. Not both.""")
+            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
