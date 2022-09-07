@@ -13,6 +13,9 @@
 """
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from os import makedirs
+from os.path import exists
+
 import argparse
 import json
 
@@ -31,6 +34,20 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         # Inherit everything from the parent base class: PurpleAirDataLogger
         super().__init__(PurpleAirAPIReadKey)
 
+        # save off the store path internally for later access
+        self._path_to_save_csv_files_in = path_to_save_csv_files_in
+
+        # Init some class vars
+        self._did_we_write_the_header_bool = False
+
+    def _open_csv_file(self, file_path_and_name):
+        the_file_stream = open(file_path_and_name, "w")
+        return the_file_stream
+
+    def _close_and_flush_csv_file(self, the_file_stream):
+        the_file_stream.flush()
+        the_file_stream.close()
+
     def store_sensor_data(self, single_sensor_data_dict):
         """
             Insert the sensor data into the database.
@@ -42,6 +59,14 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
                                                  or error checking. That is upto the caller.
         """
 
+        # Step one make the self._path_to_save_csv_files_in if it doesn't exist already
+        if exists(self._path_to_save_csv_files_in) == False:
+            print(f"Creating storage directory: {self._path_to_save_csv_files_in}...")
+            makedirs(self._path_to_save_csv_files_in)
+
+        # Step two create all the unique files names
+        
+        # Step three write data to all files.
         raise NotImplementedError
 
 
