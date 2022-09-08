@@ -13,6 +13,9 @@
 """
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
+    STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME, STATION_INFORMATION_AND_STATUS_FIELDS_HEADER,
+    ENVIRONMENTAL_FIELDS_FILE_NAME, ENVIRONMENTAL_FIELDS_HEADER)
 from os import makedirs
 from os.path import exists
 
@@ -28,7 +31,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     def __init__(self, PurpleAirAPIReadKey, path_to_save_csv_files_in):
         """
             :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
-            :param object psql_db_conn: A valid PG8000 database connection
+            :param object path_to_save_csv_files_in: A string directory path
+                                                     to save files in.
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
@@ -61,13 +65,26 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         # Step one make the self._path_to_save_csv_files_in if it doesn't exist already
         if exists(self._path_to_save_csv_files_in) == False:
-            print(f"Creating storage directory: {self._path_to_save_csv_files_in}...")
+            print(
+                f"Creating storage directory: {self._path_to_save_csv_files_in}...")
             makedirs(self._path_to_save_csv_files_in)
 
         # Step two create all the unique files names
-        
+        station_information_and_status_fields_file_stream = self._open_csv_file(
+            self._path_to_save_csv_files_in + "/" + STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME)
+
+        environmental_fields_file_steam = self._open_csv_file(
+            self._path_to_save_csv_files_in + "/" + ENVIRONMENTAL_FIELDS_FILE_NAME)
+
+        if self._did_we_write_the_header_bool == False:
+            # Write the headers
+            station_information_and_status_fields_file_stream.write(
+                STATION_INFORMATION_AND_STATUS_FIELDS_HEADER + "\n")
+
+            environmental_fields_file_steam.write(
+                ENVIRONMENTAL_FIELDS_HEADER + "\n")
+
         # Step three write data to all files.
-        raise NotImplementedError
 
 
 if __name__ == "__main__":
