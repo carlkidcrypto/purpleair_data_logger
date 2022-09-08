@@ -3,6 +3,7 @@
 """
     Copyright 2022 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+    Data will be inserted into CSV files.
     
     For best practice from PurpleAir:
     "The data from individual sensors will update no less than every 30 seconds.
