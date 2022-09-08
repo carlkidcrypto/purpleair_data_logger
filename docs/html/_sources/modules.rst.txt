@@ -1,5 +1,5 @@
-purple_air_data_logger
-======================
+purpleair_data_logger
+=====================
 
 .. toctree::
    :maxdepth: 8
