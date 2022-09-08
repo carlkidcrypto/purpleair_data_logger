@@ -154,7 +154,7 @@ PM10_0_FIELDS_HEADER = \
 PARTICLE_COUNT_FIELDS_FILE_NAME = """particle_count_fields.csv"""
 
 #: Standard CSV header for -
-PARTICLE_COUNT_FIELDS = \
+PARTICLE_COUNT_FIELDS_HEADER = \
     "data_time_stamp,"\
     "sensor_index,"\
     "0.3_um_count,"\
