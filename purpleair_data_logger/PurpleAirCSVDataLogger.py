@@ -59,7 +59,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
             :param str file_path_and_name: A string of 'file_path_and_name'. i.e
                                            '/path_to_place/file_name.csv'.
         """
-        the_file_stream = open(file_path_and_name, "w")
+        the_file_stream = open(file_path_and_name, "a")
         return the_file_stream
 
     @staticmethod
