@@ -52,11 +52,22 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
     @staticmethod
     def _open_csv_file(file_path_and_name):
+        """
+            Create the given 'file_path_and_name'.
+
+            :param str file_path_and_name: A string of 'file_path_and_name'. i.e
+                                           '/path_to_place/file_name.csv'.
+        """
         the_file_stream = open(file_path_and_name, "w")
         return the_file_stream
 
     @staticmethod
     def _close_and_flush_csv_file(the_file_stream):
+        """
+            Close and flush the given 'the_file_stream'.
+
+            :param file_stream the_file_stream: An open file stream to flush and close.
+        """
         the_file_stream.flush()
         the_file_stream.close()
 
