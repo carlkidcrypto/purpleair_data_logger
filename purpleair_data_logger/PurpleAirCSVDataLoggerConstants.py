@@ -92,7 +92,7 @@ PM2_5_FIELDS_FILE_NAME = """pm2.5_fields.csv"""
 
 #: Standard CSV header for -
 PM2_5_FIELDS_HEADER = \
-    "data_time_stamp",\
+    "data_time_stamp,"\
     "sensor_index,"\
     "pm2.5_alt,"\
     "pm2.5_alt_a,"\
@@ -112,7 +112,7 @@ PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME = """pm2.5_pseudo_average_fields.csv"""
 
 #: Standard CSV header for -
 PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER = \
-    "data_time_stamp",\
+    "data_time_stamp,"\
     "sensor_index,"\
     "pm2.5_10minute,"\
     "pm2.5_10minute_a,"\
