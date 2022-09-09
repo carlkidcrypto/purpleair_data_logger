@@ -3,7 +3,8 @@
 """
     Copyright 2022 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
-    
+    Data will be inserted into a PSQL database.
+
     For best practice from PurpleAir:
     "The data from individual sensors will update no less than every 30 seconds.
     As a courtesy, we ask that you limit the number of requests to no more than
@@ -12,8 +13,7 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirAPI import PurpleAirAPI, debug_log
-from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
+from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
 from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
                                                                 PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
                                                                 PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
@@ -24,13 +24,12 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STAT
                                                                 CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES)
 import pg8000
 import argparse
-from time import sleep
 from datetime import datetime, timezone
 import json
 import sys
 
 
-class PurpleAirDataLogger():
+class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     """
         The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
         database. Then we will use Grafana to visualize said data.
@@ -42,125 +41,122 @@ class PurpleAirDataLogger():
             :param object psql_db_conn: A valid PG8000 database connection
         """
 
-        # Make one instance of our PurpleAirAPI class
-        self.__paa_obj = PurpleAirAPI(PurpleAirAPIReadKey)
+        # Inherit everything from the parent base class: PurpleAirDataLogger
+        super().__init__(PurpleAirAPIReadKey)
 
         # Make our psql database connection
-        self.__db_conn = psql_db_conn
+        self._db_conn = psql_db_conn
 
         # Make our PSQL Tables
-        self.__create_psql_db_tables()
+        self._create_psql_db_tables()
 
         # Convert our PSQL tables to hyper tables
-        self.__convert_psql_tables_to_hyper_tables()
+        self._convert_psql_tables_to_hyper_tables()
 
         # Create compression policies
-        self.__configure_data_compression_policies()
+        self._configure_data_compression_policies()
 
         # Commit to the db
-        self.__db_conn.commit()
+        self._db_conn.commit()
 
-        # Define how often we send requests
-        self.__request_every_x = 65
-
-    def __create_psql_db_tables(self):
+    def _create_psql_db_tables(self):
         """
             Create the PSQL database tables if they don't exist already
         """
 
         # We will create one table for different data groups. Simply following the
-        # offical PurpleAir documentaiton. Think Station information and status fields,
-        # Environmental fields, etc. See website for more informaiton.
+        # official PurpleAir documentation. Think Station information and status fields,
+        # Environmental fields, etc. See website for more information.
         # https://api.purpleair.com/#api-sensors-get-sensor-data
 
-        self.__db_conn.run(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
-        self.__db_conn.run(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
-        self.__db_conn.run(CREATE_MISCELLANEOUS_FIELDS)
-        self.__db_conn.run(CREATE_PM1_0_FIELDS)
-        self.__db_conn.run(CREATE_PM2_5_FIELDS)
-        self.__db_conn.run(CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS)
-        self.__db_conn.run(CREATE_PM10_0_FIELDS)
-        self.__db_conn.run(CREATE_PARTICLE_COUNT_FIELDS)
-        self.__db_conn.run(CREATE_THINGSPEAK_FIELDS)
+        self._db_conn.run(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
+        self._db_conn.run(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
+        self._db_conn.run(CREATE_MISCELLANEOUS_FIELDS)
+        self._db_conn.run(CREATE_PM1_0_FIELDS)
+        self._db_conn.run(CREATE_PM2_5_FIELDS)
+        self._db_conn.run(CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS)
+        self._db_conn.run(CREATE_PM10_0_FIELDS)
+        self._db_conn.run(CREATE_PARTICLE_COUNT_FIELDS)
+        self._db_conn.run(CREATE_THINGSPEAK_FIELDS)
 
-    def __convert_psql_tables_to_hyper_tables(self):
+    def _convert_psql_tables_to_hyper_tables(self):
         """
             A method to convert our PSQL tables to TimeScaleDB hyper tables.
         """
 
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('environmental_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
 
-    def __configure_data_compression_policies(self):
+    def _configure_data_compression_policies(self):
         """
             A method to set TimescaleDB data compression policies. More information
             can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
 
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE station_information_and_status_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE environmental_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE miscellaneous_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE pm1_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE pm2_5_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE pm2_5_pseudo_average_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE pm10_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE particle_count_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """ALTER TABLE thingspeak_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                 timescaledb.compress_segmentby = 'sensor_index')""")
 
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('station_information_and_status_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('environmental_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('miscellaneous_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('pm1_0_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('pm2_5_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('pm2_5_pseudo_average_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('pm10_0_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('particle_count_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self.__db_conn.run(
+        self._db_conn.run(
             """SELECT add_compression_policy('thingspeak_fields', INTERVAL '14d', if_not_exists => TRUE)""")
 
-    def __convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
+    def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
             A method to covert a unix epoch timestamp to a psql timestamp.
 
@@ -175,21 +171,6 @@ class PurpleAirDataLogger():
         else:
             return str(datetime.fromtimestamp(unix_epoch_timestamp, timezone.utc))
 
-    def get_sensor_data(self, sensor_index, read_key=None, fields=None):
-        """
-            Request data from a single sensor.
-
-            :param int sensor_index: A valid PurpleAirAPI sensor index.
-
-            :param str read_key: A valid PurpleAirAPI private read key.
-
-            :param str fields: A comma delmited string of valid field names.
-
-            :return A python dictionary with data.
-        """
-
-        return self.__paa_obj.request_sensor_data(sensor_index, read_key, fields)
-
     def store_sensor_data(self, single_sensor_data_dict):
         """
             Insert the sensor data into the database.
@@ -202,9 +183,9 @@ class PurpleAirDataLogger():
         """
 
         # Run the queries
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             name=single_sensor_data_dict["name"],
@@ -224,11 +205,11 @@ class PurpleAirDataLogger():
             uptime=single_sensor_data_dict["uptime"],
             pa_latency=single_sensor_data_dict["pa_latency"],
             memory=single_sensor_data_dict["memory"],
-            last_seen=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            last_seen=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["last_seen"]),
-            last_modified=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            last_modified=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["last_modified"]),
-            date_created=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            date_created=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["date_created"]),
             channel_state=single_sensor_data_dict["channel_state"],
             channel_flags=single_sensor_data_dict["channel_flags"],
@@ -239,9 +220,9 @@ class PurpleAirDataLogger():
             confidence_auto=single_sensor_data_dict["confidence_auto"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             humidity=single_sensor_data_dict["humidity"],
@@ -255,9 +236,9 @@ class PurpleAirDataLogger():
             pressure_b=single_sensor_data_dict["pressure_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             voc=single_sensor_data_dict["voc"],
@@ -267,9 +248,9 @@ class PurpleAirDataLogger():
             analog_input=single_sensor_data_dict["analog_input"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm1_0=single_sensor_data_dict["pm1.0"],
@@ -283,9 +264,9 @@ class PurpleAirDataLogger():
             pm1_0_cf_1_b=single_sensor_data_dict["pm1.0_cf_1_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_alt=single_sensor_data_dict["pm2.5_alt"],
@@ -302,9 +283,9 @@ class PurpleAirDataLogger():
             pm2_5_cf_1_b=single_sensor_data_dict["pm2.5_cf_1_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_10minute=single_sensor_data_dict["pm2.5_10minute"],
@@ -327,9 +308,9 @@ class PurpleAirDataLogger():
             pm2_5_1week_b=single_sensor_data_dict["pm2.5_1week_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm10_0=single_sensor_data_dict["pm10.0"],
@@ -343,9 +324,9 @@ class PurpleAirDataLogger():
             pm10_0_cf_1_b=single_sensor_data_dict["pm10.0_cf_1_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             um_count_0_3=single_sensor_data_dict["0.3_um_count"],
@@ -368,9 +349,9 @@ class PurpleAirDataLogger():
             um_count_b_10_0=single_sensor_data_dict["10.0_um_count_b"]
         )
 
-        self.__db_conn.run(
+        self._db_conn.run(
             PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
-            data_time_stamp=self.__convert_unix_epoch_timestamp_to_psql_timestamp(
+            data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]),
             sensor_index=single_sensor_data_dict["sensor_index"],
             primary_id_a=single_sensor_data_dict["primary_id_a"],
@@ -384,138 +365,7 @@ class PurpleAirDataLogger():
         )
 
         # Commit to the db
-        self.__db_conn.commit()
-
-    def get_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
-        """
-            Request data from a multiple sensors. Uses the same parameters as
-            PurpleAirAPI.request_multiple_sensors_data()
-
-            :return A python dictionary with data.
-        """
-
-        return self.__paa_obj.request_multiple_sensors_data(fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
-
-    def store_multiple_sensors_data(self):
-        """
-            Insert the multiple sensors data into the database.
-        """
-
-        raise NotImplementedError
-
-    def run_loop_for_storing_single_sensor_data(self, the_json_file):
-        """
-            A method containing the run loop for inserting a sinle sensors' data into the db.
-
-            :param dict json_config_file: A dictionary object of the json config file using json load.
-        """
-
-        while True:
-            print("run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n")
-            # We will request data once every 65 seconds.
-            debug_log(f"""Requesting new data from a sensor with index
-                      {the_json_file['sensor_index']}...""")
-
-            sensor_data = self.get_sensor_data(
-                the_json_file["sensor_index"], the_json_file["read_key"], the_json_file["fields"])
-
-            # Let's make it easier on ourselves by making the sensor data one level deep.
-            # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
-            # We turn it into just json["KEYS..."].
-            the_modified_sensor_data = {}
-            the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
-            for key, val in sensor_data["sensor"].items():
-                if key == "stats":
-                    # For now name this one stats_pm2.5 until I understand the difference
-                    # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"].
-                    # Update 07/25/2022: Heard back from PurpleAir. They are the same.
-                    the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
-                    the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
-                    the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
-                    the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
-                    the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
-                    the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
-                    the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
-                    the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
-
-                elif key in ["stats_a", "stats_b"]:
-                    the_modified_sensor_data[f"pm2.5_{key[-1]}"] = val["pm2.5"]
-                    the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val["pm2.5_10minute"]
-                    the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val["pm2.5_30minute"]
-                    the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val["pm2.5_60minute"]
-                    the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val["pm2.5_6hour"]
-                    the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val["pm2.5_24hour"]
-                    the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val["pm2.5_1week"]
-                    the_modified_sensor_data[f"time_stamp_{key[-1]}"] = val["time_stamp"]
-
-                else:
-                    the_modified_sensor_data[key] = val
-
-            self.store_sensor_data(the_modified_sensor_data)
-            debug_log(f"""Waiting {self.__request_every_x} seconds before
-                  requesting new data again...""")
-            sleep(self.__request_every_x)
-
-    def run_loop_for_storing_multiple_sensors_data(self, json_config_file):
-        """
-            A method containing the run loop for inserting a multiple sensors' data into the db.
-
-            :param dict json_config_file: A dictionary object of the json config file using json load.
-        """
-
-        while True:
-            print(
-                "run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
-            # We will request data once every 65 seconds.
-            debug_log(f"""Requesting new data from multiple sensors with fields
-                      {json_config_file["fields"]}...""")
-            sensors_data = self.get_multiple_sensors_data(fields=json_config_file["fields"],
-                                                          location_type=json_config_file["location_type"],
-                                                          read_keys=json_config_file["read_keys"],
-                                                          show_only=json_config_file["show_only"],
-                                                          modified_since=json_config_file["modified_since"],
-                                                          max_age=json_config_file["max_age"],
-                                                          nwlng=json_config_file["nwlng"],
-                                                          nwlat=json_config_file["nwlat"],
-                                                          selng=json_config_file["selng"],
-                                                          selat=json_config_file["selat"])
-
-            # The sensors data will look something like this:
-            # {'api_version': 'V1.0.11-0.0.34', 'time_stamp': 1659710288, 'data_time_stamp': 1659710232,
-            # 'max_age': 604800, 'firmware_default_version': '7.00', 'fields': ['sensor_index', 'name'],
-            # 'data': [[131075, 'Mariners Bluff'], [131079, 'BRSKBV-outside'], [131077, 'BEE Patio'],
-            # ... ]}
-            # It is important to know that the order of 'fields' provided as an argument to get_multiple_sensors_data()
-            # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
-            # Now lets build and feed what the store_sensor_data() method expects.
-
-            # Extract the 'fields' and 'data' parts to make it easier on ourselves
-            extracted_fields = sensors_data["fields"]
-            extracted_data = sensors_data["data"]
-
-            # Grab each list of data items from extracted data
-            for data_list in extracted_data:
-                # Start making our modified sensor data object that will be passed to the
-                # self.store_sensor_data() method
-                the_modified_sensor_data = {}
-                the_modified_sensor_data["data_time_stamp"] = sensors_data["data_time_stamp"]
-                for data_index, data_item in enumerate(data_list):
-                    the_modified_sensor_data[str(
-                        extracted_fields[data_index])] = data_item
-
-                # Before we store the data, we must make sure all fields have been included
-                # Our psql store statements expect all fields regardless of what we request.
-                for field in ACCEPTED_FIELD_NAMES_DICT.keys():
-                    if field not in the_modified_sensor_data.keys():
-                        the_modified_sensor_data[str(
-                            field)] = ACCEPTED_FIELD_NAMES_DICT[field]
-
-                # Store the current data
-                self.store_sensor_data(the_modified_sensor_data)
-
-            debug_log(f"""Waiting {self.__request_every_x} seconds before
-                  requesting new data again...""")
-            sleep(self.__request_every_x)
+        self._db_conn.commit()
 
 
 if __name__ == "__main__":
@@ -565,7 +415,7 @@ if __name__ == "__main__":
     if args.db_drop_all_tables:
         print("""Are you sure you wish to continue? This operation will drop all tables from the database!
         ALL COLLECTED DATA WILL BE LOST!""")
-        user_input = input("""Type yes or no to contune: """)
+        user_input = input("""Type yes or no to continue: """)
         if "no" in str(user_input):
             sys.exit("""Stopping because you didn't want to continue...""")
 
@@ -576,7 +426,7 @@ if __name__ == "__main__":
                 """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided...""")
 
     # Third make an instance our our data logger
-    the_paa_data_logger = PurpleAirDataLogger(
+    the_paa_psql_data_logger = PurpleAirPSQLDataLogger(
         args.paa_read_key, the_psql_db_conn)
 
     # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
@@ -584,16 +434,16 @@ if __name__ == "__main__":
         # Now load up that json file
         file_obj = open(args.paa_multiple_sensor_request_json_file, "r")
         the_json_file = json.load(file_obj)
-        the_paa_data_logger.run_loop_for_storing_multiple_sensors_data(
+        the_paa_psql_data_logger.run_loop_for_storing_multiple_sensors_data(
             the_json_file)
 
     elif args.paa_multiple_sensor_request_json_file is None and args.paa_single_sensor_request_json_file is not None:
         # Now load up that json file
         file_obj = open(args.paa_single_sensor_request_json_file, "r")
         the_json_file = json.load(file_obj)
-        the_paa_data_logger.run_loop_for_storing_single_sensor_data(
+        the_paa_psql_data_logger.run_loop_for_storing_single_sensor_data(
             the_json_file)
 
     else:
         raise ValueError(
-            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provied. Not both.""")
+            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")

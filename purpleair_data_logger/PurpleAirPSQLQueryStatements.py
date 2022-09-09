@@ -7,7 +7,7 @@
     what the PurpleAir documentation says. We will do the same for table column names.
 """
 
-#: PSQL statemnt for station_information_and_status_fields table
+#: PSQL statement for station_information_and_status_fields table
 CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS station_information_and_status_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -41,7 +41,7 @@ CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE = """
         confidence_auto INT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-#: PSQL statemnt for environmental_fields table
+#: PSQL statement for environmental_fields table
 CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
     CREATE TABLE IF NOT EXISTS environmental_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -57,7 +57,7 @@ CREATE_ENVIRONMENTAL_FIELDS_TABLE = """
         pressure_b FLOAT NULL,
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
-#: PSQL statemnt for miscellaneous_fields table
+#: PSQL statement for miscellaneous_fields table
 CREATE_MISCELLANEOUS_FIELDS = """
     CREATE TABLE IF NOT EXISTS miscellaneous_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -70,7 +70,7 @@ CREATE_MISCELLANEOUS_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm1_0 instead of pm1.0
-#: PSQL statemnt for pm1_0_fields table
+#: PSQL statement for pm1_0_fields table
 CREATE_PM1_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm1_0_fields(
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -87,7 +87,7 @@ CREATE_PM1_0_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-#: PSQL statemnt for pm2_5_fields table
+#: PSQL statement for pm2_5_fields table
 CREATE_PM2_5_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -107,7 +107,7 @@ CREATE_PM2_5_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm2_5 instead of pm2.5
-#: PSQL statemnt for pm2_5_pseudo_average_fields table
+#: PSQL statement for pm2_5_pseudo_average_fields table
 CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm2_5_pseudo_average_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -133,7 +133,7 @@ CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: Since we can't have decimals in variable names, we do pm10_0 instead of pm10.0
-#: PSQL statemnt for pm10_0_fields table
+#: PSQL statement for pm10_0_fields table
 CREATE_PM10_0_FIELDS = """
     CREATE TABLE IF NOT EXISTS pm10_0_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -150,7 +150,7 @@ CREATE_PM10_0_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note: we can not start column names with numbers. So 0_3_um_count becomes um_count_0_3
-#: PSQL statemnt for particle_count_fields table
+#: PSQL statement for particle_count_fields table
 CREATE_PARTICLE_COUNT_FIELDS = """
     CREATE TABLE IF NOT EXISTS particle_count_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,
@@ -176,7 +176,7 @@ CREATE_PARTICLE_COUNT_FIELDS = """
         PRIMARY KEY(data_time_stamp, sensor_index))"""
 
 #: Note TO SELF MAY END UP GETTING RID OF THIS TABLE. I SEE NO USE FOR IT.
-#: PSQL statemnt for thingspeak_fields table
+#: PSQL statement for thingspeak_fields table
 CREATE_THINGSPEAK_FIELDS = """
     CREATE TABLE IF NOT EXISTS thingspeak_fields (
         data_time_stamp TIMESTAMPTZ NOT NULL,

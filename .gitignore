@@ -1,5 +1,6 @@
 *.pyc
 .DS_Store
 dist/*
+build/*
+*/__pycache__/*
 purpleair_data_logger.egg-info/*
-*/purpleair_data_logger.egg-info/*

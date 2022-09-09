@@ -32,50 +32,50 @@ class PurpleAirAPI():
 
     def __init__(self, your_api_read_key):
 
-        # Save off the API key for interal usage
-        self.__your_api_read_key = your_api_read_key
+        # Save off the API key for internal usage
+        self._your_api_read_key = your_api_read_key
 
         # Create the base API request string. Must be HTTPS.
-        self.__base_api_request_string = "https://api.purpleair.com/v1/"
+        self._base_api_request_string = "https://api.purpleair.com/v1/"
 
         # Place holders for information we care about
-        self.__api_version = ""
-        self.__api_key_last_checked = 0
-        self.__api_key_type = ""
+        self._api_version = ""
+        self._api_key_last_checked = 0
+        self._api_key_type = ""
 
-        retval = self.__check_an_api_key()
+        retval = self._check_an_api_key()
         if retval:
             print("Successfully authenticated with the PurpleAirAPI")
 
-    def __check_an_api_key(self):
+    def _check_an_api_key(self):
         """
             A method to check if an API key is valid.
         """
-        request_url = self.__base_api_request_string + "keys"
+        request_url = self._base_api_request_string + "keys"
         my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self.__your_api_read_key)})
+                                  "X-API-Key": str(self._your_api_read_key)})
 
         if my_request.status_code == 201:
             # We good :) get the request text
             the_request_text_as_json = json.loads(my_request.text)
             debug_log(the_request_text_as_json)
-            self.__api_version = the_request_text_as_json["api_version"]
-            self.__api_key_last_checked = the_request_text_as_json["time_stamp"]
-            self.__api_key_type = the_request_text_as_json["api_key_type"]
+            self._api_version = the_request_text_as_json["api_version"]
+            self._api_key_last_checked = the_request_text_as_json["time_stamp"]
+            self._api_key_type = the_request_text_as_json["api_key_type"]
             my_request.close()
             del my_request
             return True
 
         else:
             raise ValueError(
-                f"Invalid API Key provided: {self.__your_api_read_key}")
+                f"Invalid API Key provided: {self._your_api_read_key}")
 
     def recheck_api_key(self):
         """
             A method to recheck the API Key provided.
         """
 
-        return self.__check_an_api_key()
+        return self._check_an_api_key()
 
     @property
     def get_api_version(self):
@@ -83,7 +83,7 @@ class PurpleAirAPI():
             A method to return the API version being used.
         """
 
-        return self.__api_version
+        return self._api_version
 
     @property
     def get_api_key_last_checked(self):
@@ -91,7 +91,7 @@ class PurpleAirAPI():
             A method to return the timestamp of when the API Key was last checked.
         """
 
-        return self.__api_key_last_checked
+        return self._api_key_last_checked
 
     @property
     def get_api_key_type(self):
@@ -99,7 +99,7 @@ class PurpleAirAPI():
             A method to return the API version being used.
         """
 
-        return self.__api_key_type
+        return self._api_key_type
 
     def request_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
@@ -128,7 +128,7 @@ class PurpleAirAPI():
             :return A python dictionary containing the payload response
         """
 
-        request_url = self.__base_api_request_string + \
+        request_url = self._base_api_request_string + \
             "sensors/" + f"{sensor_index}"
 
         # Add to the request_url string depending on what optional parameters are
@@ -145,7 +145,7 @@ class PurpleAirAPI():
 
         debug_log(request_url)
         my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self.__your_api_read_key)})
+                                  "X-API-Key": str(self._your_api_read_key)})
 
         if my_request.status_code == 200:
             # We good :) get the request text
@@ -153,7 +153,7 @@ class PurpleAirAPI():
             debug_log(the_request_text_as_json)
             my_request.close()
             del my_request
-            return self.__sanitize_sensor_data_from_paa(the_request_text_as_json)
+            return self._sanitize_sensor_data_from_paa(the_request_text_as_json)
 
         elif my_request.status_code == 400:
             the_request_text_as_json = json.loads(my_request.text)
@@ -230,7 +230,7 @@ class PurpleAirAPI():
             :return A python dictionary containing the payload response                    
         """
 
-        request_url = self.__base_api_request_string + \
+        request_url = self._base_api_request_string + \
             "sensors/" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
@@ -256,7 +256,7 @@ class PurpleAirAPI():
 
         debug_log(request_url)
         my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self.__your_api_read_key)})
+                                  "X-API-Key": str(self._your_api_read_key)})
 
         if my_request.status_code == 200:
             # We good :) get the request text
@@ -273,7 +273,7 @@ class PurpleAirAPI():
             raise ValueError(
                 f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
 
-    def __sanitize_sensor_data_from_paa(self, paa_return_data):
+    def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
             A method for: Not all sensors support all field names, so we check that the keys exist
             in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
