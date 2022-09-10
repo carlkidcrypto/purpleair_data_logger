@@ -273,6 +273,56 @@ class PurpleAirAPI():
             raise ValueError(
                 f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
 
+    def request_sensor_historic_data(self, sensor_index, read_key, start_timestamp, end_timestamp, average, fields):
+        """
+            A method to BLA FILL ME IN
+
+            :param int sensor_index: The sensor_index as found in the JSON for this specific sensor.
+
+            :param (optional) str read_key: This read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
+
+            :param (optional) int start_timestamp: The time stamp of the first required history entry. Query is executed using data_timestamp >= start_timestamp.
+                                                   Time can be specified as a UNIX time stamp in seconds or an ISO 8601 string. https://en.wikipedia.org/wiki/ISO_8601.
+                                                   The time_stamp column in the resulting JSON or CSV will be in the same format and or time zone that you use for this start_timestamp parameter.
+                                                   If not specified, the last maximum time span for the requested average will be returned.
+
+            :param (optional) int end_timestamp: The end time stamp of the history to return. Query is executed using data_timestamp < end_timestamp.
+                                                 Time can be specified as a UNIX time stamp in seconds or an ISO 8601 string. https://en.wikipedia.org/wiki/ISO_8601.
+                                                 If not specified, the maximum time span will be returned starting from the provided start_timestamp.
+
+            :param (optional) int average: The desired average in minutes, one of the following: 0 (real-time), 10 (default if not specified), 30, 60, 360 (6 hour), 1440 (1 day)
+                                           Coming soon: 10080 (1 week), 44640 (1 month), 525600 (1 year).
+
+            :param str fields: The 'Fields' parameter specifies which 'sensor data fields' to include in the response. Not all fields are available as history fields and we will be working to add more as time goes on. Fields marked with an asterisk (*) may not be available when using averages. It is a comma separated list with one or more of the following:
+
+                               Station information and status fields:
+                               hardware*, latitude*, longitude*, altitude*, firmware_version*, rssi, uptime, pa_latency, memory,
+
+                               Environmental fields:
+                               humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b
+
+                               Miscellaneous fields:
+                               voc, voc_a, voc_b, analog_input
+
+                               PM1.0 fields:
+                               pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a, pm1.0_cf_1_b
+
+                               PM2.5 fields:
+                               pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b
+
+                               PM10.0 fields:
+                               pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b
+
+                               Visibility fields:
+                               scattering_coefficient, scattering_coefficient_a, scattering_coefficient_b, deciviews, deciviews_a, deciviews_b, visual_range, visual_range_a, visual_range_b
+
+                               Particle count fields:
+                               0.3_um_count, 0.3_um_count_a, 0.3_um_count_b, 0.5_um_count, 0.5_um_count_a, 0.5_um_count_b, 1.0_um_count, 1.0_um_count_a, 1.0_um_count_b, 2.5_um_count, 2.5_um_count_a, 2.5_um_count_b, 5.0_um_count, 5.0_um_count_a, 5.0_um_count_b, 10.0_um_count, 10.0_um_count_a, 10.0_um_count_b
+
+                               For field descriptions, please see the 'sensor data fields'. section.
+        """
+        pass
+
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
             A method for: Not all sensors support all field names, so we check that the keys exist
