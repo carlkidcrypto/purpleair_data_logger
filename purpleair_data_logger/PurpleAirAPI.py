@@ -9,7 +9,17 @@
 import requests
 import json
 from purpleair_data_logger.PurpleAirAPIConstants import (
-    ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS, SUCCESS_CODE, ERROR_CODES_LIST)
+    ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS, SUCCESS_CODE_LIST, ERROR_CODES_LIST)
+
+
+class PurpleAirAPIError(Exception):
+    """ 
+        Custom Exception for our PurpleAirAPI class.
+    """
+
+    def __init__(self, message_string):
+        self.message = message_string
+        super().__init__(self.message)
 
 
 def debug_log(debug_msg_string):
@@ -56,10 +66,11 @@ class PurpleAirAPI():
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self._your_api_read_key)})
 
-        if my_request.status_code == 201:
+        the_request_text_as_json = json.loads(my_request.text)
+        debug_log(the_request_text_as_json)
+
+        if my_request.status_code in SUCCESS_CODE_LIST:
             # We good :) get the request text
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
             self._api_version = the_request_text_as_json["api_version"]
             self._api_key_last_checked = the_request_text_as_json["time_stamp"]
             self._api_key_type = the_request_text_as_json["api_key_type"]
@@ -68,8 +79,8 @@ class PurpleAirAPI():
             return True
 
         else:
-            raise ValueError(
-                f"Invalid API Key provided: {self._your_api_read_key}")
+            raise PurpleAirAPIError(
+                f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
 
     def recheck_api_key(self):
         """
@@ -132,19 +143,12 @@ class PurpleAirAPI():
         request_url = self._base_api_request_string + \
             "sensors/" + f"{sensor_index}"
 
-        # Add to the request_url string depending on what optional parameters are
-        # passed in
-        if read_key is not None and fields is not None:
-            request_url = request_url + \
-                f"?read_key={str(read_key)}&fields={str(fields)}"
+        optional_parameters_dict = {
+            "read_key": read_key,
+            "fields": fields
+        }
 
-        elif read_key is None and fields is not None:
-            request_url = request_url + f"?fields={str(fields)}"
-
-        elif read_key is not None and fields is None:
-            request_url = request_url + f"?read_key={str(read_key)}"
-
-        return self._send_url_request(request_url, optional_parameters_dict={})
+        return self._send_url_request(request_url, optional_parameters_dict)
 
     def request_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
@@ -282,7 +286,7 @@ class PurpleAirAPI():
         """
 
         request_url = self._base_api_request_string + \
-            "sensors/" + f"{sensor_index}" + "/history" + f"?{fields}"
+            "sensors/" + f"{sensor_index}" + "/history" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
         # passed in. Turn them into a list of optional parameters
@@ -305,28 +309,36 @@ class PurpleAirAPI():
                                                   request_url. By default '{}'.
         """
 
-        if optional_parameters_dict:
+        if optional_parameters_dict is not {}:
+            opt_param_count = 0
             for opt_param, val in optional_parameters_dict.items():
-                request_url = request_url + \
-                    f"&{opt_param}={str(val)}"
+                if val is not None:
+                    opt_param_count = opt_param_count + 1
+
+                    if opt_param_count == 1:
+                        request_url = request_url + \
+                            f"?{opt_param}={str(val)}"
+
+                    elif opt_param_count >= 2:
+                        request_url = request_url + \
+                            f"&{opt_param}={str(val)}"
 
         debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self._your_api_read_key)})
 
-        if my_request.status_code == SUCCESS_CODE:
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
+        the_request_text_as_json = json.loads(my_request.text)
+        debug_log(the_request_text_as_json)
+
+        if my_request.status_code in SUCCESS_CODE_LIST:
             my_request.close()
             del my_request
             return the_request_text_as_json
 
         elif my_request.status_code in ERROR_CODES_LIST:
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
             my_request.close()
-            raise ValueError(
-                f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
+            raise PurpleAirAPIError(
+                f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
 
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """

@@ -6,7 +6,13 @@
 """
 
 #: A constant to see if debug statements are enabled in the PurpleAirAPI module.
-PRINT_DEBUG_MSGS = False
+PRINT_DEBUG_MSGS = True
+
+#: Accepted Error Codes
+ERROR_CODES_LIST = [400, 403, 404]
+
+#: Success Code
+SUCCESS_CODE_LIST = [200, 201]
 
 #: Store the dict/json keys to access data fields.
 #: And define default empty/null values for them
