@@ -8,7 +8,8 @@
 
 import requests
 import json
-from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS
+from purpleair_data_logger.PurpleAirAPIConstants import (
+    ACCEPTED_FIELD_NAMES_DICT, PRINT_DEBUG_MSGS, SUCCESS_CODE, ERROR_CODES_LIST)
 
 
 def debug_log(debug_msg_string):
@@ -143,24 +144,7 @@ class PurpleAirAPI():
         elif read_key is not None and fields is None:
             request_url = request_url + f"?read_key={str(read_key)}"
 
-        debug_log(request_url)
-        my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self._your_api_read_key)})
-
-        if my_request.status_code == 200:
-            # We good :) get the request text
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
-            my_request.close()
-            del my_request
-            return self._sanitize_sensor_data_from_paa(the_request_text_as_json)
-
-        elif my_request.status_code == 400:
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
-            my_request.close()
-            raise ValueError(
-                f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
+        return self._send_url_request(request_url, optional_parameters_dict={})
 
     def request_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
@@ -246,36 +230,11 @@ class PurpleAirAPI():
             "selng": selng,
             "selat": selat}
 
-        for opt_param, val in optional_parameters_dict.items():
+        return self._send_url_request(request_url, optional_parameters_dict)
 
-            # We haven't added any yet. The first one will look different that
-            # the rest
-            if opt_param is None:
-                request_url = request_url + \
-                    f"&{opt_param}={str(val)}"
-
-        debug_log(request_url)
-        my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self._your_api_read_key)})
-
-        if my_request.status_code == 200:
-            # We good :) get the request text
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
-            my_request.close()
-            del my_request
-            return the_request_text_as_json
-
-        elif my_request.status_code == 400:
-            the_request_text_as_json = json.loads(my_request.text)
-            debug_log(the_request_text_as_json)
-            my_request.close()
-            raise ValueError(
-                f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
-
-    def request_sensor_historic_data(self, sensor_index, read_key, start_timestamp, end_timestamp, average, fields):
+    def request_sensor_historic_data(self, sensor_index, fields, read_key=None, start_timestamp=None, end_timestamp=None, average=None):
         """
-            A method to BLA FILL ME IN
+            A method to request historic data from a single sensor.
 
             :param int sensor_index: The sensor_index as found in the JSON for this specific sensor.
 
@@ -321,7 +280,53 @@ class PurpleAirAPI():
 
                                For field descriptions, please see the 'sensor data fields'. section.
         """
-        pass
+
+        request_url = self._base_api_request_string + \
+            "sensors/" + f"{sensor_index}" + "/history" + f"?{fields}"
+
+        # Add to the request_url string depending on what optional parameters are
+        # passed in. Turn them into a list of optional parameters
+        optional_parameters_dict = {
+            "read_key": read_key,
+            "start_timestamp": start_timestamp,
+            "end_timestamp": end_timestamp,
+            "modified_since": end_timestamp,
+            "average": average}
+
+        return self._send_url_request(request_url, optional_parameters_dict)
+
+    def _send_url_request(self, request_url, optional_parameters_dict={}):
+        """
+            A class helper to send the url request. It can also add onto the
+            'request_url' string if 'optional_parameters_dict' are provided.
+
+            :param str request_url: The constructed string url request string.
+            :param dict optional_parameters_dict: Optional parameters that can be added onto the
+                                                  request_url. By default '{}'.
+        """
+
+        if optional_parameters_dict:
+            for opt_param, val in optional_parameters_dict.items():
+                request_url = request_url + \
+                    f"&{opt_param}={str(val)}"
+
+        debug_log(request_url)
+        my_request = requests.get(request_url, headers={
+                                  "X-API-Key": str(self._your_api_read_key)})
+
+        if my_request.status_code == SUCCESS_CODE:
+            the_request_text_as_json = json.loads(my_request.text)
+            debug_log(the_request_text_as_json)
+            my_request.close()
+            del my_request
+            return the_request_text_as_json
+
+        elif my_request.status_code in ERROR_CODES_LIST:
+            the_request_text_as_json = json.loads(my_request.text)
+            debug_log(the_request_text_as_json)
+            my_request.close()
+            raise ValueError(
+                f"{the_request_text_as_json['error']} - {the_request_text_as_json['description']}")
 
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
