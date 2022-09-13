@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger v0.0.8b1 documentation</title>
+  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) v0.0.8b1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -28,7 +28,7 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> PurpleAir Data Logger
+            <a href="index.html" class="icon icon-home"> PurpleAir Data Logger(s)
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -58,7 +58,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">PurpleAir Data Logger</a>
+          <a href="index.html">PurpleAir Data Logger(s)</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -77,8 +77,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="purpleairdatalogger-module">
-<h1>PurpleAirDataLogger module<a class="headerlink" href="#purpleairdatalogger-module" title="Permalink to this heading"></a></h1>
+  <section id="module-PurpleAirDataLogger">
+<span id="purpleairdatalogger-module"></span><h1>PurpleAirDataLogger module<a class="headerlink" href="#module-PurpleAirDataLogger" title="Permalink to this heading"></a></h1>
+<p>Copyright 2022 carlkid1499, All rights reserved.
+A python base Data Logger class.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>The Base Data Logger class. Will define common methods used by other data loggers. For
+example, PSQLDataLogger and CSVDataLogger. Inheritors of this class will only need to define
+their own ‘store_sensor_data’ method.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.get_multiple_sensors_data">
+<span class="sig-name descname"><span class="pre">get_multiple_sensors_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fields</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_keys</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">show_only</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modified_since</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_age</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nwlat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selat</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.get_multiple_sensors_data" title="Permalink to this definition"></a></dt>
+<dd><p>Request data from a multiple sensors. Uses the same parameters as
+PurpleAirAPI.request_multiple_sensors_data()</p>
+<p>:return A python dictionary with data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.get_sensor_data">
+<span class="sig-name descname"><span class="pre">get_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">fields</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.get_sensor_data" title="Permalink to this definition"></a></dt>
+<dd><p>Request data from a single sensor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_index</strong> (<em>int</em>) – A valid PurpleAirAPI sensor index.</p></li>
+<li><p><strong>read_key</strong> (<em>str</em>) – A valid PurpleAirAPI private read key.</p></li>
+<li><p><strong>fields</strong> (<em>str</em>) – A comma delimited string of valid field names.</p></li>
+</ul>
+</dd>
+</dl>
+<p>:return A python dictionary with data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.run_loop_for_storing_multiple_sensors_data">
+<span class="sig-name descname"><span class="pre">run_loop_for_storing_multiple_sensors_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">json_config_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.run_loop_for_storing_multiple_sensors_data" title="Permalink to this definition"></a></dt>
+<dd><p>A method containing the run loop for inserting a multiple sensors’ data into the db.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.run_loop_for_storing_single_sensor_data">
+<span class="sig-name descname"><span class="pre">run_loop_for_storing_single_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">the_json_file</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.run_loop_for_storing_single_sensor_data" title="Permalink to this definition"></a></dt>
+<dd><p>A method containing the run loop for inserting a single sensors’ data into the db.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.store_sensor_data">
+<span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.store_sensor_data" title="Permalink to this definition"></a></dt>
+<dd><p>Insert the sensor data into the database.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>single_sensor_data_dict</strong> (<em>dict</em>) – A python dictionary containing all fields
+for insertion. If a sensor doesn’t support
+a certain field make sure it is NULL and part
+of the dictionary. This method does no type
+or error checking. That is upto the caller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
