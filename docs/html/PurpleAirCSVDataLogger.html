@@ -77,8 +77,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="purpleaircsvdatalogger-module">
-<h1>PurpleAirCSVDataLogger module<a class="headerlink" href="#purpleaircsvdatalogger-module" title="Permalink to this heading"></a></h1>
+  <section id="module-PurpleAirCSVDataLogger">
+<span id="purpleaircsvdatalogger-module"></span><h1>PurpleAirCSVDataLogger module<a class="headerlink" href="#module-PurpleAirCSVDataLogger" title="Permalink to this heading"></a></h1>
+<p>Copyright 2022 carlkid1499, All rights reserved.
+A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+Data will be inserted into CSV files.</p>
+<p>For best practice from PurpleAir:
+“The data from individual sensors will update no less than every 30 seconds.
+As a courtesy, we ask that you limit the number of requests to no more than
+once every 1 to 10 minutes, assuming you are only using the API to obtain data
+from sensors. If retrieving data from multiple sensors at once, please send a
+single request rather than individual requests in succession.”</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="PurpleAirCSVDataLogger.PurpleAirCSVDataLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirCSVDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirCSVDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_save_csv_files_in</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger" title="PurpleAirDataLogger.PurpleAirDataLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></a></p>
+<p>The logger class. For now we will insert data into a CSV file.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirCSVDataLogger.PurpleAirCSVDataLogger.store_sensor_data">
+<span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger.store_sensor_data" title="Permalink to this definition"></a></dt>
+<dd><p>Insert the sensor data into CSV files.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>single_sensor_data_dict</strong> (<em>dict</em>) – A python dictionary containing all fields
+for insertion. If a sensor doesn’t support
+a certain field make sure it is NULL and part
+of the dictionary. This method does no type
+or error checking. That is upto the caller.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
