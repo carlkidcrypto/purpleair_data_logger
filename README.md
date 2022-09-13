@@ -1,6 +1,6 @@
 # purple_air_data_logger
 
- A logger that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database.
+A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, or a CSV file.
 
 ## Usage PurpleAirPSQLDataLogger.py
 
@@ -28,6 +28,43 @@ optional arguments:
   -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a multiple sensor request.
 ```
+
+### High Level Design
+
+![PAA_Data_Logger_Software_Stack.drawio.png](/diagrams/PAA_Data_Logger_Software_Stack.drawio.png)
+
+### Getting Started
+
+1. Grab and install Postgresql for your platform. <https://www.postgresql.org/download/>
+2. Create two database users. One for Grafana with insert only privileges. The other for the data logger with only insert/create privileges. <https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e>, <https://www.techonthenet.com/postgresql/grant_revoke.php>
+3. Install and configure TimescaleDB. <https://docs.timescale.com/install/latest/self-hosted/>
+4. Install and configure Grafana. <https://grafana.com/docs/grafana/latest/setup-grafana/installation/>
+5. Import into your local Grafana instance the dashboard file found [here](./grafana_dashboards/PurpleAirAPI%20(PAA)%20Data%20Logger%20Grafana%20Dashboard-1660355898051.json)
+
+## Usage PurpleAirCSVDataLogger.py
+
+```bash
+usage: PurpleAirCSVDataLogger.py [-h] -save_file_path SAVE_FILE_PATH -paa_read_key PAA_READ_KEY
+                                 [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                 [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
+
+Collect data from PurpleAir sensors and store it in CSV files!
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -save_file_path SAVE_FILE_PATH
+                        The path to save CSV files in.
+  -paa_read_key PAA_READ_KEY
+                        The PurpleAirAPI Read key
+  -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a single sensor request.
+  -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a multiple sensor request.
+```
+
+## Sample JSON Configuration File(s)
+
+The following sample json configuration files can be used with any of the data loggers.
 
 ### PAA_SINGLE_SENSOR_REQUEST_JSON_FILE Example
 
@@ -66,8 +103,8 @@ Out of the parameters listed below only "fields" is required. The others are all
 
 > Taken From the PurpleAirAPI documentation:
 
-    Field	Type	Description
-    fields	String	
+    Field Type Description
+    fields String 
     The 'Fields' parameter specifies which 'sensor data fields' to include in the response. It is a comma separated list with one or more of the following:
 
     Station information and status fields:
@@ -102,46 +139,34 @@ Out of the parameters listed below only "fields" is required. The others are all
 
     For field descriptions, please see the 'sensor data fields'. section.
 
-    location_typeoptional	Number	
+    location_typeoptional Number 
     The location_type of the sensors.
     Possible values are: 0 = Outside or 1 = Inside.
 
-    read_keysoptional	String	
+    read_keysoptional String 
     A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
 
-    show_onlyoptional	String	
+    show_onlyoptional String 
     A comma (,) separated list of sensor_index values. When provided, the results are limited only to the sensors included in this list.
 
-    modified_sinceoptional	long	
+    modified_sinceoptional long 
     The modified_since parameter causes only sensors modified after the provided time stamp to be included in the results. Using the time_stamp value from a previous call (recommended) will limit results to those with new values since the last request. Using a value of 0 will match sensors modified at any time.
 
-    max_ageoptional	Integer	
+    max_ageoptional Integer 
     Filter results to only include sensors modified or updated within the last number of seconds. Using a value of 0 will match sensors of any age.
 
     Default value: 604800
 
-    nwlngoptional	Number	
+    nwlngoptional Number 
     A north west longitude for the bounding box.
 
     Use a bounding box to limit the sensors returned to a specific geographic area. The bounding box is defined by two points, a north west latitude/longitude and a south east latitude/longitude.
 
-    nwlatoptional	Number	
+    nwlatoptional Number 
     A north west latitude for the bounding box.
 
-    selngoptional	Number	
+    selngoptional Number 
     A south east longitude for the bounding box.
 
-    selatoptional	Number	
+    selatoptional Number 
     A south east latitude for the bounding box.
-
-## High Level Design
-
-![PAA_Data_Logger_Software_Stack.drawio.png](/diagrams/PAA_Data_Logger_Software_Stack.drawio.png)
-
-## Getting Started
-
-1. Grab and install Postgresql for your platform. <https://www.postgresql.org/download/>
-2. Create two database users. One for Grafana with insert only privileges. The other for the data logger with only insert/create privileges. <https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e>, <https://www.techonthenet.com/postgresql/grant_revoke.php>
-3. Install and configure TimescaleDB. <https://docs.timescale.com/install/latest/self-hosted/>
-4. Install and configure Grafana. <https://grafana.com/docs/grafana/latest/setup-grafana/installation/>
-5. Import into your local Grafana instance the dashboard file found [here](./grafana_dashboards/PurpleAirAPI%20(PAA)%20Data%20Logger%20Grafana%20Dashboard-1660355898051.json)
