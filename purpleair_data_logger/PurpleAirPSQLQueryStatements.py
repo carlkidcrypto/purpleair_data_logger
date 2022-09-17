@@ -572,3 +572,11 @@ PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
     schedule_interval => INTERVAL '1 h',
     if_not_exists => true);
     """
+
+#: PSQL statement to add a TimescaleDB data retention policy on the sensor_index_and_name_1hour_aggregate materialized view
+#: Documentation can be found here: https://docs.timescale.com/timescaledb/latest/how-to-guides/data-retention/data-retention-with-continuous-aggregates/
+PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE = """
+    SELECT add_retention_policy('sensor_index_and_name_1hour_aggregate',
+    INTERVAL '8 hours',
+    if_not_exists => true); 
+    """
