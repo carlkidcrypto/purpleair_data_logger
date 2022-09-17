@@ -551,3 +551,24 @@ PSQL_DROP_ALL_TABLES = """
     DROP TABLE particle_count_fields;
     DROP TABLE thingspeak_fields;
     """
+
+#: PSQL statement to create a TimescaleDB Materialized View
+#: Documentation can be found here: https://docs.timescale.com/api/latest/continuous-aggregates/create_materialized_view/
+PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE = """
+    CREATE MATERIALIZED VIEW IF NOT EXISTS sensor_index_and_name_1hour_aggregate(data_time_stamp, sensor_index, name)
+    WITH (timescaledb.continuous) AS
+	    SELECT time_bucket('1h', data_time_stamp), sensor_index, name
+	    FROM station_information_and_status_fields
+	    GROUP BY time_bucket('1h', data_time_stamp), sensor_index, name
+    WITH NO DATA;
+    """
+
+#: PSQL statement to add a TimescaleDB continuous refresh policy on the sensor_index_and_name_1hour_aggregate materialized view
+#: Documentation can be found here: https://docs.timescale.com/timescaledb/latest/how-to-guides/continuous-aggregates/refresh-policies/
+PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE = """
+    SELECT add_continuous_aggregate_policy('sensor_index_and_name_1hour_aggregate',
+    start_offset => INTERVAL '3 h',
+    end_offset => INTERVAL '1 h',
+    schedule_interval => INTERVAL '1 h',
+    if_not_exists => true);
+    """
