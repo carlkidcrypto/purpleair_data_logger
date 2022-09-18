@@ -122,8 +122,7 @@
                 "mode": "absolute",
                 "steps": [
                   {
-                    "color": "green",
-                    "value": null
+                    "color": "green"
                   },
                   {
                     "color": "red",
@@ -3577,6 +3576,6 @@
   "timezone": "",
   "title": "PurpleAirAPI (PAA) Data Logger Grafana Dashboard",
   "uid": "kZwKqWzVk",
-  "version": 43,
+  "version": 44,
   "weekStart": ""
 }
