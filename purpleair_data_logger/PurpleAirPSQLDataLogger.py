@@ -47,6 +47,19 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         # Make our psql database connection
         self._db_conn = psql_db_conn
 
+        # A list of all acceptable table names
+        self._acceptable_table_names_string_list = [
+            "station_information_and_status_fields",
+            "environmental_fields",
+            "miscellaneous_fields",
+            "pm1_0_fields",
+            "pm2_5_fields",
+            "pm2_5_pseudo_average_fields",
+            "pm10_0_fields",
+            "particle_count_fields",
+            "thingspeak_fields"
+        ]
+
         # Make our PSQL Tables
         self._create_psql_db_tables()
 
@@ -59,15 +72,25 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         # Commit to the db
         self._db_conn.commit()
 
+    @property
+    def get_acceptable_table_names_string_list(self):
+        """
+            A getter method that will simply return the contents of
+            the acceptable_table_names_string_list. This is a list
+            of all the tables that this DataLogger uses and knows about.
+        """
+
+        return self._acceptable_table_names_string_list
+
     def _create_psql_db_tables(self):
         """
             Create the PSQL database tables if they don't exist already
-        """
 
-        # We will create one table for different data groups. Simply following the
-        # official PurpleAir documentation. Think Station information and status fields,
-        # Environmental fields, etc. See website for more information.
-        # https://api.purpleair.com/#api-sensors-get-sensor-data
+            We will create one table for different data groups. Simply following the
+            official PurpleAir documentation. Think Station information and status fields,
+            Environmental fields, etc. See website for more information.
+            https://api.purpleair.com/#api-sensors-get-sensor-data
+        """
 
         self._db_conn.run(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
         self._db_conn.run(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
@@ -84,24 +107,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             A method to convert our PSQL tables to TimeScaleDB hyper tables.
         """
 
-        self._db_conn.run(
-            """SELECT create_hypertable('station_information_and_status_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('environmental_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('miscellaneous_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('pm1_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('pm2_5_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('pm2_5_pseudo_average_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('pm10_0_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('particle_count_fields', 'data_time_stamp', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT create_hypertable('thingspeak_fields', 'data_time_stamp', if_not_exists => TRUE)""")
+        for table_name in self._acceptable_table_names_string_list:
+            self._db_conn.run(
+                f"""SELECT create_hypertable('{table_name}', 'data_time_stamp', if_not_exists => TRUE)""")
 
     def _configure_data_compression_policies(self):
         """
@@ -109,52 +117,13 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
 
-        self._db_conn.run(
-            """ALTER TABLE station_information_and_status_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE environmental_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE miscellaneous_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE pm1_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE pm2_5_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE pm2_5_pseudo_average_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE pm10_0_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE particle_count_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
-        self._db_conn.run(
-            """ALTER TABLE thingspeak_fields SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                timescaledb.compress_segmentby = 'sensor_index')""")
+        for table_name in self._acceptable_table_names_string_list:
+            self._db_conn.run(
+                f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                    timescaledb.compress_segmentby = 'sensor_index')""")
 
-        self._db_conn.run(
-            """SELECT add_compression_policy('station_information_and_status_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('environmental_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('miscellaneous_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('pm1_0_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('pm2_5_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('pm2_5_pseudo_average_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('pm10_0_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('particle_count_fields', INTERVAL '14d', if_not_exists => TRUE)""")
-        self._db_conn.run(
-            """SELECT add_compression_policy('thingspeak_fields', INTERVAL '14d', if_not_exists => TRUE)""")
+            self._db_conn.run(
+                f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
@@ -162,7 +131,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
             :param int unix_epoch_timestamp: A valid unix epoch timestamp
 
-            :return A valid psql UTC timestamp.
+            :return A valid psql UTC timestamp or None.
         """
 
         if unix_epoch_timestamp is None:

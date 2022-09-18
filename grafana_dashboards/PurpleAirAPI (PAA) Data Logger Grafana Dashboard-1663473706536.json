@@ -15,7 +15,7 @@
       "type": "grafana",
       "id": "grafana",
       "name": "Grafana",
-      "version": "9.0.5"
+      "version": "9.1.5"
     },
     {
       "type": "datasource",
@@ -88,6 +88,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -167,7 +169,8 @@
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -323,9 +326,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Miscellaneous Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "Miscellaneous Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -350,6 +351,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -397,14 +400,15 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1
+            "y": 2
           },
           "id": 6,
           "options": {
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -820,9 +824,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Particle Count Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "Particle Count Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -901,7 +903,8 @@
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -1137,9 +1140,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "PM10.0 Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "PM10.0 Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -1198,7 +1199,7 @@
             },
             "showHeader": true
           },
-          "pluginVersion": "9.0.5",
+          "pluginVersion": "9.1.5",
           "targets": [
             {
               "datasource": {
@@ -1324,9 +1325,7 @@
           "type": "table"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Station Information And Status Fields: Text - for: $sensor_index, $selected_sensor_name",
+      "title": "Station Information And Status Fields: Text - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -1405,7 +1404,8 @@
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -1641,9 +1641,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Environmental Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "Environmental Fields - for: $sensor_index, $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -1668,6 +1666,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -1715,14 +1715,15 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1
+            "y": 6
           },
           "id": 9,
           "options": {
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -1958,9 +1959,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "PM1.0 Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "PM1.0 Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -1985,6 +1984,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -2032,14 +2033,15 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1
+            "y": 7
           },
           "id": 10,
           "options": {
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -2335,9 +2337,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "PM2.5 Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "PM2.5 Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -2362,6 +2362,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -2409,14 +2411,15 @@
             "h": 9,
             "w": 24,
             "x": 0,
-            "y": 1
+            "y": 8
           },
           "id": 11,
           "options": {
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -2832,9 +2835,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "PM2.5 Pseudo Average Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "PM2.5 Pseudo Average Fields - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -2859,6 +2860,8 @@
                 "mode": "palette-classic"
               },
               "custom": {
+                "axisCenteredZero": false,
+                "axisColorMode": "text",
                 "axisLabel": "",
                 "axisPlacement": "auto",
                 "barAlignment": 0,
@@ -2913,7 +2916,8 @@
             "legend": {
               "calcs": [],
               "displayMode": "list",
-              "placement": "bottom"
+              "placement": "bottom",
+              "showLegend": true
             },
             "tooltip": {
               "mode": "multi",
@@ -3350,9 +3354,7 @@
           "type": "timeseries"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Station Information And Status Fields: Numbers - for: $sensor_index, $selected_sensor_name",
+      "title": "Station Information And Status Fields: Numbers - for: $name_and_sensor_index",
       "type": "row"
     },
     {
@@ -3411,7 +3413,7 @@
             },
             "showHeader": true
           },
-          "pluginVersion": "9.0.5",
+          "pluginVersion": "9.1.5",
           "targets": [
             {
               "datasource": {
@@ -3501,14 +3503,12 @@
           "type": "table"
         }
       ],
-      "repeat": "sensor_index",
-      "repeatDirection": "h",
-      "title": "Thingspeal Fields - for: $sensor_index, $selected_sensor_name",
+      "title": "Thingspeal Fields - for: $name_and_sensor_index",
       "type": "row"
     }
   ],
   "refresh": false,
-  "schemaVersion": 36,
+  "schemaVersion": 37,
   "style": "dark",
   "tags": [],
   "templating": {
@@ -3519,15 +3519,15 @@
           "type": "postgres",
           "uid": "${DS_POSTGRESQL}"
         },
-        "definition": "SELECT DISTINCT sensor_index FROM station_information_and_status_fields ORDER BY sensor_index ASC;",
-        "description": "sensor_index",
+        "definition": "WITH concated_results AS (\nSELECT DISTINCT sensor_index, name , CONCAT(name,  ', ' ,sensor_index) \"Concated sensor_index and name\"\nFROM sensor_index_and_name_1hour_aggregate\nORDER BY sensor_index ASC\n)\n\nSELECT \"Concated sensor_index and name\" FROM concated_results;",
+        "description": "Sensor Name and Index",
         "hide": 0,
         "includeAll": false,
-        "label": "sensor_index",
-        "multi": true,
-        "name": "sensor_index",
+        "label": "Sensor Name and Index",
+        "multi": false,
+        "name": "name_and_sensor_index",
         "options": [],
-        "query": "SELECT DISTINCT sensor_index FROM station_information_and_status_fields ORDER BY sensor_index ASC;",
+        "query": "WITH concated_results AS (\nSELECT DISTINCT sensor_index, name , CONCAT(name,  ', ' ,sensor_index) \"Concated sensor_index and name\"\nFROM sensor_index_and_name_1hour_aggregate\nORDER BY sensor_index ASC\n)\n\nSELECT \"Concated sensor_index and name\" FROM concated_results;",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -3540,15 +3540,15 @@
           "type": "postgres",
           "uid": "${DS_POSTGRESQL}"
         },
-        "definition": "SELECT name from station_information_and_status_fields WHERE sensor_index = $sensor_index LIMIT 1;",
-        "description": "selected sensor name",
-        "hide": 0,
+        "definition": "WITH unconcated_results AS (\nSELECT string_to_array('$name_and_sensor_index', ', ') AS parts\n)\nSELECT parts[2] FROM unconcated_results;",
+        "description": "sensor_index",
+        "hide": 2,
         "includeAll": false,
-        "label": "selected sensor name",
+        "label": "sensor_index",
         "multi": false,
-        "name": "selected_sensor_name",
+        "name": "sensor_index",
         "options": [],
-        "query": "SELECT name from station_information_and_status_fields WHERE sensor_index = $sensor_index LIMIT 1;",
+        "query": "WITH unconcated_results AS (\nSELECT string_to_array('$name_and_sensor_index', ', ') AS parts\n)\nSELECT parts[2] FROM unconcated_results;",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -3558,7 +3558,7 @@
     ]
   },
   "time": {
-    "from": "now-5m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {
@@ -3576,6 +3576,6 @@
   "timezone": "",
   "title": "PurpleAirAPI (PAA) Data Logger Grafana Dashboard",
   "uid": "kZwKqWzVk",
-  "version": 32,
+  "version": 44,
   "weekStart": ""
 }
