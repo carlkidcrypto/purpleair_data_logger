@@ -68,6 +68,22 @@ class PurpleAirDataLogger():
 
         return self._purple_air_api_obj.request_multiple_sensors_data(fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
 
+    def _validate_sensor_data_before_insert(self, the_modified_sensor_data):
+        """
+            Before we store the data, we must make sure all fields have been included
+            Our psql/sqlite store statements expect all fields regardless of what we request.
+        """
+
+        # Make a copy first
+        temp_the_modified_sensor_data = the_modified_sensor_data
+        for field in ACCEPTED_FIELD_NAMES_DICT.keys():
+            if field not in temp_the_modified_sensor_data.keys():
+                temp_the_modified_sensor_data[str(
+                    field)] = ACCEPTED_FIELD_NAMES_DICT[field]
+
+        # Then return the modified copy
+        return temp_the_modified_sensor_data
+
     def _run_loop_for_storing_single_sensor_data(self, the_json_file):
         """
             A method containing the run loop for inserting a single sensors' data into the db.
@@ -117,6 +133,8 @@ class PurpleAirDataLogger():
                 else:
                     the_modified_sensor_data[key] = val
 
+            the_modified_sensor_data = self._validate_sensor_data_before_insert(
+                the_modified_sensor_data)
             self.store_sensor_data(the_modified_sensor_data)
             debug_log(f"""Waiting {self._request_every_x} seconds before
                   requesting new data again...""")
@@ -169,12 +187,8 @@ class PurpleAirDataLogger():
                     the_modified_sensor_data[str(
                         extracted_fields[data_index])] = data_item
 
-                # Before we store the data, we must make sure all fields have been included
-                # Our psql store statements expect all fields regardless of what we request.
-                for field in ACCEPTED_FIELD_NAMES_DICT.keys():
-                    if field not in the_modified_sensor_data.keys():
-                        the_modified_sensor_data[str(
-                            field)] = ACCEPTED_FIELD_NAMES_DICT[field]
+                the_modified_sensor_data = self._validate_sensor_data_before_insert(
+                    the_modified_sensor_data)
 
                 # Store the current data
                 self.store_sensor_data(the_modified_sensor_data)

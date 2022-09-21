@@ -256,7 +256,7 @@ SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
             ?,
             ?,
             ?,
-            ?)
+            ?
         )"""
 
 #: SQLITE insert statement for environmental_fields
@@ -287,7 +287,7 @@ SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
             ?,
             ?,
             ?,
-            ?)
+            ?
         )"""
 
 #: SQLITE insert statement for miscellaneous_fields
@@ -310,7 +310,7 @@ SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
             ?,
             ?,
             ?,
-            ?)
+            ?
         )"""
 
 #: SQLITE insert statement for pm1_0_fields
@@ -341,7 +341,7 @@ SQLITE_INSERT_STATEMENT_PM1_0_FIELDS = """
             ?,
             ?,
             ?,
-            ?)
+            ?
         )"""
 
 #: SQLITE insert statement for pm2_5_fields
@@ -378,7 +378,7 @@ SQLITE_INSERT_STATEMENT_PM2_5_FIELDS = """
             ?,
             ?,
             ?,
-            ?)
+            ?
         )"""
 
 #: SQLITE insert statement for pm2_5_pseudo_average_fields
@@ -427,7 +427,7 @@ SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
         ?,
         ?,
         ?,
-        ?)
+        ?
     )"""
 
 #: SQLITE insert statement for pm10_0_fields
@@ -458,7 +458,7 @@ SQLITE_INSERT_STATEMENT_PM10_0_FIELDS = """
         ?,
         ?,
         ?,
-        ?)
+        ?
     )"""
 
 #: SQLITE insert statement for particle_count_fields
@@ -507,7 +507,7 @@ SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
         ?,
         ?,
         ?,
-        ?)
+        ?
     )"""
 
 #: SQLITE insert statement for thingspeak_fields
@@ -536,7 +536,7 @@ SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
         ?,
         ?,
         ?,
-        ?)
+        ?
     )"""
 
 #: SQLITE statement to drop all tables in the database

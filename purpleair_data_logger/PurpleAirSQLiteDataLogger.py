@@ -254,7 +254,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Collect data from PurpleAir sensors and store it a SQLite3 database file!")
     parser.add_argument("-db_name",  required=True,
-                        dest="db_name", type=str, help="""The path and name for the SQLite3 database file!""")
+                        dest="db_name", type=str, help="""The path and name for the SQLite3 database
+                        file! i.e database_name.db""")
     parser.add_argument("-paa_read_key",  required=True,
                         dest="paa_read_key", type=str, help="""The PurpleAirAPI Read key""")
     parser.add_argument("-paa_single_sensor_request_json_file",  required=False, default=None,
