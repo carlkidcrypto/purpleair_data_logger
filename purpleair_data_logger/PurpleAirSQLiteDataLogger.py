@@ -23,7 +23,6 @@ from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (SQLITE_INSERT_
                                                                   CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
                                                                   CREATE_THINGSPEAK_FIELDS, SQLITE_DROP_ALL_TABLES)
 import argparse
-import json
 import sqlite3
 
 
@@ -274,24 +273,9 @@ if __name__ == "__main__":
     file_obj = None
 
     # Second make an instance our our data logger
-    the_paa_csv_data_logger = PurpleAirSQLiteDataLogger(
+    the_paa_sqlite_data_logger = PurpleAirSQLiteDataLogger(
         args.paa_read_key, args.db_name)
 
     # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
-    if args.paa_multiple_sensor_request_json_file is not None and args.paa_single_sensor_request_json_file is None:
-        # Now load up that json file
-        file_obj = open(args.paa_multiple_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_csv_data_logger.run_loop_for_storing_multiple_sensors_data(
-            the_json_file)
-
-    elif args.paa_multiple_sensor_request_json_file is None and args.paa_single_sensor_request_json_file is not None:
-        # Now load up that json file
-        file_obj = open(args.paa_single_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_csv_data_logger.run_loop_for_storing_single_sensor_data(
-            the_json_file)
-
-    else:
-        raise ValueError(
-            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
+    the_paa_sqlite_data_logger.validate_parameters_and_run(
+        args.paa_multiple_sensor_request_json_file, args.paa_single_sensor_request_json_file)

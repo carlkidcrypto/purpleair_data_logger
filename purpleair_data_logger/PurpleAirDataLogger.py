@@ -8,6 +8,7 @@
 from purpleair_data_logger.PurpleAirAPI import PurpleAirAPI, debug_log
 from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from time import sleep
+import json
 
 
 class PurpleAirDataLogger():
@@ -67,7 +68,7 @@ class PurpleAirDataLogger():
 
         return self._purple_air_api_obj.request_multiple_sensors_data(fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
 
-    def run_loop_for_storing_single_sensor_data(self, the_json_file):
+    def _run_loop_for_storing_single_sensor_data(self, the_json_file):
         """
             A method containing the run loop for inserting a single sensors' data into the db.
 
@@ -75,7 +76,8 @@ class PurpleAirDataLogger():
         """
 
         while True:
-            print("run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n")
+            print(
+                "_run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n")
             # We will request data once every 65 seconds.
             debug_log(f"""Requesting new data from a sensor with index
                       {the_json_file['sensor_index']}...""")
@@ -120,7 +122,7 @@ class PurpleAirDataLogger():
                   requesting new data again...""")
             sleep(self._request_every_x)
 
-    def run_loop_for_storing_multiple_sensors_data(self, json_config_file):
+    def _run_loop_for_storing_multiple_sensors_data(self, json_config_file):
         """
             A method containing the run loop for inserting a multiple sensors' data into the db.
 
@@ -129,7 +131,7 @@ class PurpleAirDataLogger():
 
         while True:
             print(
-                "run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
+                "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n")
             # We will request data once every 65 seconds.
             debug_log(f"""Requesting new data from multiple sensors with fields
                       {json_config_file["fields"]}...""")
@@ -180,3 +182,26 @@ class PurpleAirDataLogger():
             debug_log(f"""Waiting {self._request_every_x} seconds before
                   requesting new data again...""")
             sleep(self._request_every_x)
+
+    def validate_parameters_and_run(self, paa_multiple_sensor_request_json_file, paa_single_sensor_request_json_file):
+        """
+        """
+
+        # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+        if paa_multiple_sensor_request_json_file is not None and paa_single_sensor_request_json_file is None:
+            # Now load up that json file
+            file_obj = open(paa_multiple_sensor_request_json_file, "r")
+            the_json_file = json.load(file_obj)
+            self._run_loop_for_storing_multiple_sensors_data(
+                the_json_file)
+
+        elif paa_multiple_sensor_request_json_file is None and paa_single_sensor_request_json_file is not None:
+            # Now load up that json file
+            file_obj = open(paa_single_sensor_request_json_file, "r")
+            the_json_file = json.load(file_obj)
+            self._run_loop_for_storing_single_sensor_data(
+                the_json_file)
+
+        else:
+            raise ValueError(
+                """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")

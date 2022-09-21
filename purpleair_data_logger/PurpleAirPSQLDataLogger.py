@@ -25,7 +25,6 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STAT
 import pg8000
 import argparse
 from datetime import datetime, timezone
-import json
 import sys
 
 
@@ -399,20 +398,5 @@ if __name__ == "__main__":
         args.paa_read_key, the_psql_db_conn)
 
     # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
-    if args.paa_multiple_sensor_request_json_file is not None and args.paa_single_sensor_request_json_file is None:
-        # Now load up that json file
-        file_obj = open(args.paa_multiple_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_psql_data_logger.run_loop_for_storing_multiple_sensors_data(
-            the_json_file)
-
-    elif args.paa_multiple_sensor_request_json_file is None and args.paa_single_sensor_request_json_file is not None:
-        # Now load up that json file
-        file_obj = open(args.paa_single_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_psql_data_logger.run_loop_for_storing_single_sensor_data(
-            the_json_file)
-
-    else:
-        raise ValueError(
-            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
+    the_paa_psql_data_logger.validate_parameters_and_run(
+        args.paa_multiple_sensor_request_json_file, args.paa_single_sensor_request_json_file)
