@@ -194,7 +194,7 @@ CREATE_THINGSPEAK_FIELDS = """
 # As of 07/23/2022 we have 9 tables to insert data into.
 #: SQLITE insert statement for station_information_and_status_fields
 SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
-    INSERT INTEGERO station_information_and_status_fields
+    INSERT INTO station_information_and_status_fields
         (
             data_time_stamp,
             sensor_index,
@@ -228,40 +228,40 @@ SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS = """
         )
         VALUES 
         (
-            data_time_stamp AS TEXT,
-            sensor_index AS INTEGER,
-            name AS TEXT,
-            icon AS INTEGER,
-            model AS TEXT,
-            hardware AS TEXT,
-            location_type AS INTEGER,
-            private AS INTEGER,
-            latitude AS REAL,
-            longitude AS REAL,
-            altitude AS REAL,
-            position_rating AS INTEGER,
-            led_brightness AS INTEGER,
-            firmware_version AS TEXT,
-            firmware_upgrade AS TEXT,
-            rssi AS INTEGER,
-            uptime AS INTEGER,
-            pa_latency AS INTEGER,
-            memory AS INTEGER,
-            last_seen AS TEXT,
-            last_modified AS TEXT,
-            date_created AS TEXT,
-            channel_state AS INTEGER,
-            channel_flags AS INTEGER,
-            channel_flags_manual AS INTEGER,
-            channel_flags_auto AS INTEGER,
-            confidence AS INTEGER,
-            confidence_manual AS INTEGER,
-            confidence_auto AS INTEGER)
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
         )"""
 
 #: SQLITE insert statement for environmental_fields
 SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
-    INSERT INTEGERO environmental_fields
+    INSERT INTO environmental_fields
         (
             data_time_stamp,
             sensor_index,
@@ -277,22 +277,22 @@ SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS = """
         ) 
         VALUES
         (
-            data_time_stamp AS TEXT,
-            sensor_index AS INTEGER,
-            humidity AS INTEGER,
-            humidity_a AS INTEGER,
-            humidity_b AS INTEGER,
-            temperature AS INTEGER,
-            temperature_a AS INTEGER,
-            temperature_b AS INTEGER,
-            pressure AS REAL,
-            pressure_a AS REAL,
-            pressure_b AS REAL)
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
         )"""
 
 #: SQLITE insert statement for miscellaneous_fields
 SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
-    INSERT INTEGERO miscellaneous_fields
+    INSERT INTO miscellaneous_fields
         (
             data_time_stamp,
             sensor_index,
@@ -304,18 +304,18 @@ SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS = """
         ) 
         VALUES
         (
-            data_time_stamp AS TEXT,
-            sensor_index AS INTEGER,
-            voc AS REAL,
-            voc_a AS REAL,
-            voc_b AS REAL,
-            ozone1 AS REAL,
-            analog_input AS REAL)
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
         )"""
 
 #: SQLITE insert statement for pm1_0_fields
 SQLITE_INSERT_STATEMENT_PM1_0_FIELDS = """
-    INSERT INTEGERO pm1_0_fields
+    INSERT INTO pm1_0_fields
         (
             data_time_stamp,
             sensor_index,
@@ -331,22 +331,22 @@ SQLITE_INSERT_STATEMENT_PM1_0_FIELDS = """
         )
         VALUES
         (
-            data_time_stamp AS TEXT,
-            sensor_index AS INTEGER,
-            pm1_0 AS REAL,
-            pm1_0_a AS REAL,
-            pm1_0_b AS REAL,
-            pm1_0_atm AS REAL,
-            pm1_0_atm_a AS REAL,
-            pm1_0_atm_b AS REAL,
-            pm1_0_cf_1 AS REAL,
-            pm1_0_cf_1_a AS REAL,
-            pm1_0_cf_1_b AS REAL)
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
         )"""
 
 #: SQLITE insert statement for pm2_5_fields
 SQLITE_INSERT_STATEMENT_PM2_5_FIELDS = """
-    INSERT INTEGERO pm2_5_fields
+    INSERT INTO pm2_5_fields
         (
             data_time_stamp,
             sensor_index,
@@ -365,25 +365,25 @@ SQLITE_INSERT_STATEMENT_PM2_5_FIELDS = """
         ) 
         VALUES
         (
-            data_time_stamp AS TEXT,
-            sensor_index AS INTEGER,
-            pm2_5_alt AS REAL,
-            pm2_5_alt_a AS REAL,
-            pm2_5_alt_b AS REAL,
-            pm2_5 AS REAL,
-            pm2_5_a AS REAL,
-            pm2_5_b AS REAL,
-            pm2_5_atm AS REAL,
-            pm2_5_atm_a AS REAL,
-            pm2_5_atm_b AS REAL,
-            pm2_5_cf_1 AS REAL,
-            pm2_5_cf_1_a AS REAL,
-            pm2_5_cf_1_b AS REAL)
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?,
+            ?)
         )"""
 
 #: SQLITE insert statement for pm2_5_pseudo_average_fields
 SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
-    INSERT INTEGERO pm2_5_pseudo_average_fields 
+    INSERT INTO pm2_5_pseudo_average_fields 
     (
         data_time_stamp,
         sensor_index,
@@ -408,31 +408,31 @@ SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS = """
     )
     VALUES
     (
-        data_time_stamp AS TEXT,
-        sensor_index AS INTEGER,
-        pm2_5_10minute AS REAL,
-        pm2_5_10minute_a AS REAL,
-        pm2_5_10minute_b AS REAL,
-        pm2_5_30minute AS REAL,
-        pm2_5_30minute_a AS REAL,
-        pm2_5_30minute_b AS REAL,
-        pm2_5_60minute AS REAL,
-        pm2_5_60minute_a AS REAL,
-        pm2_5_60minute_b AS REAL,
-        pm2_5_6hour AS REAL,
-        pm2_5_6hour_a AS REAL,
-        pm2_5_6hour_b AS REAL,
-        pm2_5_24hour AS REAL,
-        pm2_5_24hour_a AS REAL,
-        pm2_5_24hour_b AS REAL,
-        pm2_5_1week AS REAL,
-        pm2_5_1week_a AS REAL,
-        pm2_5_1week_b AS REAL)
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
     )"""
 
 #: SQLITE insert statement for pm10_0_fields
 SQLITE_INSERT_STATEMENT_PM10_0_FIELDS = """
-    INSERT INTEGERO pm10_0_fields
+    INSERT INTO pm10_0_fields
     (
         data_time_stamp,
         sensor_index,
@@ -448,22 +448,22 @@ SQLITE_INSERT_STATEMENT_PM10_0_FIELDS = """
     ) 
     VALUES
     (
-        data_time_stamp AS TEXT,
-        sensor_index AS INTEGER,
-        pm10_0 AS REAL,
-        pm10_0_a AS REAL,
-        pm10_0_b AS REAL,
-        pm10_0_atm AS REAL,
-        pm10_0_atm_a AS REAL,
-        pm10_0_atm_b AS REAL,
-        pm10_0_cf_1 AS REAL,
-        pm10_0_cf_1_a AS REAL,
-        pm10_0_cf_1_b AS REAL)
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
     )"""
 
 #: SQLITE insert statement for particle_count_fields
 SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
-    INSERT INTEGERO particle_count_fields 
+    INSERT INTO particle_count_fields 
     (
         data_time_stamp,
         sensor_index,
@@ -488,31 +488,31 @@ SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS = """
     )
     VALUES
     (
-        data_time_stamp AS TEXT,
-        sensor_index AS INTEGER,
-        um_count_0_3 AS REAL,
-        um_count_a_0_3 AS REAL,
-        um_count_b_0_3 AS REAL,
-        um_count_0_5 AS REAL,
-        um_count_a_0_5 AS REAL,
-        um_count_b_0_5 AS REAL,
-        um_count_1_0 AS REAL,
-        um_count_a_1_0 AS REAL,
-        um_count_b_1_0 AS REAL,
-        um_count_2_5 AS REAL,
-        um_count_a_2_5 AS REAL,
-        um_count_b_2_5 AS REAL,
-        um_count_5_0 AS REAL,
-        um_count_a_5_0 AS REAL,
-        um_count_b_5_0 AS REAL,
-        um_count_10_0 AS REAL,
-        um_count_a_10_0 AS REAL,
-        um_count_b_10_0 AS REAL)
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
     )"""
 
 #: SQLITE insert statement for thingspeak_fields
 SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
-    INSERT INTEGERO thingspeak_fields
+    INSERT INTO thingspeak_fields
     (
         data_time_stamp,
         sensor_index,
@@ -527,16 +527,16 @@ SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS = """
     )
     VALUES
     (
-        data_time_stamp AS TEXT,
-        sensor_index AS INTEGER,
-        primary_id_a AS INTEGER,
-        primary_key_a AS TEXT,
-        secondary_id_a AS INTEGER,
-        secondary_key_a AS TEXT,
-        primary_id_b AS INTEGER,
-        primary_key_b AS TEXT,
-        secondary_id_b AS INTEGER,
-        secondary_key_b AS TEXT)
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?,
+        ?)
     )"""
 
 #: SQLITE statement to drop all tables in the database

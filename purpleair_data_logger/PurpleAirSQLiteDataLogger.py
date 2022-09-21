@@ -14,6 +14,14 @@
 """
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+                                                                  SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, SQLITE_INSERT_STATEMENT_PM10_0_FIELDS,
+                                                                  SQLITE_INSERT_STATEMENT_PM1_0_FIELDS, SQLITE_INSERT_STATEMENT_PM2_5_FIELDS,
+                                                                  SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+                                                                  SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
+                                                                  CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+                                                                  CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+                                                                  CREATE_THINGSPEAK_FIELDS, SQLITE_DROP_ALL_TABLES)
 import argparse
 import json
 import sqlite3
@@ -34,8 +42,213 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
         self._db_conn = sqlite3.connect(sqlite_data_base_name)
 
+        # Make our PSQL Tables
+        self._create_sqlite_db_tables()
+
+    def _create_sqlite_db_tables(self):
+        """
+            Create the SQLITE database tables if they don't exist already
+
+            We will create one table for different data groups. Simply following the
+            official PurpleAir documentation. Think Station information and status fields,
+            Environmental fields, etc. See website for more information.
+            https://api.purpleair.com/#api-sensors-get-sensor-data
+        """
+
+        self._db_conn.execute(
+            CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
+        self._db_conn.execute(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
+        self._db_conn.execute(CREATE_MISCELLANEOUS_FIELDS)
+        self._db_conn.execute(CREATE_PM1_0_FIELDS)
+        self._db_conn.execute(CREATE_PM2_5_FIELDS)
+        self._db_conn.execute(CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS)
+        self._db_conn.execute(CREATE_PM10_0_FIELDS)
+        self._db_conn.execute(CREATE_PARTICLE_COUNT_FIELDS)
+        self._db_conn.execute(CREATE_THINGSPEAK_FIELDS)
+
     def store_sensor_data(self, single_sensor_data_dict):
-        raise NotImplementedError
+        """
+            Insert the sensor data into the database.
+
+            :param dict single_sensor_data_dict: A python dictionary containing all fields
+                                                 for insertion. If a sensor doesn't support
+                                                 a certain field make sure it is NULL and part
+                                                 of the dictionary. This method does no type
+                                                 or error checking. That is upto the caller.
+        """
+
+        # Run the queries
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["name"],
+             single_sensor_data_dict["icon"],
+             single_sensor_data_dict["model"],
+             single_sensor_data_dict["hardware"],
+             single_sensor_data_dict["location_type"],
+             single_sensor_data_dict["private"],
+             single_sensor_data_dict["latitude"],
+             single_sensor_data_dict["longitude"],
+             single_sensor_data_dict["altitude"],
+             single_sensor_data_dict["position_rating"],
+             single_sensor_data_dict["led_brightness"],
+             single_sensor_data_dict["firmware_version"],
+             single_sensor_data_dict["firmware_upgrade"],
+             single_sensor_data_dict["rssi"],
+             single_sensor_data_dict["uptime"],
+             single_sensor_data_dict["pa_latency"],
+             single_sensor_data_dict["memory"],
+             single_sensor_data_dict["last_seen"],
+             single_sensor_data_dict["last_modified"],
+             single_sensor_data_dict["date_created"],
+             single_sensor_data_dict["channel_state"],
+             single_sensor_data_dict["channel_flags"],
+             single_sensor_data_dict["channel_flags_manual"],
+             single_sensor_data_dict["channel_flags_auto"],
+             single_sensor_data_dict["confidence"],
+             single_sensor_data_dict["confidence_manual"],
+             single_sensor_data_dict["confidence_auto"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["humidity"],
+             single_sensor_data_dict["humidity_a"],
+             single_sensor_data_dict["humidity_b"],
+             single_sensor_data_dict["temperature"],
+             single_sensor_data_dict["temperature_a"],
+             single_sensor_data_dict["temperature_b"],
+             single_sensor_data_dict["pressure"],
+             single_sensor_data_dict["pressure_a"],
+             single_sensor_data_dict["pressure_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["voc"],
+             single_sensor_data_dict["voc_a"],
+             single_sensor_data_dict["voc_b"],
+             single_sensor_data_dict["ozone1"],
+             single_sensor_data_dict["analog_input"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_PM1_0_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["pm1.0"],
+             single_sensor_data_dict["pm1.0_a"],
+             single_sensor_data_dict["pm1.0_b"],
+             single_sensor_data_dict["pm1.0_atm"],
+             single_sensor_data_dict["pm1.0_atm_a"],
+             single_sensor_data_dict["pm1.0_atm_b"],
+             single_sensor_data_dict["pm1.0_cf_1"],
+             single_sensor_data_dict["pm1.0_cf_1_a"],
+             single_sensor_data_dict["pm1.0_cf_1_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_PM2_5_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["pm2.5_alt"],
+             single_sensor_data_dict["pm2.5_alt_a"],
+             single_sensor_data_dict["pm2.5_alt_b"],
+             single_sensor_data_dict["pm2.5"],
+             single_sensor_data_dict["pm2.5_a"],
+             single_sensor_data_dict["pm2.5_b"],
+             single_sensor_data_dict["pm2.5_atm"],
+             single_sensor_data_dict["pm2.5_atm_a"],
+             single_sensor_data_dict["pm2.5_atm_b"],
+             single_sensor_data_dict["pm2.5_cf_1"],
+             single_sensor_data_dict["pm2.5_cf_1_a"],
+             single_sensor_data_dict["pm2.5_cf_1_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["pm2.5_10minute"],
+             single_sensor_data_dict["pm2.5_10minute_a"],
+             single_sensor_data_dict["pm2.5_10minute_b"],
+             single_sensor_data_dict["pm2.5_30minute"],
+             single_sensor_data_dict["pm2.5_30minute_a"],
+             single_sensor_data_dict["pm2.5_30minute_b"],
+             single_sensor_data_dict["pm2.5_60minute"],
+             single_sensor_data_dict["pm2.5_60minute_a"],
+             single_sensor_data_dict["pm2.5_60minute_b"],
+             single_sensor_data_dict["pm2.5_6hour"],
+             single_sensor_data_dict["pm2.5_6hour_a"],
+             single_sensor_data_dict["pm2.5_6hour_b"],
+             single_sensor_data_dict["pm2.5_24hour"],
+             single_sensor_data_dict["pm2.5_24hour_a"],
+             single_sensor_data_dict["pm2.5_24hour_b"],
+             single_sensor_data_dict["pm2.5_1week"],
+             single_sensor_data_dict["pm2.5_1week_a"],
+             single_sensor_data_dict["pm2.5_1week_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_PM10_0_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["pm10.0"],
+             single_sensor_data_dict["pm10.0_a"],
+             single_sensor_data_dict["pm10.0_b"],
+             single_sensor_data_dict["pm10.0_atm"],
+             single_sensor_data_dict["pm10.0_atm_a"],
+             single_sensor_data_dict["pm10.0_atm_b"],
+             single_sensor_data_dict["pm10.0_cf_1"],
+             single_sensor_data_dict["pm10.0_cf_1_a"],
+             single_sensor_data_dict["pm10.0_cf_1_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["0.3_um_count"],
+             single_sensor_data_dict["0.3_um_count_a"],
+             single_sensor_data_dict["0.3_um_count_b"],
+             single_sensor_data_dict["0.5_um_count"],
+             single_sensor_data_dict["0.5_um_count_a"],
+             single_sensor_data_dict["0.5_um_count_b"],
+             single_sensor_data_dict["1.0_um_count"],
+             single_sensor_data_dict["1.0_um_count_a"],
+             single_sensor_data_dict["1.0_um_count_b"],
+             single_sensor_data_dict["2.5_um_count"],
+             single_sensor_data_dict["2.5_um_count_a"],
+             single_sensor_data_dict["2.5_um_count_b"],
+             single_sensor_data_dict["5.0_um_count"],
+             single_sensor_data_dict["5.0_um_count_a"],
+             single_sensor_data_dict["5.0_um_count_b"],
+             single_sensor_data_dict["10.0_um_count"],
+             single_sensor_data_dict["10.0_um_count_a"],
+             single_sensor_data_dict["10.0_um_count_b"])
+        )
+
+        self._db_conn.execute(
+            SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS,
+            (single_sensor_data_dict["data_time_stamp"],
+             single_sensor_data_dict["sensor_index"],
+             single_sensor_data_dict["primary_id_a"],
+             single_sensor_data_dict["primary_key_a"],
+             single_sensor_data_dict["secondary_id_a"],
+             single_sensor_data_dict["secondary_key_a"],
+             single_sensor_data_dict["primary_id_b"],
+             single_sensor_data_dict["primary_key_b"],
+             single_sensor_data_dict["secondary_id_b"],
+             single_sensor_data_dict["secondary_key_b"])
+        )
+
+        # Commit to the db
+        self._db_conn.commit()
 
 
 if __name__ == "__main__":
