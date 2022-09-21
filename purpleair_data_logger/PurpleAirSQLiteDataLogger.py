@@ -16,6 +16,7 @@
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
 import argparse
 import json
+import sqlite3
 
 
 class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
@@ -23,13 +24,15 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
         The logger class. For now we will insert data into a SQLite3 database file.
     """
 
-    def __init__(self, PurpleAirAPIReadKey):
+    def __init__(self, PurpleAirAPIReadKey, sqlite_data_base_name):
         """
             :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
         super().__init__(PurpleAirAPIReadKey)
+
+        self._db_conn = sqlite3.connect(sqlite_data_base_name)
 
     def store_sensor_data(self, single_sensor_data_dict):
         raise NotImplementedError
@@ -38,8 +41,8 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Collect data from PurpleAir sensors and store it a SQLite3 database file!")
-    parser.add_argument("-save_file_path",  required=True,
-                        dest="save_file_path", type=str, help="""The path to save CSV files in.""")
+    parser.add_argument("-db_name",  required=True,
+                        dest="db_name", type=str, help="""The path and name for the SQLite3 database file!""")
     parser.add_argument("-paa_read_key",  required=True,
                         dest="paa_read_key", type=str, help="""The PurpleAirAPI Read key""")
     parser.add_argument("-paa_single_sensor_request_json_file",  required=False, default=None,
@@ -59,7 +62,7 @@ if __name__ == "__main__":
 
     # Second make an instance our our data logger
     the_paa_csv_data_logger = PurpleAirSQLiteDataLogger(
-        args.paa_read_key, args.save_file_path)
+        args.paa_read_key, args.db_name)
 
     # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
     if args.paa_multiple_sensor_request_json_file is not None and args.paa_single_sensor_request_json_file is None:
