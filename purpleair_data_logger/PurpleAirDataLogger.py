@@ -11,6 +11,16 @@ from time import sleep
 import json
 
 
+class PurpleAirDataLoggerError(Exception):
+    """ 
+        Custom Exception for our PurpleAirDataLogger class.
+    """
+
+    def __init__(self, message_string):
+        self.message = message_string
+        super().__init__(self.message)
+
+
 class PurpleAirDataLogger():
     """
         The Base Data Logger class. Will define common methods used by other data loggers. For
@@ -28,22 +38,31 @@ class PurpleAirDataLogger():
         self._purple_air_api_obj = PurpleAirAPI(PurpleAirAPIReadKey)
 
         # Define how often we send requests
-        self._request_every_x = 65
+        self._send_request_every_x_seconds = 65
 
-    def get_sensor_data(self, sensor_index, read_key=None, fields=None):
+    @property
+    def send_request_every_x_seconds(self):
         """
-            Request data from a single sensor.
-
-            :param int sensor_index: A valid PurpleAirAPI sensor index.
-
-            :param str read_key: A valid PurpleAirAPI private read key.
-
-            :param str fields: A comma delimited string of valid field names.
-
-            :return A python dictionary with data.
+            Return the current value of send_request_every_x_seconds.
+            This value is how often we send requests to the Purple Air API. (PAA)
         """
 
-        return self._purple_air_api_obj.request_sensor_data(sensor_index, read_key, fields)
+        return self._send_request_every_x_seconds
+
+    @send_request_every_x_seconds.setter
+    def send_request_every_x_seconds(self, new_value):
+        """
+            Set the current value of send_request_every_x_seconds.
+            This value is how often we send requests to the Purple Air API. (PAA)
+            Value shall be greater than or equal to 60. The value is in seconds.
+        """
+
+        if new_value >= 60:
+            self._send_request_every_x_seconds = new_value
+
+        else:
+            raise PurpleAirDataLoggerError(
+                f"new_value ({new_value}) shall not be less than 60.")
 
     def store_sensor_data(self, single_sensor_data_dict):
         """
@@ -56,22 +75,17 @@ class PurpleAirDataLogger():
                                                  or error checking. That is upto the caller.
         """
 
-        raise NotImplementedError
-
-    def get_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
-        """
-            Request data from a multiple sensors. Uses the same parameters as
-            PurpleAirAPI.request_multiple_sensors_data()
-
-            :return A python dictionary with data.
-        """
-
-        return self._purple_air_api_obj.request_multiple_sensors_data(fields, location_type, read_keys, show_only, modified_since, max_age, nwlng, nwlat, selng, selat)
+        raise NotImplementedError(
+            "Must be implemented by class that is inheriting PurpleAirDataLogger!")
 
     def _validate_sensor_data_before_insert(self, the_modified_sensor_data):
         """
             Before we store the data, we must make sure all fields have been included
             Our psql/sqlite store statements expect all fields regardless of what we request.
+
+            :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
+
+            return A dictionary with all the data fields filled out.
         """
 
         # Make a copy first
@@ -98,7 +112,7 @@ class PurpleAirDataLogger():
             debug_log(f"""Requesting new data from a sensor with index
                       {the_json_file['sensor_index']}...""")
 
-            sensor_data = self.get_sensor_data(
+            sensor_data = self._purple_air_api_obj.request_sensor_data(
                 the_json_file["sensor_index"], the_json_file["read_key"], the_json_file["fields"])
 
             # Let's make it easier on ourselves by making the sensor data one level deep.
@@ -136,9 +150,9 @@ class PurpleAirDataLogger():
             the_modified_sensor_data = self._validate_sensor_data_before_insert(
                 the_modified_sensor_data)
             self.store_sensor_data(the_modified_sensor_data)
-            debug_log(f"""Waiting {self._request_every_x} seconds before
+            debug_log(f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again...""")
-            sleep(self._request_every_x)
+            sleep(self._send_request_every_x_seconds)
 
     def _run_loop_for_storing_multiple_sensors_data(self, json_config_file):
         """
@@ -153,23 +167,26 @@ class PurpleAirDataLogger():
             # We will request data once every 65 seconds.
             debug_log(f"""Requesting new data from multiple sensors with fields
                       {json_config_file["fields"]}...""")
-            sensors_data = self.get_multiple_sensors_data(fields=json_config_file["fields"],
-                                                          location_type=json_config_file["location_type"],
-                                                          read_keys=json_config_file["read_keys"],
-                                                          show_only=json_config_file["show_only"],
-                                                          modified_since=json_config_file["modified_since"],
-                                                          max_age=json_config_file["max_age"],
-                                                          nwlng=json_config_file["nwlng"],
-                                                          nwlat=json_config_file["nwlat"],
-                                                          selng=json_config_file["selng"],
-                                                          selat=json_config_file["selat"])
+
+            sensors_data = self._purple_air_api_obj.request_multiple_sensors_data(fields=json_config_file["fields"],
+                                                                                  location_type=json_config_file[
+                                                                                      "location_type"],
+                                                                                  read_keys=json_config_file["read_keys"],
+                                                                                  show_only=json_config_file["show_only"],
+                                                                                  modified_since=json_config_file[
+                                                                                      "modified_since"],
+                                                                                  max_age=json_config_file["max_age"],
+                                                                                  nwlng=json_config_file["nwlng"],
+                                                                                  nwlat=json_config_file["nwlat"],
+                                                                                  selng=json_config_file["selng"],
+                                                                                  selat=json_config_file["selat"])
 
             # The sensors data will look something like this:
             # {'api_version': 'V1.0.11-0.0.34', 'time_stamp': 1659710288, 'data_time_stamp': 1659710232,
             # 'max_age': 604800, 'firmware_default_version': '7.00', 'fields': ['sensor_index', 'name'],
             # 'data': [[131075, 'Mariners Bluff'], [131079, 'BRSKBV-outside'], [131077, 'BEE Patio'],
             # ... ]}
-            # It is important to know that the order of 'fields' provided as an argument to get_multiple_sensors_data()
+            # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
 
@@ -193,12 +210,19 @@ class PurpleAirDataLogger():
                 # Store the current data
                 self.store_sensor_data(the_modified_sensor_data)
 
-            debug_log(f"""Waiting {self._request_every_x} seconds before
+            debug_log(f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again...""")
-            sleep(self._request_every_x)
+            sleep(self._send_request_every_x_seconds)
 
-    def validate_parameters_and_run(self, paa_multiple_sensor_request_json_file, paa_single_sensor_request_json_file):
+    def validate_parameters_and_run(self, paa_multiple_sensor_request_json_file=None, paa_single_sensor_request_json_file=None):
         """
+            A method to choose what run method to execute based on what config file is being used.
+            This shall be considered the main entry point for and PurpleAirDataLogger.
+
+            :param str paa_multiple_sensor_request_json_file: The path to a json file containing
+                                                              the parameters to send a single sensor request.
+            :param str paa_single_sensor_request_json_file: The path to a json file containing
+                                                            the parameters to send a multiple sensor request.
         """
 
         # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
@@ -217,5 +241,5 @@ class PurpleAirDataLogger():
                 the_json_file)
 
         else:
-            raise ValueError(
+            raise PurpleAirDataLoggerError(
                 """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
