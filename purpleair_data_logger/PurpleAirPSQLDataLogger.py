@@ -117,12 +117,22 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         for table_name in self._acceptable_table_names_string_list:
-            self._db_conn.run(
-                f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                    timescaledb.compress_segmentby = 'sensor_index')""")
+            try:
+                self._db_conn.run(
+                    f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                        timescaledb.compress_segmentby = 'sensor_index')""")
 
-            self._db_conn.run(
-                f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
+                self._db_conn.run(
+                    f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
+
+            except pg8000.ProgrammingError as err:
+
+                if "cannot change configuration on already compressed chunks" in err.message:
+                    # If we get here continue instead of raising error
+                    continue
+
+                else:
+                    raise err
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
