@@ -127,7 +127,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
             except pg8000.ProgrammingError as err:
 
-                if "cannot change configuration on already compressed chunks" in err.message:
+                if "cannot change configuration on already compressed chunks" in err["M"]:
                     # If we get here continue instead of raising error
                     continue
 
