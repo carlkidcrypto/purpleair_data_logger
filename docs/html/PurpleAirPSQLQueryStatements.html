@@ -19,6 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PurpleAirSQLiteDataLogger module" href="PurpleAirSQLiteDataLogger.html" />
     <link rel="prev" title="PurpleAirPSQLDataLogger module" href="PurpleAirPSQLDataLogger.html" /> 
 </head>
 
@@ -47,6 +48,8 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLQueryStatements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
 </ul>
 </li>
 </ul>
@@ -143,9 +146,37 @@ PSQL statement for thingspeak_fields table</p>
 </dd></dl>
 
 <dl class="py data">
+<dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;\n</span>&#160;&#160;&#160; <span class="pre">SELECT</span> <span class="pre">add_continuous_aggregate_policy('sensor_index_and_name_1hour_aggregate',\n</span>&#160;&#160;&#160; <span class="pre">start_offset</span> <span class="pre">=&gt;</span> <span class="pre">INTERVAL</span> <span class="pre">'3</span> <span class="pre">h',\n</span>&#160;&#160;&#160; <span class="pre">end_offset</span> <span class="pre">=&gt;</span> <span class="pre">INTERVAL</span> <span class="pre">'1</span> <span class="pre">h',\n</span>&#160;&#160;&#160; <span class="pre">schedule_interval</span> <span class="pre">=&gt;</span> <span class="pre">INTERVAL</span> <span class="pre">'1</span> <span class="pre">h',\n</span>&#160;&#160;&#160; <span class="pre">if_not_exists</span> <span class="pre">=&gt;</span> <span class="pre">true);\n</span>&#160;&#160;&#160; <span class="pre">&quot;</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE" title="Permalink to this definition"></a></dt>
+<dd><p>PSQL statement to add a TimescaleDB continuous refresh policy on the sensor_index_and_name_1hour_aggregate materialized view
+Documentation can be found here: <a class="reference external" href="https://docs.timescale.com/timescaledb/latest/how-to-guides/continuous-aggregates/refresh-policies/">https://docs.timescale.com/timescaledb/latest/how-to-guides/continuous-aggregates/refresh-policies/</a></p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;\n</span>&#160;&#160;&#160; <span class="pre">SELECT</span> <span class="pre">add_retention_policy('sensor_index_and_name_1hour_aggregate',\n</span>&#160;&#160;&#160; <span class="pre">INTERVAL</span> <span class="pre">'8</span> <span class="pre">hours',\n</span>&#160;&#160;&#160; <span class="pre">if_not_exists</span> <span class="pre">=&gt;</span> <span class="pre">true);</span> <span class="pre">\n</span>&#160;&#160;&#160; <span class="pre">&quot;</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE" title="Permalink to this definition"></a></dt>
+<dd><p>PSQL statement to add a TimescaleDB data retention policy on the sensor_index_and_name_1hour_aggregate materialized view
+Documentation can be found here: <a class="reference external" href="https://docs.timescale.com/timescaledb/latest/how-to-guides/data-retention/data-retention-with-continuous-aggregates/">https://docs.timescale.com/timescaledb/latest/how-to-guides/data-retention/data-retention-with-continuous-aggregates/</a></p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;\n</span>&#160;&#160;&#160; <span class="pre">CREATE</span> <span class="pre">MATERIALIZED</span> <span class="pre">VIEW</span> <span class="pre">IF</span> <span class="pre">NOT</span> <span class="pre">EXISTS</span> <span class="pre">sensor_index_and_name_1hour_aggregate(data_time_stamp,</span> <span class="pre">sensor_index,</span> <span class="pre">name)\n</span>&#160;&#160;&#160; <span class="pre">WITH</span> <span class="pre">(timescaledb.continuous)</span> <span class="pre">AS\n\t</span>&#160;&#160;&#160; <span class="pre">SELECT</span> <span class="pre">time_bucket('1h',</span> <span class="pre">data_time_stamp),</span> <span class="pre">sensor_index,</span> <span class="pre">name\n\t</span>&#160;&#160;&#160; <span class="pre">FROM</span> <span class="pre">station_information_and_status_fields\n\t</span>&#160;&#160;&#160; <span class="pre">GROUP</span> <span class="pre">BY</span> <span class="pre">time_bucket('1h',</span> <span class="pre">data_time_stamp),</span> <span class="pre">sensor_index,</span> <span class="pre">name\n</span>&#160;&#160;&#160; <span class="pre">WITH</span> <span class="pre">NO</span> <span class="pre">DATA;\n</span>&#160;&#160;&#160; <span class="pre">&quot;</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE" title="Permalink to this definition"></a></dt>
+<dd><p>PSQL statement to create a TimescaleDB Materialized View
+Documentation can be found here: <a class="reference external" href="https://docs.timescale.com/api/latest/continuous-aggregates/create_materialized_view/">https://docs.timescale.com/api/latest/continuous-aggregates/create_materialized_view/</a></p>
+</dd></dl>
+
+<dl class="py data">
 <dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES">
 <span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_DROP_ALL_TABLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">station_information_and_status_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">environmental_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">miscellaneous_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm1_0_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_pseudo_average_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm10_0_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">particle_count_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">thingspeak_fields;\n</span>&#160;&#160;&#160; <span class="pre">'</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES" title="Permalink to this definition"></a></dt>
 <dd><p>PSQL statement to drop all tables in the database</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&quot;\n</span>&#160;&#160;&#160; <span class="pre">SELECT</span> <span class="pre">hypertable_name</span> <span class="pre">FROM</span> <span class="pre">timescaledb_information.jobs\n</span>&#160;&#160;&#160; <span class="pre">WHERE</span> <span class="pre">proc_name='policy_compression';\n</span>&#160;&#160;&#160; <span class="pre">&quot;</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES" title="Permalink to this definition"></a></dt>
+<dd><p>PSQL statement to see active TimescaleDB compression policies
+Documentation can be found here: <a class="reference external" href="https://docs.timescale.com/timescaledb/latest/how-to-guides/compression/about-compression/">https://docs.timescale.com/timescaledb/latest/how-to-guides/compression/about-compression/</a></p>
 </dd></dl>
 
 <dl class="py data">
@@ -209,6 +240,7 @@ PSQL statement for thingspeak_fields table</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="PurpleAirPSQLDataLogger.html" class="btn btn-neutral float-left" title="PurpleAirPSQLDataLogger module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PurpleAirSQLiteDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirSQLiteDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

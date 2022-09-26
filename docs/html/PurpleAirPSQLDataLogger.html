@@ -48,6 +48,8 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
 </ul>
 </li>
 </ul>
@@ -94,6 +96,14 @@ single request rather than individual requests in succession.”</p>
 <dd><p>Bases: <a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger" title="PurpleAirDataLogger.PurpleAirDataLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></a></p>
 <p>The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
 database. Then we will use Grafana to visualize said data.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_acceptable_table_names_string_list</span></span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list" title="Permalink to this definition"></a></dt>
+<dd><p>A getter method that will simply return the contents of
+the acceptable_table_names_string_list. This is a list
+of all the tables that this DataLogger uses and knows about.</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data">
 <span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data" title="Permalink to this definition"></a></dt>

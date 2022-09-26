@@ -11,3 +11,5 @@ purpleair_data_logger
    PurpleAirDataLogger
    PurpleAirPSQLDataLogger
    PurpleAirPSQLQueryStatements
+   PurpleAirSQLiteDataLogger
+   PurpleAirSQLiteQueryStatements
