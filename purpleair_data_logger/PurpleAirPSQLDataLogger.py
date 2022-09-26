@@ -120,7 +120,12 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         # Before we do anything let's get a list of all the current active compression policies
         query_result = self._db_conn.run(
             PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
-        print(query_result)
+
+        # Convert our tuple query_result into a list
+        compression_policy_list = []
+        for row in query_result:
+            compression_policy_list.append(str(row[0]))
+
         for table_name in self._acceptable_table_names_string_list:
             if table_name not in query_result:
                 self._db_conn.run(
