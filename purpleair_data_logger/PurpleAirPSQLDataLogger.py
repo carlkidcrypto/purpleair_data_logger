@@ -127,7 +127,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             compression_policy_list.append(str(row[0]))
 
         for table_name in self._acceptable_table_names_string_list:
-            if table_name not in query_result:
+            if table_name not in compression_policy_list:
                 self._db_conn.run(
                     f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                         timescaledb.compress_segmentby = 'sensor_index')""")
