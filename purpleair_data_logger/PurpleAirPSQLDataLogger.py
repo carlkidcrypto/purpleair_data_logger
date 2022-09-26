@@ -21,7 +21,8 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STAT
                                                                 PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
                                                                 CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
                                                                 CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES)
+                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES,
+                                                                PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 import pg8000
 import argparse
 from datetime import datetime, timezone
@@ -116,23 +117,18 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
 
+        # Before we do anything let's get a list of all the current active compression policies
+        query_result = self._db_conn.run(
+            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        print(query_result)
         for table_name in self._acceptable_table_names_string_list:
-            try:
+            if table_name not in query_result:
                 self._db_conn.run(
                     f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
                         timescaledb.compress_segmentby = 'sensor_index')""")
 
                 self._db_conn.run(
                     f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
-
-            except pg8000.ProgrammingError as err:
-
-                if "cannot change configuration on already compressed chunks" in err["M"]:
-                    # If we get here continue instead of raising error
-                    continue
-
-                else:
-                    raise err
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
