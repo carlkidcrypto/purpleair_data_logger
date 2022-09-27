@@ -552,6 +552,13 @@ PSQL_DROP_ALL_TABLES = """
     DROP TABLE thingspeak_fields;
     """
 
+#: PSQL statement to see active TimescaleDB compression policies
+#: Documentation can be found here: https://docs.timescale.com/timescaledb/latest/how-to-guides/compression/about-compression/
+PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES = """
+    SELECT hypertable_name FROM timescaledb_information.jobs
+    WHERE proc_name='policy_compression';
+    """
+
 #: PSQL statement to create a TimescaleDB Materialized View
 #: Documentation can be found here: https://docs.timescale.com/api/latest/continuous-aggregates/create_materialized_view/
 PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE = """

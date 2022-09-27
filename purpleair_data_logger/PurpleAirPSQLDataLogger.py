@@ -21,11 +21,11 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STAT
                                                                 PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
                                                                 CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
                                                                 CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES)
+                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES,
+                                                                PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 import pg8000
 import argparse
 from datetime import datetime, timezone
-import json
 import sys
 
 
@@ -117,13 +117,23 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
 
-        for table_name in self._acceptable_table_names_string_list:
-            self._db_conn.run(
-                f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                    timescaledb.compress_segmentby = 'sensor_index')""")
+        # Before we do anything let's get a list of all the current active compression policies
+        query_result = self._db_conn.run(
+            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
-            self._db_conn.run(
-                f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
+        # Convert our tuple query_result into a list
+        compression_policy_list = []
+        for row in query_result:
+            compression_policy_list.append(str(row[0]))
+
+        for table_name in self._acceptable_table_names_string_list:
+            if table_name not in compression_policy_list:
+                self._db_conn.run(
+                    f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
+                        timescaledb.compress_segmentby = 'sensor_index')""")
+
+                self._db_conn.run(
+                    f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
@@ -399,20 +409,5 @@ if __name__ == "__main__":
         args.paa_read_key, the_psql_db_conn)
 
     # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
-    if args.paa_multiple_sensor_request_json_file is not None and args.paa_single_sensor_request_json_file is None:
-        # Now load up that json file
-        file_obj = open(args.paa_multiple_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_psql_data_logger.run_loop_for_storing_multiple_sensors_data(
-            the_json_file)
-
-    elif args.paa_multiple_sensor_request_json_file is None and args.paa_single_sensor_request_json_file is not None:
-        # Now load up that json file
-        file_obj = open(args.paa_single_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        the_paa_psql_data_logger.run_loop_for_storing_single_sensor_data(
-            the_json_file)
-
-    else:
-        raise ValueError(
-            """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
+    the_paa_psql_data_logger.validate_parameters_and_run(
+        args.paa_multiple_sensor_request_json_file, args.paa_single_sensor_request_json_file)
