@@ -1,12 +1,12 @@
 # purple_air_data_logger
 
-A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, or a CSV file.
+A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
 ## Usage PurpleAirPSQLDataLogger.py
 
 ```bash
-usage: PurpleAirPSQLDataLogger.py [-h] [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB [-db_port DB_PORT]
-                                  [-db_pwd DB_PWD] -paa_read_key PAA_READ_KEY
+usage: PurpleAirPSQLDataLogger.py [-h] [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB
+                                  [-db_port DB_PORT] [-db_pwd DB_PWD] -paa_read_key PAA_READ_KEY
                                   [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
                                   [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
 
@@ -14,8 +14,9 @@ Collect data from PurpleAir sensors and insert into a database!
 
 optional arguments:
   -h, --help            show this help message and exit
-  -db_drop_all_tables   Set this flag if you wish to drop all tables before loading in new data. Useful if a database change has     
-                        happened. Note: Make sure to provide a db_usr with DROP rights. WARNING: ALL COLLECTED DATA WILL BE LOST!    
+  -db_drop_all_tables   Set this flag if you wish to drop all tables before loading in new data. Useful if a database
+                        change has happened. Note: Make sure to provide a db_usr with DROP rights. WARNING: ALL
+                        COLLECTED DATA WILL BE LOST!
   -db_usr DB_USR        The PSQL database user
   -db_host DB_HOST      The PSQL database host
   -db DB                The PSQL database name
@@ -54,6 +55,26 @@ optional arguments:
   -h, --help            show this help message and exit
   -save_file_path SAVE_FILE_PATH
                         The path to save CSV files in.
+  -paa_read_key PAA_READ_KEY
+                        The PurpleAirAPI Read key
+  -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a single sensor request.
+  -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a multiple sensor request.
+```
+
+## Usage PurpleAirSQLiteDataLogger.py
+
+```bash
+usage: PurpleAirSQLiteDataLogger.py [-h] -db_name DB_NAME -paa_read_key PAA_READ_KEY
+                                    [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                    [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
+
+Collect data from PurpleAir sensors and store it a SQLite3 database file!
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -db_name DB_NAME      The path and name for the SQLite3 database file! i.e database_name.db
   -paa_read_key PAA_READ_KEY
                         The PurpleAirAPI Read key
   -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
