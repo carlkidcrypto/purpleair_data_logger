@@ -28,6 +28,8 @@ def debug_log(debug_msg_string):
         debug messages only if DEBUG is defined as True in
         'PurpleAirAPIConstants.py'. Messages will be the color
         red.
+
+        :param str debug_msg_string: The debug message string
     """
 
     if PRINT_DEBUG_MSGS:
@@ -42,6 +44,9 @@ class PurpleAirAPI():
     """
 
     def __init__(self, your_api_read_key):
+        """
+            :param str your_api_read_key: A valid PurpleAirAPI Read key
+        """
 
         # Save off the API key for internal usage
         self._your_api_read_key = your_api_read_key
@@ -342,9 +347,13 @@ class PurpleAirAPI():
 
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
-            A method for: Not all sensors support all field names, so we check that the keys exist
-            in the sensor data. If not we add it in with a NULL equivalent. i.e 0.0, 0, "", etc.
+            A helper method.
+            Since not all sensors support all field names we check that the keys exist
+            in the sensor data. If they do not exist we add it in with a NULL 
+            equivalent. i.e 0.0, 0, "", etc.
             We access the "sensor" key inside this method.
+
+            :param dict paa_return_data: A dictionary with paa return data
         """
 
         for key_str in ACCEPTED_FIELD_NAMES_DICT.keys():

@@ -10,7 +10,7 @@ def read_file(filename):
 
 setup(
     name="purpleair_data_logger",
-    version="0.0.8b1",
+    version="1.0.0",
     license="MIT",
     author="Carlos Santos",
     author_email="27721404+carlkid1499@users.noreply.github.com",
@@ -18,10 +18,11 @@ setup(
     long_description_content_type='text/markdown',
     packages=['purpleair_data_logger'],
     url="https://github.com/carlkid1499/purpleair_data_logger",
-    keywords=["purpleair_data_logger", "purpleair", "data logger",
+    keywords=["purpleair_data_logger", "purpleair", "purpleair data logger",
               "PurpleAirPSQLDataLogger", "PurpleAirCSVDataLogger"],
     install_requires=[
         "pg8000",
         "requests"
     ],
+    platforms=["Windows 32/64", "Linux 32/64", "MacOS 32/64"]
 )
