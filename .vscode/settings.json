@@ -1,6 +1,7 @@
 {
     "cSpell.words": [
         "carlkid1499",
+        "drawio",
         "Grafana",
         "hypertable",
         "nwlat",
@@ -11,6 +12,8 @@
         "selat",
         "selng",
         "thingspeak",
-        "timescaledb"
+        "timescaledb",
+        "PSQL",
+        "deciviews"
     ]
 }

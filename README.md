@@ -2,6 +2,22 @@
 
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
+## Installation
+
+You can install the PurpleAir Data Logger via pip.
+
+```bash
+python3 -m pip install purpleair_data_logger
+```
+
+You can install PurpleAir Data Logger by cloning down this repo.
+
+```bash
+git clone https://github.com/carlkid1499/purpleair_data_logger.git
+cd purpleair_data_logger
+python3 setup.py install 
+```
+
 ## Usage PurpleAirPSQLDataLogger.py
 
 ```bash
@@ -160,34 +176,34 @@ Out of the parameters listed below only "fields" is required. The others are all
 
     For field descriptions, please see the 'sensor data fields'. section.
 
-    location_typeoptional Number 
+    location_type optional Number 
     The location_type of the sensors.
     Possible values are: 0 = Outside or 1 = Inside.
 
-    read_keysoptional String 
+    read_keys optional String 
     A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
 
-    show_onlyoptional String 
+    show_only optional String 
     A comma (,) separated list of sensor_index values. When provided, the results are limited only to the sensors included in this list.
 
-    modified_sinceoptional long 
+    modified_since optional long 
     The modified_since parameter causes only sensors modified after the provided time stamp to be included in the results. Using the time_stamp value from a previous call (recommended) will limit results to those with new values since the last request. Using a value of 0 will match sensors modified at any time.
 
-    max_ageoptional Integer 
+    max_age optional Integer 
     Filter results to only include sensors modified or updated within the last number of seconds. Using a value of 0 will match sensors of any age.
 
     Default value: 604800
 
-    nwlngoptional Number 
+    nwlng optional Number 
     A north west longitude for the bounding box.
 
     Use a bounding box to limit the sensors returned to a specific geographic area. The bounding box is defined by two points, a north west latitude/longitude and a south east latitude/longitude.
 
-    nwlatoptional Number 
+    nwlat optional Number 
     A north west latitude for the bounding box.
 
-    selngoptional Number 
+    selng optional Number 
     A south east longitude for the bounding box.
 
-    selatoptional Number 
+    selat optional Number 
     A south east latitude for the bounding box.
