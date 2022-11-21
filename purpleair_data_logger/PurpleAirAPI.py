@@ -43,16 +43,17 @@ class PurpleAirAPI():
         PurpleAirAPI requests.
     """
 
-    def __init__(self, your_api_read_key):
+    def __init__(self, your_api_read_key, your_api_write_key):
         """
             :param str your_api_read_key: A valid PurpleAirAPI Read key
         """
 
         # Save off the API key for internal usage
         self._your_api_read_key = your_api_read_key
+        self._your_api_write_key = your_api_write_key
 
         # Create the base API request string. Must be HTTPS.
-        self._base_api_request_string = "https://api.purpleair.com/v1/"
+        self._base_api_v1_request_string = "https://api.purpleair.com/v1/"
 
         # Place holders for information we care about
         self._api_version = ""
@@ -67,7 +68,7 @@ class PurpleAirAPI():
         """
             A method to check if an API key is valid.
         """
-        request_url = self._base_api_request_string + "keys"
+        request_url = self._base_api_v1_request_string + "keys"
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(self._your_api_read_key)})
 
@@ -145,7 +146,7 @@ class PurpleAirAPI():
             :return A python dictionary containing the payload response
         """
 
-        request_url = self._base_api_request_string + \
+        request_url = self._base_api_v1_request_string + \
             "sensors/" + f"{sensor_index}"
 
         optional_parameters_dict = {
@@ -223,7 +224,7 @@ class PurpleAirAPI():
             :return A python dictionary containing the payload response                    
         """
 
-        request_url = self._base_api_request_string + \
+        request_url = self._base_api_v1_request_string + \
             "sensors/" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
@@ -290,7 +291,7 @@ class PurpleAirAPI():
                                For field descriptions, please see the 'sensor data fields'. section.
         """
 
-        request_url = self._base_api_request_string + \
+        request_url = self._base_api_v1_request_string + \
             "sensors/" + f"{sensor_index}" + "/history" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
@@ -303,6 +304,49 @@ class PurpleAirAPI():
             "average": average}
 
         return self._send_url_request(request_url, optional_parameters_dict)
+
+    def request_create_group(self, name):
+        """
+
+        """
+
+        request_url = self._base_api_v1_request_string + \
+            "groups/name={name}"
+
+    def request_create_member(self, group_id, sensor_index=None, sensor_id=None, owner_email=None, location_type=None):
+        """
+
+        """
+
+        request_url = self._base_api_v1_request_string + \
+            "groups/{group_id}/members"
+
+        if group_id is not None and sensor_index is not None and sensor_id is None:
+            # We good, use the public sensor index
+            pass
+
+        elif group_id is not None and sensor_index is None and sensor_id is not None:
+            # We good, use the private sensor id.
+            pass
+
+        else:
+            raise PurpleAirAPIError("Error")
+
+    def request_delete_group(self, group_id):
+        """
+
+        """
+
+        request_url = self._base_api_v1_request_string + \
+            "groups/{group_id}/members"
+
+    def request_delete_member(self):
+        """
+
+        """
+
+        request_url = self._base_api_v1_request_string + \
+            "groups/{group_id}/members/{member_id}"
 
     def _send_url_request(self, request_url, optional_parameters_dict={}):
         """
