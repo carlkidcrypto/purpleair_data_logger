@@ -307,11 +307,15 @@ class PurpleAirAPI():
 
     def request_create_group(self, name):
         """
+            A method to create a group for sensors.
 
+            :param int sensor_index: The sensor_index as found in the JSON for this specific sensor.
         """
 
         request_url = self._base_api_v1_request_string + \
-            "groups/name={name}"
+            f"groups/name={name}"
+        
+        return self._send_url_request(request_url)
 
     def request_create_member(self, group_id, sensor_index=None, sensor_id=None, owner_email=None, location_type=None):
         """

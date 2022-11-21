@@ -6,7 +6,7 @@
 """
 
 #: A constant to see if debug statements are enabled in the PurpleAirAPI module.
-PRINT_DEBUG_MSGS = False
+PRINT_DEBUG_MSGS = True
 
 #: Accepted Error Codes
 ERROR_CODES_LIST = [400, 403, 404, 409]
