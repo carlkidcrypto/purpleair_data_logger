@@ -46,6 +46,7 @@ class PurpleAirAPI():
     def __init__(self, your_api_read_key, your_api_write_key):
         """
             :param str your_api_read_key: A valid PurpleAirAPI Read key
+            :param str your_api_write_key: A valid PurpleAirAPI Write key
         """
 
         # Save off the API key for internal usage
@@ -56,30 +57,43 @@ class PurpleAirAPI():
         self._base_api_v1_request_string = "https://api.purpleair.com/v1/"
 
         # Place holders for information we care about
-        self._api_version = ""
-        self._api_key_last_checked = 0
-        self._api_key_type = ""
+        self._api_versions = {}
+        self._api_keys_last_checked = {}
+        self._api_key_types = {}
 
-        retval = self._check_an_api_key()
-        if retval:
-            print("Successfully authenticated with the PurpleAirAPI")
+        retval_api_read_key = self._check_an_api_key(your_api_read_key)
+        retval_api_write_key = self._check_an_api_key(your_api_write_key)
+        api_key_type = None
+        msg = f"PurpleAirAPI: Successfully authenticated {api_key_type} key"
 
-    def _check_an_api_key(self):
+        if retval_api_read_key:
+            api_key_type = self._api_key_types[your_api_read_key]
+            print(msg)
+
+        if retval_api_write_key:
+            api_key_type = self._api_key_types[your_api_write_key]
+            print(msg)
+
+    def _check_an_api_key(self, str_api_key_to_check):
         """
-            A method to check if an API key is valid.
+            An internal class helper method to check if an API key is valid.
+
+            :param str str_api_key_to_check: A valid PurpleAirAPI key to check
+
+            :return True, if an API key can be successfully verified.
         """
         request_url = self._base_api_v1_request_string + "keys"
         my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self._your_api_read_key)})
+                                  "X-API-Key": str(str_api_key_to_check)})
 
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
 
         if my_request.status_code in SUCCESS_CODE_LIST:
             # We good :) get the request text
-            self._api_version = the_request_text_as_json["api_version"]
-            self._api_key_last_checked = the_request_text_as_json["time_stamp"]
-            self._api_key_type = the_request_text_as_json["api_key_type"]
+            self._api_versions[str_api_key_to_check] = the_request_text_as_json["api_version"]
+            self._api_keys_last_checked[str_api_key_to_check] = the_request_text_as_json["time_stamp"]
+            self._api_key_types[str_api_key_to_check] = the_request_text_as_json["api_key_type"]
             my_request.close()
             del my_request
             return True
@@ -88,36 +102,29 @@ class PurpleAirAPI():
             raise PurpleAirAPIError(
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
 
-    def recheck_api_key(self):
-        """
-            A method to recheck the API Key provided.
-        """
-
-        return self._check_an_api_key()
-
     @property
-    def get_api_version(self):
+    def get_api_versions(self):
         """
-            A method to return the API version being used.
+            A method to return the API versions being used for both read/write keys.
         """
 
-        return self._api_version
+        return self._api_versions
 
     @property
     def get_api_key_last_checked(self):
         """
-            A method to return the timestamp of when the API Key was last checked.
+            A method to return the timestamp of when the API read/write keys were last checked.
         """
 
-        return self._api_key_last_checked
+        return self._api_keys_last_checked
 
     @property
     def get_api_key_type(self):
         """
-            A method to return the API version being used.
+            A method to return the API key types being used.
         """
 
-        return self._api_key_type
+        return self._api_key_types
 
     def request_sensor_data(self, sensor_index, read_key=None, fields=None):
         """
@@ -154,7 +161,7 @@ class PurpleAirAPI():
             "fields": fields
         }
 
-        return self._send_url_request(request_url, optional_parameters_dict)
+        return self._send_url_request(request_url, self._your_api_read_key, optional_parameters_dict)
 
     def request_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
@@ -240,7 +247,7 @@ class PurpleAirAPI():
             "selng": selng,
             "selat": selat}
 
-        return self._send_url_request(request_url, optional_parameters_dict)
+        return self._send_url_request(request_url, self._your_api_read_key, optional_parameters_dict)
 
     def request_sensor_historic_data(self, sensor_index, fields, read_key=None, start_timestamp=None, end_timestamp=None, average=None):
         """
@@ -303,7 +310,7 @@ class PurpleAirAPI():
             "modified_since": end_timestamp,
             "average": average}
 
-        return self._send_url_request(request_url, optional_parameters_dict)
+        return self._send_url_request(request_url, self._your_api_read_key, optional_parameters_dict)
 
     def request_create_group(self, name):
         """
@@ -314,8 +321,8 @@ class PurpleAirAPI():
 
         request_url = self._base_api_v1_request_string + \
             f"groups/name={name}"
-        
-        return self._send_url_request(request_url)
+
+        return self._send_url_request(request_url, self._your_api_write_key)
 
     def request_create_member(self, group_id, sensor_index=None, sensor_id=None, owner_email=None, location_type=None):
         """
@@ -352,7 +359,7 @@ class PurpleAirAPI():
         request_url = self._base_api_v1_request_string + \
             "groups/{group_id}/members/{member_id}"
 
-    def _send_url_request(self, request_url, optional_parameters_dict={}):
+    def _send_url_request(self, request_url, api_key_to_use, optional_parameters_dict={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -378,7 +385,7 @@ class PurpleAirAPI():
 
         debug_log(request_url)
         my_request = requests.get(request_url, headers={
-                                  "X-API-Key": str(self._your_api_read_key)})
+                                  "X-API-Key": str(api_key_to_use)})
 
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
