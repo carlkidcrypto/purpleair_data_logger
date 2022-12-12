@@ -389,13 +389,16 @@ class PurpleAirAPI():
 
         return self._send_url_post_request(post_url, self._your_api_write_key, {})
 
-    def post_delete_member(self):
+    def post_delete_member(self, group_id, member_id):
         """
-
+            :param int group_id: The group_id of the group in which member_id is in.
+            :param int member_id: The member_id to delete.
         """
 
         post_url = self._base_api_v1_request_string + \
-            "groups/{group_id}/members/{member_id}"
+            f"groups/{group_id}/members/{member_id}"
+
+        return self._send_url_post_request(post_url, self._your_api_write_key, {})
 
     @staticmethod
     def _send_url_get_request(request_url, api_key_to_use, optional_parameters_dict={}):
