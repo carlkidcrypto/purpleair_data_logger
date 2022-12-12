@@ -315,38 +315,69 @@ class PurpleAirAPI():
 
         return self._send_url_get_request(request_url, self._your_api_read_key, optional_parameters_dict)
 
-    def request_create_group(self, name):
+    def post_create_group(self, name):
         """
             A method to create a group for sensors.
 
             :param int sensor_index: The sensor_index as found in the JSON for this specific sensor.
         """
 
-        request_url = self._base_api_v1_request_string + \
+        post_url = self._base_api_v1_request_string + \
             f"groups"
 
-        return self._send_url_post_request(request_url, self._your_api_write_key, {"name": name})
+        return self._send_url_post_request(post_url, self._your_api_write_key, {"name": name})
 
-    def request_create_member(self, group_id, sensor_index=None, sensor_id=None, owner_email=None, location_type=None):
+    def post_create_member(self, group_id, sensor_index=None, sensor_id=None, owner_email=None, location_type=None):
+        """
+            Using a sensor_id (Parameters Option 1)
+            The sensor_id should be exactly as printed on the label on the sensor. When no owner_email is provided, the sensor has to be marked as public.
+
+            :param int group_id: The group_id of the group to add a member to. This group must be owned by the api_key.
+
+            :param str sensor_id: The sensor_id of the new member sensor. This must be AS PRINTED on the sensor’s label.
+
+            Using a sensor_index (Parameters Option 2)
+            The sensor_index can be found in lists for example from a /sensors api call. When no owner_email is provided, the sensor has to be marked as public.
+
+            :param int group_id: The group_id of the group to add a member to. This group must be owned by the api_key.
+
+            :param int sensor_index: The sensor_index of the new member as found in the JSON for this specific sensor.
+
+            Using sensor_id with a private sensor by specifying owner_email and optionally location_type. (Parameters Option 3)
+            This example will produce an error if any provided value does not match the current configuration of the sensor. Note, too many incorrect attempts may disable your API key, so do not try guessing the email!!
+
+            :param int group_id: The group_id of the group to add a member to. This group must be owned by the api_key.
+
+            :param str sensor_id: The sensor_id of the new member sensor. This must be AS PRINTED on the sensor’s label.
+
+            :param str owner_email: An email address that matches the Owner email as set by previously completing the PurpleAir registration form at www.purpleair.com/register.
+
+            :param (optional) int location_type: The expected location_type of the new member.
+                                                 Possible values are: 0 = Outside or 1 = Inside.
+                                                 If the target member is not of this type, an error will result.
+                                                 NOTE: This value is required if the sensor in question is marked as ‘private’ on the registration form.
         """
 
-        """
+        post_url = self._base_api_v1_request_string + \
+            f"groups/{group_id}/members"
 
-        request_url = self._base_api_v1_request_string + \
-            "groups/{group_id}/members"
+        if sensor_index is None and sensor_id is not None and owner_email is None and location_type is None:
+            # We good, use the sensor index
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id})
 
-        if group_id is not None and sensor_index is not None and sensor_id is None:
-            # We good, use the public sensor index
-            pass
+        if sensor_index is not None and sensor_id is None and owner_email is None and location_type is None:
+            # We good, use the sensor id
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_idex": sensor_index})
 
-        elif group_id is not None and sensor_index is None and sensor_id is not None:
+        elif sensor_index is None and sensor_id is not None and owner_email is not None:
             # We good, use the private sensor id.
-            pass
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
 
         else:
-            raise PurpleAirAPIError("Error")
+            raise PurpleAirAPIError(
+                "Invalid configuration of method parameters!")
 
-    def request_delete_group(self, group_id):
+    def post_delete_group(self, group_id):
         """
 
         """
@@ -354,7 +385,7 @@ class PurpleAirAPI():
         request_url = self._base_api_v1_request_string + \
             "groups/{group_id}/members"
 
-    def request_delete_member(self):
+    def post_delete_member(self):
         """
 
         """
@@ -362,7 +393,8 @@ class PurpleAirAPI():
         request_url = self._base_api_v1_request_string + \
             "groups/{group_id}/members/{member_id}"
 
-    def _send_url_get_request(self, request_url, api_key_to_use, optional_parameters_dict={}):
+    @staticmethod
+    def _send_url_get_request(request_url, api_key_to_use, optional_parameters_dict={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -402,8 +434,9 @@ class PurpleAirAPI():
             my_request.close()
             raise PurpleAirAPIError(
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
-    
-    def _send_url_post_request(self, request_url, api_key_to_use, json_post_parameters):
+
+    @staticmethod
+    def _send_url_post_request(request_url, api_key_to_use, json_post_parameters):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -413,7 +446,7 @@ class PurpleAirAPI():
 
         debug_log(request_url)
         my_request = requests.post(request_url, headers={
-                                "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
+            "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
 
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
