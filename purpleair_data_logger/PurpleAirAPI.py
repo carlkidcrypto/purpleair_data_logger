@@ -363,15 +363,15 @@ class PurpleAirAPI():
 
         if sensor_index is None and sensor_id is not None and owner_email is None and location_type is None:
             # We good, use the sensor index
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id})
 
-        if sensor_index is not None and sensor_id is None and owner_email is None and location_type is None:
+        elif sensor_index is not None and sensor_id is None and owner_email is None and location_type is None:
             # We good, use the sensor id
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_idex": sensor_index})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_idex": sensor_index})
 
         elif sensor_index is None and sensor_id is not None and owner_email is not None:
             # We good, use the private sensor id.
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
 
         else:
             raise PurpleAirAPIError(
@@ -387,7 +387,7 @@ class PurpleAirAPI():
         post_url = self._base_api_v1_request_string + \
             f"groups/{group_id}"
 
-        return self._send_url_post_request(post_url, self._your_api_write_key, {})
+        return self._send_url_post_request(post_url, self._your_api_write_key)
 
     def post_delete_member(self, group_id, member_id):
         """
@@ -398,7 +398,7 @@ class PurpleAirAPI():
         post_url = self._base_api_v1_request_string + \
             f"groups/{group_id}/members/{member_id}"
 
-        return self._send_url_post_request(post_url, self._your_api_write_key, {})
+        return self._send_url_post_request(post_url, self._your_api_write_key)
 
     @staticmethod
     def _send_url_get_request(request_url, api_key_to_use, optional_parameters_dict={}):
@@ -443,7 +443,7 @@ class PurpleAirAPI():
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
 
     @staticmethod
-    def _send_url_post_request(request_url, api_key_to_use, json_post_parameters):
+    def _send_url_post_request(request_url, api_key_to_use, json_post_parameters={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -452,8 +452,13 @@ class PurpleAirAPI():
         """
 
         debug_log(request_url)
-        my_request = requests.post(request_url, headers={
-            "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
+        if json_post_parameters:
+            my_request = requests.post(request_url, headers={
+                "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
+
+        else:
+            my_request = requests.post(request_url, headers={
+                "X-API-Key": str(api_key_to_use)})
 
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
