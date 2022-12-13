@@ -387,7 +387,7 @@ class PurpleAirAPI():
         post_url = self._base_api_v1_request_string + \
             f"groups/{group_id}"
 
-        return self._send_url_post_request(post_url, self._your_api_write_key)
+        return self._send_url_delete_request(post_url, self._your_api_write_key)
 
     def post_delete_member(self, group_id, member_id):
         """
@@ -398,7 +398,7 @@ class PurpleAirAPI():
         post_url = self._base_api_v1_request_string + \
             f"groups/{group_id}/members/{member_id}"
 
-        return self._send_url_post_request(post_url, self._your_api_write_key)
+        return self._send_url_delete_request(post_url, self._your_api_write_key)
 
     @staticmethod
     def _send_url_get_request(request_url, api_key_to_use, optional_parameters_dict={}):
@@ -458,6 +458,37 @@ class PurpleAirAPI():
 
         else:
             my_request = requests.post(request_url, headers={
+                "X-API-Key": str(api_key_to_use)})
+
+        the_request_text_as_json = json.loads(my_request.text)
+        debug_log(the_request_text_as_json)
+
+        if my_request.status_code in SUCCESS_CODE_LIST:
+            my_request.close()
+            del my_request
+            return the_request_text_as_json
+
+        elif my_request.status_code in ERROR_CODES_LIST:
+            my_request.close()
+            raise PurpleAirAPIError(
+                f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
+    
+    @staticmethod
+    def _send_url_delete_request(request_url, api_key_to_use, json_post_parameters={}):
+        """
+            A class helper to send the url request. It can also add onto the
+            'request_url' string if 'optional_parameters_dict' are provided.
+
+            :param str request_url: The constructed string url request string.
+        """
+
+        debug_log(request_url)
+        if json_post_parameters:
+            my_request = requests.delete(request_url, headers={
+                "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
+
+        else:
+            my_request = requests.delete(request_url, headers={
                 "X-API-Key": str(api_key_to_use)})
 
         the_request_text_as_json = json.loads(my_request.text)
