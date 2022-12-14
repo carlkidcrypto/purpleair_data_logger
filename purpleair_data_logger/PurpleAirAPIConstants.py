@@ -12,7 +12,7 @@ PRINT_DEBUG_MSGS = True
 ERROR_CODES_LIST = [400, 403, 404, 409]
 
 #: Success Code
-SUCCESS_CODE_LIST = [200, 201]
+SUCCESS_CODE_LIST = [200, 201, 204]
 
 #: Store the dict/json keys to access data fields.
 #: And define default empty/null values for them

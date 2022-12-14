@@ -400,8 +400,7 @@ class PurpleAirAPI():
 
         return self._send_url_delete_request(post_url, self._your_api_write_key)
 
-    @staticmethod
-    def _send_url_get_request(request_url, api_key_to_use, optional_parameters_dict={}):
+    def _send_url_get_request(self, request_url, api_key_to_use, optional_parameters_dict={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -432,18 +431,14 @@ class PurpleAirAPI():
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
 
-        if my_request.status_code in SUCCESS_CODE_LIST:
-            my_request.close()
-            del my_request
+        if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
 
-        elif my_request.status_code in ERROR_CODES_LIST:
-            my_request.close()
+        else:
             raise PurpleAirAPIError(
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
 
-    @staticmethod
-    def _send_url_post_request(request_url, api_key_to_use, json_post_parameters={}):
+    def _send_url_post_request(self, request_url, api_key_to_use, json_post_parameters={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -463,18 +458,14 @@ class PurpleAirAPI():
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
 
-        if my_request.status_code in SUCCESS_CODE_LIST:
-            my_request.close()
-            del my_request
+        if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
 
-        elif my_request.status_code in ERROR_CODES_LIST:
-            my_request.close()
+        else:
             raise PurpleAirAPIError(
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
-    
-    @staticmethod
-    def _send_url_delete_request(request_url, api_key_to_use, json_post_parameters={}):
+
+    def _send_url_delete_request(self, request_url, api_key_to_use, json_post_parameters={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -494,15 +485,26 @@ class PurpleAirAPI():
         the_request_text_as_json = json.loads(my_request.text)
         debug_log(the_request_text_as_json)
 
-        if my_request.status_code in SUCCESS_CODE_LIST:
-            my_request.close()
-            del my_request
+        if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
 
-        elif my_request.status_code in ERROR_CODES_LIST:
-            my_request.close()
+        else:
             raise PurpleAirAPIError(
                 f"""{my_request.status_code}: {the_request_text_as_json['error']} - {the_request_text_as_json['description']}""")
+
+    @staticmethod
+    def _verify_request_status_codes(status_code) -> bool:
+        """
+            A helper to check those status codes.
+            True if in SUCCESS_CODE_LIST
+            False if in ERROR_CODES_LIST
+        """
+
+        if status_code in SUCCESS_CODE_LIST:
+            return True
+
+        elif status_code in ERROR_CODES_LIST:
+            return False
 
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
