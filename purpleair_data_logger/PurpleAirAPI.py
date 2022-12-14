@@ -428,8 +428,8 @@ class PurpleAirAPI():
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(api_key_to_use)})
 
-        the_request_text_as_json = json.loads(my_request.text)
-        debug_log(the_request_text_as_json)
+        the_request_text_as_json = self._convert_requests_text_to_json(
+            my_request.text)
 
         if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
@@ -455,8 +455,8 @@ class PurpleAirAPI():
             my_request = requests.post(request_url, headers={
                 "X-API-Key": str(api_key_to_use)})
 
-        the_request_text_as_json = json.loads(my_request.text)
-        debug_log(the_request_text_as_json)
+        the_request_text_as_json = self._convert_requests_text_to_json(
+            my_request.text)
 
         if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
@@ -482,8 +482,8 @@ class PurpleAirAPI():
             my_request = requests.delete(request_url, headers={
                 "X-API-Key": str(api_key_to_use)})
 
-        the_request_text_as_json = json.loads(my_request.text)
-        debug_log(the_request_text_as_json)
+        the_request_text_as_json = self._convert_requests_text_to_json(
+            my_request.text)
 
         if self._verify_request_status_codes(my_request.status_code):
             return the_request_text_as_json
@@ -505,6 +505,19 @@ class PurpleAirAPI():
 
         elif status_code in ERROR_CODES_LIST:
             return False
+
+    @staticmethod
+    def _convert_requests_text_to_json(text) -> None | dict:
+        """
+            A helper to convert request.text to json.
+        """
+
+        the_request_text_as_json = None
+        if text:
+            the_request_text_as_json = json.loads(text)
+            debug_log(the_request_text_as_json)
+
+        return the_request_text_as_json
 
     def _sanitize_sensor_data_from_paa(self, paa_return_data):
         """
