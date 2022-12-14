@@ -363,14 +363,17 @@ class PurpleAirAPI():
 
         if sensor_index is None and sensor_id is not None and owner_email is None and location_type is None:
             # We good, use the sensor index
+            debug_log("post_create_member - option 1")
             return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id})
 
         elif sensor_index is not None and sensor_id is None and owner_email is None and location_type is None:
             # We good, use the sensor id
+            debug_log("post_create_member - option 2")
             return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_idex": sensor_index})
 
         elif sensor_index is None and sensor_id is not None and owner_email is not None:
             # We good, use the private sensor id.
+            debug_log("post_create_member - option 3")
             return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
 
         else:
@@ -448,10 +451,12 @@ class PurpleAirAPI():
 
         debug_log(request_url)
         if json_post_parameters:
+            debug_log(json_post_parameters)
             my_request = requests.post(request_url, headers={
                 "X-API-Key": str(api_key_to_use)}, json=json_post_parameters)
 
         else:
+            debug_log(json_post_parameters)
             my_request = requests.post(request_url, headers={
                 "X-API-Key": str(api_key_to_use)})
 
