@@ -363,15 +363,15 @@ class PurpleAirAPI():
 
         if sensor_index is None and sensor_id is not None and owner_email is None and location_type is None:
             # We good, use the sensor index
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id})
 
         elif sensor_index is not None and sensor_id is None and owner_email is None and location_type is None:
             # We good, use the sensor id
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_idex": sensor_index})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_idex": sensor_index})
 
         elif sensor_index is None and sensor_id is not None and owner_email is not None:
             # We good, use the private sensor id.
-            return self._send_url_post_request(post_url, self._your_api_write_key, {"group_id": group_id, "sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
+            return self._send_url_post_request(post_url, self._your_api_write_key, {"sensor_id": sensor_id, "owner_email": owner_email, "location_type": location_type})
 
         else:
             raise PurpleAirAPIError(
