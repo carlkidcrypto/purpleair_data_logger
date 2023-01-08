@@ -527,7 +527,7 @@ class PurpleAirAPI():
             return False
 
     @staticmethod
-    def _convert_requests_text_to_json(text) -> None | dict:
+    def _convert_requests_text_to_json(text) -> dict:
         """
             A helper to convert request.text to json.
         """
