@@ -13,7 +13,7 @@ from purpleair_data_logger.PurpleAirAPIConstants import (
 
 
 class PurpleAirAPIError(Exception):
-    """ 
+    """
         Custom Exception for our PurpleAirAPI class.
     """
 
@@ -68,29 +68,31 @@ class PurpleAirAPI():
         retval_api_read_key = None
         retval_api_write_key = None
 
-        if your_api_read_key:
+        if your_api_read_key is not None:
             retval_api_read_key = self._check_an_api_key(your_api_read_key)
 
-        if your_api_write_key:
+        if your_api_write_key is not None:
             retval_api_write_key = self._check_an_api_key(your_api_write_key)
 
         debug_log(self._api_versions)
         debug_log(self._api_keys_last_checked)
         debug_log(self._api_key_types)
 
-        if (retval_api_read_key and self._api_key_types[your_api_read_key] == "READ"):
-            print("PurpleAirAPI: Successfully authenticated read key")
+        if retval_api_read_key is not None:
+            if self._api_key_types[your_api_read_key] == "READ":
+                print("PurpleAirAPI: Successfully authenticated read key")
 
-        else:
-            raise PurpleAirAPIError(
-                "Ensure 'your_api_read_key' is a read key.")
+            else:
+                raise PurpleAirAPIError(
+                    "Ensure 'your_api_read_key' is a read key.")
 
-        if (retval_api_write_key and self._api_key_types[your_api_write_key] == "WRITE"):
-            print("PurpleAirAPI: Successfully authenticated write key")
+        if retval_api_write_key is not None:
+            if self._api_key_types[your_api_write_key] == "WRITE":
+                print("PurpleAirAPI: Successfully authenticated write key")
 
-        else:
-            raise PurpleAirAPIError(
-                "Ensure 'your_api_write_key' is a write key")
+            else:
+                raise PurpleAirAPIError(
+                    "Ensure 'your_api_write_key' is a write key")
 
     def _check_an_api_key(self, str_api_key_to_check):
         """
