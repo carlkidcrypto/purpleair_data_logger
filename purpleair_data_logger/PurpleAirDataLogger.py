@@ -35,7 +35,8 @@ class PurpleAirDataLogger():
         """
 
         # Make one instance of our PurpleAirAPI class
-        self._purple_air_api_obj = PurpleAirAPI(PurpleAirAPIReadKey)
+        self._purple_air_api_obj = PurpleAirAPI(
+            your_api_read_key=PurpleAirAPIReadKey)
 
         # Define how often we send requests
         self._send_request_every_x_seconds = 65
@@ -240,6 +241,10 @@ class PurpleAirDataLogger():
             self._run_loop_for_storing_single_sensor_data(
                 the_json_file)
 
+        elif paa_multiple_sensor_request_json_file is None and paa_single_sensor_request_json_file is None:
+            raise PurpleAirDataLoggerError(
+                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' were provided. Please provide at least one!""")
+
         else:
             raise PurpleAirDataLoggerError(
-                """The parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both.""")
+                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both!""")

@@ -86,32 +86,101 @@ A python3 class designed to fetch data from Purple Air’s new API.
 <a class="reference external" href="https://api.purpleair.com/#api-welcome">https://api.purpleair.com/#api-welcome</a></p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirAPI.</span></span><span class="sig-name descname"><span class="pre">PurpleAirAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">your_api_read_key</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirAPI.</span></span><span class="sig-name descname"><span class="pre">PurpleAirAPI</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">your_api_read_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">your_api_write_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The PurpleAirAPI class designed to send valid
 PurpleAirAPI requests.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_key_last_checked">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_key_last_checked</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_key_last_checked" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the timestamp of when the API Key was last checked.</p>
+<dd><p>A method to return the timestamp of when the API read/write keys were last checked.</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_key_type">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_key_type</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_key_type" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the API version being used.</p>
+<dd><p>A method to return the API key types being used.</p>
 </dd></dl>
 
 <dl class="py property">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_version">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_version</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_version" title="Permalink to this definition"></a></dt>
-<dd><p>A method to return the API version being used.</p>
+<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.get_api_versions">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get_api_versions</span></span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.get_api_versions" title="Permalink to this definition"></a></dt>
+<dd><p>A method to return the API versions being used for both read/write keys.</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.recheck_api_key">
-<span class="sig-name descname"><span class="pre">recheck_api_key</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.recheck_api_key" title="Permalink to this definition"></a></dt>
-<dd><p>A method to recheck the API Key provided.</p>
+<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.post_create_group">
+<span class="sig-name descname"><span class="pre">post_create_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.post_create_group" title="Permalink to this definition"></a></dt>
+<dd><p>A method to create a group for sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>sensor_index</strong> (<em>int</em>) – The sensor_index as found in the JSON for this specific sensor.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.post_create_member">
+<span class="sig-name descname"><span class="pre">post_create_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">owner_email</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">location_type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.post_create_member" title="Permalink to this definition"></a></dt>
+<dd><p>Using a sensor_id (Parameters Option 1)
+The sensor_id should be exactly as printed on the label on the sensor. When no owner_email is provided, the sensor has to be marked as public.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_id</strong> (<em>int</em>) – The group_id of the group to add a member to. This group must be owned by the api_key.</p></li>
+<li><p><strong>sensor_id</strong> (<em>str</em>) – The sensor_id of the new member sensor. This must be AS PRINTED on the sensor’s label.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Using a sensor_index (Parameters Option 2)
+The sensor_index can be found in lists for example from a /sensors api call. When no owner_email is provided, the sensor has to be marked as public.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_id</strong> (<em>int</em>) – The group_id of the group to add a member to. This group must be owned by the api_key.</p></li>
+<li><p><strong>sensor_index</strong> (<em>int</em>) – The sensor_index of the new member as found in the JSON for this specific sensor.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Using sensor_id with a private sensor by specifying owner_email and optionally location_type. (Parameters Option 3)
+This example will produce an error if any provided value does not match the current configuration of the sensor. Note, too many incorrect attempts may disable your API key, so do not try guessing the email!!</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_id</strong> (<em>int</em>) – The group_id of the group to add a member to. This group must be owned by the api_key.</p></li>
+<li><p><strong>sensor_id</strong> (<em>str</em>) – The sensor_id of the new member sensor. This must be AS PRINTED on the sensor’s label.</p></li>
+<li><p><strong>owner_email</strong> (<em>str</em>) – An email address that matches the Owner email as set by previously completing the PurpleAir registration form at www.purpleair.com/register.</p></li>
+<li><p><strong>location_type</strong> (<em>(</em><em>optional</em><em>) </em><em>int</em>) – The expected location_type of the new member.
+Possible values are: 0 = Outside or 1 = Inside.
+If the target member is not of this type, an error will result.
+NOTE: This value is required if the sensor in question is marked as ‘private’ on the registration form.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.post_delete_group">
+<span class="sig-name descname"><span class="pre">post_delete_group</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.post_delete_group" title="Permalink to this definition"></a></dt>
+<dd><p>A method to delete a group for sensors.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>group_id</strong> (<em>int</em>) – The group_id of the group to delete</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirAPI.PurpleAirAPI.post_delete_member">
+<span class="sig-name descname"><span class="pre">post_delete_member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">group_id</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_id</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirAPI.PurpleAirAPI.post_delete_member" title="Permalink to this definition"></a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>group_id</strong> (<em>int</em>) – The group_id of the group in which member_id is in.</p></li>
+<li><p><strong>member_id</strong> (<em>int</em>) – The member_id to delete.</p></li>
+</ul>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
