@@ -3,8 +3,8 @@ uses: cryptic-wizard/run-behave-tests@v0.3.0
 on: [push]
 jobs:
   Execute the behave tests under /purpleair_data_logger/behave_tests:
-  runs-on: carlkid1499-ubuntu22.04
-  steps:
+    runs-on: carlkid1499-ubuntu22.04
+    steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
