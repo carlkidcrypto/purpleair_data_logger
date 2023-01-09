@@ -54,10 +54,7 @@ def after_step(context, step):
     """
         These run before and after every step.
     """
-    
-    if "we start the CSVDatalogger" in step.name:
-        print("We are sleeping 65 seconds to limit PurpleAir API calls...")
-        sleep(65)
+    pass
         
 
 

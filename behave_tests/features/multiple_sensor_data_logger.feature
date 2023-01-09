@@ -10,9 +10,9 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
     Scenario Outline: An invalid configuration file is provided
         Given we do not provide <settings_field> in configuration file
         When we start the CSVDatalogger using above configuration file
-        Then the CSVDatalogger should fail to start
+        Then the CSVDatalogger should not start
 
-        Examples: Configuration settings to omit
+        Examples: Configuration setting to omit
             | settings_field |
             | fields         |
             | location_type  |

@@ -9,6 +9,9 @@ from behave import given, when, then
 from json import load, dumps
 import subprocess
 from hamcrest import assert_that, equal_to
+from time import sleep
+
+SLEEP_BETWEEN_REPEATED_API_CALLS = 65  # seconds
 
 
 @given("we do not provide {settings_field} in configuration file")
@@ -64,8 +67,18 @@ def start_the_csv_data_logger(context):
     stderr_file_obj.flush()
     stderr_file_obj.close()
 
+    sleep(SLEEP_BETWEEN_REPEATED_API_CALLS)
 
-@then("the CSVDatalogger should fail to start")
-def check_started_data_logger(context):
 
-    assert_that(context.subproc_for_datalogger.returncode, equal_to(1))
+@then("the CSVDatalogger should {expected_outcome}")
+def check_started_data_logger(context, expected_outcome):
+
+    if expected_outcome is None:
+        raise ValueError(
+            "In step 'check_started_data_logger' parameter 'expected_outcome' can not be `None`!")
+
+    if expected_outcome == "not start":
+        assert_that(context.subproc_for_datalogger.returncode, equal_to(1))
+
+    else:
+        raise ValueError(f"{expected_outcome} is not a valid case!")
