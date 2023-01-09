@@ -10,7 +10,7 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
     Scenario Outline: An invalid configuration file is provided
         Given we do not provide <settings_field> in configuration file
         When we start the CSVDatalogger using above configuration file
-        Then the CSVDatalogger should not start
+        Then the CSVDatalogger should not start with error message KeyError: '<settings_field>'
 
         Examples: Configuration setting to omit
             | settings_field |
@@ -25,13 +25,13 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
             | selng          |
             | selat          |
 
-    #Scenario Outline: Provide valid and invalid values to the 'fields' json field inside the configuration settings file
-    #    Given we set <field> in configuration file to <value>
-    #    When we start the CSVDatalogger using above configuration file
-    #    Then the CSVDatalogger should <expected result>
-    #
-    #    Examples: Pass valid and invalid values to the 'fields' field inside configuration settings file
-    #        | field          | value                                                                                                      | expected result |
-    #        | fields         | null                                                                                                       | not start       |
-    #        | fields         | name                                                                                                       | start           |
-    #        | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           |
+    Scenario Outline: Provide valid and invalid values to the 'fields' json field inside the configuration settings file
+        Given we set <field> in configuration file to <value>
+        When we start the CSVDatalogger using above configuration file
+        Then the CSVDatalogger should <expected_result> with error message <error_message>
+    
+        Examples: Pass valid and invalid values to the 'fields' field inside configuration settings file
+            | field          | value                                                                                                      | expected_result | error_message |
+            | fields         | null                                                                                                       | not start       | None          |
+            | fields         | name                                                                                                       | start           | None          |
+            | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           | None          |

@@ -7,7 +7,7 @@
 
 from os import mkdir, path, getcwd
 from shutil import rmtree
-from time import sleep
+
 
 def before_all(context):
     """
@@ -22,7 +22,7 @@ def before_all(context):
     except FileNotFoundError:
         # Do nothing
         pass
-    
+
     except OSError as os_err:
         if os_err.errno == 39:
             # Directory is not empty
@@ -36,6 +36,11 @@ def before_all(context):
     # Save off logs path
     context.logs_path = getcwd() + "/logs"
 
+    # Init vars used in behave steps
+    context.file_counter = 0
+    context.test_settings_file_name = ""
+
+
 def after_all(context):
     """
         These run before and after the whole shooting match.
@@ -47,6 +52,7 @@ def before_step(context, step):
     """
         These run before and after every step.
     """
+
     pass
 
 
@@ -54,36 +60,42 @@ def after_step(context, step):
     """
         These run before and after every step.
     """
+
     pass
-        
 
 
 def before_scenario(context, scenario):
     """
         These run before and after each scenario is run.
     """
-    pass
+
+    context.test_settings_file_name = ""
 
 
 def after_scenario(context, scenario):
     """
         These run before and after each scenario is run.
     """
-    pass
+
+    context.test_settings_file_name = ""
 
 
 def before_feature(context, feature):
     """
         These run before and after each feature file is exercised.
     """
-    pass
+
+    context.file_counter = 0
+    context.test_settings_file_name = ""
 
 
 def after_feature(context, feature):
     """
         These run before and after each feature file is exercised.
     """
-    pass
+
+    context.file_counter = 0
+    context.test_settings_file_name = ""
 
 
 def before_tag(context, tag):
