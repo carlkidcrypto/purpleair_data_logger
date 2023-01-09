@@ -5,10 +5,10 @@
     Steps for behavior driven tests for the purpleair_data_logger.
 """
 
-from behave import given
+from behave import given, when, then
 from json import load, dumps
 import subprocess
-from hamcrest import assert_that, equal_to, is_not
+from hamcrest import assert_that, equal_to
 
 
 @given("we do not provide {settings_field} in configuration file")
@@ -27,21 +27,45 @@ def create_configuration_file_with_settings_field_omitted(context, settings_fiel
     read_file_obj.close()
 
     # Remove settings_field from json file contents
-    del json_file_contents["fields"]
+    del json_file_contents[str(settings_field)]
 
     # Write new file to disk and launch the CSVDataLogger
-    test_settings_file_name_and_path = context.logs_path + \
-        f"/settings_file_with_{settings_field}_removed.json"
+    context.test_settings_file_name = f"settings_file_with_{settings_field}_removed.json"
+    context.test_settings_file_name_and_path = context.logs_path + \
+        f"/{context.test_settings_file_name}"
     json_file_contents = dumps(json_file_contents)
-    write_file_obj = open(test_settings_file_name_and_path, "x")
+    write_file_obj = open(context.test_settings_file_name_and_path, "x")
     write_file_obj.write(json_file_contents)
     write_file_obj.flush()
     write_file_obj.close()
 
+
+@when("we start the CSVDatalogger using above configuration file")
+def start_the_csv_data_logger(context):
+
     # Launch the CSVDataLogger with test_settings_file_name_and_path
     DELETE_ME_DO_NOT_PUSH_TO_GITHUB = ""
-    command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger", "-save_file_path",
-                    f"{context.logs_path}", "-paa_read_key", f"{DELETE_ME_DO_NOT_PUSH_TO_GITHUB}", "-paa_multiple_sensor_request_json_file", f"{test_settings_file_name_and_path}"]
-    
-    proc = subprocess.run(args=command_args)
-    assert_that(proc.returncode, equal_to(1))
+    command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
+                    "-save_file_path", f"{context.logs_path}",
+                    "-paa_read_key", f"{DELETE_ME_DO_NOT_PUSH_TO_GITHUB}",
+                    "-paa_multiple_sensor_request_json_file", f"{context.test_settings_file_name_and_path}"]
+
+    # Create stdout and stderr files
+    stdout_file_obj = open(
+        f"{context.test_settings_file_name_and_path}.stdout", "x")
+    stderr_file_obj = open(
+        f"{context.test_settings_file_name_and_path}.stderr", "x")
+
+    context.subproc_for_datalogger = subprocess.run(
+        args=command_args, stdout=stdout_file_obj, stderr=stderr_file_obj)
+
+    stdout_file_obj.flush()
+    stdout_file_obj.close()
+    stderr_file_obj.flush()
+    stderr_file_obj.close()
+
+
+@then("the CSVDatalogger should fail to start")
+def check_started_data_logger(context):
+
+    assert_that(context.subproc_for_datalogger.returncode, equal_to(1))
