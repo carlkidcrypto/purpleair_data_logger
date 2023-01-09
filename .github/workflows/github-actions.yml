@@ -2,7 +2,7 @@ name: GitHub Actions Demo
 run-name: ${{ github.actor }} is testing out GitHub Actions 🚀
 on: [push]
 jobs:
-  Execute the behave tests under /purpleair_data_logger/behave_tests:
+  Execute-Github-Actions:
     runs-on: carlkid1499-ubuntu22.04
     steps:
       - name: Run Behave Tests
