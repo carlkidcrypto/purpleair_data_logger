@@ -5,13 +5,36 @@
     Behavior driven tests for the purpleair_data_logger.
 """
 
+from os import mkdir, path, getcwd
+from shutil import rmtree
+from time import sleep
 
 def before_all(context):
     """
         These run before and after the whole shooting match.
     """
-    pass
 
+    # Make a place to store logs. First remove then create
+    current_directory = getcwd()
+    try:
+        rmtree(path.join(current_directory, "logs"))
+
+    except FileNotFoundError:
+        # Do nothing
+        pass
+    
+    except OSError as os_err:
+        if os_err.errno == 39:
+            # Directory is not empty
+            pass
+
+        else:
+            raise
+
+    mkdir(path.join(current_directory, "logs"))
+
+    # Save off logs path
+    context.logs_path = getcwd() + "/logs"
 
 def after_all(context):
     """
@@ -31,7 +54,11 @@ def after_step(context, step):
     """
         These run before and after every step.
     """
-    pass
+    
+    if "we do not provide" in step.name:
+        print("We are sleeping 65 seconds to limit PurpleAir API calls...")
+        sleep(65)
+        
 
 
 def before_scenario(context, scenario):

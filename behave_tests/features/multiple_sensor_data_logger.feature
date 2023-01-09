@@ -5,15 +5,15 @@
 # multiple sensor configuration file is passed in
 ###############################################################################
 
-Feature: CSVDatalogger when a multiple sensor configuration file is passed in
+Feature: A multiple sensor configuration file is passed into the CSVDatalogger
 
     Scenario Outline: An invalid configuration file is provided
-        Given we do not provide <field> in configuration file
+        Given we do not provide <settings_field> in configuration file
         When we start the CSVDatalogger using above configuration file
         Then the CSVDatalogger should fail to start
 
-        Examples: Missing configuration settings
-            | field          |
+        Examples: Configuration settings to omit
+            | settings_field |
             | fields         |
             | location_type  |
             | read_keys      |
@@ -31,7 +31,7 @@ Feature: CSVDatalogger when a multiple sensor configuration file is passed in
         Then the CSVDatalogger should <expected result> successfully
 
         Examples: Test 'fields' configuration settings
-            | field          | value                                                                                                      | expected result |                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+            | field          | value                                                                                                      | expected result |
             | fields         | null                                                                                                       | not start       |
             | fields         | name                                                                                                       | start           |
             | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           |
