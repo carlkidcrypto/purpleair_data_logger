@@ -94,8 +94,9 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
 
         assert_that(bool(
             "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..." in file_out_contents), is_(True), "Checking contents of stdout file...")
-        assert_that(bool(
-            f"{error_message}" in file_err_contents), is_(True), "Checking contents of stderr file...")
+        if error_message != "None":
+            assert_that(bool(
+                f"{error_message}" in file_err_contents), is_(True), "Checking contents of stderr file...")
         assert_that(context.subproc_for_datalogger.returncode, equal_to(1))
 
     elif expected_outcome == "start":
@@ -143,6 +144,7 @@ def set_field_in_json_to_value(context, field=None, value=None):
     json_file_contents[str(field)] = value
 
     # Write new file to disk
+    context.file_counter = context.file_counter + 1
     context.test_settings_file_name = f"settings_file_with_custom_{field}_value_{context.file_counter}.json"
     context.test_settings_file_name_and_path = context.logs_path + \
         f"/{context.test_settings_file_name}"
