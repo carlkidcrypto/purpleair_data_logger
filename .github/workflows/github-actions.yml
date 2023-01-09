@@ -7,8 +7,8 @@ jobs:
     steps:
       - name: Set up env for running behave tests...
         uses: actions/setup-python@v4
-          with:
-            python-version: 3.10.5
+        with:
+          python-version: 3.10.5
         uses: cryptic-wizard/run-behave-tests@v0.3.0
           with:
             test-path: purple_air_data_logger/behave_tests
