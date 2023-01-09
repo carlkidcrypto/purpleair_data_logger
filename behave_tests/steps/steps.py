@@ -48,10 +48,9 @@ def create_configuration_file_with_settings_field_omitted(context, settings_fiel
 def start_the_csv_data_logger(context):
 
     # Launch the CSVDataLogger with test_settings_file_name_and_path
-    DELETE_ME_DO_NOT_PUSH_TO_GITHUB = ""
     command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
                     "-save_file_path", f"{context.logs_path}",
-                    "-paa_read_key", f"{DELETE_ME_DO_NOT_PUSH_TO_GITHUB}",
+                    "-paa_read_key", f"{context.config.userdata['PAA_API_READ_KEY']}",
                     "-paa_multiple_sensor_request_json_file", f"{context.test_settings_file_name_and_path}"]
 
     # Create stdout and stderr files
