@@ -11,8 +11,7 @@ jobs:
           python-version: 3.10.5
       - uses: cryptic-wizard/run-behave-tests@v0.3.0
         with:
-          test-path: 
-    test-path: purple_air_data_logger/behave_tests
+          test-path: purple_air_data_logger/behave_tests
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
