@@ -85,7 +85,6 @@ def before_feature(context, feature):
         These run before and after each feature file is exercised.
     """
 
-    context.file_counter = 0
     context.test_settings_file_name = ""
 
 
@@ -94,7 +93,6 @@ def after_feature(context, feature):
         These run before and after each feature file is exercised.
     """
 
-    context.file_counter = 0
     context.test_settings_file_name = ""
 
 
