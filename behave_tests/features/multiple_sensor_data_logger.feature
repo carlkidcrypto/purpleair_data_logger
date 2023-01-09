@@ -24,3 +24,14 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
             | nwlat          |
             | selng          |
             | selat          |
+
+    #Scenario Outline: Provide valid and invalid values to the 'fields' json field inside the configuration settings file
+    #    Given we set <field> in configuration file to <value>
+    #    When we start the CSVDatalogger using above configuration file
+    #    Then the CSVDatalogger should <expected result>
+    #
+    #    Examples: Pass valid and invalid values to the 'fields' field inside configuration settings file
+    #        | field          | value                                                                                                      | expected result |
+    #        | fields         | null                                                                                                       | not start       |
+    #        | fields         | name                                                                                                       | start           |
+    #        | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           |

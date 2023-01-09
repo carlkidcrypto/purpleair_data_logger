@@ -8,7 +8,7 @@
 from behave import given, when, then
 from json import load, dumps
 import subprocess
-from hamcrest import assert_that, equal_to
+from hamcrest import assert_that, equal_to, is_
 from time import sleep
 
 SLEEP_BETWEEN_REPEATED_API_CALLS = 65  # seconds
@@ -34,6 +34,7 @@ def create_configuration_file_with_settings_field_omitted(context, settings_fiel
 
     # Write new file to disk and launch the CSVDataLogger
     context.test_settings_file_name = f"settings_file_with_{settings_field}_removed.json"
+    context.settings_field_being_removed = settings_field
     context.test_settings_file_name_and_path = context.logs_path + \
         f"/{context.test_settings_file_name}"
     json_file_contents = dumps(json_file_contents)
@@ -78,6 +79,20 @@ def check_started_data_logger(context, expected_outcome):
             "In step 'check_started_data_logger' parameter 'expected_outcome' can not be `None`!")
 
     if expected_outcome == "not start":
+        file_err_obj = open(
+            f"{context.test_settings_file_name_and_path}.stderr", "r")
+        file_err_contents = file_err_obj.read()
+        file_err_obj.close()
+
+        file_out_obj = open(
+            f"{context.test_settings_file_name_and_path}.stdout", "r")
+        file_out_contents = file_out_obj.read()
+        file_out_obj.close()
+
+        assert_that(bool(
+            "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..." in file_out_contents), is_(True))
+        assert_that(bool(
+            f"KeyError: '{context.settings_field_being_removed}'" in file_err_contents), is_(True))
         assert_that(context.subproc_for_datalogger.returncode, equal_to(1))
 
     else:
