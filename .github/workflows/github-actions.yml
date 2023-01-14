@@ -16,5 +16,5 @@ jobs:
       - name: Set up Cryptic Wizard to run the behave tests...
         uses: cryptic-wizard/run-behave-tests@v0.3.0
         with:
-          test-path: /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests
+          test-path: /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/
   
