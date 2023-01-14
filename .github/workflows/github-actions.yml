@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is running GitHub Actions 🚀
 on: [push]
 jobs:
   Execute-Github-Actions:
-    runs-on: carlkid1499-ubuntu22.04
+    runs-on: ubuntu-latest
     steps:
       - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
       - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
