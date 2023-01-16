@@ -30,10 +30,10 @@ jobs:
           path: /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/requirements.txt
 
       - name: Run the behave tests...
-        env:
-              PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
-              PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
         uses: cryptic-wizard/run-behave-tests@v0.3.0
+        env:
+            PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
+            PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
         with:
           test-path: /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/
           test-output-name: ${{ matrix.os }}-${{ matrix.python-version }}.txt
