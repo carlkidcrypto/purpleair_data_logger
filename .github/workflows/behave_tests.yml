@@ -49,11 +49,11 @@ jobs:
                    python setup.py install
       
       - name: Run behave tests...
-        uses: knicknic/os-specific-run@v1.0.4
-        with:
-          env:
+        env:
             PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
             PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
+        uses: knicknic/os-specific-run@v1.0.4
+        with:
           macos: cd home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/
                  behave
           linux: cd Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/
