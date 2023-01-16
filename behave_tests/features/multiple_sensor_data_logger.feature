@@ -25,7 +25,6 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
             | selng          |
             | selat          |
 
-    @wip
     Scenario Outline: Provide valid and invalid values to the 'fields' json field inside the configuration settings file
         Given we set <field> in configuration file to <value>
         When we start the CSVDatalogger using above configuration file
