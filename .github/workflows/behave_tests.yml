@@ -54,9 +54,9 @@ jobs:
             PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
         uses: knicknic/os-specific-run@v1.0.4
         with:
-          macos: cd home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ &&
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ &&
                  behave
-          linux: cd Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ &&
+          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ &&
                  behave
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\behave_tests\ &&
                    behave
