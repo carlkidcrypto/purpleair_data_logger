@@ -98,6 +98,7 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
 
         assert_that(bool(
             "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..." in file_out_contents), is_(True), "Checking contents of stdout file...")
+
         if error_message != "None":
             assert_that(bool(
                 f"{error_message}" in file_err_contents), is_(True), "Checking contents of stderr file...")

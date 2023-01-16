@@ -5,4 +5,4 @@
 **/__pycache__/**
 **/purpleair_data_logger.egg-info/**
 behave_tests/logs/**
-behave_tests/behave.ini
+*.ini
