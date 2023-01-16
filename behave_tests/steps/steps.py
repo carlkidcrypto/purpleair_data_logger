@@ -144,12 +144,22 @@ def set_field_in_json_to_value(context, field=None, value=None):
     json_file_contents[str(field)] = value
 
     # Write new file to disk
-    context.file_counter = context.file_counter + 1
-    context.test_settings_file_name = f"settings_file_with_custom_{field}_value_{context.file_counter}.json"
-    context.test_settings_file_name_and_path = context.logs_path + \
-        f"/{context.test_settings_file_name}"
-    json_file_contents = dumps(json_file_contents)
-    write_file_obj = open(context.test_settings_file_name_and_path, "x")
-    write_file_obj.write(json_file_contents)
-    write_file_obj.flush()
-    write_file_obj.close()
+    did_we_write_a_new_file = False
+    file_creation_counter = 1
+
+    while did_we_write_a_new_file == False:
+        try:
+            context.test_settings_file_name = f"settings_file_with_custom_{field}_value_{file_creation_counter}.json"
+            context.test_settings_file_name_and_path = context.logs_path + \
+                f"/{context.test_settings_file_name}"
+            json_file_contents_out = None
+            json_file_contents_out = dumps(json_file_contents)
+            write_file_obj = open(context.test_settings_file_name_and_path, "x")
+            write_file_obj.write(json_file_contents_out)
+            write_file_obj.flush()
+            write_file_obj.close()
+            did_we_write_a_new_file = True
+        
+        except FileExistsError:
+            file_creation_counter = file_creation_counter + 1
+

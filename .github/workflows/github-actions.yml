@@ -16,6 +16,11 @@ jobs:
         with:
           python-version: 3.10.5
 
+      - name: Set up ENV vars...
+        env:
+            PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
+            PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
+
       - name: Install Python dependencies...
         uses: py-actions/py-dependency-install@v4
         with:

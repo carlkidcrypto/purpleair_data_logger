@@ -5,7 +5,7 @@
     Behavior driven tests for the purpleair_data_logger.
 """
 
-from os import mkdir, path, getcwd
+from os import mkdir, path, getcwd, environ
 from shutil import rmtree
 
 
@@ -37,8 +37,15 @@ def before_all(context):
     context.logs_path = getcwd() + "/logs"
 
     # Init vars used in behave steps
-    context.file_counter = 0
     context.test_settings_file_name = ""
+
+    if environ["PAA_API_READ_KEY"]:
+        context.config.userdata["PAA_API_READ_KEY"] = ""
+        context.config.userdata["PAA_API_READ_KEY"] = environ["PAA_API_READ_KEY"]
+
+    if environ["PAA_API_WRITE_KEY"]:
+        context.config.userdata["PAA_API_WRITE_KEY"] = ""
+        context.config.userdata["PAA_API_WRITE_KEY"] = environ["PAA_API_WRITE_KEY"]
 
 
 def after_all(context):
