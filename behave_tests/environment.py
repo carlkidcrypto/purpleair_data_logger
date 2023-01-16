@@ -38,12 +38,13 @@ def before_all(context):
 
     # Init vars used in behave steps
     context.test_settings_file_name = ""
+    context.csvdatalogger_save_file_path = ""
 
-    if environ["PAA_API_READ_KEY"]:
+    if "PAA_API_READ_KEY" in environ.keys():
         context.config.userdata["PAA_API_READ_KEY"] = ""
         context.config.userdata["PAA_API_READ_KEY"] = environ["PAA_API_READ_KEY"]
 
-    if environ["PAA_API_WRITE_KEY"]:
+    if "PAA_API_WRITE_KEY" in environ.keys():
         context.config.userdata["PAA_API_WRITE_KEY"] = ""
         context.config.userdata["PAA_API_WRITE_KEY"] = environ["PAA_API_WRITE_KEY"]
 
@@ -77,6 +78,7 @@ def before_scenario(context, scenario):
     """
 
     context.test_settings_file_name = ""
+    context.csvdatalogger_save_file_path = ""
 
 
 def after_scenario(context, scenario):
@@ -85,6 +87,7 @@ def after_scenario(context, scenario):
     """
 
     context.test_settings_file_name = ""
+    context.csvdatalogger_save_file_path = ""
 
 
 def before_feature(context, feature):
@@ -93,6 +96,7 @@ def before_feature(context, feature):
     """
 
     context.test_settings_file_name = ""
+    context.csvdatalogger_save_file_path = ""
 
 
 def after_feature(context, feature):
@@ -101,6 +105,7 @@ def after_feature(context, feature):
     """
 
     context.test_settings_file_name = ""
+    context.csvdatalogger_save_file_path = ""
 
 
 def before_tag(context, tag):
