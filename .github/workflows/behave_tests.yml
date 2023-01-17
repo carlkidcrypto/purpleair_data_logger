@@ -7,7 +7,7 @@ on: [push]
 #  pull_request:
 #    branches: [ main ]
 jobs:
-  build:
+  build-and-test:
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -72,6 +72,11 @@ jobs:
           name: behave_junit_reports_${{matrix.os}}_${{matrix.python-version}}
           path: "**/junit_reports/*.xml"
 
+  publish-test-results:
+    name: "Publish Tests Results"
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
       - name: Download Junit Reports
         if: always()
         uses: actions/download-artifact@v2
