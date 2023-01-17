@@ -83,5 +83,5 @@ jobs:
         if: always()
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         with:
-          junit_files: "artifacts/**/*.xml"
+          junit_files: "artifacts/**/*.xml" 
   
