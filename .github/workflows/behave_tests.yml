@@ -66,9 +66,22 @@ jobs:
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\behave_tests\ &&
                    behave --junit --junit-directory junit_reports
       
-      - name: Publish Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
+      - name: Upload Junit Reports
         if: always()
+        uses: actions/upload-artifact@v2
         with:
-          junit_files: "**/junit_reports/*.xml"
+          name: behave_junit_reports_${{matrix.os}}_${{matrix.python-version}}
+          path: "**/junit_reports/*.xml"
+
+      - name: Download Junit Reports
+        if: always()
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Junit Reports
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          junit_files: "artifacts/**/*.xml"
   
