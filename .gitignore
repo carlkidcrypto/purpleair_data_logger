@@ -6,3 +6,4 @@
 **/purpleair_data_logger.egg-info/**
 behave_tests/logs/**
 *.ini
+*.xml
