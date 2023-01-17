@@ -49,7 +49,7 @@ def start_the_csv_data_logger(context):
 
     # Launch the CSVDataLogger with test_settings_file_name_and_path
     context.csvdatalogger_save_file_path = context.logs_path + \
-        "/" + context.scenario.name.split("-- @")[1]
+        "/" + "csvdatalogger_outputs"
     command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
                     "-save_file_path", f"{context.csvdatalogger_save_file_path}",
                     "-paa_read_key", f"{context.config.userdata['PAA_API_READ_KEY']}",

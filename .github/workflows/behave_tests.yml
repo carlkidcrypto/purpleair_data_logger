@@ -73,7 +73,7 @@ jobs:
           path: "**/junit_reports/*.xml"
 
   publish-test-results:
-    name: "Publish Tests Results"
+    name: Publish Tests Results
     needs: build-and-test
     runs-on: ubuntu-latest
     steps:
@@ -87,6 +87,5 @@ jobs:
         if: always()
         uses: EnricoMi/publish-unit-test-result-action/composite@v2
         with:
-          check_name: behave_junit_reports_${{matrix.os}}_${{matrix.python-version}}
           junit_files: "artifacts/**/*.xml"
   
