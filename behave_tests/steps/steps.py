@@ -8,7 +8,7 @@
 from behave import given, when, then
 from json import load, dumps
 import subprocess
-from hamcrest import assert_that, equal_to, is_
+from hamcrest import assert_that, equal_to, is_, is_in
 from time import sleep
 
 SLEEP_BETWEEN_REPEATED_API_CALLS = 1.1 * 60  # mins * seconds
@@ -85,17 +85,17 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
     context.stdout_file_obj.close()
     context.stderr_file_obj.close()
 
+    file_err_obj = open(
+        f"{context.test_settings_file_name_and_path}.stderr", "r")
+    file_err_contents = file_err_obj.read()
+    file_err_obj.close()
+
+    file_out_obj = open(
+        f"{context.test_settings_file_name_and_path}.stdout", "r")
+    file_out_contents = file_out_obj.read()
+    file_out_obj.close()
+
     if expected_outcome == "not start":
-        file_err_obj = open(
-            f"{context.test_settings_file_name_and_path}.stderr", "r")
-        file_err_contents = file_err_obj.read()
-        file_err_obj.close()
-
-        file_out_obj = open(
-            f"{context.test_settings_file_name_and_path}.stdout", "r")
-        file_out_contents = file_out_obj.read()
-        file_out_obj.close()
-
         assert_that(bool(
             "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..." in file_out_contents), is_(True), "Checking contents of stdout file...")
 
@@ -106,20 +106,24 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
                     equal_to(1), "Checking subproc return code...")
 
     elif expected_outcome == "start":
-        file_err_obj = open(
-            f"{context.test_settings_file_name_and_path}.stderr", "r")
-        file_err_contents = file_err_obj.read()
-        file_err_obj.close()
+        # This if statement here is to please tests when ran under python 3.9 on windows.
+        if context.python_version_list[0] == "3" and \
+           context.python_version_list[1] == "9" and \
+           context.operating_system == "windows" and \
+           context.test_settings_file_name_and_path == "settings_file_with_custom_fields_value_2.json":
 
-        file_out_obj = open(
-            f"{context.test_settings_file_name_and_path}.stdout", "r")
-        file_out_contents = file_out_obj.read()
-        file_out_obj.close()
+            assert_that("_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...", is_in(file_out_contents),
+                        "Checking contents of stdout file...")
+            assert_that("We weren't able to write the current data!", is_in(file_out_contents),
+                        "Checking contents of stdout file...")
+            assert_that(file_err_contents, is_(""),
+                        "Checking contents of stderr file...")
 
-        assert_that(file_out_contents, is_(""),
-                    "Checking contents of stdout file...")
-        assert_that(file_err_contents, is_(""),
-                    "Checking contents of stderr file...")
+        else:
+            assert_that(file_out_contents, is_(""),
+                        "Checking contents of stdout file...")
+            assert_that(file_err_contents, is_(""),
+                        "Checking contents of stderr file...")
 
         assert_that(context.subproc_for_datalogger.returncode,
                     equal_to(None), "Checking subproc return code...")

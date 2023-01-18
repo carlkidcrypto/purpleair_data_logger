@@ -7,7 +7,7 @@
 
 from os import mkdir, path, getcwd, environ
 from shutil import rmtree
-
+from platform import python_version, system
 
 def before_all(context):
     """
@@ -39,6 +39,8 @@ def before_all(context):
     # Init vars used in behave steps
     context.test_settings_file_name = ""
     context.csvdatalogger_save_file_path = ""
+    context.python_version_list = python_version().split(".")
+    context.operating_system = system().lower()
 
     if "PAA_API_READ_KEY" in environ.keys():
         context.config.userdata["PAA_API_READ_KEY"] = ""
