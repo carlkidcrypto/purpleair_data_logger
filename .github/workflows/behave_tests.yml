@@ -1,11 +1,11 @@
 name: Behave Tests
 run-name: ${{ github.actor }} is running Behave Tests 🚀
-on: [push]
-#on:
-#  push:
-#    branches: [ main ]
-#  pull_request:
-#    branches: [ main ]
+#on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 jobs:
   build-and-test:
     runs-on: ${{ matrix.os }}

@@ -25,12 +25,12 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
             | selng          |
             | selat          |
 
-    Scenario Outline: Provide valid and invalid values to the 'fields' json field inside the configuration settings file
+    Scenario Outline: Provide valid and invalid values to the json fields inside the multiple sensor configuration settings file
         Given we set <field> in multiple sensor configuration file to <value>
         When we start the CSVDatalogger using above multiple sensor configuration file
         Then the CSVDatalogger should <expected_result> with error message <error_message>
     
-        Examples: Pass valid and invalid values to the 'fields' field inside configuration settings file
+        Examples: Pass valid and invalid values to the fields inside configuration settings file
             | field          | value                                                                                                      | expected_result | error_message                                                                                                              |
             | fields         | null                                                                                                       | not start       | purpleair_data_logger.PurpleAirAPI.PurpleAirAPIError: 400: InvalidFieldValueError - A provided field (null) was not found. |
             | fields         | name                                                                                                       | start           | None                                                                                                                       |
