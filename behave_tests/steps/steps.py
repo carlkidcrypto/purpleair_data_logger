@@ -14,16 +14,20 @@ from time import sleep
 SLEEP_BETWEEN_REPEATED_API_CALLS = 1.1 * 60  # mins * seconds
 
 
-@given("we do not provide {settings_field} in configuration file")
-def create_configuration_file_with_settings_field_omitted(context, settings_field=None):
+@given("we do not provide {settings_field} in {config_file_type} sensor configuration file")
+def create_configuration_file_with_settings_field_omitted(context, settings_field=None, config_file_type=None):
 
     if settings_field is None:
         raise ValueError(
             "In step 'create_configuration_file_with_settings_field_omitted' parameter 'settings_field' can not be `None`!")
 
+    if config_file_type is None:
+        raise ValueError(
+            "In step 'create_configuration_file_with_settings_field_omitted' parameter 'config_file_type' can not be `None`!")
+
     # Open up ../sample_json_config_files/sample_multiple_sensor_request_json_file.json
     read_file_obj = open(
-        "../sample_json_config_files/sample_multiple_sensor_request_json_file.json", "r")
+        f"../sample_json_config_files/sample_{config_file_type}_sensor_request_json_file.json", "r")
 
     # Read in the json file into a python3 dict
     json_file_contents = load(read_file_obj)
@@ -44,16 +48,32 @@ def create_configuration_file_with_settings_field_omitted(context, settings_fiel
     write_file_obj.close()
 
 
-@when("we start the CSVDatalogger using above configuration file")
-def start_the_csv_data_logger(context):
+@when("we start the CSVDatalogger using above {config_file_type} sensor configuration file")
+def start_the_csv_data_logger(context, config_file_type=None):
+
+    if config_file_type is None:
+        raise ValueError(
+            "In step 'start_the_csv_data_logger' parameter 'config_file_type' can not be `None`!")
 
     # Launch the CSVDataLogger with test_settings_file_name_and_path
     context.csvdatalogger_save_file_path = context.logs_path + \
         "/" + "csvdatalogger_outputs"
-    command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
-                    "-save_file_path", f"{context.csvdatalogger_save_file_path}",
-                    "-paa_read_key", f"{context.config.userdata['PAA_API_READ_KEY']}",
-                    "-paa_multiple_sensor_request_json_file", f"{context.test_settings_file_name_and_path}"]
+
+    if config_file_type == "single":
+        command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
+                        "-save_file_path", f"{context.csvdatalogger_save_file_path}",
+                        "-paa_read_key", f"{context.config.userdata['PAA_API_READ_KEY']}",
+                        "-paa_single_sensor_request_json_file", f"{context.test_settings_file_name_and_path}"]
+
+    elif config_file_type == "multiple":
+        command_args = ["python3", "-m", "purpleair_data_logger.PurpleAirCSVDataLogger",
+                        "-save_file_path", f"{context.csvdatalogger_save_file_path}",
+                        "-paa_read_key", f"{context.config.userdata['PAA_API_READ_KEY']}",
+                        "-paa_multiple_sensor_request_json_file", f"{context.test_settings_file_name_and_path}"]
+
+    else:
+        raise ValueError(
+            "Invalid option for 'start_the_csv_data_logger' parameter 'config_file_type'!")
 
     # Create stdout and stderr files
     context.stdout_file_obj = open(
@@ -106,9 +126,9 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
                     equal_to(1), "Checking subproc return code...")
 
     elif expected_outcome == "start":
-        # This if statement here is to please tests when ran under python 3.9 on windows.
+        # This if statement here is to please tests when ran under python 3.9/10 on windows.
         if context.python_version_list[0] == "3" and \
-           context.python_version_list[1] == "9" and \
+           (context.python_version_list[1] == "9" or context.python_version_list[1] == "10") and \
            context.operating_system == "windows" and \
            context.test_settings_file_name_and_path == "settings_file_with_custom_fields_value_2.json":
 
@@ -132,12 +152,16 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
         raise ValueError(f"{expected_outcome} is not a valid case!")
 
 
-@given("we set {field} in configuration file to {value}")
-def set_field_in_json_to_value(context, field=None, value=None):
+@given("we set {field} in {config_file_type} sensor configuration file to {value}")
+def set_field_in_json_to_value(context, field=None, config_file_type=None, value=None):
 
     if field is None:
         raise ValueError(
             "In step 'set_field_in_json_to_value' parameter 'field' can not be `None`!")
+
+    if config_file_type is None:
+        raise ValueError(
+            "In step 'set_field_in_json_to_value' parameter 'config_file_type' can not be `None`!")
 
     if value is None:
         raise ValueError(
@@ -145,7 +169,7 @@ def set_field_in_json_to_value(context, field=None, value=None):
 
     # Open up ../sample_json_config_files/sample_multiple_sensor_request_json_file.json
     read_file_obj = open(
-        "../sample_json_config_files/sample_multiple_sensor_request_json_file.json", "r")
+        f"../sample_json_config_files/sample_{config_file_type}_sensor_request_json_file.json", "r")
 
     # Read in the json file into a python3 dict
     json_file_contents = load(read_file_obj)

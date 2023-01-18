@@ -312,9 +312,9 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         except UnicodeEncodeError as except_err:
             self._data_error_counter = self._data_error_counter + 1
-            print(f"We weren't able to write the current data! -"
-                  "Data error counter is at {self._data_error_counter} -"
-                  "Error is {except_err} \n")
+            print("We weren't able to write the current data!")
+            print(f"Data error counter is at {self._data_error_counter}")
+            print(f"Error is {except_err} \n")
 
         self._close_and_flush_csv_file(
             station_information_and_status_fields_file_stream)
