@@ -181,7 +181,8 @@ class PurpleAirAPI():
             "fields": fields
         }
 
-        return self._send_url_get_request(request_url, self._your_api_read_key, optional_parameters_dict)
+        first_optional_parameter_separator = "?"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
 
     def request_multiple_sensors_data(self, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
@@ -267,7 +268,8 @@ class PurpleAirAPI():
             "selng": selng,
             "selat": selat}
 
-        return self._send_url_get_request(request_url, self._your_api_read_key, optional_parameters_dict)
+        first_optional_parameter_separator = "&"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
 
     def request_sensor_historic_data(self, sensor_index, fields, read_key=None, start_timestamp=None, end_timestamp=None, average=None):
         """
@@ -330,7 +332,8 @@ class PurpleAirAPI():
             "modified_since": end_timestamp,
             "average": average}
 
-        return self._send_url_get_request(request_url, self._your_api_read_key, optional_parameters_dict)
+        first_optional_parameter_separator = "&"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
 
     def post_create_group(self, name):
         """
@@ -420,12 +423,14 @@ class PurpleAirAPI():
 
         return self._send_url_delete_request(post_url, self._your_api_write_key)
 
-    def _send_url_get_request(self, request_url, api_key_to_use, optional_parameters_dict={}):
+    def _send_url_get_request(self, request_url, api_key_to_use, first_optional_parameter_separator, optional_parameters_dict={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
 
             :param str request_url: The constructed string url request string.
+            :param str first_optional_parameter_separator: The separator between first parameter
+                                                           in optional_parameters_dict. i.e '?' or '&'.
             :param dict optional_parameters_dict: Optional parameters that can be added onto the
                                                   request_url. By default '{}'.
         """
@@ -434,11 +439,10 @@ class PurpleAirAPI():
             opt_param_count = 0
             for opt_param, val in optional_parameters_dict.items():
                 if val is not None:
-                    opt_param_count = opt_param_count + 1
 
                     if opt_param_count == 1:
                         request_url = request_url + \
-                            f"?{opt_param}={str(val)}"
+                            f"{first_optional_parameter_separator}{opt_param}={str(val)}"
 
                     elif opt_param_count >= 2:
                         request_url = request_url + \
