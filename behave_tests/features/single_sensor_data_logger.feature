@@ -22,11 +22,11 @@ Feature: A single sensor configuration file is passed into the CSVDatalogger
     Given we set <field> in single sensor configuration file to <value>
     When we start the CSVDatalogger using above single sensor configuration file
     Then the CSVDatalogger should <expected_result> with error message <error_message>
-
+    @wip
     Examples: Pass valid and invalid values to the fields inside configuration settings file
-        | field          | value                                                                                                      | expected_result | error_message |
-        | sensor_index   | -1                                                                                                         | not start       | None          |
-        | sensor_index   | 160387                                                                                                     | start           | None          |
-        | fields         | names                                                                                                      | not start       | None          |
-        | fields         | name                                                                                                       | start           | None          |
-        | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           | None          |
+        | field          | value                                                                                                      | expected_result | error_message                                                                                                                                          |
+        | sensor_index   | -1                                                                                                         | not start       | purpleair_data_logger.PurpleAirAPI.PurpleAirAPIError: 400: InvalidParameterValueError - The value provided for parameter 'sensor_index' was not valid. |
+        | sensor_index   | 160387                                                                                                     | start           | None                                                                                                                                                   |
+        | fields         | names                                                                                                      | not start       | purpleair_data_logger.PurpleAirAPI.PurpleAirAPIError: 400: InvalidFieldValueError - A provided field (names) was not found.                            |
+        | fields         | name                                                                                                       | start           | None                                                                                                                                                   |
+        | fields         | position_rating, firmware_version, firmware_upgrade, channel_state, channel_flags, channel_flags_manual    | start           | None                                                                                                                                                   |

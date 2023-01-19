@@ -439,6 +439,7 @@ class PurpleAirAPI():
             opt_param_count = 0
             for opt_param, val in optional_parameters_dict.items():
                 if val is not None:
+                    opt_param_count = opt_param_count + 1
 
                     if opt_param_count == 1:
                         request_url = request_url + \
