@@ -11,7 +11,7 @@ Feature: A single sensor configuration file is passed into the CSVDatalogger
         Given we do not provide <settings_field> in single sensor configuration file
         When we start the CSVDatalogger using above single sensor configuration file
         Then the CSVDatalogger should not start with error message KeyError: '<settings_field>'
-
+        @single_sensor_omit
         Examples: Single sensor configuration setting to omit
             | settings_field |
             | sensor_index   |
@@ -22,7 +22,7 @@ Feature: A single sensor configuration file is passed into the CSVDatalogger
     Given we set <field> in single sensor configuration file to <value>
     When we start the CSVDatalogger using above single sensor configuration file
     Then the CSVDatalogger should <expected_result> with error message <error_message>
-    @wip
+    @single_sensor_valid_invalid
     Examples: Pass valid and invalid values to the fields inside configuration settings file
         | field          | value                                                                                                      | expected_result | error_message                                                                                                                                          |
         | sensor_index   | -1                                                                                                         | not start       | purpleair_data_logger.PurpleAirAPI.PurpleAirAPIError: 400: InvalidParameterValueError - The value provided for parameter 'sensor_index' was not valid. |

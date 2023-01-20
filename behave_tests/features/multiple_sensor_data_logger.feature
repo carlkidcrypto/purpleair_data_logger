@@ -11,7 +11,7 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
         Given we do not provide <settings_field> in multiple sensor configuration file
         When we start the CSVDatalogger using above multiple sensor configuration file
         Then the CSVDatalogger should not start with error message KeyError: '<settings_field>'
-
+        @multiple_sensors_omit
         Examples: Multiple sensor configuration setting to omit
             | settings_field |
             | fields         |
@@ -29,7 +29,7 @@ Feature: A multiple sensor configuration file is passed into the CSVDatalogger
         Given we set <field> in multiple sensor configuration file to <value>
         When we start the CSVDatalogger using above multiple sensor configuration file
         Then the CSVDatalogger should <expected_result> with error message <error_message>
-
+        @multiple_sensors_valid_invalid
         Examples: Pass valid and invalid values to the fields inside configuration settings file
             | field          | value                                                                                                      | expected_result | error_message                                                                                                                                              |
             | fields         | null                                                                                                       | not start       | purpleair_data_logger.PurpleAirAPI.PurpleAirAPIError: 400: InvalidFieldValueError - A provided field (null) was not found.                                |
