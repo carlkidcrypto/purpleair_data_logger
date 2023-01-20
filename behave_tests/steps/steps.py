@@ -115,9 +115,23 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
     file_out_contents = file_out_obj.read()
     file_out_obj.close()
 
+    file_out_contents = str(file_out_contents)
+    file_err_contents = str(file_err_contents)
+    multi_run_loop_msg = "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..."
+    single_run_loop_msg = "_run_loop_for_storing_single_sensor_data - Beep boop I am alive..."
+
     if expected_outcome == "not start":
-        assert_that("_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...", is_in(file_out_contents),
-                    "Checking contents of stdout file...")
+
+        if "single" in context.test_settings_file_name_and_path:
+            assert_that(single_run_loop_msg, is_in(file_out_contents),
+                        "Checking contents of stdout file...")
+
+        elif "multiple" in context.test_settings_file_name_and_path:
+            assert_that(multi_run_loop_msg, is_in(file_out_contents),
+                        "Checking contents of stdout file...")
+        else:
+            raise ValueError(
+                "Invalid file. Only `single` or `multiple` supported!")
 
         if error_message != "None":
             assert_that(error_message, is_in(file_err_contents),
@@ -133,10 +147,20 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
            context.operating_system == "windows" and \
            context.test_settings_file_name_and_path == "settings_file_with_custom_fields_value_2.json":
 
-            assert_that("_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...", is_in(file_out_contents),
-                        "Checking contents of stdout file...")
+            if "single" in context.test_settings_file_name_and_path:
+                assert_that(single_run_loop_msg, is_in(file_out_contents),
+                            "Checking contents of stdout file...")
+
+            elif "multiple" in context.test_settings_file_name_and_path:
+                assert_that(multi_run_loop_msg, is_in(file_out_contents),
+                            "Checking contents of stdout file...")
+            else:
+                raise ValueError(
+                    "Invalid file. Only `single` or `multiple` supported!")
+
             assert_that("We weren't able to write the current data!", is_in(file_out_contents),
                         "Checking contents of stdout file...")
+
             assert_that(file_err_contents, is_(""),
                         "Checking contents of stderr file...")
 

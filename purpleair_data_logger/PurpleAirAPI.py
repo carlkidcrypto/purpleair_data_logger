@@ -449,6 +449,8 @@ class PurpleAirAPI():
                         request_url = request_url + \
                             f"&{opt_param}={str(val)}"
 
+        # Strip any quotes from that might persist because of config file
+        request_url.replace('"' , "")
         debug_log(request_url)
         my_request = requests.get(request_url, headers={
                                   "X-API-Key": str(api_key_to_use)})
