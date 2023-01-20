@@ -15,7 +15,7 @@ SLEEP_BETWEEN_REPEATED_API_CALLS = 1.1 * 60  # mins * seconds
 
 
 @given("we do not provide {settings_field} in {config_file_type} sensor configuration file")
-def create_configuration_file_with_settings_field_omitted(context, settings_field=None, config_file_type=None):
+def create_configuration_file_with_settings_field_omitted(context, config_file_type=None, settings_field=None):
 
     if settings_field is None:
         raise ValueError(
@@ -37,7 +37,7 @@ def create_configuration_file_with_settings_field_omitted(context, settings_fiel
     del json_file_contents[str(settings_field)]
 
     # Write new file to disk
-    context.test_settings_file_name = f"settings_file_with_{settings_field}_removed.json"
+    context.test_settings_file_name = f"{config_file_type}_settings_file_with_{settings_field}_removed.json"
     context.settings_field_being_removed = settings_field
     context.test_settings_file_name_and_path = context.logs_path + \
         f"/{context.test_settings_file_name}"
@@ -116,12 +116,13 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
     file_out_obj.close()
 
     if expected_outcome == "not start":
-        assert_that(bool(
-            "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..." in file_out_contents), is_(True), "Checking contents of stdout file...")
+        assert_that("_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...", is_in(file_out_contents),
+                    "Checking contents of stdout file...")
 
         if error_message != "None":
-            assert_that(bool(
-                f"{error_message}" in file_err_contents), is_(True), "Checking contents of stderr file...")
+            assert_that(error_message, is_in(file_err_contents),
+                        "Checking contents of stderr file...")
+
         assert_that(context.subproc_for_datalogger.returncode,
                     equal_to(1), "Checking subproc return code...")
 
@@ -183,7 +184,7 @@ def set_field_in_json_to_value(context, field=None, config_file_type=None, value
 
     while did_we_write_a_new_file == False:
         try:
-            context.test_settings_file_name = f"settings_file_with_custom_{field}_value_{file_creation_counter}.json"
+            context.test_settings_file_name = f"{config_file_type}_settings_file_with_custom_{field}_value_{file_creation_counter}.json"
             context.test_settings_file_name_and_path = context.logs_path + \
                 f"/{context.test_settings_file_name}"
             json_file_contents_out = None
