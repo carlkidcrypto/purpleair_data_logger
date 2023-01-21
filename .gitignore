@@ -4,6 +4,6 @@
 **/build/**
 **/__pycache__/**
 **/purpleair_data_logger.egg-info/**
-behave_tests/logs/**
-*.ini
-*.xml
+**/logs/**
+**.ini
+**.xml
