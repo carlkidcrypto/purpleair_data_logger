@@ -297,3 +297,46 @@ def set_field_in_json_to_value(context, field=None, config_file_type=None, value
 
         except FileExistsError:
             file_creation_counter = file_creation_counter + 1
+
+
+@given("we use the PurpleAirAPI module")
+def create_an_instance_of_purpleair_api(context):
+
+    from purpleair_data_logger.PurpleAirAPI import PurpleAirAPI
+
+    context.purpleair_api_instance = PurpleAirAPI(
+        context.config.userdata["PAA_API_READ_KEY"],
+        context.config.userdata["PAA_API_WRITE_KEY"],
+    )
+
+
+@when(
+    "we use the `post_create_group_data` method to create a group called: `Behave Test Group`"
+)
+def use_the_post_create_group_data_method(context):
+
+    context.purpleair_api_instance_retval = (
+        context.purpleair_api_instance.post_create_group_data("behave test group")
+    )
+    print(context.purpleair_api_instance_retval)
+
+
+@then("the PurpleAirAPI should not raise any errors")
+def purpleairapi_should_not_raise_an_error(context):
+
+    try:
+        context.purpleair_api_instance_retval.text
+        assert_that(False, is_(True), "Check for no error response in PAA call...")
+
+    except AttributeError:
+        assert_that(True, is_(True), "Check for no error response in PAA call...")
+
+
+@then("the group `Behave Test Group` should be created")
+def the_group_should_be_created(context):
+
+    print(context.purpleair_api_instance_retval)
+    assert_that(context.purpleair_api_instance_retval, is_(dict))
+    assert_that("group_id", is_in(context.purpleair_api_instance_retval.keys()))
+    context.purpleair_api_newly_created_group_id = context.purpleair_api_instance_retval["group_id"]
+    

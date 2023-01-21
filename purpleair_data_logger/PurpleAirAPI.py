@@ -759,8 +759,8 @@ class PurpleAirAPI:
         self,
         request_url,
         api_key_to_use,
-        first_optional_parameter_separator="",
-        optional_parameters_dict={},
+        first_optional_parameter_separator=None,
+        optional_parameters_dict=None,
     ):
         """
         A class helper to send the url request. It can also add onto the
@@ -770,10 +770,10 @@ class PurpleAirAPI:
         :param str first_optional_parameter_separator: The separator between first parameter
                                                        in optional_parameters_dict. i.e '?' or '&'.
         :param dict optional_parameters_dict: Optional parameters that can be added onto the
-                                              request_url. By default '{}'.
+                                              request_url.
         """
 
-        if optional_parameters_dict is not {}:
+        if optional_parameters_dict is not None:
             if first_optional_parameter_separator not in ["?", "&"]:
                 raise PurpleAirAPIError(
                     f"Invalid `first_optional_parameter_separator: {first_optional_parameter_separator}` passed into `_send_url_get_request`!"
