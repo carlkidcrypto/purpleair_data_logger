@@ -14,15 +14,28 @@
 """
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
-from purpleair_data_logger.PurpleAirPSQLQueryStatements import (PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS, PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
-                                                                PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS, PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
-                                                                PSQL_INSERT_STATEMENT_PM1_0_FIELDS, PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
-                                                                PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS, PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
-                                                                PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS, CREATE_PARTICLE_COUNT_FIELDS,
-                                                                CREATE_PM10_0_FIELDS, CREATE_PM1_0_FIELDS, CREATE_PM2_5_FIELDS, CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
-                                                                CREATE_ENVIRONMENTAL_FIELDS_TABLE, CREATE_MISCELLANEOUS_FIELDS, CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
-                                                                CREATE_THINGSPEAK_FIELDS, PSQL_DROP_ALL_TABLES,
-                                                                PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
+    PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
+    PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+    PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
+    PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+    PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
+    PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+    PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
+    PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+    PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
+    CREATE_PARTICLE_COUNT_FIELDS,
+    CREATE_PM10_0_FIELDS,
+    CREATE_PM1_0_FIELDS,
+    CREATE_PM2_5_FIELDS,
+    CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS,
+    CREATE_ENVIRONMENTAL_FIELDS_TABLE,
+    CREATE_MISCELLANEOUS_FIELDS,
+    CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE,
+    CREATE_THINGSPEAK_FIELDS,
+    PSQL_DROP_ALL_TABLES,
+    PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES,
+)
 import pg8000
 import argparse
 from datetime import datetime, timezone
@@ -31,14 +44,14 @@ import sys
 
 class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     """
-        The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
-        database. Then we will use Grafana to visualize said data.
+    The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
+    database. Then we will use Grafana to visualize said data.
     """
 
     def __init__(self, PurpleAirAPIReadKey, psql_db_conn):
         """
-            :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
-            :param object psql_db_conn: A valid PG8000 database connection
+        :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
+        :param object psql_db_conn: A valid PG8000 database connection
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
@@ -57,7 +70,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             "pm2_5_pseudo_average_fields",
             "pm10_0_fields",
             "particle_count_fields",
-            "thingspeak_fields"
+            "thingspeak_fields",
         ]
 
         # Make our PSQL Tables
@@ -75,21 +88,21 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     @property
     def get_acceptable_table_names_string_list(self):
         """
-            A getter method that will simply return the contents of
-            the acceptable_table_names_string_list. This is a list
-            of all the tables that this DataLogger uses and knows about.
+        A getter method that will simply return the contents of
+        the acceptable_table_names_string_list. This is a list
+        of all the tables that this DataLogger uses and knows about.
         """
 
         return self._acceptable_table_names_string_list
 
     def _create_psql_db_tables(self):
         """
-            Create the PSQL database tables if they don't exist already
+        Create the PSQL database tables if they don't exist already
 
-            We will create one table for different data groups. Simply following the
-            official PurpleAir documentation. Think Station information and status fields,
-            Environmental fields, etc. See website for more information.
-            https://api.purpleair.com/#api-sensors-get-sensor-data
+        We will create one table for different data groups. Simply following the
+        official PurpleAir documentation. Think Station information and status fields,
+        Environmental fields, etc. See website for more information.
+        https://api.purpleair.com/#api-sensors-get-sensor-data
         """
 
         self._db_conn.run(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
@@ -104,22 +117,22 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
     def _convert_psql_tables_to_hyper_tables(self):
         """
-            A method to convert our PSQL tables to TimeScaleDB hyper tables.
+        A method to convert our PSQL tables to TimeScaleDB hyper tables.
         """
 
         for table_name in self._acceptable_table_names_string_list:
             self._db_conn.run(
-                f"""SELECT create_hypertable('{table_name}', 'data_time_stamp', if_not_exists => TRUE)""")
+                f"""SELECT create_hypertable('{table_name}', 'data_time_stamp', if_not_exists => TRUE)"""
+            )
 
     def _configure_data_compression_policies(self):
         """
-            A method to set TimescaleDB data compression policies. More information
-            can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
+        A method to set TimescaleDB data compression policies. More information
+        can be found here: https://docs.timescale.com/api/latest/compression/add_compression_policy/#add-compression-policy
         """
 
         # Before we do anything let's get a list of all the current active compression policies
-        query_result = self._db_conn.run(
-            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        query_result = self._db_conn.run(PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
         # Convert our tuple query_result into a list
         compression_policy_list = []
@@ -130,18 +143,20 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             if table_name not in compression_policy_list:
                 self._db_conn.run(
                     f"""ALTER TABLE {table_name} SET (timescaledb.compress, timescaledb.compress_orderby = 'data_time_stamp',
-                        timescaledb.compress_segmentby = 'sensor_index')""")
+                        timescaledb.compress_segmentby = 'sensor_index')"""
+                )
 
                 self._db_conn.run(
-                    f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)""")
+                    f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)"""
+                )
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
-            A method to covert a unix epoch timestamp to a psql timestamp.
+        A method to covert a unix epoch timestamp to a psql timestamp.
 
-            :param int unix_epoch_timestamp: A valid unix epoch timestamp
+        :param int unix_epoch_timestamp: A valid unix epoch timestamp
 
-            :return A valid psql UTC timestamp or None.
+        :return A valid psql UTC timestamp or None.
         """
 
         if unix_epoch_timestamp is None:
@@ -152,20 +167,21 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
     def store_sensor_data(self, single_sensor_data_dict):
         """
-            Insert the sensor data into the database.
+        Insert the sensor data into the database.
 
-            :param dict single_sensor_data_dict: A python dictionary containing all fields
-                                                 for insertion. If a sensor doesn't support
-                                                 a certain field make sure it is NULL and part
-                                                 of the dictionary. This method does no type
-                                                 or error checking. That is upto the caller.
+        :param dict single_sensor_data_dict: A python dictionary containing all fields
+                                             for insertion. If a sensor doesn't support
+                                             a certain field make sure it is NULL and part
+                                             of the dictionary. This method does no type
+                                             or error checking. That is upto the caller.
         """
 
         # Run the queries
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             name=single_sensor_data_dict["name"],
             icon=single_sensor_data_dict["icon"],
@@ -185,24 +201,28 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pa_latency=single_sensor_data_dict["pa_latency"],
             memory=single_sensor_data_dict["memory"],
             last_seen=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["last_seen"]),
+                single_sensor_data_dict["last_seen"]
+            ),
             last_modified=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["last_modified"]),
+                single_sensor_data_dict["last_modified"]
+            ),
             date_created=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["date_created"]),
+                single_sensor_data_dict["date_created"]
+            ),
             channel_state=single_sensor_data_dict["channel_state"],
             channel_flags=single_sensor_data_dict["channel_flags"],
             channel_flags_manual=single_sensor_data_dict["channel_flags_manual"],
             channel_flags_auto=single_sensor_data_dict["channel_flags_auto"],
             confidence=single_sensor_data_dict["confidence"],
             confidence_manual=single_sensor_data_dict["confidence_manual"],
-            confidence_auto=single_sensor_data_dict["confidence_auto"]
+            confidence_auto=single_sensor_data_dict["confidence_auto"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             humidity=single_sensor_data_dict["humidity"],
             humidity_a=single_sensor_data_dict["humidity_a"],
@@ -212,25 +232,27 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             temperature_b=single_sensor_data_dict["temperature_b"],
             pressure=single_sensor_data_dict["pressure"],
             pressure_a=single_sensor_data_dict["pressure_a"],
-            pressure_b=single_sensor_data_dict["pressure_b"]
+            pressure_b=single_sensor_data_dict["pressure_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             voc=single_sensor_data_dict["voc"],
             voc_a=single_sensor_data_dict["voc_a"],
             voc_b=single_sensor_data_dict["voc_b"],
             ozone1=single_sensor_data_dict["ozone1"],
-            analog_input=single_sensor_data_dict["analog_input"]
+            analog_input=single_sensor_data_dict["analog_input"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm1_0=single_sensor_data_dict["pm1.0"],
             pm1_0_a=single_sensor_data_dict["pm1.0_a"],
@@ -240,13 +262,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm1_0_atm_b=single_sensor_data_dict["pm1.0_atm_b"],
             pm1_0_cf_1=single_sensor_data_dict["pm1.0_cf_1"],
             pm1_0_cf_1_a=single_sensor_data_dict["pm1.0_cf_1_a"],
-            pm1_0_cf_1_b=single_sensor_data_dict["pm1.0_cf_1_b"]
+            pm1_0_cf_1_b=single_sensor_data_dict["pm1.0_cf_1_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_alt=single_sensor_data_dict["pm2.5_alt"],
             pm2_5_alt_a=single_sensor_data_dict["pm2.5_alt_a"],
@@ -259,13 +282,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm2_5_atm_b=single_sensor_data_dict["pm2.5_atm_b"],
             pm2_5_cf_1=single_sensor_data_dict["pm2.5_cf_1"],
             pm2_5_cf_1_a=single_sensor_data_dict["pm2.5_cf_1_a"],
-            pm2_5_cf_1_b=single_sensor_data_dict["pm2.5_cf_1_b"]
+            pm2_5_cf_1_b=single_sensor_data_dict["pm2.5_cf_1_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm2_5_10minute=single_sensor_data_dict["pm2.5_10minute"],
             pm2_5_10minute_a=single_sensor_data_dict["pm2.5_10minute_a"],
@@ -284,13 +308,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm2_5_24hour_b=single_sensor_data_dict["pm2.5_24hour_b"],
             pm2_5_1week=single_sensor_data_dict["pm2.5_1week"],
             pm2_5_1week_a=single_sensor_data_dict["pm2.5_1week_a"],
-            pm2_5_1week_b=single_sensor_data_dict["pm2.5_1week_b"]
+            pm2_5_1week_b=single_sensor_data_dict["pm2.5_1week_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             pm10_0=single_sensor_data_dict["pm10.0"],
             pm10_0_a=single_sensor_data_dict["pm10.0_a"],
@@ -300,13 +325,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm10_0_atm_b=single_sensor_data_dict["pm10.0_atm_b"],
             pm10_0_cf_1=single_sensor_data_dict["pm10.0_cf_1"],
             pm10_0_cf_1_a=single_sensor_data_dict["pm10.0_cf_1_a"],
-            pm10_0_cf_1_b=single_sensor_data_dict["pm10.0_cf_1_b"]
+            pm10_0_cf_1_b=single_sensor_data_dict["pm10.0_cf_1_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             um_count_0_3=single_sensor_data_dict["0.3_um_count"],
             um_count_a_0_3=single_sensor_data_dict["0.3_um_count_a"],
@@ -325,13 +351,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             um_count_b_5_0=single_sensor_data_dict["5.0_um_count_b"],
             um_count_10_0=single_sensor_data_dict["10.0_um_count"],
             um_count_a_10_0=single_sensor_data_dict["10.0_um_count_a"],
-            um_count_b_10_0=single_sensor_data_dict["10.0_um_count_b"]
+            um_count_b_10_0=single_sensor_data_dict["10.0_um_count_b"],
         )
 
         self._db_conn.run(
             PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
-                single_sensor_data_dict["data_time_stamp"]),
+                single_sensor_data_dict["data_time_stamp"]
+            ),
             sensor_index=single_sensor_data_dict["sensor_index"],
             primary_id_a=single_sensor_data_dict["primary_id_a"],
             primary_key_a=single_sensor_data_dict["primary_key_a"],
@@ -340,7 +367,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             primary_id_b=single_sensor_data_dict["primary_id_b"],
             primary_key_b=single_sensor_data_dict["primary_key_b"],
             secondary_id_b=single_sensor_data_dict["secondary_id_b"],
-            secondary_key_b=single_sensor_data_dict["secondary_key_b"]
+            secondary_key_b=single_sensor_data_dict["secondary_key_b"],
         )
 
         # Commit to the db
@@ -349,32 +376,79 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        description="Collect data from PurpleAir sensors and insert into a database!")
-    parser.add_argument("-db_drop_all_tables",  action="store_true", required=False,
-                        dest="db_drop_all_tables", help="""Set this flag if you wish to drop all
+        description="Collect data from PurpleAir sensors and insert into a database!"
+    )
+    parser.add_argument(
+        "-db_drop_all_tables",
+        action="store_true",
+        required=False,
+        dest="db_drop_all_tables",
+        help="""Set this flag if you wish to drop all
                         tables before loading in new data. Useful if a database change has happened.
                         Note: Make sure to provide a db_usr with DROP rights.
-                        WARNING: ALL COLLECTED DATA WILL BE LOST!""")
-    parser.add_argument("-db_usr",  required=True, dest="db_usr",
-                        type=str, help="""The PSQL database user""")
-    parser.add_argument("-db_host", required=False, default="localhost",
-                        dest="db_host", type=str, help="""The PSQL database host""")
-    parser.add_argument("-db", required=True, dest="db",
-                        type=str, help="""The PSQL database name""")
-    parser.add_argument("-db_port", required=False, default=5432,
-                        dest="db_port", type=str, help="""The PSQL database port number""")
-    parser.add_argument("-db_pwd",  required=False, default=None,
-                        dest="db_pwd", type=str, help="""The PSQL database password""")
-    parser.add_argument("-paa_read_key",  required=True,
-                        dest="paa_read_key", type=str, help="""The PurpleAirAPI Read key""")
-    parser.add_argument("-paa_single_sensor_request_json_file",  required=False, default=None,
-                        dest="paa_single_sensor_request_json_file", type=str, help="""The
+                        WARNING: ALL COLLECTED DATA WILL BE LOST!""",
+    )
+    parser.add_argument(
+        "-db_usr",
+        required=True,
+        dest="db_usr",
+        type=str,
+        help="""The PSQL database user""",
+    )
+    parser.add_argument(
+        "-db_host",
+        required=False,
+        default="localhost",
+        dest="db_host",
+        type=str,
+        help="""The PSQL database host""",
+    )
+    parser.add_argument(
+        "-db", required=True, dest="db", type=str, help="""The PSQL database name"""
+    )
+    parser.add_argument(
+        "-db_port",
+        required=False,
+        default=5432,
+        dest="db_port",
+        type=str,
+        help="""The PSQL database port number""",
+    )
+    parser.add_argument(
+        "-db_pwd",
+        required=False,
+        default=None,
+        dest="db_pwd",
+        type=str,
+        help="""The PSQL database password""",
+    )
+    parser.add_argument(
+        "-paa_read_key",
+        required=True,
+        dest="paa_read_key",
+        type=str,
+        help="""The PurpleAirAPI Read key""",
+    )
+    parser.add_argument(
+        "-paa_single_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_single_sensor_request_json_file",
+        type=str,
+        help="""The
                         path to a json file containing the parameters to send a single
-                        sensor request.""")
-    parser.add_argument("-paa_multiple_sensor_request_json_file",  required=False, default=None,
-                        dest="paa_multiple_sensor_request_json_file", type=str, help="""The
+                        sensor request.""",
+    )
+    parser.add_argument(
+        "-paa_multiple_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_multiple_sensor_request_json_file",
+        type=str,
+        help="""The
                         path to a json file containing the parameters to send a multiple
-                        sensor request.""")
+                        sensor request.""",
+    )
 
     args = parser.parse_args()
 
@@ -388,12 +462,15 @@ if __name__ == "__main__":
         host=args.db_host,
         database=args.db,
         port=args.db_port,
-        password=args.db_pwd)
+        password=args.db_pwd,
+    )
 
     # Before doing step three, check if we wish to drop all tables.
     if args.db_drop_all_tables:
-        print("""Are you sure you wish to continue? This operation will drop all tables from the database!
-        ALL COLLECTED DATA WILL BE LOST!""")
+        print(
+            """Are you sure you wish to continue? This operation will drop all tables from the database!
+        ALL COLLECTED DATA WILL BE LOST!"""
+        )
         user_input = input("""Type yes or no to continue: """)
         if "no" in str(user_input):
             sys.exit("""Stopping because you didn't want to continue...""")
@@ -402,12 +479,16 @@ if __name__ == "__main__":
             the_psql_db_conn.run(PSQL_DROP_ALL_TABLES)
             the_psql_db_conn.commit()
             sys.exit(
-                """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided...""")
+                """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided..."""
+            )
 
     # Third make an instance our our data logger
     the_paa_psql_data_logger = PurpleAirPSQLDataLogger(
-        args.paa_read_key, the_psql_db_conn)
+        args.paa_read_key, the_psql_db_conn
+    )
 
     # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
     the_paa_psql_data_logger.validate_parameters_and_run(
-        args.paa_multiple_sensor_request_json_file, args.paa_single_sensor_request_json_file)
+        args.paa_multiple_sensor_request_json_file,
+        args.paa_single_sensor_request_json_file,
+    )
