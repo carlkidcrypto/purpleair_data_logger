@@ -2,6 +2,8 @@
 
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
+[![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml)
+
 ## Installation
 
 You can install the PurpleAir Data Logger via pip.

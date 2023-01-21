@@ -1,0 +1,91 @@
+name: Behave Tests
+run-name: ${{ github.actor }} is running Behave Tests 🚀
+#on: [push]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.9', '3.10', '3.11']
+        exclude:
+          - os: windows-latest
+            # Broken ATM, see previous runs
+            python-version: '3.11'
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+
+      - name: Set up Python env for running behave tests...
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install python3 requirements...
+        uses: knicknic/os-specific-run@v1.0.4
+        with:
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
+                 python -m pip install --upgrade wheel && 
+                 python -m pip install --upgrade setuptools &&
+                 python -m pip install --upgrade pip &&
+                 python -m pip install -r behave_tests/requirements.txt &&
+                 python setup.py install
+
+          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
+                 python -m pip install --upgrade wheel &&
+                 python -m pip install --upgrade setuptools &&
+                 python -m pip install --upgrade pip &&
+                 python -m pip install -r behave_tests/requirements.txt &&
+                 python setup.py install
+
+          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ &&
+                   python -m pip install --upgrade wheel &&
+                   python -m pip install --upgrade setuptools &&
+                   python -m pip install --upgrade pip &&
+                   python -m pip install -r behave_tests/requirements.txt &&
+                   python setup.py install
+      
+      - name: Run behave tests...
+        env:
+            PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
+            PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
+        uses: knicknic/os-specific-run@v1.0.4
+        with:
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ ;
+                 behave --junit --junit-directory junit_reports
+          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/  ;
+                 behave --junit --junit-directory junit_reports
+          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\behave_tests\ ;
+                   behave --junit --junit-directory junit_reports
+      
+      - name: Upload Junit Reports
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: behave_junit_reports_${{matrix.os}}_${{matrix.python-version}}
+          path: "**/junit_reports/*.xml"
+
+  publish-test-results:
+    name: Publish Tests Results
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Junit Reports
+        if: always()
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Publish Junit Reports
+        if: always()
+        uses: EnricoMi/publish-unit-test-result-action/composite@v2
+        with:
+          junit_files: "artifacts/**/*.xml"
+  
