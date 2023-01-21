@@ -256,7 +256,7 @@ class PurpleAirAPI():
             "sensors/" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
-        # passed in. Turn them into a list of optional parameters
+        # passed in. Turn them into a dict of optional parameters
         optional_parameters_dict = {
             "location_type": location_type,
             "read_keys": read_keys,
@@ -324,7 +324,7 @@ class PurpleAirAPI():
             "sensors/" + f"{sensor_index}" + "/history" + f"?fields={fields}"
 
         # Add to the request_url string depending on what optional parameters are
-        # passed in. Turn them into a list of optional parameters
+        # passed in. Turn them into a dict of optional parameters
         optional_parameters_dict = {
             "read_key": read_key,
             "start_timestamp": start_timestamp,
@@ -341,15 +341,19 @@ class PurpleAirAPI():
 
             :param int group_id: The group_id of the requested group. This group must be owned by the api_key.
         """
-        pass
+
+        request_url = self._base_api_v1_request_string + f"groups/{group_id}"
+        return self._send_url_get_request(request_url, self._your_api_read_key)
 
     def request_group_list_data(self):
         """
             A method to retrieve a list of all groups owned by the provided api_key.
         """
-        pass
 
-    def request_member_data(self):
+        request_url = self._base_api_v1_request_string + f"groups/"
+        return self._send_url_get_request(request_url, self._your_api_read_key)
+
+    def request_member_data(self, group_id, member_id, fields=None):
         """
             A method to get a members' data from a group to which said member belongs.
 
@@ -388,9 +392,19 @@ class PurpleAirAPI():
 
                 For field descriptions, please see the 'sensor data fields'. section.
         """
-        pass
 
-    def request_member_historic_data(self):
+        request_url = self._base_api_v1_request_string + \
+            f"groups/{group_id}/members/{member_id}"
+
+        # Add to the request_url string depending on what optional parameters are
+        # passed in. Turn them into a dict of optional parameters
+        optional_parameters_dict = {
+            "fields": fields}
+
+        first_optional_parameter_separator = "?"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
+
+    def request_member_historic_data(self, group_id, member_id, fields, start_timestamp=None, end_timestamp=None, average=None):
         """
             A method to get a members' historic data from a group to which said member belongs too.
 
@@ -438,9 +452,21 @@ class PurpleAirAPI():
 
                                 For field descriptions, please see the 'sensor data fields'. section.
         """
-        pass
 
-    def request_members_data(self):
+        request_url = self._base_api_v1_request_string + \
+            f"groups/{group_id}/members/{member_id}/history/?{fields}"
+
+        # Add to the request_url string depending on what optional parameters are
+        # passed in. Turn them into a dict of optional parameters
+        optional_parameters_dict = {
+            "start_timestamp": start_timestamp,
+            "end_timestamp": end_timestamp,
+            "average": average}
+
+        first_optional_parameter_separator = "&"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
+
+    def request_members_data(self, group_id, fields, location_type=None, read_keys=None, show_only=None, modified_since=None, max_age=None, nwlng=None, nwlat=None, selng=None, selat=None):
         """
             A method to get multiple members' data from from a group to which said members belong too.
 
@@ -502,7 +528,25 @@ class PurpleAirAPI():
              :param (optional) int selat: A south east latitude for the bounding box.
 
         """
-        pass
+
+        request_url = self._base_api_v1_request_string + \
+            f"groups/{group_id}/members?{fields}"
+
+        # Add to the request_url string depending on what optional parameters are
+        # passed in. Turn them into a dict of optional parameters
+        optional_parameters_dict = {
+            "location_type": location_type,
+            "read_keys": read_keys,
+            "show_only": show_only,
+            "modified_since": modified_since,
+            "max_age": max_age,
+            "nwlng": nwlng,
+            "nwlat": nwlat,
+            "selng": selng,
+            "selat": selat}
+
+        first_optional_parameter_separator = "&"
+        return self._send_url_get_request(request_url, self._your_api_read_key, first_optional_parameter_separator, optional_parameters_dict)
 
     def post_create_group_data(self, name):
         """
@@ -592,7 +636,7 @@ class PurpleAirAPI():
 
         return self._send_url_delete_request(post_url, self._your_api_write_key)
 
-    def _send_url_get_request(self, request_url, api_key_to_use, first_optional_parameter_separator, optional_parameters_dict={}):
+    def _send_url_get_request(self, request_url, api_key_to_use, first_optional_parameter_separator="", optional_parameters_dict={}):
         """
             A class helper to send the url request. It can also add onto the
             'request_url' string if 'optional_parameters_dict' are provided.
@@ -605,6 +649,10 @@ class PurpleAirAPI():
         """
 
         if optional_parameters_dict is not {}:
+            if first_optional_parameter_separator not in ["?", "&"]:
+                raise PurpleAirAPIError(
+                    f"Invalid `first_optional_parameter_separator: {first_optional_parameter_separator}` passed into `_send_url_get_request`!")
+
             opt_param_count = 0
             for opt_param, val in optional_parameters_dict.items():
                 if val is not None:
