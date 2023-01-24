@@ -9,9 +9,10 @@ from os import mkdir, path, getcwd, environ
 from shutil import rmtree
 from platform import python_version, system
 
+
 def before_all(context):
     """
-        These run before and after the whole shooting match.
+    These run before and after the whole shooting match.
     """
 
     # Make a place to store logs. First remove then create
@@ -53,14 +54,14 @@ def before_all(context):
 
 def after_all(context):
     """
-        These run before and after the whole shooting match.
+    These run before and after the whole shooting match.
     """
     pass
 
 
 def before_step(context, step):
     """
-        These run before and after every step.
+    These run before and after every step.
     """
 
     pass
@@ -68,7 +69,7 @@ def before_step(context, step):
 
 def after_step(context, step):
     """
-        These run before and after every step.
+    These run before and after every step.
     """
 
     pass
@@ -76,7 +77,7 @@ def after_step(context, step):
 
 def before_scenario(context, scenario):
     """
-        These run before and after each scenario is run.
+    These run before and after each scenario is run.
     """
 
     context.test_settings_file_name = ""
@@ -85,7 +86,7 @@ def before_scenario(context, scenario):
 
 def after_scenario(context, scenario):
     """
-        These run before and after each scenario is run.
+    These run before and after each scenario is run.
     """
 
     context.test_settings_file_name = ""
@@ -94,7 +95,7 @@ def after_scenario(context, scenario):
 
 def before_feature(context, feature):
     """
-        These run before and after each feature file is exercised.
+    These run before and after each feature file is exercised.
     """
 
     context.test_settings_file_name = ""
@@ -103,7 +104,7 @@ def before_feature(context, feature):
 
 def after_feature(context, feature):
     """
-        These run before and after each feature file is exercised.
+    These run before and after each feature file is exercised.
     """
 
     context.test_settings_file_name = ""
@@ -112,17 +113,17 @@ def after_feature(context, feature):
 
 def before_tag(context, tag):
     """
-        These run before and after a section tagged with the given name.
-        They are invoked for each tag encountered in the order they’re found in the feature file.
-        See controlling things with tags.
+    These run before and after a section tagged with the given name.
+    They are invoked for each tag encountered in the order they’re found in the feature file.
+    See controlling things with tags.
     """
     pass
 
 
 def after_tag(context, tag):
     """
-        These run before and after a section tagged with the given name.
-        They are invoked for each tag encountered in the order they’re found in the feature file.
-        See controlling things with tags.
+    These run before and after a section tagged with the given name.
+    They are invoked for each tag encountered in the order they’re found in the feature file.
+    See controlling things with tags.
     """
     pass
