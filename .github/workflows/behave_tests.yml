@@ -1,4 +1,5 @@
 name: Behave Tests
+concurrency: behave_tests
 run-name: ${{ github.actor }} is running Behave Tests 🚀
 #on: [push]
 on:
