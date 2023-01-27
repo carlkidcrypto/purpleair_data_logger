@@ -1,6 +1,5 @@
 name: Behave Tests
 concurrency: behave_tests
-run-name: ${{ github.actor }} is running Behave Tests 🚀
 #on: [push]
 on:
   push:
@@ -9,6 +8,7 @@ on:
     branches: [ main ]
 jobs:
   build-and-test:
+    name: Build and Test on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
