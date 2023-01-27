@@ -4,6 +4,8 @@ A set of data logger(s) that will query purple air sensor(s) for data. That data
 
 [![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml)
 
+[![Publish Python 🐍 distributions 📦 to PyPI and TestPyPI](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
+
 ## Installation
 
 You can install the PurpleAir Data Logger via pip.
