@@ -23,7 +23,7 @@ copyright = "2022, carlkid1499"
 author = "carlkid1499"
 
 # The full version, including alpha/beta/rc tags
-release = "V1.0.0"
+release = "V1.2.0a0"
 
 
 # -- General configuration ---------------------------------------------------
