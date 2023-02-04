@@ -35,6 +35,9 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
     CREATE_THINGSPEAK_FIELDS,
     PSQL_DROP_ALL_TABLES,
     PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES,
+    PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
+    PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
+    PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
 )
 import pg8000
 import argparse
@@ -81,6 +84,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
         # Create compression policies
         self._configure_data_compression_policies()
+
+        # Create continuous aggregates and materialized views
+        self._configure_continuous_aggregates()
 
         # Commit to the db
         self._db_conn.commit()
@@ -132,7 +138,8 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # Before we do anything let's get a list of all the current active compression policies
-        query_result = self._db_conn.run(PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        query_result = self._db_conn.run(
+            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
         # Convert our tuple query_result into a list
         compression_policy_list = []
@@ -149,6 +156,19 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
                 self._db_conn.run(
                     f"""SELECT add_compression_policy('{table_name}', INTERVAL '14d', if_not_exists => TRUE)"""
                 )
+
+    def _configure_continuous_aggregates(self):
+        """
+        A method to set TimescaleDB continuous aggregates policies. More information
+        can be found here: https://docs.timescale.com/timescaledb/latest/overview/core-concepts/continuous-aggregates/
+        """
+
+        self._db_conn.run(
+            PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
+        self._db_conn.run(
+            PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
+        self._db_conn.run(
+            PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
