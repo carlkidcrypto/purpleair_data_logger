@@ -3,12 +3,10 @@
 
 name: Build And Publish Python 🐍 distributions 📦 to TestPyPI
 concurrency: build_and_publish_to_test_pypi
-#on: [push]
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
 jobs:
   build-n-publish:
     name: Build and Publish

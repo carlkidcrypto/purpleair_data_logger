@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>purpleair_data_logger &mdash; PurpleAir Data Logger(s) V1.0.0 documentation</title>
+  <title>purpleair_data_logger &mdash; PurpleAir Data Logger(s) V1.2.0a0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -67,8 +68,8 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-      <li>purpleair_data_logger</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li class="breadcrumb-item active">purpleair_data_logger</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/modules.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -82,15 +83,137 @@
 <h1>purpleair_data_logger<a class="headerlink" href="#purpleair-data-logger" title="Permalink to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirAPI.html">PurpleAirAPI module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirAPIConstants.html">PurpleAirAPIConstants module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirAPI.html">PurpleAirAPI module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.get_api_key_last_checked"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.get_api_key_last_checked</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.get_api_key_type"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.get_api_key_type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.get_api_versions"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.get_api_versions</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.post_create_group_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.post_create_group_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.post_create_member"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.post_create_member()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.post_delete_group"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.post_delete_group()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.post_delete_member"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.post_delete_member()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_group_detail_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_group_detail_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_group_list_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_group_list_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_member_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_member_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_member_historic_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_member_historic_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_members_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_members_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_multiple_sensors_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_multiple_sensors_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_sensor_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPI.request_sensor_historic_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPI.request_sensor_historic_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.PurpleAirAPIError"><code class="docutils literal notranslate"><span class="pre">PurpleAirAPIError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPI.html#PurpleAirAPI.debug_log"><code class="docutils literal notranslate"><span class="pre">debug_log()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirAPIConstants.html">PurpleAirAPIConstants module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPIConstants.html#PurpleAirAPIConstants.ACCEPTED_FIELD_NAMES_DICT"><code class="docutils literal notranslate"><span class="pre">ACCEPTED_FIELD_NAMES_DICT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPIConstants.html#PurpleAirAPIConstants.ERROR_CODES_LIST"><code class="docutils literal notranslate"><span class="pre">ERROR_CODES_LIST</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPIConstants.html#PurpleAirAPIConstants.PRINT_DEBUG_MSGS"><code class="docutils literal notranslate"><span class="pre">PRINT_DEBUG_MSGS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirAPIConstants.html#PurpleAirAPIConstants.SUCCESS_CODE_LIST"><code class="docutils literal notranslate"><span class="pre">SUCCESS_CODE_LIST</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirCSVDataLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirCSVDataLogger.html#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirCSVDataLogger.store_sensor_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.ENVIRONMENTAL_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">ENVIRONMENTAL_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.ENVIRONMENTAL_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">ENVIRONMENTAL_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.MISCELLANEOUS_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">MISCELLANEOUS_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.MISCELLANEOUS_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">MISCELLANEOUS_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PARTICLE_COUNT_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PARTICLE_COUNT_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PARTICLE_COUNT_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PARTICLE_COUNT_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM10_0_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM10_0_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM10_0_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM10_0_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM1_0_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM1_0_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM1_0_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM1_0_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM2_5_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM2_5_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM2_5_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM2_5_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.STATION_INFORMATION_AND_STATUS_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">STATION_INFORMATION_AND_STATUS_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.THINGSPEAK_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">THINGSPEAK_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html#PurpleAirCSVDataLoggerConstants.THINGSPEAK_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">THINGSPEAK_FIELDS_HEADER</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLogger.send_request_every_x_seconds</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLogger.store_sensor_data()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLogger.validate_parameters_and_run"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLogger.validate_parameters_and_run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLoggerError"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLoggerError</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirPSQLDataLogger.html#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirPSQLDataLogger.html#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.store_sensor_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_ENVIRONMENTAL_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_ENVIRONMENTAL_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.CREATE_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_THINGSPEAK_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">PSQL_DROP_ALL_TABLES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES"><code class="docutils literal notranslate"><span class="pre">PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html#PurpleAirSQLiteDataLogger.PurpleAirSQLiteDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirSQLiteDataLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html#PurpleAirSQLiteDataLogger.PurpleAirSQLiteDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirSQLiteDataLogger.store_sensor_data()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_ENVIRONMENTAL_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_ENVIRONMENTAL_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.CREATE_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_THINGSPEAK_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_DROP_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">SQLITE_DROP_ALL_TABLES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS</span></code></a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>

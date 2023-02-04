@@ -4,9 +4,9 @@ A set of data logger(s) that will query purple air sensor(s) for data. That data
 
 [![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml)
 
-[![Build And Publish Python 🐍 distributions 📦 to PyPI](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
+[![PyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
 
-[![Build And Publish Python 🐍 distributions 📦 to TestPyPI](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml)
+[![TestPyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml)
 
 ## Installation
 
@@ -59,7 +59,7 @@ optional arguments:
 ### Getting Started
 
 1. Grab and install Postgresql for your platform. <https://www.postgresql.org/download/>
-2. Create two database users. One for Grafana with insert only privileges. The other for the data logger with only insert/create privileges. <https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e>, <https://www.techonthenet.com/postgresql/grant_revoke.php>
+2. Create two database users. One for Grafana with select only privileges. The other for the data logger with only insert/create privileges. <https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e>, <https://www.techonthenet.com/postgresql/grant_revoke.php>
 3. Install and configure TimescaleDB. <https://docs.timescale.com/install/latest/self-hosted/>
 4. Install and configure Grafana. <https://grafana.com/docs/grafana/latest/setup-grafana/installation/>
 5. Import into your local Grafana instance the dashboard file found [here](./grafana_dashboards/PurpleAirAPI%20(PAA)%20Data%20Logger%20Grafana%20Dashboard-1660355898051.json)

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirPSQLQueryStatements module &mdash; PurpleAir Data Logger(s) V1.0.0 documentation</title>
+  <title>PurpleAirPSQLQueryStatements module &mdash; PurpleAir Data Logger(s) V1.2.0a0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -47,7 +48,32 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLQueryStatements module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLQueryStatements module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_ENVIRONMENTAL_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_ENVIRONMENTAL_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.CREATE_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_THINGSPEAK_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE"><code class="docutils literal notranslate"><span class="pre">PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">PSQL_DROP_ALL_TABLES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES"><code class="docutils literal notranslate"><span class="pre">PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLQueryStatements.PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
 </ul>
@@ -67,9 +93,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">purpleair_data_logger</a> &raquo;</li>
-      <li>PurpleAirPSQLQueryStatements module</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
+      <li class="breadcrumb-item active">PurpleAirPSQLQueryStatements module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/PurpleAirPSQLQueryStatements.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -168,7 +194,7 @@ Documentation can be found here: <a class="reference external" href="https://doc
 
 <dl class="py data">
 <dt class="sig sig-object py" id="PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES">
-<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_DROP_ALL_TABLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">station_information_and_status_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">environmental_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">miscellaneous_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm1_0_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_pseudo_average_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm10_0_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">particle_count_fields;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">thingspeak_fields;\n</span>&#160;&#160;&#160; <span class="pre">'</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES" title="Permalink to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLQueryStatements.</span></span><span class="sig-name descname"><span class="pre">PSQL_DROP_ALL_TABLES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">station_information_and_status_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">environmental_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">miscellaneous_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm1_0_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm2_5_pseudo_average_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">pm10_0_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">particle_count_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">DROP</span> <span class="pre">TABLE</span> <span class="pre">thingspeak_fields</span> <span class="pre">CASCADE;\n</span>&#160;&#160;&#160; <span class="pre">'</span></em><a class="headerlink" href="#PurpleAirPSQLQueryStatements.PSQL_DROP_ALL_TABLES" title="Permalink to this definition"></a></dt>
 <dd><p>PSQL statement to drop all tables in the database</p>
 </dd></dl>
 

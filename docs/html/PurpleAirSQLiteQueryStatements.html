@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirSQLiteQueryStatements module &mdash; PurpleAir Data Logger(s) V1.0.0 documentation</title>
+  <title>PurpleAirSQLiteQueryStatements module &mdash; PurpleAir Data Logger(s) V1.2.0a0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -16,6 +16,7 @@
         <script src="_static/underscore.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,7 +49,28 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirSQLiteQueryStatements module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirSQLiteQueryStatements module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_ENVIRONMENTAL_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_ENVIRONMENTAL_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_THINGSPEAK_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_DROP_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">SQLITE_DROP_ALL_TABLES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM10_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM1_0_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
@@ -66,9 +88,9 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a> &raquo;</li>
-          <li><a href="modules.html">purpleair_data_logger</a> &raquo;</li>
-      <li>PurpleAirSQLiteQueryStatements module</li>
+      <li><a href="index.html" class="icon icon-home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
+      <li class="breadcrumb-item active">PurpleAirSQLiteQueryStatements module</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/PurpleAirSQLiteQueryStatements.rst.txt" rel="nofollow"> View page source</a>
       </li>
