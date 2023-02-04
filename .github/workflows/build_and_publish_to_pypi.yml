@@ -3,12 +3,10 @@
 
 name: Build And Publish Python 🐍 distributions 📦 to PyPI
 concurrency: build_and_publish_to_pypi
-#on: [push]
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+
 jobs:
   build-n-publish:
     name: Build and Publish
@@ -38,7 +36,7 @@ jobs:
           .
 
       - name: Publish distribution 📦 to PyPI
-        if: startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1
+        if: startsWith(github.ref, 'refs/tags')
         with:
           password: ${{ secrets.PYPI_API_TOKEN }}
