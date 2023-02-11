@@ -4,8 +4,11 @@
 name: PyPI Distributions
 concurrency: build_and_publish_to_pypi
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   build-n-publish-pypi:
