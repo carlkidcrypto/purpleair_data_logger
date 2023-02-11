@@ -2,11 +2,8 @@ name: Python 🐍 Auto Version Tag
 
 concurrency: python_auto_version_tag
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  push:
+    branches: [ main ]
 
 jobs:
   python-auto-version-tag:
@@ -23,5 +20,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
-        DEFAULT_BUMP: minor
         PRERELEASE: true
+        PRERELEASE_SUFFIX: "a"
