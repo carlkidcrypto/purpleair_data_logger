@@ -1,14 +1,17 @@
 # Refer to the following link for help
 # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 
-name: Build And Publish Python 🐍 distributions 📦 to PyPI
+name: PyPI Distributions
 concurrency: build_and_publish_to_pypi
 on:
-  push:
-    branches: [ main ]
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
-  build-n-publish:
+  build-n-publish-pypi:
     name: Build and Publish
     runs-on: ubuntu-latest
 
