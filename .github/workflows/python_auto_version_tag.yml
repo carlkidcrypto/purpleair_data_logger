@@ -2,11 +2,8 @@ name: Python 🐍 Auto Version Tag
 
 concurrency: python_auto_version_tag
 on:
-  pull_request:
-    types:
-      - closed
-    branches:
-      - main
+  push:
+    branches: [ bugfix/40-investigate-workflows-for-pypi-try-2 ]
 
 jobs:
   python-auto-version-tag:
@@ -23,3 +20,5 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         WITH_V: true
+        PRERELEASE: true
+        PRERELEASE_SUFFIX: "beta"
