@@ -2,8 +2,11 @@ name: Python 🐍 Auto Version Tag
 
 concurrency: python_auto_version_tag
 on:
-  push:
-    branches: [ bug/40-investigate-workflows-for-pypi ]
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
 
 jobs:
   python-auto-version-tag:
