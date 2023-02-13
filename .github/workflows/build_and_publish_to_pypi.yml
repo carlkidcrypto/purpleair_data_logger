@@ -34,9 +34,10 @@ jobs:
           --wheel
           --outdir dist/
           .
-
+      
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        if: startsWith(github.ref, 'refs/tags')
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@release/v1.6
         with:
+          print_hash: true
           password: ${{ secrets.PYPI_API_TOKEN }}
