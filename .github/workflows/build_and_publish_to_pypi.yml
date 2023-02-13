@@ -4,8 +4,8 @@
 name: PyPI Distributions
 concurrency: build_and_publish_to_pypi
 on:
-  push:
-    branches: [ main ]
+  release:
+    types: [published]
 
 jobs:
   build-n-publish-pypi:
@@ -36,7 +36,6 @@ jobs:
           .
       
       - name: Publish distribution 📦 to PyPI
-        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: pypa/gh-action-pypi-publish@release/v1.6
         with:
           print_hash: true
