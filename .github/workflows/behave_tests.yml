@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    name: Build and Test on ${{ matrix.os }}
+    name: Build and Test on ${{ matrix.os }} using Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
@@ -17,7 +17,6 @@ jobs:
         python-version: ['3.9', '3.10', '3.11']
         exclude:
           - os: windows-latest
-            # Broken ATM, see previous runs
             python-version: '3.11'
 
     steps:
@@ -32,26 +31,26 @@ jobs:
       - name: Install python3 requirements...
         uses: knicknic/os-specific-run@v1.0.4
         with:
-          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
-                 python -m pip install --upgrade wheel && 
-                 python -m pip install --upgrade setuptools &&
-                 python -m pip install --upgrade pip &&
-                 python -m pip install -r behave_tests/requirements.txt &&
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+                 python -m pip install --upgrade wheel ; 
+                 python -m pip install --upgrade setuptools ;
+                 python -m pip install --upgrade pip ;
+                 python -m pip install -r behave_tests/requirements.txt ;
                  python setup.py install
 
-          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
-                 python -m pip install --upgrade wheel &&
-                 python -m pip install --upgrade setuptools &&
-                 python -m pip install --upgrade pip &&
-                 python -m pip install -r behave_tests/requirements.txt &&
+          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+                 python -m pip install --upgrade wheel ;
+                 python -m pip install --upgrade setuptools ;
+                 python -m pip install --upgrade pip ;
+                 python -m pip install -r behave_tests/requirements.txt ;
                  python setup.py install
 
-          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ &&
-                   python -m pip install --upgrade wheel &&
-                   python -m pip install --upgrade setuptools &&
-                   python -m pip install --upgrade pip &&
-                   python -m pip install -r behave_tests/requirements.txt &&
-                   python setup.py install
+          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
+                   python -m pip install --upgrade wheel ;
+                   python -m pip install --upgrade setuptools ;
+                   python -m pip install --upgrade pip ;
+                   python -m pip install -r behave_tests/requirements.txt ;
+                   python setup.py install --user
       
       - name: Run behave tests...
         env:

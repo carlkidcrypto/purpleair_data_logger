@@ -10,11 +10,11 @@ def read_file(filename):
 
 setup(
     name="purpleair_data_logger",
-    version="1.2.0a0",
+    version="1.2.0a1",
     license="MIT",
     author="Carlos Santos",
     author_email="27721404+carlkid1499@users.noreply.github.com",
-    long_description=read_file("README.md"),
+    long_description=read_file("README.md", "utf-8"),
     long_description_content_type="text/markdown",
     packages=["purpleair_data_logger"],
     url="https://github.com/carlkid1499/purpleair_data_logger",
