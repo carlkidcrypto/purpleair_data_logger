@@ -20,7 +20,6 @@ SLEEP_BETWEEN_REPEATED_API_CALLS = 1.1 * 60  # mins * seconds
 def create_configuration_file_with_settings_field_omitted(
     context, config_file_type=None, settings_field=None
 ):
-
     if settings_field is None:
         raise ValueError(
             "In step 'create_configuration_file_with_settings_field_omitted' parameter 'settings_field' can not be `None`!"
@@ -63,7 +62,6 @@ def create_configuration_file_with_settings_field_omitted(
     "we start the CSVDatalogger using above {config_file_type} sensor configuration file"
 )
 def start_the_csv_data_logger(context, config_file_type=None):
-
     if config_file_type is None:
         raise ValueError(
             "In step 'start_the_csv_data_logger' parameter 'config_file_type' can not be `None`!"
@@ -124,7 +122,6 @@ def start_the_csv_data_logger(context, config_file_type=None):
 
 @then("the CSVDatalogger should {expected_outcome} with error message {error_message}")
 def check_started_data_logger(context, expected_outcome=None, error_message=None):
-
     if expected_outcome is None:
         raise ValueError(
             "In step 'check_started_data_logger' parameter 'expected_outcome' can not be `None`!"
@@ -160,7 +157,6 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
     )
 
     if expected_outcome == "not start":
-
         if "single" in context.test_settings_file_name_and_path:
             assert_that(
                 single_run_loop_msg,
@@ -199,10 +195,9 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
                 or context.python_version_list[1] == "10"
             )
             and context.operating_system == "windows"
-            and context.test_settings_file_name_and_path
-            == "settings_file_with_custom_fields_value_2.json"
+            and "settings_file_with_custom_location_type_value_2.json"
+            in context.test_settings_file_name_and_path
         ):
-
             if "single" in context.test_settings_file_name_and_path:
                 assert_that(
                     single_run_loop_msg,
@@ -249,7 +244,6 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
 
 @given("we set {field} in {config_file_type} sensor configuration file to {value}")
 def set_field_in_json_to_value(context, field=None, config_file_type=None, value=None):
-
     if field is None:
         raise ValueError(
             "In step 'set_field_in_json_to_value' parameter 'field' can not be `None`!"

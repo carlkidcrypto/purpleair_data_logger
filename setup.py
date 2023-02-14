@@ -4,7 +4,9 @@ import os
 
 
 def read_file(filename):
-    with open(os.path.join(os.path.dirname(__file__), filename),  encoding="utf-8") as file:
+    with open(
+        os.path.join(os.path.dirname(__file__), filename), encoding="utf-8"
+    ) as file:
         return file.read()
 
 
