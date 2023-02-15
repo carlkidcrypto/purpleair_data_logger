@@ -196,13 +196,12 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
             )
             and context.operating_system == "windows"
             and (
-                "multiple_ settings_file_with_custom_location_type_value_2"
-                in context.test_settings_file_name_and_path
-                or "multiple_settings_file_with_custom_fields_value_2"
-                in context.test_settings_file_name_and_path
-                or "multiple_settings_file_with_custom_location_type_value_1"
-                in context.test_settings_file_name_and_path
-                or "multiple_settings_file_with_custom_max_age_value_1"
+                [
+                    "multiple_settings_file_with_custom_fields_value_2",
+                    "multiple_settings_file_with_custom_location_type_value_2",
+                    "multiple_settings_file_with_custom_max_age_value_1",
+                    "multiple_settings_file_with_custom_modified_since_value_1",
+                ]
                 in context.test_settings_file_name_and_path
             )
         ):
