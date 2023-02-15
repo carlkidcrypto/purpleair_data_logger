@@ -195,24 +195,22 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
                 or context.python_version_list[1] == "10"
             )
             and context.operating_system == "windows"
-            and "settings_file_with_custom_location_type_value_2.json"
-            in context.test_settings_file_name_and_path
+            and (
+                "multiple_ settings_file_with_custom_location_type_value_2"
+                in context.test_settings_file_name_and_path
+                or "multiple_settings_file_with_custom_fields_value_2"
+                in context.test_settings_file_name_and_path
+                or "multiple_settings_file_with_custom_location_type_value_1"
+                in context.test_settings_file_name_and_path
+                or "multiple_settings_file_with_custom_max_age_value_1"
+                in context.test_settings_file_name_and_path
+            )
         ):
-            if "single" in context.test_settings_file_name_and_path:
-                assert_that(
-                    single_run_loop_msg,
-                    is_in(file_out_contents),
-                    "Checking contents of stdout file...",
-                )
-
-            elif "multiple" in context.test_settings_file_name_and_path:
-                assert_that(
-                    multi_run_loop_msg,
-                    is_in(file_out_contents),
-                    "Checking contents of stdout file...",
-                )
-            else:
-                raise ValueError("Invalid file. Only `single` or `multiple` supported!")
+            assert_that(
+                multi_run_loop_msg,
+                is_in(file_out_contents),
+                "Checking contents of stdout file...",
+            )
 
             assert_that(
                 "We weren't able to write the current data!",
