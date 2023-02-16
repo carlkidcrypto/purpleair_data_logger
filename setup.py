@@ -4,13 +4,15 @@ import os
 
 
 def read_file(filename):
-    with open(os.path.join(os.path.dirname(__file__), filename)) as file:
+    with open(
+        os.path.join(os.path.dirname(__file__), filename), encoding="utf-8"
+    ) as file:
         return file.read()
 
 
 setup(
     name="purpleair_data_logger",
-    version="1.2.0a0",
+    version="1.2.0a1",
     license="MIT",
     author="Carlos Santos",
     author_email="27721404+carlkid1499@users.noreply.github.com",

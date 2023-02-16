@@ -37,7 +37,7 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
     PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES,
     PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
     PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
-    PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
+    PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
 )
 import pg8000
 import argparse
@@ -138,8 +138,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # Before we do anything let's get a list of all the current active compression policies
-        query_result = self._db_conn.run(
-            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        query_result = self._db_conn.run(PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
         # Convert our tuple query_result into a list
         compression_policy_list = []
@@ -164,11 +163,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         self._db_conn.run(
-            PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
+            PSQL_CREATE_MATERIALIZED_VIEW_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
+        )
         self._db_conn.run(
-            PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
+            PSQL_CREATE_CONTINUOUS_AGGREGATE_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
+        )
         self._db_conn.run(
-            PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE)
+            PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE
+        )
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
