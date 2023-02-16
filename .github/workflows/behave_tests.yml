@@ -59,11 +59,22 @@ jobs:
         uses: knicknic/os-specific-run@v1.0.4
         with:
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ ;
-                 behave --junit --junit-directory junit_reports
+                 behave --junit --junit-directory junit_reports ;
+                 cd junit_reports ;
+                 mv TESTS-features.multiple_sensor_data_logger.xml TESTS-features.multiple_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml; 
+                 mv TESTS-features.single_sensor_data_logger.xml TESTS-features.single_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml;
+
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/  ;
-                 behave --junit --junit-directory junit_reports
+                 behave --junit --junit-directory junit_reports ;
+                 cd junit_reports ;
+                 mv TESTS-features.multiple_sensor_data_logger.xml TESTS-features.multiple_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml; 
+                 mv TESTS-features.single_sensor_data_logger.xml TESTS-features.single_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml;
+
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\behave_tests\ ;
-                   behave --junit --junit-directory junit_reports
+                   behave --junit --junit-directory junit_reports ;
+                   cd junit_reports ;
+                   mv TESTS-features.multiple_sensor_data_logger.xml TESTS-features.multiple_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml; 
+                   mv TESTS-features.single_sensor_data_logger.xml TESTS-features.single_sensor_data_logger_${{matrix.os}}_${{matrix.python-version}}.xml;
       
       - name: Upload Junit Reports
         if: always()
