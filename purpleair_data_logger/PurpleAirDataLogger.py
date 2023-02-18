@@ -5,8 +5,8 @@
     A python base Data Logger class.
 """
 
-from purpleair_data_logger.PurpleAirAPI import PurpleAirAPI, debug_log
-from purpleair_data_logger.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
+from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log
+from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from time import sleep
 import json
 
