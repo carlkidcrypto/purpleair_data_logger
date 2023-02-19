@@ -138,7 +138,8 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # Before we do anything let's get a list of all the current active compression policies
-        query_result = self._db_conn.run(PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        query_result = self._db_conn.run(
+            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
         # Convert our tuple query_result into a list
         compression_policy_list = []
@@ -471,6 +472,16 @@ if __name__ == "__main__":
                         path to a json file containing the parameters to send a multiple
                         sensor request.""",
     )
+    parser.add_argument(
+        "-paa_group_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_group_sensor_request_json_file",
+        type=str,
+        help="""The
+                    path to a json file containing the parameters to send a group
+                    sensor request.""",
+    )
 
     args = parser.parse_args()
 
@@ -509,8 +520,10 @@ if __name__ == "__main__":
         args.paa_read_key, the_psql_db_conn
     )
 
-    # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+    # Fourth choose what run method to execute depending on
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
     the_paa_psql_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file
     )

@@ -67,7 +67,8 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
         https://api.purpleair.com/#api-sensors-get-sensor-data
         """
 
-        self._db_conn.execute(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
+        self._db_conn.execute(
+            CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
         self._db_conn.execute(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
         self._db_conn.execute(CREATE_MISCELLANEOUS_FIELDS)
         self._db_conn.execute(CREATE_PM1_0_FIELDS)
@@ -319,6 +320,16 @@ if __name__ == "__main__":
                         path to a json file containing the parameters to send a multiple
                         sensor request.""",
     )
+    parser.add_argument(
+        "-paa_group_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_group_sensor_request_json_file",
+        type=str,
+        help="""The
+                    path to a json file containing the parameters to send a group
+                    sensor request.""",
+    )
 
     args = parser.parse_args()
 
@@ -331,8 +342,10 @@ if __name__ == "__main__":
         args.paa_read_key, args.db_name
     )
 
-    # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+    # Third choose what run method to execute depending on
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
     the_paa_sqlite_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file
     )

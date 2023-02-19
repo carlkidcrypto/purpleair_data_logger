@@ -95,7 +95,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         # Step one make the self._path_to_save_csv_files_in if it doesn't exist already
         if exists(self._path_to_save_csv_files_in) == False:
-            print(f"Creating storage directory: {self._path_to_save_csv_files_in}...")
+            print(
+                f"Creating storage directory: {self._path_to_save_csv_files_in}...")
             makedirs(self._path_to_save_csv_files_in)
 
         try:
@@ -168,7 +169,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
                     PARTICLE_COUNT_FIELDS_HEADER + "\n"
                 )
 
-                thingspeak_fields_file_stream.write(THINGSPEAK_FIELDS_HEADER + "\n")
+                thingspeak_fields_file_stream.write(
+                    THINGSPEAK_FIELDS_HEADER + "\n")
 
                 self._did_we_write_the_header_bool = True
 
@@ -523,6 +525,16 @@ if __name__ == "__main__":
                         path to a json file containing the parameters to send a multiple
                         sensor request.""",
     )
+    parser.add_argument(
+        "-paa_group_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_group_sensor_request_json_file",
+        type=str,
+        help="""The
+                        path to a json file containing the parameters to send a group
+                        sensor request.""",
+    )
 
     args = parser.parse_args()
 
@@ -535,8 +547,10 @@ if __name__ == "__main__":
         args.paa_read_key, args.save_file_path
     )
 
-    # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+    # Third choose what run method to execute depending on
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
     the_paa_csv_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file
     )
