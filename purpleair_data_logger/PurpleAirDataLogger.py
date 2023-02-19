@@ -307,7 +307,55 @@ class PurpleAirDataLogger:
                         f"No sensors will be added to the `group_id` - {group_id_to_use}...")
 
             assert(group_id_to_use is not None)
-            
+            members_data = self._purpleair_api_obj.request_members_data(group_id=group_id_to_use, fields=json_config_file["fields"],
+                                                                        location_type=json_config_file["location_type"],
+                                                                        read_keys=json_config_file["read_keys"],
+                                                                        show_only=json_config_file["show_only"],
+                                                                        modified_since=json_config_file["modified_since"],
+                                                                        max_age=json_config_file["max_age"],
+                                                                        nwlng=json_config_file["nwlng"],
+                                                                        nwlat=json_config_file["nwlat"],
+                                                                        selng=json_config_file["selng"],
+                                                                        selat=json_config_file["selat"])
+
+            assert(group_id_to_use == members_data["group_id"])
+            # The sensors data will look something like this:
+            # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
+            # 'max_age': 604800, 'firmware_default_version': '7.02', 'fields': ['sensor_index', 'name'], 'data': [[77, 'Sunnyside'],
+            # [81, 'Sherwood Hills 2']]}
+            # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
+            # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
+            # Now lets build and feed what the store_sensor_data() method expects.
+
+            # Extract the 'fields' and 'data' parts to make it easier on ourselves
+            extracted_fields = members_data["fields"]
+            extracted_data = members_data["data"]
+
+            # Grab each list of data items from extracted data
+            for data_list in extracted_data:
+                # Start making our modified sensor data object that will be passed to the
+                # self.store_sensor_data() method
+                the_modified_sensor_data = {}
+                the_modified_sensor_data["data_time_stamp"] = members_data[
+                    "data_time_stamp"
+                ]
+                for data_index, data_item in enumerate(data_list):
+                    the_modified_sensor_data[
+                        str(extracted_fields[data_index])
+                    ] = data_item
+
+                the_modified_sensor_data = self._validate_sensor_data_before_insert(
+                    the_modified_sensor_data
+                )
+
+                # Store the current data
+                self.store_sensor_data(the_modified_sensor_data)
+
+            debug_log(
+                f"""Waiting {self._send_request_every_x_seconds} seconds before
+                  requesting new data again..."""
+            )
+
             sleep(self.send_request_every_x_seconds())
 
     def validate_parameters_and_run(
