@@ -391,7 +391,12 @@ class PurpleAirDataLogger:
             sleep(self.send_request_every_x_seconds())
 
     def _construct_store_sensor_data_type(self, raw_data):
-        """ """
+        """
+        A method to build the dict data type that the store_sensor_data method expects.
+
+        :param dict raw_data: The return value from either self._purpleair_api_obj.request_members_data or
+                              self._purpleair_api_obj.request_multiple_sensors_data.
+        """
 
         # Extract the 'fields' and 'data' parts to make it easier on ourselves
         extracted_fields = raw_data["fields"]
