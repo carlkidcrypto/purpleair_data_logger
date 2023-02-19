@@ -272,29 +272,13 @@ class PurpleAirDataLogger:
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
 
-            # Extract the 'fields' and 'data' parts to make it easier on ourselves
-            extracted_fields = sensors_data["fields"]
-            extracted_data = sensors_data["data"]
+            store_sensor_data_type_list = self._construct_store_sensor_data_type(
+                sensors_data
+            )
 
-            # Grab each list of data items from extracted data
-            for data_list in extracted_data:
-                # Start making our modified sensor data object that will be passed to the
-                # self.store_sensor_data() method
-                the_modified_sensor_data = {}
-                the_modified_sensor_data["data_time_stamp"] = sensors_data[
-                    "data_time_stamp"
-                ]
-                for data_index, data_item in enumerate(data_list):
-                    the_modified_sensor_data[
-                        str(extracted_fields[data_index])
-                    ] = data_item
-
-                the_modified_sensor_data = self._validate_sensor_data_before_insert(
-                    the_modified_sensor_data
-                )
-
+            for store_sensor_data_type in store_sensor_data_type_list:
                 # Store the current data
-                self.store_sensor_data(the_modified_sensor_data)
+                self.store_sensor_data(store_sensor_data_type)
 
             debug_log(
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
@@ -391,29 +375,13 @@ class PurpleAirDataLogger:
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
 
-            # Extract the 'fields' and 'data' parts to make it easier on ourselves
-            extracted_fields = members_data["fields"]
-            extracted_data = members_data["data"]
+            store_sensor_data_type_list = self._construct_store_sensor_data_type(
+                members_data
+            )
 
-            # Grab each list of data items from extracted data
-            for data_list in extracted_data:
-                # Start making our modified sensor data object that will be passed to the
-                # self.store_sensor_data() method
-                the_modified_sensor_data = {}
-                the_modified_sensor_data["data_time_stamp"] = members_data[
-                    "data_time_stamp"
-                ]
-                for data_index, data_item in enumerate(data_list):
-                    the_modified_sensor_data[
-                        str(extracted_fields[data_index])
-                    ] = data_item
-
-                the_modified_sensor_data = self._validate_sensor_data_before_insert(
-                    the_modified_sensor_data
-                )
-
+            for store_sensor_data_type in store_sensor_data_type_list:
                 # Store the current data
-                self.store_sensor_data(the_modified_sensor_data)
+                self.store_sensor_data(store_sensor_data_type)
 
             debug_log(
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
@@ -421,6 +389,35 @@ class PurpleAirDataLogger:
             )
 
             sleep(self.send_request_every_x_seconds())
+
+    def _construct_store_sensor_data_type(self, raw_data):
+        """ """
+
+        # Extract the 'fields' and 'data' parts to make it easier on ourselves
+        extracted_fields = raw_data["fields"]
+        extracted_data = raw_data["data"]
+        store_sensor_data_type_list = []
+
+        # Grab each list of data items from extracted data
+        for data_list in extracted_data:
+            # Start making our modified sensor data object that will be passed to the
+            # self.store_sensor_data() method
+            the_modified_sensor_data_dict = {}
+            the_modified_sensor_data_dict["data_time_stamp"] = raw_data[
+                "data_time_stamp"
+            ]
+            for data_index, data_item in enumerate(data_list):
+                the_modified_sensor_data_dict[
+                    str(extracted_fields[data_index])
+                ] = data_item
+
+            the_modified_sensor_data_dict = self._validate_sensor_data_before_insert(
+                the_modified_sensor_data_dict
+            )
+
+            store_sensor_data_type_list.append(the_modified_sensor_data_dict)
+
+        return store_sensor_data_type_list
 
     def validate_parameters_and_run(
         self,
