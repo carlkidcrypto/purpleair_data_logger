@@ -53,6 +53,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a multiple sensor request.
 ```
 
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
 ### High Level Design
 
 ![PAA_Data_Logger_Software_Stack.drawio.png](/diagrams/PAA_Data_Logger_Software_Stack.drawio.png)
@@ -86,6 +98,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a multiple sensor request.
 ```
 
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
 ## Usage PurpleAirSQLiteDataLogger.py
 
 ```bash
@@ -104,6 +128,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a single sensor request.
   -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a multiple sensor request.
+```
+
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
 ```
 
 ## Sample JSON Configuration File(s)
