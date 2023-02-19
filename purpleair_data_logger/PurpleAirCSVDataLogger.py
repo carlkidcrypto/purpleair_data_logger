@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkid1499, All rights reserved.
+    Copyright 2023 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
     Data will be inserted into CSV files.
     
@@ -13,7 +13,7 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger, generate_common_arg_parser
 from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
     STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME,
     STATION_INFORMATION_AND_STATUS_FIELDS_HEADER,
@@ -36,7 +36,6 @@ from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
 )
 from os import makedirs
 from os.path import exists
-import argparse
 
 
 class PurpleAirCSVDataLogger(PurpleAirDataLogger):
@@ -486,52 +485,14 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Collect data from PurpleAir sensors and store it in CSV files!"
-    )
+    parser = generate_common_arg_parser("Collect data from PurpleAir sensors and store it in CSV files!")
+
     parser.add_argument(
         "-save_file_path",
         required=True,
         dest="save_file_path",
         type=str,
         help="""The path to save CSV files in.""",
-    )
-    parser.add_argument(
-        "-paa_read_key",
-        required=True,
-        dest="paa_read_key",
-        type=str,
-        help="""The PurpleAirAPI Read key""",
-    )
-    parser.add_argument(
-        "-paa_single_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_single_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a single
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_multiple_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_multiple_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a multiple
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_group_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_group_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a group
-                        sensor request.""",
     )
 
     args = parser.parse_args()

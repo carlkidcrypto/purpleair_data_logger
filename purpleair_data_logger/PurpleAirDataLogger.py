@@ -9,6 +9,61 @@ from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from time import sleep
 import json
+import argparse
+
+
+def generate_common_arg_parser(argparse_description=""):
+    """
+        A function to generate the common arguments that all data loggers need
+
+        :param str argparse_description: A description for the argument parser that will be return
+
+        :return An instance of argparse with the common arguments added.
+        """
+
+    parser = argparse.ArgumentParser(
+        description=argparse_description
+    )
+
+    parser.add_argument(
+        "-paa_read_key",
+        required=True,
+        dest="paa_read_key",
+        type=str,
+        help="""The PurpleAirAPI Read key""",
+    )
+    parser.add_argument(
+        "-paa_single_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_single_sensor_request_json_file",
+        type=str,
+        help="""The
+                            path to a json file containing the parameters to send a single
+                            sensor request.""",
+    )
+    parser.add_argument(
+        "-paa_multiple_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_multiple_sensor_request_json_file",
+        type=str,
+        help="""The
+                            path to a json file containing the parameters to send a multiple
+                            sensor request.""",
+    )
+    parser.add_argument(
+        "-paa_group_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_group_sensor_request_json_file",
+        type=str,
+        help="""The
+                            path to a json file containing the parameters to send a group
+                            sensor request.""",
+    )
+
+    return parser
 
 
 class PurpleAirDataLoggerError(Exception):
@@ -35,7 +90,8 @@ class PurpleAirDataLogger:
         """
 
         # Make one instance of our PurpleAirAPI class
-        self._purpleair_api_obj = PurpleAirAPI(your_api_read_key=PurpleAirAPIReadKey)
+        self._purpleair_api_obj = PurpleAirAPI(
+            your_api_read_key=PurpleAirAPIReadKey)
 
         # Define how often we send requests
         self._send_request_every_x_seconds = 65

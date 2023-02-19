@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkid1499, All rights reserved.
+    Copyright 2023 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
     Data will be inserted into a SQLite3 database file.
     
@@ -13,7 +13,7 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger, generate_common_arg_parser
 from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (
     SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
     SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
@@ -281,9 +281,8 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Collect data from PurpleAir sensors and store it a SQLite3 database file!"
-    )
+    parser = generate_common_arg_parser("Collect data from PurpleAir sensors and store it a SQLite3 database file!")
+
     parser.add_argument(
         "-db_name",
         required=True,
@@ -291,43 +290,6 @@ if __name__ == "__main__":
         type=str,
         help="""The path and name for the SQLite3 database
                         file! i.e database_name.db""",
-    )
-    parser.add_argument(
-        "-paa_read_key",
-        required=True,
-        dest="paa_read_key",
-        type=str,
-        help="""The PurpleAirAPI Read key""",
-    )
-    parser.add_argument(
-        "-paa_single_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_single_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a single
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_multiple_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_multiple_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a multiple
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_group_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_group_sensor_request_json_file",
-        type=str,
-        help="""The
-                    path to a json file containing the parameters to send a group
-                    sensor request.""",
     )
 
     args = parser.parse_args()
