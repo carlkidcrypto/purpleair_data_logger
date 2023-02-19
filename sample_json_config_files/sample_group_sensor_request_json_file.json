@@ -1,0 +1,5 @@
+{
+    "sensor_group_name": "A Name Goes Here",
+    "add_sensors_to_group": true,
+    "sensor_index_list": [1, 2, 3, 4]
+}
