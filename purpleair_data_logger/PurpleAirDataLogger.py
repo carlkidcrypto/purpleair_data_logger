@@ -263,48 +263,51 @@ class PurpleAirDataLogger:
                 "_run_loop_for_storing_group_sensors_data - Beep boop I am alive...\n\n"
             )
 
-            # Get a current list of sensors that the API key provided owns
-            group_dict_list_data = self._purpleair_api_obj.request_group_list_data()[
-                "groups"]
+            if group_id_to_use is None:
+                # Get a current list of sensors that the API key provided owns
+                group_dict_list_data = self._purpleair_api_obj.request_group_list_data()[
+                    "groups"]
 
-            # Now make the sensor_group_name if it doesn't already exist.
-            does_sensor_group_name_exist = False
-            for item in group_dict_list_data:
-                name = item["name"]
-                id = item["id"]
-                # Find the first name that matches our sensor_group_name. No use to continue further
-                if bool(name == json_config_file["sensor_group_name"]):
-                    does_sensor_group_name_exist = True
-                    group_id_to_use = id
-                    break
+                # Now make the sensor_group_name if it doesn't already exist.
+                does_sensor_group_name_exist = False
+                for item in group_dict_list_data:
+                    name = item["name"]
+                    id = item["id"]
+                    # Find the first name that matches our sensor_group_name. No use to continue further
+                    if bool(name == json_config_file["sensor_group_name"]):
+                        does_sensor_group_name_exist = True
+                        group_id_to_use = id
+                        break
 
-            if bool(does_sensor_group_name_exist == False):
-                print(
-                    f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created...")
-                retval = self._purpleair_api_obj.post_create_group_data(
-                    json_config_file["sensor_group_name"])
-                group_id_to_use = retval["group_id"]
-                print(
-                    f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`...")
-
-            else:
-                print(
-                    f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` already exists. A new one will not be created...")
-
-            # By now we have a group_id_to_use. Let see if the user wants us to add members
-            if bool(json_config_file["add_sensors_to_group"]):
-                print(
-                    f"Adding the provided sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}...")
-                for sensor_index_val in json_config_file["sensor_index_list"]:
-                    retval = self._purpleair_api_obj.post_create_member(
-                        group_id=group_id_to_use, sensor_index=sensor_index_val)
+                if bool(does_sensor_group_name_exist == False):
                     print(
-                        f"`sensor_index` - {sensor_index_val} successfully added to group...")
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created...")
+                    retval = self._purpleair_api_obj.post_create_group_data(
+                        json_config_file["sensor_group_name"])
+                    group_id_to_use = retval["group_id"]
+                    print(
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`...")
 
-            else:
-                print(
-                    f"No sensors will be added to the `group_id` - {group_id_to_use}...")
+                else:
+                    print(
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` already exists. A new one will not be created...")
 
+                # By now we have a group_id_to_use. Let see if the user wants us to add members
+                if bool(json_config_file["add_sensors_to_group"]):
+                    print(
+                        f"Adding the provided sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}...")
+                    for sensor_index_val in json_config_file["sensor_index_list"]:
+                        retval = self._purpleair_api_obj.post_create_member(
+                            group_id=group_id_to_use, sensor_index=sensor_index_val)
+                        print(
+                            f"`sensor_index` - {sensor_index_val} successfully added to group...")
+
+                else:
+                    print(
+                        f"No sensors will be added to the `group_id` - {group_id_to_use}...")
+
+            assert(group_id_to_use is not None)
+            
             sleep(self.send_request_every_x_seconds())
 
     def validate_parameters_and_run(
