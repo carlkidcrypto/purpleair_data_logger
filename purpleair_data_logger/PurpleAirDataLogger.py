@@ -362,21 +362,26 @@ class PurpleAirDataLogger:
         self,
         paa_multiple_sensor_request_json_file=None,
         paa_single_sensor_request_json_file=None,
+        paa_group_sensor_request_json_file=None
     ):
         """
         A method to choose what run method to execute based on what config file is being used.
         This shall be considered the main entry point for and PurpleAirDataLogger.
 
         :param str paa_multiple_sensor_request_json_file: The path to a json file containing
-                                                          the parameters to send a single sensor request.
+                                                          the parameters to send a single sensor request(s).
         :param str paa_single_sensor_request_json_file: The path to a json file containing
-                                                        the parameters to send a multiple sensor request.
+                                                        the parameters to send a multiple sensor request(s).
+        :param str paa_group_sensor_request_json_file: The path to a json file containing
+                                                        the parameters to send a group sensor request(s).
         """
 
-        # Choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+        # Choose what run method to execute depending on
+        # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
         if (
             paa_multiple_sensor_request_json_file is not None
             and paa_single_sensor_request_json_file is None
+            and paa_group_sensor_request_json_file is None
         ):
             # Now load up that json file
             file_obj = open(paa_multiple_sensor_request_json_file, "r")
@@ -386,6 +391,7 @@ class PurpleAirDataLogger:
         elif (
             paa_multiple_sensor_request_json_file is None
             and paa_single_sensor_request_json_file is not None
+            and paa_group_sensor_request_json_file is None
         ):
             # Now load up that json file
             file_obj = open(paa_single_sensor_request_json_file, "r")
@@ -395,12 +401,23 @@ class PurpleAirDataLogger:
         elif (
             paa_multiple_sensor_request_json_file is None
             and paa_single_sensor_request_json_file is None
+            and paa_group_sensor_request_json_file is not None
+        ):
+            # Now load up that json file
+            file_obj = open(paa_group_sensor_request_json_file, "r")
+            the_json_file = json.load(file_obj)
+            self._run_loop_for_storing_group_sensors_data(the_json_file)
+
+        elif (
+            paa_multiple_sensor_request_json_file is None
+            and paa_single_sensor_request_json_file is None
+            and paa_group_sensor_request_json_file is None
         ):
             raise PurpleAirDataLoggerError(
-                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' were provided. Please provide at least one!"""
+                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' were provided. Please provide at least one!"""
             )
 
         else:
             raise PurpleAirDataLoggerError(
-                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' must be provided. Not both!"""
+                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' must be provided. Not all!"""
             )
