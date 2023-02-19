@@ -138,8 +138,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # Before we do anything let's get a list of all the current active compression policies
-        query_result = self._db_conn.run(
-            PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
+        query_result = self._db_conn.run(PSQL_GET_LIST_OF_ACTIVE_COMPRESSION_POLICIES)
 
         # Convert our tuple query_result into a list
         compression_policy_list = []
@@ -525,5 +524,5 @@ if __name__ == "__main__":
     the_paa_psql_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
-        args.paa_group_sensor_request_json_file
+        args.paa_group_sensor_request_json_file,
     )

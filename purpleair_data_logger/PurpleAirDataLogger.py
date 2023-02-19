@@ -35,8 +35,7 @@ class PurpleAirDataLogger:
         """
 
         # Make one instance of our PurpleAirAPI class
-        self._purpleair_api_obj = PurpleAirAPI(
-            your_api_read_key=PurpleAirAPIReadKey)
+        self._purpleair_api_obj = PurpleAirAPI(your_api_read_key=PurpleAirAPIReadKey)
 
         # Define how often we send requests
         self._send_request_every_x_seconds = 65
@@ -265,8 +264,9 @@ class PurpleAirDataLogger:
 
             if group_id_to_use is None:
                 # Get a current list of sensors that the API key provided owns
-                group_dict_list_data = self._purpleair_api_obj.request_group_list_data()[
-                    "groups"]
+                group_dict_list_data = (
+                    self._purpleair_api_obj.request_group_list_data()["groups"]
+                )
 
                 # Now make the sensor_group_name if it doesn't already exist.
                 does_sensor_group_name_exist = False
@@ -281,44 +281,55 @@ class PurpleAirDataLogger:
 
                 if bool(does_sensor_group_name_exist == False):
                     print(
-                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created...")
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created..."
+                    )
                     retval = self._purpleair_api_obj.post_create_group_data(
-                        json_config_file["sensor_group_name"])
+                        json_config_file["sensor_group_name"]
+                    )
                     group_id_to_use = retval["group_id"]
                     print(
-                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`...")
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`..."
+                    )
 
                 else:
                     print(
-                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` already exists. A new one will not be created...")
+                        f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` already exists. A new one will not be created..."
+                    )
 
                 # By now we have a group_id_to_use. Let see if the user wants us to add members
                 if bool(json_config_file["add_sensors_to_group"]):
                     print(
-                        f"Adding the provided sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}...")
+                        f"Adding the provided sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}..."
+                    )
                     for sensor_index_val in json_config_file["sensor_index_list"]:
                         retval = self._purpleair_api_obj.post_create_member(
-                            group_id=group_id_to_use, sensor_index=sensor_index_val)
+                            group_id=group_id_to_use, sensor_index=sensor_index_val
+                        )
                         print(
-                            f"`sensor_index` - {sensor_index_val} successfully added to group...")
+                            f"`sensor_index` - {sensor_index_val} successfully added to group..."
+                        )
 
                 else:
                     print(
-                        f"No sensors will be added to the `group_id` - {group_id_to_use}...")
+                        f"No sensors will be added to the `group_id` - {group_id_to_use}..."
+                    )
 
-            assert(group_id_to_use is not None)
-            members_data = self._purpleair_api_obj.request_members_data(group_id=group_id_to_use, fields=json_config_file["fields"],
-                                                                        location_type=json_config_file["location_type"],
-                                                                        read_keys=json_config_file["read_keys"],
-                                                                        show_only=json_config_file["show_only"],
-                                                                        modified_since=json_config_file["modified_since"],
-                                                                        max_age=json_config_file["max_age"],
-                                                                        nwlng=json_config_file["nwlng"],
-                                                                        nwlat=json_config_file["nwlat"],
-                                                                        selng=json_config_file["selng"],
-                                                                        selat=json_config_file["selat"])
+            assert group_id_to_use is not None
+            members_data = self._purpleair_api_obj.request_members_data(
+                group_id=group_id_to_use,
+                fields=json_config_file["fields"],
+                location_type=json_config_file["location_type"],
+                read_keys=json_config_file["read_keys"],
+                show_only=json_config_file["show_only"],
+                modified_since=json_config_file["modified_since"],
+                max_age=json_config_file["max_age"],
+                nwlng=json_config_file["nwlng"],
+                nwlat=json_config_file["nwlat"],
+                selng=json_config_file["selng"],
+                selat=json_config_file["selat"],
+            )
 
-            assert(group_id_to_use == members_data["group_id"])
+            assert group_id_to_use == members_data["group_id"]
             # The sensors data will look something like this:
             # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
             # 'max_age': 604800, 'firmware_default_version': '7.02', 'fields': ['sensor_index', 'name'], 'data': [[77, 'Sunnyside'],
@@ -362,7 +373,7 @@ class PurpleAirDataLogger:
         self,
         paa_multiple_sensor_request_json_file=None,
         paa_single_sensor_request_json_file=None,
-        paa_group_sensor_request_json_file=None
+        paa_group_sensor_request_json_file=None,
     ):
         """
         A method to choose what run method to execute based on what config file is being used.

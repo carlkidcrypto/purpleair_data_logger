@@ -67,8 +67,7 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
         https://api.purpleair.com/#api-sensors-get-sensor-data
         """
 
-        self._db_conn.execute(
-            CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
+        self._db_conn.execute(CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE)
         self._db_conn.execute(CREATE_ENVIRONMENTAL_FIELDS_TABLE)
         self._db_conn.execute(CREATE_MISCELLANEOUS_FIELDS)
         self._db_conn.execute(CREATE_PM1_0_FIELDS)
@@ -347,5 +346,5 @@ if __name__ == "__main__":
     the_paa_sqlite_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
-        args.paa_group_sensor_request_json_file
+        args.paa_group_sensor_request_json_file,
     )

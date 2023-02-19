@@ -95,8 +95,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         # Step one make the self._path_to_save_csv_files_in if it doesn't exist already
         if exists(self._path_to_save_csv_files_in) == False:
-            print(
-                f"Creating storage directory: {self._path_to_save_csv_files_in}...")
+            print(f"Creating storage directory: {self._path_to_save_csv_files_in}...")
             makedirs(self._path_to_save_csv_files_in)
 
         try:
@@ -169,8 +168,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
                     PARTICLE_COUNT_FIELDS_HEADER + "\n"
                 )
 
-                thingspeak_fields_file_stream.write(
-                    THINGSPEAK_FIELDS_HEADER + "\n")
+                thingspeak_fields_file_stream.write(THINGSPEAK_FIELDS_HEADER + "\n")
 
                 self._did_we_write_the_header_bool = True
 
@@ -552,5 +550,5 @@ if __name__ == "__main__":
     the_paa_csv_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
-        args.paa_group_sensor_request_json_file
+        args.paa_group_sensor_request_json_file,
     )
