@@ -13,7 +13,10 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger, generate_common_arg_parser
+from purpleair_data_logger.PurpleAirDataLogger import (
+    PurpleAirDataLogger,
+    generate_common_arg_parser,
+)
 from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
     STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME,
     STATION_INFORMATION_AND_STATUS_FIELDS_HEADER,
@@ -485,7 +488,9 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = generate_common_arg_parser("Collect data from PurpleAir sensors and store it in CSV files!")
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and store it in CSV files!"
+    )
 
     parser.add_argument(
         "-save_file_path",

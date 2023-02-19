@@ -13,7 +13,10 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger, generate_common_arg_parser
+from purpleair_data_logger.PurpleAirDataLogger import (
+    PurpleAirDataLogger,
+    generate_common_arg_parser,
+)
 from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (
     SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
     SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
@@ -281,7 +284,9 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = generate_common_arg_parser("Collect data from PurpleAir sensors and store it a SQLite3 database file!")
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and store it a SQLite3 database file!"
+    )
 
     parser.add_argument(
         "-db_name",

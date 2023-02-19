@@ -13,7 +13,10 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger, generate_common_arg_parser
+from purpleair_data_logger.PurpleAirDataLogger import (
+    PurpleAirDataLogger,
+    generate_common_arg_parser,
+)
 from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
     PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
     PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
@@ -396,7 +399,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = generate_common_arg_parser("Collect data from PurpleAir sensors and insert into a database!")
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and insert into a database!"
+    )
 
     parser.add_argument(
         "-db_drop_all_tables",

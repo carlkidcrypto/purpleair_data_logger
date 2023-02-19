@@ -14,16 +14,14 @@ import argparse
 
 def generate_common_arg_parser(argparse_description=""):
     """
-        A function to generate the common arguments that all data loggers need
+    A function to generate the common arguments that all data loggers need
 
-        :param str argparse_description: A description for the argument parser that will be return
+    :param str argparse_description: A description for the argument parser that will be return
 
-        :return An instance of argparse with the common arguments added.
-        """
+    :return An instance of argparse with the common arguments added.
+    """
 
-    parser = argparse.ArgumentParser(
-        description=argparse_description
-    )
+    parser = argparse.ArgumentParser(description=argparse_description)
 
     parser.add_argument(
         "-paa_read_key",
@@ -90,8 +88,7 @@ class PurpleAirDataLogger:
         """
 
         # Make one instance of our PurpleAirAPI class
-        self._purpleair_api_obj = PurpleAirAPI(
-            your_api_read_key=PurpleAirAPIReadKey)
+        self._purpleair_api_obj = PurpleAirAPI(your_api_read_key=PurpleAirAPIReadKey)
 
         # Define how often we send requests
         self._send_request_every_x_seconds = 65
