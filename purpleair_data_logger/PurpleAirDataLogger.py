@@ -357,7 +357,6 @@ class PurpleAirDataLogger:
                         f"Attempting to add the sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}..."
                     )
                     for sensor_index_val in json_config_file["sensor_index_list"]:
-
                         try:
                             retval = self._purpleair_api_obj.post_create_member(
                                 group_id=group_id_to_use, sensor_index=sensor_index_val
