@@ -46,7 +46,9 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     The logger class. For now we will insert data into a CSV file.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, path_to_save_csv_files_in):
+    def __init__(
+        self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, path_to_save_csv_files_in
+    ):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         :param object path_to_save_csv_files_in: A string directory path
@@ -54,7 +56,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey)
+        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
         # save off the store path internally for later access
         self._path_to_save_csv_files_in = path_to_save_csv_files_in
@@ -508,7 +510,7 @@ if __name__ == "__main__":
 
     # Second make an instance our our data logger
     the_paa_csv_data_logger = PurpleAirCSVDataLogger(
-        args.paa_read_key, args.save_file_path
+        args.paa_read_key, args.paa_write_key, args.save_file_path
     )
 
     # Third choose what run method to execute depending on

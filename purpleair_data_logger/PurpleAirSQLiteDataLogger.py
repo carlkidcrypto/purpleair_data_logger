@@ -38,7 +38,7 @@ from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (
     CREATE_THINGSPEAK_FIELDS,
     SQLITE_DROP_ALL_TABLES,
 )
-import argparse
+
 import sqlite3
 
 
@@ -47,13 +47,15 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
     The logger class. For now we will insert data into a SQLite3 database file.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, sqlite_data_base_name):
+    def __init__(
+        self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, sqlite_data_base_name
+    ):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey)
+        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
         self._db_conn = sqlite3.connect(sqlite_data_base_name)
 
@@ -305,7 +307,7 @@ if __name__ == "__main__":
 
     # Second make an instance our our data logger
     the_paa_sqlite_data_logger = PurpleAirSQLiteDataLogger(
-        args.paa_read_key, args.db_name
+        args.paa_read_key, args.paa_write_key, args.db_name
     )
 
     # Third choose what run method to execute depending on

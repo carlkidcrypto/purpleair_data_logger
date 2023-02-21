@@ -5,7 +5,7 @@
     A python base Data Logger class.
 """
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log
+from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log, PurpleAirAPIError
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from time import sleep
 import json
@@ -30,6 +30,15 @@ def generate_common_arg_parser(argparse_description=""):
         type=str,
         help="""The PurpleAirAPI Read key""",
     )
+
+    parser.add_argument(
+        "-paa_write_key",
+        required=True,
+        dest="paa_write_key",
+        type=str,
+        help="""The PurpleAirAPI write key""",
+    )
+
     parser.add_argument(
         "-paa_single_sensor_request_json_file",
         required=False,
@@ -40,6 +49,7 @@ def generate_common_arg_parser(argparse_description=""):
                             path to a json file containing the parameters to send a single
                             sensor request.""",
     )
+
     parser.add_argument(
         "-paa_multiple_sensor_request_json_file",
         required=False,
@@ -50,6 +60,7 @@ def generate_common_arg_parser(argparse_description=""):
                             path to a json file containing the parameters to send a multiple
                             sensor request.""",
     )
+
     parser.add_argument(
         "-paa_group_sensor_request_json_file",
         required=False,
@@ -77,18 +88,21 @@ class PurpleAirDataLoggerError(Exception):
 class PurpleAirDataLogger:
     """
     The Base Data Logger class. Will define common methods used by other data loggers. For
-    example, PSQLDataLogger and CSVDataLogger. Inheritors of this class will only need to define
-    their own 'store_sensor_data' method.
+    example, PSQLDataLogger, CSVDataLogger, or SQLiteDataLogger. Inheritors of this class
+    will only need to define their own 'store_sensor_data' method.
     """
 
-    def __init__(self, PurpleAirAPIReadKey):
+    def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         :param object psql_db_conn: A valid PG8000 database connection
         """
 
         # Make one instance of our PurpleAirAPI class
-        self._purpleair_api_obj = PurpleAirAPI(your_api_read_key=PurpleAirAPIReadKey)
+        self._purpleair_api_obj = PurpleAirAPI(
+            your_api_read_key=PurpleAirAPIReadKey,
+            your_api_write_key=PurpleAirAPIWriteKey,
+        )
 
         # Define how often we send requests
         self._send_request_every_x_seconds = 65
@@ -327,6 +341,10 @@ class PurpleAirDataLogger:
                     print(
                         f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`..."
                     )
+                    print(
+                        f"Waiting {self.send_request_every_x_seconds} seconds for group to be created on server..."
+                    )
+                    sleep(self.send_request_every_x_seconds)
 
                 else:
                     print(
@@ -336,15 +354,29 @@ class PurpleAirDataLogger:
                 # By now we have a group_id_to_use. Let see if the user wants us to add members
                 if bool(json_config_file["add_sensors_to_group"]):
                     print(
-                        f"Adding the provided sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}..."
+                        f"Attempting to add the sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}..."
                     )
                     for sensor_index_val in json_config_file["sensor_index_list"]:
-                        retval = self._purpleair_api_obj.post_create_member(
-                            group_id=group_id_to_use, sensor_index=sensor_index_val
-                        )
-                        print(
-                            f"`sensor_index` - {sensor_index_val} successfully added to group..."
-                        )
+
+                        try:
+                            retval = self._purpleair_api_obj.post_create_member(
+                                group_id=group_id_to_use, sensor_index=sensor_index_val
+                            )
+                            print(
+                                f"`sensor_index` - {sensor_index_val} successfully added to group..."
+                            )
+
+                        except PurpleAirAPIError as err:
+                            if (
+                                "409: DuplicateGroupEntryError - This sensor already exists in this group."
+                                in err.message
+                            ):
+                                print(
+                                    f"`sensor_index` - {sensor_index_val} already exists in group..."
+                                )
+
+                            else:
+                                raise err
 
                 else:
                     print(

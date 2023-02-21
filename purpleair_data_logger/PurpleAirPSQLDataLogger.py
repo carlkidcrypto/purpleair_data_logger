@@ -53,14 +53,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     database. Then we will use Grafana to visualize said data.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, psql_db_conn):
+    def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, psql_db_conn):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         :param object psql_db_conn: A valid PG8000 database connection
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey)
+        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
         # Make our psql database connection
         self._db_conn = psql_db_conn
@@ -482,7 +482,7 @@ if __name__ == "__main__":
 
     # Third make an instance our our data logger
     the_paa_psql_data_logger = PurpleAirPSQLDataLogger(
-        args.paa_read_key, the_psql_db_conn
+        args.paa_read_key, args.paa_write_key, the_psql_db_conn
     )
 
     # Fourth choose what run method to execute depending on
