@@ -1,35 +1,38 @@
 ###############################################################################
-# Copyright 2022 carlkid1499, All rights reserved.
+# Copyright 2023 carlkid1499, All rights reserved.
 # Behavior driven tests for the purpleair_data_logger.
 # This file will test the Behavior for the CSVDatalogger when a
-# multiple sensor configuration file is passed in
+# group sensor configuration file is passed in
 ###############################################################################
 
-Feature: A multiple sensor configuration file is passed into the CSVDatalogger
+Feature: A group sensor configuration file is passed into the CSVDatalogger
 
-    Scenario Outline: An invalid multiple sensor configuration file is provided
-        Given we do not provide <settings_field> in multiple sensor configuration file
-        When we start the CSVDatalogger using above multiple sensor configuration file
+    Scenario Outline: An invalid group sensor configuration file is provided
+        Given we do not provide <settings_field> in group sensor configuration file
+        When we start the CSVDatalogger using above group sensor configuration file
         Then the CSVDatalogger should not start with error message KeyError: '<settings_field>'
-        @multiple_sensors_omit
-        Examples: Multiple sensor configuration setting to omit
-            | settings_field |
-            | fields         |
-            | location_type  |
-            | read_keys      |
-            | show_only      |
-            | modified_since |
-            | max_age        |
-            | nwlng          |
-            | nwlat          |
-            | selng          |
-            | selat          |
+        @group_sensors_omit
+        Examples: group sensor configuration setting to omit
+            | settings_field       |
+            | sensor_group_name    |
+            | add_sensors_to_group |
+            | sensor_index_list    |
+            | fields               |
+            | location_type        |
+            | read_keys            |
+            | show_only            |
+            | modified_since       |
+            | max_age              |
+            | nwlng                |
+            | nwlat                |
+            | selng                |
+            | selat                |
 
-    Scenario Outline: Provide valid and invalid values to the json fields inside the multiple sensor configuration settings file
-        Given we set <field> in multiple sensor configuration file to <value>
-        When we start the CSVDatalogger using above multiple sensor configuration file
+    Scenario Outline: Provide valid and invalid values to the json fields inside the group sensor configuration settings file
+        Given we set <field> in group sensor configuration file to <value>
+        When we start the CSVDatalogger using above group sensor configuration file
         Then the CSVDatalogger should <expected_result> with error message <error_message>
-        @multiple_sensors_valid_invalid
+        @group_sensors_valid_invalid
         Examples: Pass valid and invalid values to the fields inside configuration settings file
             | field          | value                                                                                                      | expected_result | error_message                                                                                                                                      |
             | fields         | null                                                                                                       | not start       | purpleair_api.PurpleAirAPI.PurpleAirAPIError: 400: InvalidFieldValueError - A provided field (null) was not found.                                 |

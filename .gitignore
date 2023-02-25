@@ -7,3 +7,4 @@
 **/logs/**
 **.ini
 **.xml
+.DS_Store

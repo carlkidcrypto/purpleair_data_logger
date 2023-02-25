@@ -2,8 +2,8 @@
 
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
-| [![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml) | [![PyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) |
-| --------------- | --------------- | --------------- |
+| [![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml) | [![PyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/black.yml) |
+| --------------- | --------------- | --------------- | --------------- |
 
 ## How to Support This Project
 
@@ -53,6 +53,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a multiple sensor request.
 ```
 
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
 ### High Level Design
 
 ![PAA_Data_Logger_Software_Stack.drawio.png](/diagrams/PAA_Data_Logger_Software_Stack.drawio.png)
@@ -86,6 +98,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a multiple sensor request.
 ```
 
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
 ## Usage PurpleAirSQLiteDataLogger.py
 
 ```bash
@@ -104,6 +128,18 @@ optional arguments:
                         The path to a json file containing the parameters to send a single sensor request.
   -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a multiple sensor request.
+```
+
+Using it with single sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m  purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
 ```
 
 ## Sample JSON Configuration File(s)

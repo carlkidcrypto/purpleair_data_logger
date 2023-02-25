@@ -81,6 +81,8 @@ def start_the_csv_data_logger(context, config_file_type=None):
             f"{context.csvdatalogger_save_file_path}",
             "-paa_read_key",
             f"{context.config.userdata['PAA_API_READ_KEY']}",
+            "-paa_write_key",
+            f"{context.config.userdata['PAA_API_WRITE_KEY']}",
             "-paa_single_sensor_request_json_file",
             f"{context.test_settings_file_name_and_path}",
         ]
@@ -94,7 +96,24 @@ def start_the_csv_data_logger(context, config_file_type=None):
             f"{context.csvdatalogger_save_file_path}",
             "-paa_read_key",
             f"{context.config.userdata['PAA_API_READ_KEY']}",
+            "-paa_write_key",
+            f"{context.config.userdata['PAA_API_WRITE_KEY']}",
             "-paa_multiple_sensor_request_json_file",
+            f"{context.test_settings_file_name_and_path}",
+        ]
+
+    elif config_file_type == "group":
+        command_args = [
+            "python3",
+            "-m",
+            "purpleair_data_logger.PurpleAirCSVDataLogger",
+            "-save_file_path",
+            f"{context.csvdatalogger_save_file_path}",
+            "-paa_read_key",
+            f"{context.config.userdata['PAA_API_READ_KEY']}",
+            "-paa_write_key",
+            f"{context.config.userdata['PAA_API_WRITE_KEY']}",
+            "-paa_group_sensor_request_json_file",
             f"{context.test_settings_file_name_and_path}",
         ]
 
@@ -149,6 +168,9 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
 
     file_out_contents = str(file_out_contents)
     file_err_contents = str(file_err_contents)
+    group_run_loop_msg = (
+        "_run_loop_for_storing_group_sensors_data - Beep boop I am alive..."
+    )
     multi_run_loop_msg = (
         "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive..."
     )
@@ -170,8 +192,18 @@ def check_started_data_logger(context, expected_outcome=None, error_message=None
                 is_in(file_out_contents),
                 "Checking contents of stdout file...",
             )
+
+        elif "group" in context.test_settings_file_name_and_path:
+            assert_that(
+                group_run_loop_msg,
+                is_in(file_out_contents),
+                "Checking contents of stdout file...",
+            )
+
         else:
-            raise ValueError("Invalid file. Only `single` or `multiple` supported!")
+            raise ValueError(
+                "Invalid file. Only `single`, `multiple`, or `group` supported!"
+            )
 
         if error_message != "None":
             assert_that(

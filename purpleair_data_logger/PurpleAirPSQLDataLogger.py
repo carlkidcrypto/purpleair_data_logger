@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkid1499, All rights reserved.
+    Copyright 2023 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
     Data will be inserted into a PSQL database.
 
@@ -13,7 +13,10 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirDataLogger import (
+    PurpleAirDataLogger,
+    generate_common_arg_parser,
+)
 from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
     PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
     PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
@@ -40,7 +43,6 @@ from purpleair_data_logger.PurpleAirPSQLQueryStatements import (
     PSQL_CREATE_DATA_RETENTION_POLICY_ON_SENSOR_INDEX_AND_NAME_1HOUR_AGGREGATE,
 )
 import pg8000
-import argparse
 from datetime import datetime, timezone
 import sys
 
@@ -51,14 +53,14 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     database. Then we will use Grafana to visualize said data.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, psql_db_conn):
+    def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, psql_db_conn):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         :param object psql_db_conn: A valid PG8000 database connection
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey)
+        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
         # Make our psql database connection
         self._db_conn = psql_db_conn
@@ -397,9 +399,10 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Collect data from PurpleAir sensors and insert into a database!"
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and insert into a database!"
     )
+
     parser.add_argument(
         "-db_drop_all_tables",
         action="store_true",
@@ -444,33 +447,6 @@ if __name__ == "__main__":
         type=str,
         help="""The PSQL database password""",
     )
-    parser.add_argument(
-        "-paa_read_key",
-        required=True,
-        dest="paa_read_key",
-        type=str,
-        help="""The PurpleAirAPI Read key""",
-    )
-    parser.add_argument(
-        "-paa_single_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_single_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a single
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_multiple_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_multiple_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a multiple
-                        sensor request.""",
-    )
 
     args = parser.parse_args()
 
@@ -506,11 +482,13 @@ if __name__ == "__main__":
 
     # Third make an instance our our data logger
     the_paa_psql_data_logger = PurpleAirPSQLDataLogger(
-        args.paa_read_key, the_psql_db_conn
+        args.paa_read_key, args.paa_write_key, the_psql_db_conn
     )
 
-    # Fourth choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+    # Fourth choose what run method to execute depending on
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
     the_paa_psql_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file,
     )

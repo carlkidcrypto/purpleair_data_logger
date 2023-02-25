@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkid1499, All rights reserved.
+    Copyright 2023 carlkid1499, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
     Data will be inserted into CSV files.
     
@@ -13,7 +13,10 @@
     single request rather than individual requests in succession."
 """
 
-from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
+from purpleair_data_logger.PurpleAirDataLogger import (
+    PurpleAirDataLogger,
+    generate_common_arg_parser,
+)
 from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
     STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME,
     STATION_INFORMATION_AND_STATUS_FIELDS_HEADER,
@@ -36,7 +39,6 @@ from purpleair_data_logger.PurpleAirCSVDataLoggerConstants import (
 )
 from os import makedirs
 from os.path import exists
-import argparse
 
 
 class PurpleAirCSVDataLogger(PurpleAirDataLogger):
@@ -44,7 +46,9 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     The logger class. For now we will insert data into a CSV file.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, path_to_save_csv_files_in):
+    def __init__(
+        self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, path_to_save_csv_files_in
+    ):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
         :param object path_to_save_csv_files_in: A string directory path
@@ -52,7 +56,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey)
+        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
         # save off the store path internally for later access
         self._path_to_save_csv_files_in = path_to_save_csv_files_in
@@ -486,42 +490,16 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Collect data from PurpleAir sensors and store it in CSV files!"
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and store it in CSV files!"
     )
+
     parser.add_argument(
         "-save_file_path",
         required=True,
         dest="save_file_path",
         type=str,
         help="""The path to save CSV files in.""",
-    )
-    parser.add_argument(
-        "-paa_read_key",
-        required=True,
-        dest="paa_read_key",
-        type=str,
-        help="""The PurpleAirAPI Read key""",
-    )
-    parser.add_argument(
-        "-paa_single_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_single_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a single
-                        sensor request.""",
-    )
-    parser.add_argument(
-        "-paa_multiple_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_multiple_sensor_request_json_file",
-        type=str,
-        help="""The
-                        path to a json file containing the parameters to send a multiple
-                        sensor request.""",
     )
 
     args = parser.parse_args()
@@ -532,11 +510,13 @@ if __name__ == "__main__":
 
     # Second make an instance our our data logger
     the_paa_csv_data_logger = PurpleAirCSVDataLogger(
-        args.paa_read_key, args.save_file_path
+        args.paa_read_key, args.paa_write_key, args.save_file_path
     )
 
-    # Third choose what run method to execute depending on paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file
+    # Third choose what run method to execute depending on
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
     the_paa_csv_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file,
     )
