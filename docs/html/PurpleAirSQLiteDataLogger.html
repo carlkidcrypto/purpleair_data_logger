@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirSQLiteDataLogger module &mdash; PurpleAir Data Logger(s) V1.2.0a2 documentation</title>
+  <title>PurpleAirSQLiteDataLogger module &mdash; PurpleAir Data Logger(s) V1.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -97,7 +97,7 @@ from sensors. If retrieving data from multiple sensors at once, please send a
 single request rather than individual requests in succession.”</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirSQLiteDataLogger.PurpleAirSQLiteDataLogger">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirSQLiteDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirSQLiteDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sqlite_data_base_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirSQLiteDataLogger.PurpleAirSQLiteDataLogger" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirSQLiteDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirSQLiteDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIWriteKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sqlite_data_base_name</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirSQLiteDataLogger.PurpleAirSQLiteDataLogger" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></p>
 <p>The logger class. For now we will insert data into a SQLite3 database file.</p>
 <dl class="py method">

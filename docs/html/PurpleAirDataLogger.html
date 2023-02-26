@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) V1.2.0a2 documentation</title>
+  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) V1.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -94,11 +94,11 @@
 A python base Data Logger class.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Permalink to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIWriteKey</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Permalink to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Base Data Logger class. Will define common methods used by other data loggers. For
-example, PSQLDataLogger and CSVDataLogger. Inheritors of this class will only need to define
-their own ‘store_sensor_data’ method.</p>
+example, PSQLDataLogger, CSVDataLogger, or SQLiteDataLogger. Inheritors of this class
+will only need to define their own ‘store_sensor_data’ method.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_request_every_x_seconds</span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds" title="Permalink to this definition"></a></dt>
