@@ -1,4 +1,4 @@
-# purple_air_data_logger
+# Purple Air Data Logger(s) (PADLs)
 
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
@@ -164,7 +164,7 @@ python3 -m  purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -pa
 
 The following sample json configuration files can be used with any of the data loggers.
 
-### PAA_SINGLE_SENSOR_REQUEST_JSON_FILE Example
+### PAA Single Sensor Request Example
 
 Out of the parameters listed below only "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
 
@@ -180,7 +180,7 @@ Or see this [file](./sample_json_config_files/sample_single_sensor_request_json_
 
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensor-data>
 
-### PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE Example
+### PAA Multiple Sensor Request Example
 
 Out of the parameters listed below only "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
 
@@ -203,77 +203,79 @@ Or see this [file](./sample_json_config_files/sample_multiple_sensor_request_jso
 
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
-> Taken From the PurpleAirAPI documentation:
+The below snippet is taken From the PurpleAirAPI (PAA) documentation:
 
-    Field Type Description
-    fields String 
-    The 'Fields' parameter specifies which 'sensor data fields' to include in the response. It is a comma separated list with one or more of the following:
+```plain text
+  Field Type Description
+  fields String
+  The 'Fields' parameter specifies which 'sensor data fields' to include in the response. It is a comma separated list with one or more of the following:
 
-    Station information and status fields:
-    name, icon, model, hardware, location_type, private, latitude, longitude, altitude, position_rating, led_brightness, firmware_version, firmware_upgrade, rssi, uptime, pa_latency, memory, last_seen, last_modified, date_created, channel_state, channel_flags, channel_flags_manual, channel_flags_auto, confidence, confidence_manual, confidence_auto
+  Station information and status fields:
+  name, icon, model, hardware, location_type, private, latitude, longitude, altitude, position_rating, led_brightness, firmware_version, firmware_upgrade, rssi, uptime, pa_latency, memory, last_seen, last_modified, date_created, channel_state, channel_flags, channel_flags_manual, channel_flags_auto, confidence, confidence_manual, confidence_auto
 
-    Environmental fields:
-    humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b
+  Environmental fields:
+  humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b
 
-    Miscellaneous fields:
-    voc, voc_a, voc_b, ozone1, analog_input
+  Miscellaneous fields:
+  voc, voc_a, voc_b, ozone1, analog_input
 
-    PM1.0 fields:
-    pm1.0, pm1.0_a, pm1.0_b, pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a, pm1.0_cf_1_b
+  PM1.0 fields:
+  pm1.0, pm1.0_a, pm1.0_b, pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a, pm1.0_cf_1_b
 
-    PM2.5 fields:
-    pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5, pm2.5_a, pm2.5_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b
+  PM2.5 fields:
+  pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5, pm2.5_a, pm2.5_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b
 
-    PM2.5 pseudo (simple running) average fields:
-    pm2.5_10minute, pm2.5_10minute_a, pm2.5_10minute_b, pm2.5_30minute, pm2.5_30minute_a, pm2.5_30minute_b, pm2.5_60minute, pm2.5_60minute_a, pm2.5_60minute_b, pm2.5_6hour, pm2.5_6hour_a, pm2.5_6hour_b, pm2.5_24hour, pm2.5_24hour_a, pm2.5_24hour_b, pm2.5_1week, pm2.5_1week_a, pm2.5_1week_b
+  PM2.5 pseudo (simple running) average fields:
+  pm2.5_10minute, pm2.5_10minute_a, pm2.5_10minute_b, pm2.5_30minute, pm2.5_30minute_a, pm2.5_30minute_b, pm2.5_60minute, pm2.5_60minute_a, pm2.5_60minute_b, pm2.5_6hour, pm2.5_6hour_a, pm2.5_6hour_b, pm2.5_24hour, pm2.5_24hour_a, pm2.5_24hour_b, pm2.5_1week, pm2.5_1week_a, pm2.5_1week_b
 
-    PM10.0 fields:
-    pm10.0, pm10.0_a, pm10.0_b, pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b
+  PM10.0 fields:
+  pm10.0, pm10.0_a, pm10.0_b, pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b
 
-    Visibility fields:
-    scattering_coefficient, scattering_coefficient_a, scattering_coefficient_b, deciviews, deciviews_a, deciviews_b, visual_range, visual_range_a, visual_range_b
+  Visibility fields:
+  scattering_coefficient, scattering_coefficient_a, scattering_coefficient_b, deciviews, deciviews_a, deciviews_b, visual_range, visual_range_a, visual_range_b
 
-    Particle count fields:
-    0.3_um_count, 0.3_um_count_a, 0.3_um_count_b, 0.5_um_count, 0.5_um_count_a, 0.5_um_count_b, 1.0_um_count, 1.0_um_count_a, 1.0_um_count_b, 2.5_um_count, 2.5_um_count_a, 2.5_um_count_b, 5.0_um_count, 5.0_um_count_a, 5.0_um_count_b, 10.0_um_count 10.0_um_count_a, 10.0_um_count_b
+  Particle count fields:
+  0.3_um_count, 0.3_um_count_a, 0.3_um_count_b, 0.5_um_count, 0.5_um_count_a, 0.5_um_count_b, 1.0_um_count, 1.0_um_count_a, 1.0_um_count_b, 2.5_um_count, 2.5_um_count_a, 2.5_um_count_b, 5.0_um_count, 5.0_um_count_a, 5.0_um_count_b, 10.0_um_count 10.0_um_count_a, 10.0_um_count_b
 
-    ThingSpeak fields, used to retrieve data from api.thingspeak.com:
-    primary_id_a, primary_key_a, secondary_id_a, secondary_key_a, primary_id_b, primary_key_b, secondary_id_b, secondary_key_b
+  ThingSpeak fields, used to retrieve data from api.thingspeak.com:
+  primary_id_a, primary_key_a, secondary_id_a, secondary_key_a, primary_id_b, primary_key_b, secondary_id_b, secondary_key_b
 
-    For field descriptions, please see the 'sensor data fields'. section.
+  For field descriptions, please see the 'sensor data fields'. section.
 
-    location_type optional Number 
-    The location_type of the sensors.
-    Possible values are: 0 = Outside or 1 = Inside.
+  location_type optional Number
+  The location_type of the sensors.
+  Possible values are: 0 = Outside or 1 = Inside.
 
-    read_keys optional String 
-    A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
+  read_keys optional String
+  A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
 
-    show_only optional String 
-    A comma (,) separated list of sensor_index values. When provided, the results are limited only to the sensors included in this list.
+  show_only optional String
+  A comma (,) separated list of sensor_index values. When provided, the results are limited only to the sensors included in this list.
 
-    modified_since optional long 
-    The modified_since parameter causes only sensors modified after the provided time stamp to be included in the results. Using the time_stamp value from a previous call (recommended) will limit results to those with new values since the last request. Using a value of 0 will match sensors modified at any time.
+  modified_since optional long
+  The modified_since parameter causes only sensors modified after the provided time stamp to be included in the results. Using the time_stamp value from a previous call (recommended) will limit results to those with new values since the last request. Using a value of 0 will match sensors modified at any time.
 
-    max_age optional Integer 
-    Filter results to only include sensors modified or updated within the last number of seconds. Using a value of 0 will match sensors of any age.
+  max_age optional Integer
+  Filter results to only include sensors modified or updated within the last number of seconds. Using a value of 0 will match sensors of any age.
 
-    Default value: 604800
+  Default value: 604800
 
-    nwlng optional Number 
-    A north west longitude for the bounding box.
+  nwlng optional Number
+  A north west longitude for the bounding box.
 
-    Use a bounding box to limit the sensors returned to a specific geographic area. The bounding box is defined by two points, a north west latitude/longitude and a south east latitude/longitude.
+  Use a bounding box to limit the sensors returned to a specific geographic area. The bounding box is defined by two points, a north west latitude/longitude and a south east latitude/longitude.
 
-    nwlat optional Number 
-    A north west latitude for the bounding box.
+  nwlat optional Number
+  A north west latitude for the bounding box.
 
-    selng optional Number 
-    A south east longitude for the bounding box.
+  selng optional Number
+  A south east longitude for the bounding box.
 
-    selat optional Number 
-    A south east latitude for the bounding box.
+  selat optional Number
+  A south east latitude for the bounding box.
+```
 
-### PAA_GROUP_SENSOR_REQUEST_JSON_FILE Example
+### PAA Group Sensor Request Example
 
 Out of the parameters below `sensor_group_name`, `add_sensors_to_group`, and `sensor_index_list` are custom settings not
 defined in the official PAA documentation. These three setting help drive the `group` request feature.
@@ -285,7 +287,7 @@ Otherwise, the first group matching the name will be used.
 
 `sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
 
-The rest of the settings are official PAA settings. They are the same as the [PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE Example](#paa_multiple_sensor_request_json_file-example). Refer above for details.
+The rest of the settings are official PAA settings. They are the same as the [### PAA Multiple Sensor Request Example](#paa-multiple-sensor-request-example). Refer above for details.
 
 ```json
 {
