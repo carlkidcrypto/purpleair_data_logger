@@ -176,6 +176,8 @@ Out of the parameters listed below only "sensor_index" is required. The others a
 }
 ```
 
+Or see this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for another example.
+
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensor-data>
 
 ### PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE Example
@@ -184,7 +186,7 @@ Out of the parameters listed below only "fields" is required. The others are all
 
 ```json
 {
-    "fields": "A string comma delimited list of fields to retrieve",
+    "fields": "A string comma delimited string of fields to retrieve. i.e fields,name,etc",
     "location_type": null,
     "read_keys": null,
     "show_only": null,
@@ -196,6 +198,8 @@ Out of the parameters listed below only "fields" is required. The others are all
     "selat": null
 }
 ```
+
+Or see this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for another example.
 
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
@@ -268,3 +272,42 @@ Out of the parameters listed below only "fields" is required. The others are all
 
     selat optional Number 
     A south east latitude for the bounding box.
+
+### PAA_GROUP_SENSOR_REQUEST_JSON_FILE Example
+
+Out of the parameters below `sensor_group_name`, `add_sensors_to_group`, and `sensor_index_list` are custom settings not
+defined in the official PAA documentation. These three setting help drive the `group` request feature.
+
+`sensor_group_name` - This will be the name assigned to your group. If it doesn't exist already, it will be created.
+Otherwise, the first group matching the name will be used.
+
+`add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list`. If false, `sensor_index_list` is ignored.
+
+`sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
+
+The rest of the settings are official PAA settings. They are the same as the [PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE Example](#paa_multiple_sensor_request_json_file-example). Refer above for details.
+
+```json
+{
+    "sensor_group_name": "A Name Goes Here",
+    "add_sensors_to_group": true,
+    "sensor_index_list": [
+        77,
+        81,
+        95079,
+        167897
+    ],
+    "fields": "A string comma delimited string of fields to retrieve. i.e fields,name,etc",
+    "location_type": null,
+    "read_keys": null,
+    "show_only": null,
+    "modified_since": null,
+    "max_age": null,
+    "nwlng" : null,
+    "nwlat": null,
+    "selng": null,
+    "selat": null
+}
+```
+
+Or see this [file](./sample_json_config_files/sample_group_sensor_request_json_file.json) for another example.
