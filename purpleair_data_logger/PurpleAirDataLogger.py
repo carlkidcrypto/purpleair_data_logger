@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkid1499, All rights reserved.
+    Copyright 2023 carlkidcrypto, All rights reserved.
     A python base Data Logger class.
 """
 

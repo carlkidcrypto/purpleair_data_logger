@@ -19,8 +19,8 @@ sys.path.insert(0, os.path.abspath("../../purpleair_data_logger/"))
 # -- Project information -----------------------------------------------------
 
 project = "PurpleAir Data Logger(s)"
-copyright = "2022, carlkid1499"
-author = "carlkid1499"
+copyright = "2023, carlkidcrypto"
+author = "carlkidcrypto"
 
 # The full version, including alpha/beta/rc tags
 release = "V1.2.0"

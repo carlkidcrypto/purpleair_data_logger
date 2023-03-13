@@ -1,5 +1,5 @@
 ###############################################################################
-# Copyright 2023 carlkid1499, All rights reserved.
+# Copyright 2023 carlkidcrypto, All rights reserved.
 # Behavior driven tests for the purpleair_data_logger.
 # This file will test the Behavior for the CSVDatalogger when a
 # group sensor configuration file is passed in

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkid1499, All rights reserved.
+    Copyright 2023 carlkidcrypto, All rights reserved.
     A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
     Data will be inserted into CSV files.
     

@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -29,11 +27,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> PurpleAir Data Logger(s)
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PurpleAir Data Logger(s)
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -45,14 +47,7 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLDataLogger module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.store_sensor_data()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
@@ -73,7 +68,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
       <li class="breadcrumb-item active">PurpleAirPSQLDataLogger module</li>
       <li class="wy-breadcrumbs-aside">
@@ -86,8 +81,8 @@
            <div itemprop="articleBody">
              
   <section id="module-PurpleAirPSQLDataLogger">
-<span id="purpleairpsqldatalogger-module"></span><h1>PurpleAirPSQLDataLogger module<a class="headerlink" href="#module-PurpleAirPSQLDataLogger" title="Permalink to this heading"></a></h1>
-<p>Copyright 2023 carlkid1499, All rights reserved.
+<span id="purpleairpsqldatalogger-module"></span><h1>PurpleAirPSQLDataLogger module<a class="headerlink" href="#module-PurpleAirPSQLDataLogger" title="Permalink to this headline"></a></h1>
+<p>Copyright 2023 carlkidcrypto, All rights reserved.
 A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be inserted into a PSQL database.</p>
 <p>For best practice from PurpleAir:
@@ -99,7 +94,7 @@ single request rather than individual requests in succession.”</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirPSQLDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIWriteKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psql_db_conn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger" title="Permalink to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">purpleair_data_logger.PurpleAirDataLogger.PurpleAirDataLogger</span></code></p>
 <p>The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
 database. Then we will use Grafana to visualize said data.</p>
 <dl class="py property">
@@ -140,7 +135,7 @@ or error checking. That is upto the caller.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, carlkid1499.</p>
+    <p>&#169; Copyright 2023, carlkidcrypto.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

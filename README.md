@@ -2,12 +2,12 @@
 
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
-| [![Behave Tests](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/behave_tests.yml) | [![PyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkid1499/purpleair_data_logger/actions/workflows/black.yml) |
+| [![Behave Tests](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/behave_tests.yml) | [![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml) |
 | --------------- | --------------- | --------------- | --------------- |
 
 ## How to Support This Project
 
-<a href="https://www.buymeacoffee.com/carlkid1499" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
+<a href="https://www.buymeacoffee.com/carlkidcrypto" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
 
 ## Installation
 
@@ -20,7 +20,7 @@ python3 -m pip install purpleair_data_logger
 You can install PurpleAir Data Logger by cloning down this repo.
 
 ```bash
-git clone https://github.com/carlkid1499/purpleair_data_logger.git
+git clone https://github.com/carlkidcrypto/purpleair_data_logger.git
 cd purpleair_data_logger
 python3 setup.py install 
 ```

@@ -14,9 +14,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -28,11 +26,15 @@
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
-            <a href="index.html" class="icon icon-home"> PurpleAir Data Logger(s)
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PurpleAir Data Logger(s)
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
-    <input type="text" name="q" placeholder="Search docs" />
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
     <input type="hidden" name="check_keywords" value="yes" />
     <input type="hidden" name="area" value="default" />
   </form>
@@ -47,28 +49,7 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirSQLiteQueryStatements module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_ENVIRONMENTAL_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_ENVIRONMENTAL_FIELDS_TABLE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_MISCELLANEOUS_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PARTICLE_COUNT_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM10_0_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM1_0_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE"><code class="docutils literal notranslate"><span class="pre">CREATE_STATION_INFORMATION_AND_STATUS_FIELDS_TABLE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.CREATE_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">CREATE_THINGSPEAK_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_DROP_ALL_TABLES"><code class="docutils literal notranslate"><span class="pre">SQLITE_DROP_ALL_TABLES</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_MISCELLANEOUS_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM10_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM10_0_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM1_0_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM1_0_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirSQLiteQueryStatements.SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS"><code class="docutils literal notranslate"><span class="pre">SQLITE_INSERT_STATEMENT_THINGSPEAK_FIELDS</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirSQLiteQueryStatements module</a></li>
 </ul>
 </li>
 </ul>
@@ -86,7 +67,7 @@
         <div class="rst-content">
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
-      <li><a href="index.html" class="icon icon-home"></a></li>
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
       <li class="breadcrumb-item active">PurpleAirSQLiteQueryStatements module</li>
       <li class="wy-breadcrumbs-aside">
@@ -99,8 +80,8 @@
            <div itemprop="articleBody">
              
   <section id="module-PurpleAirSQLiteQueryStatements">
-<span id="purpleairsqlitequerystatements-module"></span><h1>PurpleAirSQLiteQueryStatements module<a class="headerlink" href="#module-PurpleAirSQLiteQueryStatements" title="Permalink to this heading"></a></h1>
-<p>Copyright 2022 carlkid1499, All rights reserved.
+<span id="purpleairsqlitequerystatements-module"></span><h1>PurpleAirSQLiteQueryStatements module<a class="headerlink" href="#module-PurpleAirSQLiteQueryStatements" title="Permalink to this headline"></a></h1>
+<p>Copyright 2022 carlkidcrypto, All rights reserved.
 A file containing SQLITE statements defined as constants.
 Generate the SQLITE query strings. For simplicity our table names will match
 what the PurpleAir documentation says. We will do the same for table column names.</p>
@@ -236,7 +217,7 @@ SQLITE statement for thingspeak_fields table</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2022, carlkid1499.</p>
+    <p>&#169; Copyright 2023, carlkidcrypto.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a

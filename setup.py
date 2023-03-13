@@ -15,11 +15,11 @@ setup(
     version="1.2.0",
     license="MIT",
     author="Carlos Santos",
-    author_email="27721404+carlkid1499@users.noreply.github.com",
+    author_email="dose.lucky.sake@cloak.id",
     long_description=read_file("README.md"),
     long_description_content_type="text/markdown",
     packages=["purpleair_data_logger"],
-    url="https://github.com/carlkid1499/purpleair_data_logger",
+    url="https://github.com/carlkidcrypto/purpleair_data_logger",
     keywords=[
         "purpleair_data_logger",
         "purple air",

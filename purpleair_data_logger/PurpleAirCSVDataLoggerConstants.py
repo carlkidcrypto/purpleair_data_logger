@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkid1499, All rights reserved.
+    Copyright 2022 carlkidcrypto, All rights reserved.
     A file containing CSVDataLogger constants.
 """
 
