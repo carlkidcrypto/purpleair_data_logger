@@ -185,6 +185,7 @@ class PurpleAirDataLogger:
                       {the_json_file['sensor_index']}..."""
             )
 
+            sensor_data = None
             sensor_data = self._purpleair_api_obj.request_sensor_data(
                 the_json_file["sensor_index"],
                 the_json_file["read_key"],
@@ -269,6 +270,7 @@ class PurpleAirDataLogger:
                       {json_config_file["fields"]}..."""
             )
 
+            sensors_data = None
             sensors_data = self._purpleair_api_obj.request_multiple_sensors_data(
                 fields=json_config_file["fields"],
                 location_type=json_config_file["location_type"],
@@ -440,6 +442,8 @@ class PurpleAirDataLogger:
         """
 
         # Extract the 'fields' and 'data' parts to make it easier on ourselves
+        extracted_fields = None
+        extracted_data = None
         extracted_fields = raw_data["fields"]
         extracted_data = raw_data["data"]
         store_sensor_data_type_list = []
@@ -462,6 +466,10 @@ class PurpleAirDataLogger:
             )
 
             store_sensor_data_type_list.append(the_modified_sensor_data_dict)
+
+        # Delete some stuff
+        del extracted_fields
+        del extracted_data
 
         return store_sensor_data_type_list
 
