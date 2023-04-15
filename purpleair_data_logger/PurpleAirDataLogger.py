@@ -245,6 +245,11 @@ class PurpleAirDataLogger:
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
+
+            # Delete some stuff
+            del sensor_data
+            del the_modified_sensor_data
+
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_multiple_sensors_data(self, json_config_file):
@@ -298,6 +303,10 @@ class PurpleAirDataLogger:
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
+
+            # Delete some stuff
+            del sensors_data
+
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_group_sensors_data(self, json_config_file):
