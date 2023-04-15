@@ -290,7 +290,7 @@ class PurpleAirDataLogger:
             # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
-
+            store_sensor_data_type_list = []
             store_sensor_data_type_list = self._construct_store_sensor_data_type(
                 sensors_data
             )
@@ -306,6 +306,7 @@ class PurpleAirDataLogger:
 
             # Delete some stuff
             del sensors_data
+            del store_sensor_data_type_list
 
             sleep(self.send_request_every_x_seconds)
 
