@@ -397,6 +397,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         # Commit to the db
         self._db_conn.commit()
 
+        # Delete some stuff
+        del single_sensor_data_dict
+
 
 if __name__ == "__main__":
     parser = generate_common_arg_parser(

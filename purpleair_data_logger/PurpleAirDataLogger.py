@@ -165,6 +165,9 @@ class PurpleAirDataLogger:
                     field
                 ]
 
+        # Delete some stuff
+        del the_modified_sensor_data
+
         # Then return the modified copy
         return temp_the_modified_sensor_data
 
