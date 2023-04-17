@@ -473,6 +473,7 @@ class PurpleAirDataLogger:
         # Delete some stuff
         del extracted_fields
         del extracted_data
+        del raw_data
 
         return store_sensor_data_type_list
 
@@ -504,6 +505,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_multiple_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_multiple_sensors_data(the_json_file)
 
         elif (
@@ -514,6 +516,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_single_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_single_sensor_data(the_json_file)
 
         elif (
@@ -524,6 +527,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_group_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_group_sensors_data(the_json_file)
 
         elif (
