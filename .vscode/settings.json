@@ -15,5 +15,6 @@
         "timescaledb",
         "PSQL",
         "deciviews"
-    ]
+    ],
+    "python.formatting.provider": "black"
 }

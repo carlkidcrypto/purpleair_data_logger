@@ -165,6 +165,9 @@ class PurpleAirDataLogger:
                     field
                 ]
 
+        # Delete some stuff
+        del the_modified_sensor_data
+
         # Then return the modified copy
         return temp_the_modified_sensor_data
 
@@ -185,6 +188,7 @@ class PurpleAirDataLogger:
                       {the_json_file['sensor_index']}..."""
             )
 
+            sensor_data = None
             sensor_data = self._purpleair_api_obj.request_sensor_data(
                 the_json_file["sensor_index"],
                 the_json_file["read_key"],
@@ -245,6 +249,11 @@ class PurpleAirDataLogger:
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
+
+            # Delete some stuff
+            del sensor_data
+            del the_modified_sensor_data
+
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_multiple_sensors_data(self, json_config_file):
@@ -264,6 +273,7 @@ class PurpleAirDataLogger:
                       {json_config_file["fields"]}..."""
             )
 
+            sensors_data = None
             sensors_data = self._purpleair_api_obj.request_multiple_sensors_data(
                 fields=json_config_file["fields"],
                 location_type=json_config_file["location_type"],
@@ -285,7 +295,7 @@ class PurpleAirDataLogger:
             # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
-
+            store_sensor_data_type_list = []
             store_sensor_data_type_list = self._construct_store_sensor_data_type(
                 sensors_data
             )
@@ -298,6 +308,11 @@ class PurpleAirDataLogger:
                 f"""Waiting {self._send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
+
+            # Delete some stuff
+            del sensors_data
+            del store_sensor_data_type_list
+
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_group_sensors_data(self, json_config_file):
@@ -430,6 +445,8 @@ class PurpleAirDataLogger:
         """
 
         # Extract the 'fields' and 'data' parts to make it easier on ourselves
+        extracted_fields = None
+        extracted_data = None
         extracted_fields = raw_data["fields"]
         extracted_data = raw_data["data"]
         store_sensor_data_type_list = []
@@ -452,6 +469,11 @@ class PurpleAirDataLogger:
             )
 
             store_sensor_data_type_list.append(the_modified_sensor_data_dict)
+
+        # Delete some stuff
+        del extracted_fields
+        del extracted_data
+        del raw_data
 
         return store_sensor_data_type_list
 
@@ -483,6 +505,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_multiple_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_multiple_sensors_data(the_json_file)
 
         elif (
@@ -493,6 +516,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_single_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_single_sensor_data(the_json_file)
 
         elif (
@@ -503,6 +527,7 @@ class PurpleAirDataLogger:
             # Now load up that json file
             file_obj = open(paa_group_sensor_request_json_file, "r")
             the_json_file = json.load(file_obj)
+            file_obj.close()
             self._run_loop_for_storing_group_sensors_data(the_json_file)
 
         elif (

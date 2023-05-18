@@ -90,6 +90,38 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         # Create continuous aggregates and materialized views
         self._configure_continuous_aggregates()
 
+        # Create some prepared statements
+        self._db_prepared_statements = {}
+        self._db_prepared_statements[
+            "station_information_and_status_fields"
+        ] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS
+        )
+        self._db_prepared_statements["environmental_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS
+        )
+        self._db_prepared_statements["miscellaneous_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS
+        )
+        self._db_prepared_statements["pm1_0_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_PM1_0_FIELDS
+        )
+        self._db_prepared_statements["pm2_5_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_PM2_5_FIELDS
+        )
+        self._db_prepared_statements[
+            "pm2_5_pseudo_average_fields"
+        ] = self._db_conn.prepare(PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS)
+        self._db_prepared_statements["pm10_0_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_PM10_0_FIELDS
+        )
+        self._db_prepared_statements["particle_count_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS
+        )
+        self._db_prepared_statements["thingspeak_fields"] = self._db_conn.prepare(
+            PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS
+        )
+
         # Commit to the db
         self._db_conn.commit()
 
@@ -201,8 +233,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         """
 
         # Run the queries
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS,
+        self._db_prepared_statements["station_information_and_status_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -242,8 +273,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             confidence_auto=single_sensor_data_dict["confidence_auto"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS,
+        self._db_prepared_statements["environmental_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -259,8 +289,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pressure_b=single_sensor_data_dict["pressure_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_MISCELLANEOUS_FIELDS,
+        self._db_prepared_statements["miscellaneous_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -272,8 +301,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             analog_input=single_sensor_data_dict["analog_input"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_PM1_0_FIELDS,
+        self._db_prepared_statements["pm1_0_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -289,8 +317,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm1_0_cf_1_b=single_sensor_data_dict["pm1.0_cf_1_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_PM2_5_FIELDS,
+        self._db_prepared_statements["pm2_5_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -309,8 +336,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm2_5_cf_1_b=single_sensor_data_dict["pm2.5_cf_1_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS,
+        self._db_prepared_statements["pm2_5_pseudo_average_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -335,8 +361,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm2_5_1week_b=single_sensor_data_dict["pm2.5_1week_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_PM10_0_FIELDS,
+        self._db_prepared_statements["pm10_0_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -352,8 +377,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             pm10_0_cf_1_b=single_sensor_data_dict["pm10.0_cf_1_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_PARTICLE_COUNT_FIELDS,
+        self._db_prepared_statements["particle_count_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -378,8 +402,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
             um_count_b_10_0=single_sensor_data_dict["10.0_um_count_b"],
         )
 
-        self._db_conn.run(
-            PSQL_INSERT_STATEMENT_THINGSPEAK_FIELDS,
+        self._db_prepared_statements["thingspeak_fields"].run(
             data_time_stamp=self._convert_unix_epoch_timestamp_to_psql_timestamp(
                 single_sensor_data_dict["data_time_stamp"]
             ),
@@ -396,6 +419,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
         # Commit to the db
         self._db_conn.commit()
+
+        # Delete some stuff
+        del single_sensor_data_dict
 
 
 if __name__ == "__main__":
