@@ -29,6 +29,6 @@ setup(
         "purple air api",
         "PurpleAirSQLiteDataLogger",
     ],
-    install_requires=["pg8000==1.29.4", "requests", "purpleair_api==1.0.1"],
+    install_requires=["pg8000==1.29.5", "requests", "purpleair_api==1.0.1"],
     platforms=["Windows 32/64", "Linux 32/64", "MacOS 32/64"],
 )
