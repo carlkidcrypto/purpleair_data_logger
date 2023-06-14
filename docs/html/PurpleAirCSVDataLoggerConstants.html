@@ -1,20 +1,21 @@
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" >
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirCSVDataLoggerConstants module &mdash; PurpleAir Data Logger(s) V1.2.0 documentation</title>
+  <title>PurpleAirCSVDataLoggerConstants module &mdash; PurpleAir Data Logger(s) V1.2.1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
-        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/doctools.js"></script>
+        <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -45,7 +46,27 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">purpleair_data_logger</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirCSVDataLoggerConstants module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirCSVDataLoggerConstants module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.ENVIRONMENTAL_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">ENVIRONMENTAL_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.ENVIRONMENTAL_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">ENVIRONMENTAL_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.MISCELLANEOUS_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">MISCELLANEOUS_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.MISCELLANEOUS_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">MISCELLANEOUS_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PARTICLE_COUNT_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PARTICLE_COUNT_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PARTICLE_COUNT_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PARTICLE_COUNT_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM10_0_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM10_0_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM10_0_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM10_0_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM1_0_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM1_0_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM1_0_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM1_0_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM2_5_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM2_5_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM2_5_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM2_5_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.STATION_INFORMATION_AND_STATUS_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">STATION_INFORMATION_AND_STATUS_FIELDS_HEADER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.THINGSPEAK_FIELDS_FILE_NAME"><code class="docutils literal notranslate"><span class="pre">THINGSPEAK_FIELDS_FILE_NAME</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirCSVDataLoggerConstants.THINGSPEAK_FIELDS_HEADER"><code class="docutils literal notranslate"><span class="pre">THINGSPEAK_FIELDS_HEADER</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
@@ -81,7 +102,7 @@
            <div itemprop="articleBody">
              
   <section id="module-PurpleAirCSVDataLoggerConstants">
-<span id="purpleaircsvdataloggerconstants-module"></span><h1>PurpleAirCSVDataLoggerConstants module<a class="headerlink" href="#module-PurpleAirCSVDataLoggerConstants" title="Permalink to this headline"></a></h1>
+<span id="purpleaircsvdataloggerconstants-module"></span><h1>PurpleAirCSVDataLoggerConstants module<a class="headerlink" href="#module-PurpleAirCSVDataLoggerConstants" title="Permalink to this heading"></a></h1>
 <p>Copyright 2022 carlkidcrypto, All rights reserved.
 A file containing CSVDataLogger constants.</p>
 <dl class="py data">
