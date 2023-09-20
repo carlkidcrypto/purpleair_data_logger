@@ -1,0 +1,6 @@
+{
+    "sensor_ip_list": [
+        "192.168.1.2"
+    ],
+    "poll_interval_seconds": 1
+}

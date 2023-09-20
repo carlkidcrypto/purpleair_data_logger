@@ -25,7 +25,8 @@ def generate_common_arg_parser(argparse_description=""):
 
     parser.add_argument(
         "-paa_read_key",
-        required=True,
+        required=False,
+        default=None,
         dest="paa_read_key",
         type=str,
         help="""The PurpleAirAPI Read key""",
@@ -33,7 +34,8 @@ def generate_common_arg_parser(argparse_description=""):
 
     parser.add_argument(
         "-paa_write_key",
-        required=True,
+        required=False,
+        default=None,
         dest="paa_write_key",
         type=str,
         help="""The PurpleAirAPI write key""",
@@ -92,16 +94,22 @@ class PurpleAirDataLogger:
     will only need to define their own 'store_sensor_data' method.
     """
 
-    def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey):
+    def __init__(
+        self,
+        PurpleAirApiReadKey=None,
+        PurpleAirApiWriteKey=None,
+        PurpleAirApiIpv4Address=None,
+    ):
         """
-        :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
+        :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param object psql_db_conn: A valid PG8000 database connection
         """
 
         # Make one instance of our PurpleAirAPI class
         self._purpleair_api_obj = PurpleAirAPI(
-            your_api_read_key=PurpleAirAPIReadKey,
-            your_api_write_key=PurpleAirAPIWriteKey,
+            your_api_read_key=PurpleAirApiReadKey,
+            your_api_write_key=PurpleAirApiWriteKey,
+            your_ipv4_address=PurpleAirApiIpv4Address,
         )
 
         # Define how often we send requests
@@ -147,7 +155,7 @@ class PurpleAirDataLogger:
             "Must be implemented by class that is inheriting PurpleAirDataLogger!"
         )
 
-    def _validate_sensor_data_before_insert(self, the_modified_sensor_data):
+    def _validate_sensor_data_before_insert(self, the_modified_sensor_data) -> dict:
         """
         Before we store the data, we must make sure all fields have been included
         Our psql/sqlite store statements expect all fields regardless of what we request.
@@ -171,12 +179,15 @@ class PurpleAirDataLogger:
         # Then return the modified copy
         return temp_the_modified_sensor_data
 
-    def _run_loop_for_storing_single_sensor_data(self, the_json_file):
+    def _run_loop_for_storing_single_sensor_data(self, json_config_file) -> dict:
         """
         A method containing the run loop for inserting a single sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         """
+
+        # Set the polling interval
+        self.send_request_every_x_seconds = json_config_file["poll_interval_seconds"]
 
         while True:
             print(
@@ -185,14 +196,14 @@ class PurpleAirDataLogger:
             # We will request data once every 65 seconds.
             debug_log(
                 f"""Requesting new data from a sensor with index
-                      {the_json_file['sensor_index']}..."""
+                      {json_config_file['sensor_index']}..."""
             )
 
             sensor_data = None
             sensor_data = self._purpleair_api_obj.request_sensor_data(
-                the_json_file["sensor_index"],
-                the_json_file["read_key"],
-                the_json_file["fields"],
+                json_config_file["sensor_index"],
+                json_config_file["read_key"],
+                json_config_file["fields"],
             )
 
             # Let's make it easier on ourselves by making the sensor data one level deep.
@@ -246,7 +257,7 @@ class PurpleAirDataLogger:
             )
             self.store_sensor_data(the_modified_sensor_data)
             debug_log(
-                f"""Waiting {self._send_request_every_x_seconds} seconds before
+                f"""Waiting {self.send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
 
@@ -256,12 +267,15 @@ class PurpleAirDataLogger:
 
             sleep(self.send_request_every_x_seconds)
 
-    def _run_loop_for_storing_multiple_sensors_data(self, json_config_file):
+    def _run_loop_for_storing_multiple_sensors_data(self, json_config_file) -> dict:
         """
         A method containing the run loop for inserting a multiple sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         """
+
+        # Set the polling interval
+        self.send_request_every_x_seconds = json_config_file["poll_interval_seconds"]
 
         while True:
             print(
@@ -305,7 +319,7 @@ class PurpleAirDataLogger:
                 self.store_sensor_data(store_sensor_data_type)
 
             debug_log(
-                f"""Waiting {self._send_request_every_x_seconds} seconds before
+                f"""Waiting {self.send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
 
@@ -315,12 +329,15 @@ class PurpleAirDataLogger:
 
             sleep(self.send_request_every_x_seconds)
 
-    def _run_loop_for_storing_group_sensors_data(self, json_config_file):
+    def _run_loop_for_storing_group_sensors_data(self, json_config_file) -> dict:
         """
         A method containing the run loop for inserting a group sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         """
+
+        # Set the polling interval
+        self.send_request_every_x_seconds = json_config_file["poll_interval_seconds"]
 
         group_id_to_use = None
         while True:
@@ -430,13 +447,32 @@ class PurpleAirDataLogger:
                 self.store_sensor_data(store_sensor_data_type)
 
             debug_log(
-                f"""Waiting {self._send_request_every_x_seconds} seconds before
+                f"""Waiting {self.send_request_every_x_seconds} seconds before
                   requesting new data again..."""
             )
 
             sleep(self.send_request_every_x_seconds)
 
-    def _construct_store_sensor_data_type(self, raw_data):
+    def _run_loop_for_storing_local_sensors_data(self, json_config_file) -> dict:
+        """
+        A method containing the run loop for inserting a local sensors' data into the data logger.
+
+        :param dict json_config_file: A dictionary object of the json config file using json load.
+        """
+
+        while True:
+            print(
+                "_run_loop_for_storing_local_sensors_data - Beep boop I am alive...\n\n"
+            )
+
+            debug_log(
+                f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
+                    requesting new data again..."""
+            )
+
+            sleep(json_config_file["poll_interval_seconds"])
+
+    def _construct_store_sensor_data_type(self, raw_data) -> dict:
         """
         A method to build the dict data type that the store_sensor_data method expects.
 
@@ -482,7 +518,7 @@ class PurpleAirDataLogger:
         paa_multiple_sensor_request_json_file=None,
         paa_single_sensor_request_json_file=None,
         paa_group_sensor_request_json_file=None,
-    ):
+    ) -> None:
         """
         A method to choose what run method to execute based on what config file is being used.
         This shall be considered the main entry point for and PurpleAirDataLogger.
