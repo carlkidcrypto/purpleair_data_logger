@@ -157,7 +157,7 @@ class PurpleAirDataLogger:
 
     def _validate_sensor_data_before_insert(self, the_modified_sensor_data) -> dict:
         """
-        Before we store the data, we must make sure all fields have been included
+        Before we store the data, we must make sure all fields have been included.
         Our psql/sqlite store statements expect all fields regardless of what we request.
 
         :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
@@ -464,6 +464,11 @@ class PurpleAirDataLogger:
             print(
                 "_run_loop_for_storing_local_sensors_data - Beep boop I am alive...\n\n"
             )
+
+            # Ask for our local sensor data
+            local_sensor_dict = self._purpleair_api_obj.request_local_sensor_data()
+
+            # The data that is returned via a local network API is different.
 
             debug_log(
                 f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
