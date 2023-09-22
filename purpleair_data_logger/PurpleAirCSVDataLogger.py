@@ -47,16 +47,18 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     """
 
     def __init__(
-        self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, path_to_save_csv_files_in
+        self, PurpleAirApiReadKey=None, PurpleAirApiWriteKey=None, PurpleAirApiIpv4Address=None, path_to_save_csv_files_in=None
     ):
         """
-        :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
+        :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
+        :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
         :param object path_to_save_csv_files_in: A string directory path
                                                  to save files in.
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
+        super().__init__(PurpleAirApiReadKey, PurpleAirApiWriteKey,PurpleAirApiIpv4Address)
 
         # save off the store path internally for later access
         self._path_to_save_csv_files_in = path_to_save_csv_files_in
@@ -509,8 +511,18 @@ if __name__ == "__main__":
     file_obj = None
 
     # Second make an instance our our data logger
+    ipv4_address_list = []
+    if args.paa_local_sensor_request_json_file:
+        # This is a temp working solution. We will need to redo this at some point.
+        import json
+        file_obj = open(args.paa_local_sensor_request_json_file, "r")
+        the_json_file = json.load(file_obj)
+        file_obj.close()
+        ipv4_address_list = the_json_file["sensor_ip_list"] # LOAD THIS IN MAYBE ???
+        del the_json_file
+
     the_paa_csv_data_logger = PurpleAirCSVDataLogger(
-        args.paa_read_key, args.paa_write_key, args.save_file_path
+        args.paa_read_key, args.paa_write_key, ipv4_address_list, args.save_file_path
     )
 
     # Third choose what run method to execute depending on
@@ -519,4 +531,5 @@ if __name__ == "__main__":
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
         args.paa_group_sensor_request_json_file,
+        args.paa_local_sensor_request_json_file,
     )

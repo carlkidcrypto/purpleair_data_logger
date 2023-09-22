@@ -74,6 +74,18 @@ def generate_common_arg_parser(argparse_description=""):
                             sensor request.""",
     )
 
+    parser.add_argument(
+        "-paa_local_sensor_request_json_file",
+        required=False,
+        default=None,
+        dest="paa_local_sensor_request_json_file",
+        type=str,
+        help="""The
+                            path to a json file containing the parameters to send a local
+                            sensor request.""",
+    )
+    
+
     return parser
 
 
@@ -468,7 +480,59 @@ class PurpleAirDataLogger:
             # Ask for our local sensor data
             local_sensor_dict = self._purpleair_api_obj.request_local_sensor_data()
 
-            # The data that is returned via a local network API is different.
+            # The data that is returned via an internal network API is different than the data returned via an external network API.
+            # With that in mind let's try to map internal network API values to external network API values. That way we don't have to
+            # write more code in the PADL's.
+            for ip, sensor_dict in local_sensor_dict.items():
+                the_modified_sensor_data = {}
+
+                # This timestamp appears to be a unix epoch timestamp (seconds) type.
+                the_modified_sensor_data["data_time_stamp"] = sensor_dict["response_date"]
+
+                # Since we want this to work for all loggers let's make an assumption. The 'SensorId' is the 'name' since it is just a MAC address.
+                # The 'Id' is the `sensor_index` since it is an int type and will work for all the loggers.
+                the_modified_sensor_data["sensor_index"] = sensor_dict["Id"]
+
+                # Station information and status fields:
+                the_modified_sensor_data["name"] = sensor_dict["SensorId"]
+                # "icon": 0,
+                # "model": "",
+                the_modified_sensor_data["hardware"] = sensor_dict["hardwarediscovered"]
+                if sensor_dict["place"] == "inside":
+                    the_modified_sensor_data["location_type"] = 1
+
+                elif sensor_dict["place"] == "outside":
+                    the_modified_sensor_data["location_type"] = 0
+
+                # "private": 0,
+                the_modified_sensor_data["latitude"] = sensor_dict["lat"]
+                the_modified_sensor_data["longitude"] = sensor_dict["lon"]
+                # "altitude": 0.0,
+                # "position_rating": 0,
+                # "led_brightness": 0,
+                the_modified_sensor_data["firmware_version"] = sensor_dict["version"]
+                # "firmware_upgrade": "",
+                the_modified_sensor_data["rssi"] = sensor_dict["rssi"]
+                the_modified_sensor_data["uptime"] = sensor_dict["uptime"]
+                the_modified_sensor_data["pa_latency"] = sensor_dict["place"]
+                the_modified_sensor_data[""] = sensor_dict["latency"]
+                # "last_seen": 0,
+                # "last_modified": 0,
+                # "date_created": 0,
+                # "channel_state": 0,
+                # "channel_flags": 0,
+                # "channel_flags_manual": 0,
+                # "channel_flags_auto": 0,
+                # "confidence": 0,
+                # "confidence_manual": 0,
+                # "confidence_auto": 0,
+
+
+
+                the_modified_sensor_data = self._validate_sensor_data_before_insert(
+                    the_modified_sensor_data
+                )
+                self.store_sensor_data(the_modified_sensor_data)
 
             debug_log(
                 f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
@@ -477,12 +541,14 @@ class PurpleAirDataLogger:
 
             sleep(json_config_file["poll_interval_seconds"])
 
-    def _construct_store_sensor_data_type(self, raw_data) -> dict:
+    def _construct_store_sensor_data_type(self, raw_data) -> list:
         """
         A method to build the dict data type that the store_sensor_data method expects.
 
         :param dict raw_data: The return value from either self._purpleair_api_obj.request_members_data or
                               self._purpleair_api_obj.request_multiple_sensors_data.
+
+        :return A list full of the dict data type that the store_sensor_data method expects.
         """
 
         # Extract the 'fields' and 'data' parts to make it easier on ourselves
@@ -523,6 +589,7 @@ class PurpleAirDataLogger:
         paa_multiple_sensor_request_json_file=None,
         paa_single_sensor_request_json_file=None,
         paa_group_sensor_request_json_file=None,
+        paa_local_sensor_request_json_file=None,
     ) -> None:
         """
         A method to choose what run method to execute based on what config file is being used.
@@ -534,14 +601,17 @@ class PurpleAirDataLogger:
                                                         the parameters to send a multiple sensor request(s).
         :param str paa_group_sensor_request_json_file: The path to a json file containing
                                                         the parameters to send a group sensor request(s).
+        :param str paa_local_sensor_request_json_file: The path to a json file containing
+                                                        the parameters to send a local sensor request(s).
         """
 
         # Choose what run method to execute depending on
-        # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
+        # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file/paa_local_sensor_request_json_file
         if (
             paa_multiple_sensor_request_json_file is not None
             and paa_single_sensor_request_json_file is None
             and paa_group_sensor_request_json_file is None
+            and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
             file_obj = open(paa_multiple_sensor_request_json_file, "r")
@@ -553,6 +623,7 @@ class PurpleAirDataLogger:
             paa_multiple_sensor_request_json_file is None
             and paa_single_sensor_request_json_file is not None
             and paa_group_sensor_request_json_file is None
+            and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
             file_obj = open(paa_single_sensor_request_json_file, "r")
@@ -564,6 +635,7 @@ class PurpleAirDataLogger:
             paa_multiple_sensor_request_json_file is None
             and paa_single_sensor_request_json_file is None
             and paa_group_sensor_request_json_file is not None
+            and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
             file_obj = open(paa_group_sensor_request_json_file, "r")
@@ -575,12 +647,25 @@ class PurpleAirDataLogger:
             paa_multiple_sensor_request_json_file is None
             and paa_single_sensor_request_json_file is None
             and paa_group_sensor_request_json_file is None
+            and paa_local_sensor_request_json_file is not None
+        ):
+            # Now load up that json file
+            file_obj = open(paa_local_sensor_request_json_file, "r")
+            the_json_file = json.load(file_obj)
+            file_obj.close()
+            self._run_loop_for_storing_local_sensors_data(the_json_file)
+
+        elif (
+            paa_multiple_sensor_request_json_file is None
+            and paa_single_sensor_request_json_file is None
+            and paa_group_sensor_request_json_file is None
+            and paa_local_sensor_request_json_file is None
         ):
             raise PurpleAirDataLoggerError(
-                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' were provided. Please provide at least one!"""
+                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' or 'and paa_local_sensor_request_json_file is' were provided. Please provide at least one!"""
             )
 
         else:
             raise PurpleAirDataLoggerError(
-                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' must be provided. Not all!"""
+                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file'  or 'and paa_local_sensor_request_json_file is must be provided. Not all!"""
             )
