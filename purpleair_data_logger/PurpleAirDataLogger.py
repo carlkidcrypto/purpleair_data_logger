@@ -514,8 +514,7 @@ class PurpleAirDataLogger:
                 # "firmware_upgrade": "",
                 the_modified_sensor_data["rssi"] = sensor_dict["rssi"]
                 the_modified_sensor_data["uptime"] = sensor_dict["uptime"]
-                the_modified_sensor_data["pa_latency"] = sensor_dict["place"]
-                the_modified_sensor_data[""] = sensor_dict["latency"]
+                the_modified_sensor_data["pa_latency"] = sensor_dict["latency"]
                 # "last_seen": 0,
                 # "last_modified": 0,
                 # "date_created": 0,
@@ -527,6 +526,34 @@ class PurpleAirDataLogger:
                 # "confidence_manual": 0,
                 # "confidence_auto": 0,
 
+                # Environmental fields:
+                if "current_humidity_680" not in sensor_dict.keys():
+                    the_modified_sensor_data["humidity"] = sensor_dict["current_humidity"]
+                    the_modified_sensor_data["humidity_a"] = sensor_dict["current_humidity"]
+                
+                else:
+                    the_modified_sensor_data["humidity_a"] = sensor_dict["current_humidity"]
+                    the_modified_sensor_data["humidity_b"] = sensor_dict["current_humidity_680"]
+                    the_modified_sensor_data["humidity"] = int((sensor_dict["current_humidity"] + sensor_dict["current_humidity_680"]) / 2)
+
+
+                if "current_temp_f_680" not in sensor_dict.keys():
+                    the_modified_sensor_data["temperature"] = sensor_dict["current_temp_f"]
+                    the_modified_sensor_data["temperature_a"] = sensor_dict["current_temp_f"]
+                
+                else:
+                    the_modified_sensor_data["temperature_a"] = sensor_dict["current_temp_f"]
+                    the_modified_sensor_data["temperature_b"] = sensor_dict["current_temp_f_680"]
+                    the_modified_sensor_data["temperature"] = int((sensor_dict["current_temp_f"] + sensor_dict["current_temp_f_680"]) / 2)
+                
+                if "pressure_680" not in sensor_dict.keys():
+                    the_modified_sensor_data["pressure"] = sensor_dict["pressure"]
+                    the_modified_sensor_data["pressure_a"] = sensor_dict["pressure"]
+                
+                else:
+                    the_modified_sensor_data["pressure_a"] = sensor_dict["pressure"]
+                    the_modified_sensor_data["pressure_b"] = sensor_dict["pressure_680"]
+                    the_modified_sensor_data["pressure"] = int((sensor_dict["pressure"] + sensor_dict["pressure_680"]) / 2)
 
 
                 the_modified_sensor_data = self._validate_sensor_data_before_insert(
