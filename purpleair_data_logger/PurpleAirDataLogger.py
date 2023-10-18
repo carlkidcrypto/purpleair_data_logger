@@ -493,7 +493,7 @@ class PurpleAirDataLogger:
                 # The 'Id' is the `sensor_index` since it is an int type and will work for all the loggers.
                 the_modified_sensor_data["sensor_index"] = sensor_dict["Id"]
 
-                # Station information and status fields:
+                ###### Station information and status fields: ######
                 the_modified_sensor_data["name"] = sensor_dict["SensorId"]
                 # "icon": 0,
                 # "model": "",
@@ -526,7 +526,7 @@ class PurpleAirDataLogger:
                 # "confidence_manual": 0,
                 # "confidence_auto": 0,
 
-                # Environmental fields:
+                ###### Environmental fields: ######
                 if "current_humidity_680" not in sensor_dict.keys():
                     the_modified_sensor_data["humidity"] = sensor_dict["current_humidity"]
                     the_modified_sensor_data["humidity_a"] = sensor_dict["current_humidity"]
@@ -554,6 +554,106 @@ class PurpleAirDataLogger:
                     the_modified_sensor_data["pressure_a"] = sensor_dict["pressure"]
                     the_modified_sensor_data["pressure_b"] = sensor_dict["pressure_680"]
                     the_modified_sensor_data["pressure"] = int((sensor_dict["pressure"] + sensor_dict["pressure_680"]) / 2)
+
+                ###### Miscellaneous fields: ######
+                # "voc": 0.0,
+                # "voc_a": 0.0,
+                # "voc_b": 0.0,
+                # "ozone1": 0.0,
+                # "analog_input": 0.0,
+
+                ###### PM1.0 fields: ######
+                if "p_1_0_um_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm1.0"] = sensor_dict["p_1_0_um"]
+                    the_modified_sensor_data["pm1.0_a"] = sensor_dict["p_1_0_um"]
+                
+                else:
+                    the_modified_sensor_data["pm1.0"] = int((sensor_dict["p_1_0_um"] + sensor_dict["p_1_0_um_b"]) / 2)
+                    the_modified_sensor_data["pm1.0_a"] = sensor_dict["p_1_0_um"]
+                    the_modified_sensor_data["pm1.0_b"] = sensor_dict["p_1_0_um_b"]
+
+                # "pm1.0_atm": 0.0,
+                # "pm1.0_atm_a": 0.0,
+                # "pm1.0_atm_b": 0.0,
+                # "pm1.0_cf_1": 0.0,
+                # "pm1.0_cf_1_a": 0.0,
+                # "pm1.0_cf_1_b": 0.0,
+
+                ###### PM2.5 fields: ######
+                # "pm2.5_alt": 0.0,
+                # "pm2.5_alt_a": 0.0,
+                # "pm2.5_alt_b": 0.0,
+                # "pm2.5": 0.0,
+                # "pm2.5_a": 0.0,
+                # "pm2.5_b": 0.0,
+                # "pm2.5_atm": 0.0,
+                # "pm2.5_atm_a": 0.0,
+                # "pm2.5_atm_b": 0.0,
+                # "pm2.5_cf_1": 0.0,
+                # "pm2.5_cf_1_a": 0.0,
+                # "pm2.5_cf_1_b": 0.0,
+                # # PM2.5 pseudo (simple running) average fields:
+                # # Note: These are inside the return json as json["sensor"]["stats"]. They are averages of the two sensors.
+                # # sensor 'a' and sensor 'b'. Each sensors data is inside json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
+                # "pm2.5_10minute": 0.0,
+                # "pm2.5_10minute_a": 0.0,
+                # "pm2.5_10minute_b": 0.0,
+                # "pm2.5_30minute": 0.0,
+                # "pm2.5_30minute_a": 0.0,
+                # "pm2.5_30minute_b": 0.0,
+                # "pm2.5_60minute": 0.0,
+                # "pm2.5_60minute_a": 0.0,
+                # "pm2.5_60minute_b": 0.0,
+                # "pm2.5_6hour": 0.0,
+                # "pm2.5_6hour_a": 0.0,
+                # "pm2.5_6hour_b": 0.0,
+                # "pm2.5_24hour": 0.0,
+                # "pm2.5_24hour_a": 0.0,
+                # "pm2.5_24hour_b": 0.0,
+                # "pm2.5_1week": 0.0,
+                # "pm2.5_1week_a": 0.0,
+                # "pm2.5_1week_b": 0.0,
+
+                ###### PM10.0 fields: ######
+                # "pm10.0": 0.0,
+                # "pm10.0_a": 0.0,
+                # "pm10.0_b": 0.0,
+                # "pm10.0_atm": 0.0,
+                # "pm10.0_atm_a": 0.0,
+                # "pm10.0_atm_b": 0.0,
+                # "pm10.0_cf_1": 0.0,
+                # "pm10.0_cf_1_a": 0.0,
+                # "pm10.0_cf_1_b": 0.0,
+
+                ###### Particle count fields: #####
+                # "0.3_um_count": 0.0,
+                # "0.3_um_count_a": 0.0,
+                # "0.3_um_count_b": 0.0,
+                # "0.5_um_count": 0.0,
+                # "0.5_um_count_a": 0.0,
+                # "0.5_um_count_b": 0.0,
+                # "1.0_um_count": 0.0,
+                # "1.0_um_count_a": 0.0,
+                # "1.0_um_count_b": 0.0,
+                # "2.5_um_count": 0.0,
+                # "2.5_um_count_a": 0.0,
+                # "2.5_um_count_b": 0.0,
+                # "5.0_um_count": 0.0,
+                # "5.0_um_count_a": 0.0,
+                # "5.0_um_count_b": 0.0,
+                # "10.0_um_count": 0.0,
+                # "10.0_um_count_a": 0.0,
+                # "10.0_um_count_b": 0.0,
+
+                ###### ThingSpeak fields, used to retrieve data from api.thingspeak.com: #####
+                # "primary_id_a": 0,
+                # "primary_key_a": "",
+                # "secondary_id_a": 0,
+                # "secondary_key_a": "",
+                # "primary_id_b": 0,
+                # "primary_key_b": "",
+                # "secondary_id_b": 0,
+                # "secondary_key_b": "",
 
 
                 the_modified_sensor_data = self._validate_sensor_data_before_insert(
