@@ -642,10 +642,8 @@ class PurpleAirDataLogger:
                     )
                     the_modified_sensor_data["pm2.5_a"] = sensor_dict["p_2_5_um_a"]
                     the_modified_sensor_data["pm2.5_b"] = sensor_dict["p_2_5_um_b"]
-                # "pm2.5_atm": 0.0,
-                # "pm2.5_atm_a": 0.0,
-                # "pm2.5_atm_b": 0.0,
-                if "p_2_5_um_b" not in sensor_dict.keys():
+
+                if "pm2_5_atm_b" not in sensor_dict.keys():
                     the_modified_sensor_data["pm2.5_atm"] = sensor_dict["pm2_5_atm"]
                     the_modified_sensor_data["pm2.5_atm_a"] = sensor_dict["pm2_5_atm"]
 
@@ -655,9 +653,18 @@ class PurpleAirDataLogger:
                     )
                     the_modified_sensor_data["pm2.5_atm_a"] = sensor_dict["pm2_5_atm"]
                     the_modified_sensor_data["pm2.5_atm_b"] = sensor_dict["pm2_5_atm_b"]
-                # "pm2.5_cf_1": 0.0,
-                # "pm2.5_cf_1_a": 0.0,
-                # "pm2.5_cf_1_b": 0.0,
+
+                if "pm2_5_cf_1_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm2.5_cf_1"] = sensor_dict["pm2_5_cf_1"]
+                    the_modified_sensor_data["pm2.5_cf_1_a"] = sensor_dict["pm2_5_cf_1"]
+
+                else:
+                    the_modified_sensor_data["pm2.5_cf_1"] = float(
+                        (sensor_dict["pm2_5_cf_1"] + sensor_dict["pm2_5_cf_1_b"]) / 2
+                    )
+                    the_modified_sensor_data["pm2.5_cf_1_a"] = sensor_dict["pm2_5_cf_1"]
+                    the_modified_sensor_data["pm2.5_cf_1_b"] = sensor_dict["pm2_5_cf_1_b"]
+
                 # # PM2.5 pseudo (simple running) average fields:
                 # # Note: These are inside the return json as json["sensor"]["stats"]. They are averages of the two sensors.
                 # # sensor 'a' and sensor 'b'. Each sensors data is inside json["sensor"]["stats_a"] and json["sensor"]["stats_b"]
@@ -681,15 +688,38 @@ class PurpleAirDataLogger:
                 # "pm2.5_1week_b": 0.0,
 
                 ###### PM10.0 fields: ######
-                # "pm10.0": 0.0,
-                # "pm10.0_a": 0.0,
-                # "pm10.0_b": 0.0,
-                # "pm10.0_atm": 0.0,
-                # "pm10.0_atm_a": 0.0,
-                # "pm10.0_atm_b": 0.0,
-                # "pm10.0_cf_1": 0.0,
-                # "pm10.0_cf_1_a": 0.0,
-                # "pm10.0_cf_1_b": 0.0,
+                if "p_10_0_um_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm10.0"] = sensor_dict["p_10_0_um"]
+                    the_modified_sensor_data["pm10.0_a"] = sensor_dict["p_10_0_um"]
+
+                else:
+                    the_modified_sensor_data["pm10.0"] = float(
+                        (sensor_dict["p_10_0_um"] + sensor_dict["p_10_0_um_b"]) / 2
+                    )
+                    the_modified_sensor_data["pm10.0_a"] = sensor_dict["p_10_0_um_a"]
+                    the_modified_sensor_data["pm10.0_b"] = sensor_dict["p_10_0_um_b"]
+
+                if "pm10_0_atm_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm10.0_atm"] = sensor_dict["pm10_0_atm"]
+                    the_modified_sensor_data["pm10.0_atm_a"] = sensor_dict["pm10_0_atm"]
+
+                else:
+                    the_modified_sensor_data["pm10.0_atm"] = float(
+                        (sensor_dict["pm10_0_atm"] + sensor_dict["pm10_0_atm_b"]) / 2
+                    )
+                    the_modified_sensor_data["pm10.0_atm_a"] = sensor_dict["pm10_0_atm"]
+                    the_modified_sensor_data["pm10.0_atm_b"] = sensor_dict["pm10_0_atm_b"]
+
+                if "pm10_0_cf_1_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm10.0_cf_1"] = sensor_dict["pm10_0_cf_1"]
+                    the_modified_sensor_data["pm10.0_cf_1_a"] = sensor_dict["pm10_0_cf_1"]
+
+                else:
+                    the_modified_sensor_data["pm10.0_cf_1"] = float(
+                        (sensor_dict["pm10_0_cf_1"] + sensor_dict["pm10_0_cf_1_b"]) / 2
+                    )
+                    the_modified_sensor_data["pm10.0_cf_1_a"] = sensor_dict["pm10_0_cf_1"]
+                    the_modified_sensor_data["pm10.0_cf_1_b"] = sensor_dict["pm10_0_cf_1_b"]
 
                 ###### Particle count fields: #####
                 # "0.3_um_count": 0.0,
