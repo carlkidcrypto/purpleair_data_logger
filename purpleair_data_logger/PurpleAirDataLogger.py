@@ -534,7 +534,7 @@ class PurpleAirDataLogger:
                 else:
                     the_modified_sensor_data["humidity_a"] = sensor_dict["current_humidity"]
                     the_modified_sensor_data["humidity_b"] = sensor_dict["current_humidity_680"]
-                    the_modified_sensor_data["humidity"] = int((sensor_dict["current_humidity"] + sensor_dict["current_humidity_680"]) / 2)
+                    the_modified_sensor_data["humidity"] = float((sensor_dict["current_humidity"] + sensor_dict["current_humidity_680"]) / 2)
 
 
                 if "current_temp_f_680" not in sensor_dict.keys():
@@ -544,7 +544,7 @@ class PurpleAirDataLogger:
                 else:
                     the_modified_sensor_data["temperature_a"] = sensor_dict["current_temp_f"]
                     the_modified_sensor_data["temperature_b"] = sensor_dict["current_temp_f_680"]
-                    the_modified_sensor_data["temperature"] = int((sensor_dict["current_temp_f"] + sensor_dict["current_temp_f_680"]) / 2)
+                    the_modified_sensor_data["temperature"] = float((sensor_dict["current_temp_f"] + sensor_dict["current_temp_f_680"]) / 2)
                 
                 if "pressure_680" not in sensor_dict.keys():
                     the_modified_sensor_data["pressure"] = sensor_dict["pressure"]
@@ -553,7 +553,7 @@ class PurpleAirDataLogger:
                 else:
                     the_modified_sensor_data["pressure_a"] = sensor_dict["pressure"]
                     the_modified_sensor_data["pressure_b"] = sensor_dict["pressure_680"]
-                    the_modified_sensor_data["pressure"] = int((sensor_dict["pressure"] + sensor_dict["pressure_680"]) / 2)
+                    the_modified_sensor_data["pressure"] = float((sensor_dict["pressure"] + sensor_dict["pressure_680"]) / 2)
 
                 ###### Miscellaneous fields: ######
                 # "voc": 0.0,
@@ -568,16 +568,28 @@ class PurpleAirDataLogger:
                     the_modified_sensor_data["pm1.0_a"] = sensor_dict["p_1_0_um"]
                 
                 else:
-                    the_modified_sensor_data["pm1.0"] = int((sensor_dict["p_1_0_um"] + sensor_dict["p_1_0_um_b"]) / 2)
+                    the_modified_sensor_data["pm1.0"] = float((sensor_dict["p_1_0_um"] + sensor_dict["p_1_0_um_b"]) / 2)
                     the_modified_sensor_data["pm1.0_a"] = sensor_dict["p_1_0_um"]
                     the_modified_sensor_data["pm1.0_b"] = sensor_dict["p_1_0_um_b"]
 
-                # "pm1.0_atm": 0.0,
-                # "pm1.0_atm_a": 0.0,
-                # "pm1.0_atm_b": 0.0,
-                # "pm1.0_cf_1": 0.0,
-                # "pm1.0_cf_1_a": 0.0,
-                # "pm1.0_cf_1_b": 0.0,
+                if "pm1_0_atm_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm1.0_atm"] = sensor_dict["pm1_0_atm"]
+                    the_modified_sensor_data["pm1.0_atm_a"] = sensor_dict["pm1_0_atm"]
+                
+                else:
+                    the_modified_sensor_data["pm1.0_atm"] = float((sensor_dict["pm1_0_atm"] + sensor_dict["pm1_0_atm_b"]) / 2)
+                    the_modified_sensor_data["pm1.0_atm_a"] = sensor_dict["pm1_0_atm"]
+                    the_modified_sensor_data["pm1.0_atm_b"] = sensor_dict["pm1_0_atm_b"]
+
+
+                if "pm1_0_cf_1_b" not in sensor_dict.keys():
+                    the_modified_sensor_data["pm1.0_cf_1"] = sensor_dict["pm1_0_cf_1"]
+                    the_modified_sensor_data["pm1.0_cf_1_a"] = sensor_dict["pm1_0_cf_1"]
+                
+                else:
+                    the_modified_sensor_data["pm1.0_cf_1"] = float((sensor_dict["pm1_0_cf_1"] + sensor_dict["pm1_0_cf_1_b"]) / 2)
+                    the_modified_sensor_data["pm1.0_cf_1_a"] = sensor_dict["pm1_0_cf_1"]
+                    the_modified_sensor_data["pm1.0_cf_1_b"] = sensor_dict["pm1_0_cf_1_b"]
 
                 ###### PM2.5 fields: ######
                 # "pm2.5_alt": 0.0,
