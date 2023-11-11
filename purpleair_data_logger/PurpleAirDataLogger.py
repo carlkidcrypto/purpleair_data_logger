@@ -491,8 +491,9 @@ class PurpleAirDataLogger:
                 ]
 
                 # Since we want this to work for all loggers let's make an assumption. The 'SensorId' is the 'name' since it is just a MAC address.
-                # The 'Id' is the `sensor_index` since it is an int type and will work for all the loggers.
-                the_modified_sensor_data["sensor_index"] = sensor_dict["Id"]
+                # The 'Id' is not the `sensor_index` it increments when the data changes. It is more of a `sample_id`. Let's just use the mac as a base
+                # 10 number. That should be unique.
+                the_modified_sensor_data["sensor_index"] = int(str(sensor_dict["SensorId"]).replace(":", ""), 16)
 
                 ###### Station information and status fields: ######
                 the_modified_sensor_data["name"] = sensor_dict["SensorId"]
@@ -640,7 +641,7 @@ class PurpleAirDataLogger:
                     the_modified_sensor_data["pm2.5"] = float(
                         (sensor_dict["p_2_5_um"] + sensor_dict["p_2_5_um_b"]) / 2
                     )
-                    the_modified_sensor_data["pm2.5_a"] = sensor_dict["p_2_5_um_a"]
+                    the_modified_sensor_data["pm2.5_a"] = sensor_dict["p_2_5_um"]
                     the_modified_sensor_data["pm2.5_b"] = sensor_dict["p_2_5_um_b"]
 
                 if "pm2_5_atm_b" not in sensor_dict.keys():
@@ -698,7 +699,7 @@ class PurpleAirDataLogger:
                     the_modified_sensor_data["pm10.0"] = float(
                         (sensor_dict["p_10_0_um"] + sensor_dict["p_10_0_um_b"]) / 2
                     )
-                    the_modified_sensor_data["pm10.0_a"] = sensor_dict["p_10_0_um_a"]
+                    the_modified_sensor_data["pm10.0_a"] = sensor_dict["p_10_0_um"]
                     the_modified_sensor_data["pm10.0_b"] = sensor_dict["p_10_0_um_b"]
 
                 if "pm10_0_atm_b" not in sensor_dict.keys():
@@ -771,6 +772,7 @@ class PurpleAirDataLogger:
                     requesting new data again..."""
             )
 
+            del local_sensor_dict
             sleep(json_config_file["poll_interval_seconds"])
 
     def _construct_store_sensor_data_type(self, raw_data) -> list:
