@@ -47,7 +47,11 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     """
 
     def __init__(
-        self, PurpleAirApiReadKey=None, PurpleAirApiWriteKey=None, PurpleAirApiIpv4Address=None, path_to_save_csv_files_in=None
+        self,
+        PurpleAirApiReadKey=None,
+        PurpleAirApiWriteKey=None,
+        PurpleAirApiIpv4Address=None,
+        path_to_save_csv_files_in=None,
     ):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
@@ -58,7 +62,9 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
-        super().__init__(PurpleAirApiReadKey, PurpleAirApiWriteKey,PurpleAirApiIpv4Address)
+        super().__init__(
+            PurpleAirApiReadKey, PurpleAirApiWriteKey, PurpleAirApiIpv4Address
+        )
 
         # save off the store path internally for later access
         self._path_to_save_csv_files_in = path_to_save_csv_files_in
@@ -515,10 +521,11 @@ if __name__ == "__main__":
     if args.paa_local_sensor_request_json_file:
         # This is a temp working solution. We will need to redo this at some point.
         import json
+
         file_obj = open(args.paa_local_sensor_request_json_file, "r")
         the_json_file = json.load(file_obj)
         file_obj.close()
-        ipv4_address_list = the_json_file["sensor_ip_list"] # LOAD THIS IN MAYBE ???
+        ipv4_address_list = the_json_file["sensor_ip_list"]  # LOAD THIS IN MAYBE ???
         del the_json_file
 
     the_paa_csv_data_logger = PurpleAirCSVDataLogger(
