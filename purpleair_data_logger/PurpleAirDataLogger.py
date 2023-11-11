@@ -493,7 +493,9 @@ class PurpleAirDataLogger:
                 # Since we want this to work for all loggers let's make an assumption. The 'SensorId' is the 'name' since it is just a MAC address.
                 # The 'Id' is not the `sensor_index` it increments when the data changes. It is more of a `sample_id`. Let's just use the mac as a base
                 # 10 number. That should be unique.
-                the_modified_sensor_data["sensor_index"] = int(str(sensor_dict["SensorId"]).replace(":", ""), 16)
+                the_modified_sensor_data["sensor_index"] = int(
+                    str(sensor_dict["SensorId"]).replace(":", ""), 16
+                )
 
                 ###### Station information and status fields: ######
                 the_modified_sensor_data["name"] = sensor_dict["SensorId"]
