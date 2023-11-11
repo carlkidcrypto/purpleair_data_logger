@@ -12,7 +12,7 @@ def read_file(filename):
 
 setup(
     name="purpleair_data_logger",
-    version="1.2.1",
+    version="1.3.0a0",
     license="MIT",
     author="Carlos Santos",
     author_email="dose.lucky.sake@cloak.id",
@@ -29,6 +29,6 @@ setup(
         "purple air api",
         "PurpleAirSQLiteDataLogger",
     ],
-    install_requires=["pg8000==1.29.6", "requests", "purpleair_api==1.0.2"],
+    install_requires=["pg8000==1.30.1", "requests", "purpleair_api==1.1.1"],
     platforms=["Windows 32/64", "Linux 32/64", "MacOS 32/64"],
 )

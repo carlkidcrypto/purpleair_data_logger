@@ -1,4 +1,5 @@
 {
+    "poll_interval_seconds": 60,
     "sensor_index": 53,
     "read_key": null,
     "fields": null
