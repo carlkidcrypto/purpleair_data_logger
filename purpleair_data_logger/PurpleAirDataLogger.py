@@ -9,6 +9,7 @@ from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log, PurpleAirAPIErro
 from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     validate_sensor_data_before_insert,
     construct_store_sensor_data_type,
+    flatten_single_sensor_data,
 )
 from time import sleep
 import json
@@ -119,52 +120,7 @@ class PurpleAirDataLogger:
                 json_config_file["fields"],
             )
 
-            # Let's make it easier on ourselves by making the sensor data one level deep.
-            # Instead of json["sensor"]["KEYS..."] and json["sensor"]["stats_a"]["KEYS..."] etc
-            # We turn it into just json["KEYS..."].
-            the_modified_sensor_data = {}
-            the_modified_sensor_data["data_time_stamp"] = sensor_data["data_time_stamp"]
-            for key, val in sensor_data["sensor"].items():
-                if key == "stats":
-                    # For now name this one stats_pm2.5 until I understand the difference
-                    # between sensor_data["stats"]["pm2.5"] and sensor_data["pm2.5"].
-                    # Update 07/25/2022: Heard back from PurpleAir. They are the same.
-                    the_modified_sensor_data["stats_pm2.5"] = val["pm2.5"]
-                    the_modified_sensor_data["pm2.5_10minute"] = val["pm2.5_10minute"]
-                    the_modified_sensor_data["pm2.5_30minute"] = val["pm2.5_30minute"]
-                    the_modified_sensor_data["pm2.5_60minute"] = val["pm2.5_60minute"]
-                    the_modified_sensor_data["pm2.5_6hour"] = val["pm2.5_6hour"]
-                    the_modified_sensor_data["pm2.5_24hour"] = val["pm2.5_24hour"]
-                    the_modified_sensor_data["pm2.5_1week"] = val["pm2.5_1week"]
-                    the_modified_sensor_data["pm2.5_time_stamp"] = val["time_stamp"]
-
-                elif key in ["stats_a", "stats_b"]:
-                    the_modified_sensor_data[f"pm2.5_{key[-1]}"] = val["pm2.5"]
-                    the_modified_sensor_data[f"pm2.5_10minute_{key[-1]}"] = val[
-                        "pm2.5_10minute"
-                    ]
-                    the_modified_sensor_data[f"pm2.5_30minute_{key[-1]}"] = val[
-                        "pm2.5_30minute"
-                    ]
-                    the_modified_sensor_data[f"pm2.5_60minute_{key[-1]}"] = val[
-                        "pm2.5_60minute"
-                    ]
-                    the_modified_sensor_data[f"pm2.5_6hour_{key[-1]}"] = val[
-                        "pm2.5_6hour"
-                    ]
-                    the_modified_sensor_data[f"pm2.5_24hour_{key[-1]}"] = val[
-                        "pm2.5_24hour"
-                    ]
-                    the_modified_sensor_data[f"pm2.5_1week_{key[-1]}"] = val[
-                        "pm2.5_1week"
-                    ]
-                    the_modified_sensor_data[f"time_stamp_{key[-1]}"] = val[
-                        "time_stamp"
-                    ]
-
-                else:
-                    the_modified_sensor_data[key] = val
-
+            the_modified_sensor_data = flatten_single_sensor_data(sensor_data)
             the_modified_sensor_data = validate_sensor_data_before_insert(
                 the_modified_sensor_data
             )
