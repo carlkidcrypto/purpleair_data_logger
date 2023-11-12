@@ -6,86 +6,12 @@
 """
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log, PurpleAirAPIError
-from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
+from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
+    validate_sensor_data_before_insert,
+    construct_store_sensor_data_type,
+)
 from time import sleep
 import json
-import argparse
-
-
-def generate_common_arg_parser(argparse_description=""):
-    """
-    A function to generate the common arguments that all data loggers need
-
-    :param str argparse_description: A description for the argument parser that will be return
-
-    :return An instance of argparse with the common arguments added.
-    """
-
-    parser = argparse.ArgumentParser(description=argparse_description)
-
-    parser.add_argument(
-        "-paa_read_key",
-        required=False,
-        default=None,
-        dest="paa_read_key",
-        type=str,
-        help="""The PurpleAirAPI Read key""",
-    )
-
-    parser.add_argument(
-        "-paa_write_key",
-        required=False,
-        default=None,
-        dest="paa_write_key",
-        type=str,
-        help="""The PurpleAirAPI write key""",
-    )
-
-    parser.add_argument(
-        "-paa_single_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_single_sensor_request_json_file",
-        type=str,
-        help="""The
-                            path to a json file containing the parameters to send a single
-                            sensor request.""",
-    )
-
-    parser.add_argument(
-        "-paa_multiple_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_multiple_sensor_request_json_file",
-        type=str,
-        help="""The
-                            path to a json file containing the parameters to send a multiple
-                            sensor request.""",
-    )
-
-    parser.add_argument(
-        "-paa_group_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_group_sensor_request_json_file",
-        type=str,
-        help="""The
-                            path to a json file containing the parameters to send a group
-                            sensor request.""",
-    )
-
-    parser.add_argument(
-        "-paa_local_sensor_request_json_file",
-        required=False,
-        default=None,
-        dest="paa_local_sensor_request_json_file",
-        type=str,
-        help="""The
-                            path to a json file containing the parameters to send a local
-                            sensor request.""",
-    )
-
-    return parser
 
 
 class PurpleAirDataLoggerError(Exception):
@@ -166,30 +92,6 @@ class PurpleAirDataLogger:
             "Must be implemented by class that is inheriting PurpleAirDataLogger!"
         )
 
-    def _validate_sensor_data_before_insert(self, the_modified_sensor_data) -> dict:
-        """
-        Before we store the data, we must make sure all fields have been included.
-        Our psql/sqlite store statements expect all fields regardless of what we request.
-
-        :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
-
-        return A dictionary with all the data fields filled out.
-        """
-
-        # Make a copy first
-        temp_the_modified_sensor_data = the_modified_sensor_data
-        for field in ACCEPTED_FIELD_NAMES_DICT.keys():
-            if field not in temp_the_modified_sensor_data.keys():
-                temp_the_modified_sensor_data[str(field)] = ACCEPTED_FIELD_NAMES_DICT[
-                    field
-                ]
-
-        # Delete some stuff
-        del the_modified_sensor_data
-
-        # Then return the modified copy
-        return temp_the_modified_sensor_data
-
     def _run_loop_for_storing_single_sensor_data(self, json_config_file) -> dict:
         """
         A method containing the run loop for inserting a single sensors' data into the data logger.
@@ -263,7 +165,7 @@ class PurpleAirDataLogger:
                 else:
                     the_modified_sensor_data[key] = val
 
-            the_modified_sensor_data = self._validate_sensor_data_before_insert(
+            the_modified_sensor_data = validate_sensor_data_before_insert(
                 the_modified_sensor_data
             )
             self.store_sensor_data(the_modified_sensor_data)
@@ -321,9 +223,7 @@ class PurpleAirDataLogger:
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
             store_sensor_data_type_list = []
-            store_sensor_data_type_list = self._construct_store_sensor_data_type(
-                sensors_data
-            )
+            store_sensor_data_type_list = construct_store_sensor_data_type(sensors_data)
 
             for store_sensor_data_type in store_sensor_data_type_list:
                 # Store the current data
@@ -449,9 +349,7 @@ class PurpleAirDataLogger:
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
 
-            store_sensor_data_type_list = self._construct_store_sensor_data_type(
-                members_data
-            )
+            store_sensor_data_type_list = construct_store_sensor_data_type(members_data)
 
             for store_sensor_data_type in store_sensor_data_type_list:
                 # Store the current data
@@ -764,7 +662,7 @@ class PurpleAirDataLogger:
                 # "secondary_id_b": 0,
                 # "secondary_key_b": "",
 
-                the_modified_sensor_data = self._validate_sensor_data_before_insert(
+                the_modified_sensor_data = validate_sensor_data_before_insert(
                     the_modified_sensor_data
                 )
                 self.store_sensor_data(the_modified_sensor_data)
@@ -777,7 +675,7 @@ class PurpleAirDataLogger:
             del local_sensor_dict
             sleep(json_config_file["poll_interval_seconds"])
 
-    def _construct_store_sensor_data_type(self, raw_data) -> list:
+    def construct_store_sensor_data_type(self, raw_data) -> list:
         """
         A method to build the dict data type that the store_sensor_data method expects.
 
@@ -807,7 +705,7 @@ class PurpleAirDataLogger:
                     str(extracted_fields[data_index])
                 ] = data_item
 
-            the_modified_sensor_data_dict = self._validate_sensor_data_before_insert(
+            the_modified_sensor_data_dict = validate_sensor_data_before_insert(
                 the_modified_sensor_data_dict
             )
 
