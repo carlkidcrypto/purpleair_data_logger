@@ -29,6 +29,7 @@ jobs:
                  python -m pip install --upgrade pip ;
                  python -m pip install coverage ;
                  python -m pip install requests_mock ;
+                 python -m pip install purpleair_api ;
 
       - name: Run unit tests...
         uses: knicknic/os-specific-run@v1.0.4
