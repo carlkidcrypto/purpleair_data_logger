@@ -8,6 +8,7 @@
 import unittest
 import requests_mock
 import sys
+from json import load
 
 sys.path.append("../")
 
@@ -15,6 +16,18 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     generate_common_arg_parser,
     validate_sensor_data_before_insert,
     construct_store_sensor_data_type,
+    flatten_single_sensor_data,
+)
+
+from helpers import (
+    EXPECTED_FILE_CONTENTS_1,
+    EXPECTED_FILE_CONTENTS_2,
+    EXPECTED_FILE_CONTENTS_3,
+    EXPECTED_FILE_CONTENTS_4,
+    EXPECTED_FILE_CONTENTS_5,
+    EXPECTED_FILE_CONTENTS_6,
+    EXPECTED_FILE_CONTENTS_7,
+    EXPECTED_FILE_CONTENTS_8,
 )
 
 
@@ -549,3 +562,69 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         ]
         retval = construct_store_sensor_data_type(data_in)
         self.assertEqual(retval, data_out)
+
+    def test_flatten_single_sensor_data(self):
+        """
+        Test that the flatten_single_sensor_data can handle all the sample responses under ../external_network_hardware_variant_json_samples/*.json
+        """
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/1.0+1M+PMSX003-O.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_1
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/2.0+1M+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_2
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/2.0+BME280+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_3
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/2.0+BME280+PMSX003-B+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_4
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/2.0+OPENLOG+31037 MB+DS3231+BME280+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_5
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/2.0+OPENLOG+31037 MB+DS3231+BME280+PMSX003-B+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        print(retval)
+        expected_value = EXPECTED_FILE_CONTENTS_6
+        self.assertEqual(retval, expected_value)
