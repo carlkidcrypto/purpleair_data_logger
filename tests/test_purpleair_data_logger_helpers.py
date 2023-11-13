@@ -167,3 +167,25 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         retval = flatten_single_sensor_data(file_data)
         expected_value = EXPECTED_FILE_CONTENTS_8
         self.assertEqual(retval, expected_value)
+
+
+    def test_logic_for_storing_single_sensor_data(self):
+        """
+        """
+        pass
+
+
+    def test_logic_for_storing_multiple_sensors_data(self):
+        """
+        """
+        pass
+
+    def test_logic_for_storing_group_sensors_data(self):
+        """
+        """
+        pass
+
+    def test_logic_for_storing_local_sensors_data(self):
+        """
+        """
+        pass
