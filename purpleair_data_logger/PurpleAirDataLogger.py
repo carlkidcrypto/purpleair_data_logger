@@ -178,7 +178,6 @@ class PurpleAirDataLogger:
             # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
-            store_sensor_data_type_list = []
             store_sensor_data_type_list = construct_store_sensor_data_type(sensors_data)
 
             for store_sensor_data_type in store_sensor_data_type_list:
@@ -297,6 +296,7 @@ class PurpleAirDataLogger:
             )
 
             assert group_id_to_use == members_data["group_id"]
+
             # The sensors data will look something like this:
             # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
             # 'max_age': 604800, 'firmware_default_version': '7.02', 'fields': ['sensor_index', 'name'], 'data': [[77, 'Sunnyside'],
@@ -304,7 +304,6 @@ class PurpleAirDataLogger:
             # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
             # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
             # Now lets build and feed what the store_sensor_data() method expects.
-
             store_sensor_data_type_list = construct_store_sensor_data_type(members_data)
 
             for store_sensor_data_type in store_sensor_data_type_list:
