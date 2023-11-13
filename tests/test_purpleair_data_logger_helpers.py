@@ -625,6 +625,25 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         file_data = load(file_obj)
         file_obj.close()
         retval = flatten_single_sensor_data(file_data)
-        print(retval)
         expected_value = EXPECTED_FILE_CONTENTS_6
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/3.0+BME280+BME680+PMSX003-A.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_7
+        self.assertEqual(retval, expected_value)
+
+        file_obj = open(
+            "../external_network_hardware_variant_json_samples/3.0+OPENLOG+31037 MB+DS3231+BME280+BME68X+PMSX003-A+PMSX003-B.json",
+            "r",
+        )
+        file_data = load(file_obj)
+        file_obj.close()
+        retval = flatten_single_sensor_data(file_data)
+        expected_value = EXPECTED_FILE_CONTENTS_8
         self.assertEqual(retval, expected_value)
