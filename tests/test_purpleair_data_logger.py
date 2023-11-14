@@ -45,12 +45,12 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         """
 
         # Setup
-        fake_url_request = "https://api.purpleair.com/v1/keys"
+        expected_url_request = "https://api.purpleair.com/v1/keys"
 
         # Action and Expected Result
         with requests_mock.Mocker() as m:
             m.get(
-                fake_url_request,
+                expected_url_request,
                 text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
                 status_code=200,
             )
@@ -66,12 +66,12 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         """
 
         # Setup
-        fake_url_request = "https://api.purpleair.com/v1/keys"
+        expected_url_request = "https://api.purpleair.com/v1/keys"
 
         # Action and Expected Result
         with requests_mock.Mocker() as m:
             m.get(
-                fake_url_request,
+                expected_url_request,
                 text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
                 status_code=200,
             )

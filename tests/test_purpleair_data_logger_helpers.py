@@ -6,9 +6,10 @@
 
 
 import unittest
+from unittest.mock import MagicMock
 import requests_mock
 import sys
-from json import load
+from json import load, dumps
 
 sys.path.append("../")
 
@@ -17,11 +18,16 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     validate_sensor_data_before_insert,
     construct_store_sensor_data_type,
     flatten_single_sensor_data,
+    logic_for_storing_single_sensor_data,
 )
+
+from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
 
 from helpers import (
     DATA_IN_1,
+    DATA_IN_2,
     DATA_OUT_1,
+    DATA_OUT_2,
     EXPECTED_VALUE_1,
     EXPECTED_FILE_CONTENTS_1,
     EXPECTED_FILE_CONTENTS_2,
@@ -168,24 +174,47 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         expected_value = EXPECTED_FILE_CONTENTS_8
         self.assertEqual(retval, expected_value)
 
-
     def test_logic_for_storing_single_sensor_data(self):
         """
+        Test the main logic for the PurpleAirDataLogger.`_run_loop_for_storing_single_sensor_data` method.
         """
-        pass
 
+        # Setup
+        expected_url_request = "https://api.purpleair.com/v1/keys"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl.store_sensor_data = MagicMock(name="method")
+        json_config_file = {
+            "sensor_index": "1111",
+            "read_key": None,
+            "fields": ["name", "icon", "model", "hardware", "location_type"],
+        }
+
+        # Action & Expected Result
+        expected_url_request = "https://api.purpleair.com/v1/sensors/1111?fields=%5B'name','icon','model','hardware','location_type'%5D"
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text=f"{dumps(DATA_IN_2)}",
+                status_code=200,
+            )
+            logic_for_storing_single_sensor_data(padl, json_config_file)
+            padl.store_sensor_data.assert_called_once_with(DATA_OUT_2)
 
     def test_logic_for_storing_multiple_sensors_data(self):
-        """
-        """
+        """ """
         pass
 
     def test_logic_for_storing_group_sensors_data(self):
-        """
-        """
+        """ """
         pass
 
     def test_logic_for_storing_local_sensors_data(self):
-        """
-        """
+        """ """
         pass

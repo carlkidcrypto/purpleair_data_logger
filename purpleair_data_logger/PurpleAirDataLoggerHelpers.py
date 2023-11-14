@@ -114,8 +114,8 @@ def construct_store_sensor_data_type(raw_data) -> list:
     """
     A method to build the dict data type that the store_sensor_data method expects.
 
-    :param dict raw_data: The return value from either paa_obj._purpleair_api_obj.request_members_data or
-                            paa_obj._purpleair_api_obj.request_multiple_sensors_data.
+    :param dict raw_data: The return value from either padl_obj.request_members_data or
+                            padl_obj.request_multiple_sensors_data.
 
     :return A list full of the dict data type that the store_sensor_data method expects.
     """
@@ -130,7 +130,7 @@ def construct_store_sensor_data_type(raw_data) -> list:
     # Grab each list of data items from extracted data
     for data_list in extracted_data:
         # Start making our modified sensor data object that will be passed to the
-        # paa_obj.store_sensor_data() method
+        # padl_obj.store_sensor_data() method
         the_modified_sensor_data_dict = {}
         the_modified_sensor_data_dict["data_time_stamp"] = raw_data["data_time_stamp"]
         for data_index, data_item in enumerate(data_list):
@@ -154,7 +154,7 @@ def flatten_single_sensor_data(raw_data) -> dict:
     """
     A method to flatten the raw data from a single sensor request. This makes our logic downstream easier.
 
-    :param dict raw_data: The return value from paa_obj._purpleair_api_obj.request_sensor_data.
+    :param dict raw_data: The return value from padl_obj.request_sensor_data.
 
     :return A single level dict full request_sensor_data data.
     """
@@ -200,11 +200,11 @@ def flatten_single_sensor_data(raw_data) -> dict:
     return the_modified_sensor_data
 
 
-def logic_for_storing_single_sensor_data(paa_obj, json_config_file) -> None:
+def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
     """
     A method containing the run loop for inserting a single sensors' data into the data logger.
 
-    :param PurpleAirAPI paa_obj: A valid instance of PurpleAirAPI.
+    :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
     :param dict json_config_file: A dictionary object of the json config file using json load.
     :return None
     """
@@ -216,7 +216,7 @@ def logic_for_storing_single_sensor_data(paa_obj, json_config_file) -> None:
     )
 
     sensor_data = None
-    sensor_data = paa_obj._purpleair_api_obj.request_sensor_data(
+    sensor_data = padl_obj._purpleair_api_obj.request_sensor_data(
         json_config_file["sensor_index"],
         json_config_file["read_key"],
         json_config_file["fields"],
@@ -226,9 +226,9 @@ def logic_for_storing_single_sensor_data(paa_obj, json_config_file) -> None:
     the_modified_sensor_data = validate_sensor_data_before_insert(
         the_modified_sensor_data
     )
-    paa_obj.store_sensor_data(the_modified_sensor_data)
+    padl_obj.store_sensor_data(the_modified_sensor_data)
     debug_log(
-        f"""Waiting {paa_obj.send_request_every_x_seconds} seconds before
+        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
             requesting new data again..."""
     )
 
@@ -237,11 +237,11 @@ def logic_for_storing_single_sensor_data(paa_obj, json_config_file) -> None:
     del the_modified_sensor_data
 
 
-def logic_for_storing_multiple_sensors_data(paa_obj, json_config_file) -> None:
+def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     """
     A method containing the run loop for inserting a multiple sensors' data into the data logger.
 
-    :param PurpleAirAPI paa_obj: A valid instance of PurpleAirAPI.
+    :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
     :param dict json_config_file: A dictionary object of the json config file using json load.
     :return None
     """
@@ -253,7 +253,7 @@ def logic_for_storing_multiple_sensors_data(paa_obj, json_config_file) -> None:
     )
 
     sensors_data = None
-    sensors_data = paa_obj._purpleair_api_obj.request_multiple_sensors_data(
+    sensors_data = padl_obj.request_multiple_sensors_data(
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
         read_keys=json_config_file["read_keys"],
@@ -278,10 +278,10 @@ def logic_for_storing_multiple_sensors_data(paa_obj, json_config_file) -> None:
 
     for store_sensor_data_type in store_sensor_data_type_list:
         # Store the current data
-        paa_obj.store_sensor_data(store_sensor_data_type)
+        padl_obj.store_sensor_data(store_sensor_data_type)
 
     debug_log(
-        f"""Waiting {paa_obj.send_request_every_x_seconds} seconds before
+        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
                 requesting new data again..."""
     )
 
@@ -291,12 +291,12 @@ def logic_for_storing_multiple_sensors_data(paa_obj, json_config_file) -> None:
 
 
 def logic_for_storing_group_sensors_data(
-    paa_obj, group_id_to_use, json_config_file
+    padl_obj, group_id_to_use, json_config_file
 ) -> None:
     """
     A method containing the run loop for inserting a group sensors' data into the data logger.
 
-    :param PurpleAirAPI paa_obj: A valid instance of PurpleAirAPI.
+    :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
     :param str: The group id to be used. Starts out being `None` then gets filled out.
     :param dict json_config_file: A dictionary object of the json config file using json load.
     :return None
@@ -304,9 +304,7 @@ def logic_for_storing_group_sensors_data(
 
     if group_id_to_use is None:
         # Get a current list of sensors that the API key provided owns
-        group_dict_list_data = paa_obj._purpleair_api_obj.request_group_list_data()[
-            "groups"
-        ]
+        group_dict_list_data = padl_obj.request_group_list_data()["groups"]
 
         # Now make the sensor_group_name if it doesn't already exist.
         does_sensor_group_name_exist = False
@@ -323,7 +321,7 @@ def logic_for_storing_group_sensors_data(
             print(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created..."
             )
-            retval = paa_obj._purpleair_api_obj.post_create_group_data(
+            retval = padl_obj.post_create_group_data(
                 json_config_file["sensor_group_name"]
             )
             group_id_to_use = retval["group_id"]
@@ -331,9 +329,9 @@ def logic_for_storing_group_sensors_data(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` has been created! Its `group_id` number is `{group_id_to_use}`..."
             )
             print(
-                f"Waiting {paa_obj.send_request_every_x_seconds} seconds for group to be created on server..."
+                f"Waiting {padl_obj.send_request_every_x_seconds} seconds for group to be created on server..."
             )
-            sleep(paa_obj.send_request_every_x_seconds)
+            sleep(padl_obj.send_request_every_x_seconds)
 
         else:
             print(
@@ -347,7 +345,7 @@ def logic_for_storing_group_sensors_data(
             )
             for sensor_index_val in json_config_file["sensor_index_list"]:
                 try:
-                    retval = paa_obj._purpleair_api_obj.post_create_member(
+                    retval = padl_obj.post_create_member(
                         group_id=group_id_to_use, sensor_index=sensor_index_val
                     )
                     print(
@@ -370,7 +368,7 @@ def logic_for_storing_group_sensors_data(
             print(f"No sensors will be added to the `group_id` - {group_id_to_use}...")
 
     assert group_id_to_use is not None
-    members_data = paa_obj._purpleair_api_obj.request_members_data(
+    members_data = padl_obj.request_members_data(
         group_id=group_id_to_use,
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
@@ -397,25 +395,25 @@ def logic_for_storing_group_sensors_data(
 
     for store_sensor_data_type in store_sensor_data_type_list:
         # Store the current data
-        paa_obj.store_sensor_data(store_sensor_data_type)
+        padl_obj.store_sensor_data(store_sensor_data_type)
 
     debug_log(
-        f"""Waiting {paa_obj.send_request_every_x_seconds} seconds before
+        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
                 requesting new data again..."""
     )
 
 
-def logic_for_storing_local_sensors_data(paa_obj, json_config_file) -> None:
+def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     """
     A method containing the run loop for inserting a local sensors' data into the data logger.
 
-    :param PurpleAirAPI paa_obj: A valid instance of PurpleAirAPI.
+    :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
     :param dict json_config_file: A dictionary object of the json config file using json load.
     :return None
     """
 
     # Ask for our local sensor data
-    local_sensor_dict = paa_obj._purpleair_api_obj.request_local_sensor_data()
+    local_sensor_dict = padl_obj.request_local_sensor_data()
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to
@@ -670,7 +668,7 @@ def logic_for_storing_local_sensors_data(paa_obj, json_config_file) -> None:
         the_modified_sensor_data = validate_sensor_data_before_insert(
             the_modified_sensor_data
         )
-        paa_obj.store_sensor_data(the_modified_sensor_data)
+        padl_obj.store_sensor_data(the_modified_sensor_data)
 
     debug_log(
         f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
