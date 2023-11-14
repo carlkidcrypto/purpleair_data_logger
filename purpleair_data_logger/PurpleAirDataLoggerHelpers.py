@@ -253,7 +253,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     )
 
     sensors_data = None
-    sensors_data = padl_obj.request_multiple_sensors_data(
+    sensors_data = padl_obj._purpleair_api_obj.request_multiple_sensors_data(
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
         read_keys=json_config_file["read_keys"],

@@ -19,6 +19,7 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     construct_store_sensor_data_type,
     flatten_single_sensor_data,
     logic_for_storing_single_sensor_data,
+    logic_for_storing_multiple_sensors_data,
 )
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
@@ -28,6 +29,9 @@ from helpers import (
     DATA_IN_2,
     DATA_OUT_1,
     DATA_OUT_2,
+    DATA_OUT_3,
+    DATA_OUT_4,
+    DATA_OUT_5,
     EXPECTED_VALUE_1,
     EXPECTED_FILE_CONTENTS_1,
     EXPECTED_FILE_CONTENTS_2,
@@ -189,7 +193,7 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 status_code=200,
             )
             padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
-            padl.store_sensor_data = MagicMock(name="method")
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
         json_config_file = {
             "sensor_index": "1111",
             "read_key": None,
@@ -205,11 +209,51 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 status_code=200,
             )
             logic_for_storing_single_sensor_data(padl, json_config_file)
+            padl.store_sensor_data.return_value = None
             padl.store_sensor_data.assert_called_once_with(DATA_OUT_2)
 
     def test_logic_for_storing_multiple_sensors_data(self):
-        """ """
-        pass
+        """
+        Test the main logic for the PurpleAirDataLogger.`_run_loop_for_storing_multiple_sensors_data` method.
+        """
+
+        # Setup
+        expected_url_request = "https://api.purpleair.com/v1/keys"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
+        json_config_file = {
+            "poll_interval_seconds": 60,
+            "fields": "name, icon, model, hardware, location_type, private, latitude, longitude, altitude, position_rating, led_brightness, firmware_version, firmware_upgrade, rssi, uptime, pa_latency, memory, last_seen, last_modified, date_created, channel_state, channel_flags, channel_flags_manual, channel_flags_auto, confidence, confidence_manual, confidence_auto,humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b,voc, voc_a, voc_b, ozone1, analog_input,pm1.0, pm1.0_a, pm1.0_b, pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a,pm1.0_cf_1_b,pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5, pm2.5_a, pm2.5_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b,pm2.5_10minute, pm2.5_10minute_a, pm2.5_10minute_b, pm2.5_30minute, pm2.5_30minute_a, pm2.5_30minute_b, pm2.5_60minute, pm2.5_60minute_a, pm2.5_60minute_b, pm2.5_6hour, pm2.5_6hour_a, pm2.5_6hour_b,pm2.5_24hour, pm2.5_24hour_a, pm2.5_24hour_b, pm2.5_1week, pm2.5_1week_a, pm2.5_1week_b,pm10.0, pm10.0_a, pm10.0_b, pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b,0.3_um_count,0.3_um_count_a,0.3_um_count_b,0.5_um_count,0.5_um_count_a,0.5_um_count_b,1.0_um_count,1.0_um_count_a,1.0_um_count_b,2.5_um_count,2.5_um_count_a,2.5_um_count_b,5.0_um_count,5.0_um_count_a,5.0_um_count_b,10.0_um_count,10.0_um_count_a,10.0_um_count_b,primary_id_a, primary_key_a, secondary_id_a, secondary_key_a, primary_id_b, primary_key_b, secondary_id_b, secondary_key_b",
+            "location_type": None,
+            "read_keys": None,
+            "show_only": None,
+            "modified_since": None,
+            "max_age": None,
+            "nwlng": None,
+            "nwlat": None,
+            "selng": None,
+            "selat": None,
+        }
+
+        # Action & Expected Result
+        expected_url_request = "https://api.purpleair.com/v1/sensors/?fields=name,icon,model,hardware,location_type,private,latitude,longitude,altitude,position_rating,led_brightness,firmware_version,firmware_upgrade,rssi,uptime,pa_latency,memory,last_seen,last_modified,date_created,channel_state,channel_flags,channel_flags_manual,channel_flags_auto,confidence,confidence_manual,confidence_auto,humidity,humidity_a,humidity_b,temperature,temperature_a,temperature_b,pressure,pressure_a,pressure_b,voc,voc_a,voc_b,ozone1,analog_input,pm1.0,pm1.0_a,pm1.0_b,pm1.0_atm,pm1.0_atm_a,pm1.0_atm_b,pm1.0_cf_1,pm1.0_cf_1_a,pm1.0_cf_1_b,pm2.5_alt,pm2.5_alt_a,pm2.5_alt_b,pm2.5,pm2.5_a,pm2.5_b,pm2.5_atm,pm2.5_atm_a,pm2.5_atm_b,pm2.5_cf_1,pm2.5_cf_1_a,pm2.5_cf_1_b,pm2.5_10minute,pm2.5_10minute_a,pm2.5_10minute_b,pm2.5_30minute,pm2.5_30minute_a,pm2.5_30minute_b,pm2.5_60minute,pm2.5_60minute_a,pm2.5_60minute_b,pm2.5_6hour,pm2.5_6hour_a,pm2.5_6hour_b,pm2.5_24hour,pm2.5_24hour_a,pm2.5_24hour_b,pm2.5_1week,pm2.5_1week_a,pm2.5_1week_b,pm10.0,pm10.0_a,pm10.0_b,pm10.0_atm,pm10.0_atm_a,pm10.0_atm_b,pm10.0_cf_1,pm10.0_cf_1_a,pm10.0_cf_1_b,0.3_um_count,0.3_um_count_a,0.3_um_count_b,0.5_um_count,0.5_um_count_a,0.5_um_count_b,1.0_um_count,1.0_um_count_a,1.0_um_count_b,2.5_um_count,2.5_um_count_a,2.5_um_count_b,5.0_um_count,5.0_um_count_a,5.0_um_count_b,10.0_um_count,10.0_um_count_a,10.0_um_count_b,primary_id_a,primary_key_a,secondary_id_a,secondary_key_a,primary_id_b,primary_key_b,secondary_id_b,secondary_key_b"
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text=f"{dumps(DATA_IN_1)}",
+                status_code=200,
+            )
+            logic_for_storing_multiple_sensors_data(padl, json_config_file)
+            padl.store_sensor_data.return_value = None
+            padl.store_sensor_data.side_effect = [DATA_OUT_3, DATA_OUT_4, DATA_OUT_5]
+            self.assertEqual(padl.store_sensor_data.call_count, 3)
 
     def test_logic_for_storing_group_sensors_data(self):
         """ """
