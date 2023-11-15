@@ -289,7 +289,14 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 "selat": None,
             }
 
-        expected_return_data = {
+        expected_return_data_1 = {
+            "groups": [
+                {"name": "A Name Goes Here!", "id": 1234},
+                {"name": "A Name Goes Here", "id": 1234},
+            ]
+        }
+        expected_return_data_2 = {}
+        expected_return_data_3 = {
             "api_version": "V1.0.11-0.0.42",
             "time_stamp": 1676784867,
             "data_time_stamp": 1676784847,
@@ -301,14 +308,27 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         }
 
         # Action & Expected Result
-        expected_url_request = "https://api.purpleair.com/v1/groups/1234/members?fields=name,icon,model,hardware,location_type,private,latitude,longitude,altitude,position_rating,led_brightness,firmware_version,firmware_upgrade,rssi,uptime,pa_latency,memory,last_seen,last_modified,date_created,channel_state,channel_flags,channel_flags_manual,channel_flags_auto,confidence,confidence_manual,confidence_auto,humidity,humidity_a,humidity_b,temperature,temperature_a,temperature_b,pressure,pressure_a,pressure_b,voc,voc_a,voc_b,ozone1,analog_input,pm1.0,pm1.0_a,pm1.0_b,pm1.0_atm,pm1.0_atm_a,pm1.0_atm_b,pm1.0_cf_1,pm1.0_cf_1_a,pm1.0_cf_1_b,pm2.5_alt,pm2.5_alt_a,pm2.5_alt_b,pm2.5,pm2.5_a,pm2.5_b,pm2.5_atm,pm2.5_atm_a,pm2.5_atm_b,pm2.5_cf_1,pm2.5_cf_1_a,pm2.5_cf_1_b,pm2.5_10minute,pm2.5_10minute_a,pm2.5_10minute_b,pm2.5_30minute,pm2.5_30minute_a,pm2.5_30minute_b,pm2.5_60minute,pm2.5_60minute_a,pm2.5_60minute_b,pm2.5_6hour,pm2.5_6hour_a,pm2.5_6hour_b,pm2.5_24hour,pm2.5_24hour_a,pm2.5_24hour_b,pm2.5_1week,pm2.5_1week_a,pm2.5_1week_b,pm10.0,pm10.0_a,pm10.0_b,pm10.0_atm,pm10.0_atm_a,pm10.0_atm_b,pm10.0_cf_1,pm10.0_cf_1_a,pm10.0_cf_1_b,0.3_um_count,0.3_um_count_a,0.3_um_count_b,0.5_um_count,0.5_um_count_a,0.5_um_count_b,1.0_um_count,1.0_um_count_a,1.0_um_count_b,2.5_um_count,2.5_um_count_a,2.5_um_count_b,5.0_um_count,5.0_um_count_a,5.0_um_count_b,10.0_um_count,10.0_um_count_a,10.0_um_count_b,primary_id_a,primary_key_a,secondary_id_a,secondary_key_a,primary_id_b,primary_key_b,secondary_id_b,secondary_key_b"
+        expected_url_request_1 = "https://api.purpleair.com/v1/groups/"
+        expected_url_request_2 = "https://api.purpleair.com/v1/groups/1234/members"
+        expected_url_request_3 = "https://api.purpleair.com/v1/groups/1234/members?fields=name,icon,model,hardware,location_type,private,latitude,longitude,altitude,position_rating,led_brightness,firmware_version,firmware_upgrade,rssi,uptime,pa_latency,memory,last_seen,last_modified,date_created,channel_state,channel_flags,channel_flags_manual,channel_flags_auto,confidence,confidence_manual,confidence_auto,humidity,humidity_a,humidity_b,temperature,temperature_a,temperature_b,pressure,pressure_a,pressure_b,voc,voc_a,voc_b,ozone1,analog_input,pm1.0,pm1.0_a,pm1.0_b,pm1.0_atm,pm1.0_atm_a,pm1.0_atm_b,pm1.0_cf_1,pm1.0_cf_1_a,pm1.0_cf_1_b,pm2.5_alt,pm2.5_alt_a,pm2.5_alt_b,pm2.5,pm2.5_a,pm2.5_b,pm2.5_atm,pm2.5_atm_a,pm2.5_atm_b,pm2.5_cf_1,pm2.5_cf_1_a,pm2.5_cf_1_b,pm2.5_10minute,pm2.5_10minute_a,pm2.5_10minute_b,pm2.5_30minute,pm2.5_30minute_a,pm2.5_30minute_b,pm2.5_60minute,pm2.5_60minute_a,pm2.5_60minute_b,pm2.5_6hour,pm2.5_6hour_a,pm2.5_6hour_b,pm2.5_24hour,pm2.5_24hour_a,pm2.5_24hour_b,pm2.5_1week,pm2.5_1week_a,pm2.5_1week_b,pm10.0,pm10.0_a,pm10.0_b,pm10.0_atm,pm10.0_atm_a,pm10.0_atm_b,pm10.0_cf_1,pm10.0_cf_1_a,pm10.0_cf_1_b,0.3_um_count,0.3_um_count_a,0.3_um_count_b,0.5_um_count,0.5_um_count_a,0.5_um_count_b,1.0_um_count,1.0_um_count_a,1.0_um_count_b,2.5_um_count,2.5_um_count_a,2.5_um_count_b,5.0_um_count,5.0_um_count_a,5.0_um_count_b,10.0_um_count,10.0_um_count_a,10.0_um_count_b,primary_id_a,primary_key_a,secondary_id_a,secondary_key_a,primary_id_b,primary_key_b,secondary_id_b,secondary_key_b"
+
         with requests_mock.Mocker() as m1:
             m1.get(
-                expected_url_request,
-                text=f"{dumps(expected_return_data)}",
+                expected_url_request_1,
+                text=f"{dumps(expected_return_data_1)}",
                 status_code=200,
             )
-            logic_for_storing_group_sensors_data(padl, 1234, json_config_file)
+            m1.post(
+                expected_url_request_2,
+                text=f"{dumps(expected_return_data_2)}",
+                status_code=200,
+            )
+            m1.get(
+                expected_url_request_3,
+                text=f"{dumps(expected_return_data_3)}",
+                status_code=200,
+            )
+            logic_for_storing_group_sensors_data(padl, None, json_config_file)
 
     def test_logic_for_storing_group_sensors_data_without_adding_group(self):
         """
