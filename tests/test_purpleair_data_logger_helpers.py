@@ -438,7 +438,7 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
 
         expected_return_data_1 = {
             "groups": [
-                {"name": "A Name Goes Here!", "id": 4321},
+                {"name": "A Name Goes Here!", "id": 20},
                 {"name": "A Name Goes Here", "id": 4321},
             ]
         }
@@ -475,7 +475,91 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 text=f"{dumps(expected_return_data_3)}",
                 status_code=200,
             )
-            logic_for_storing_group_sensors_data(padl, None, json_config_file)
+            self.assertEqual(
+                logic_for_storing_group_sensors_data(padl, None, json_config_file), 4321
+            )
+
+    def test_logic_for_storing_group_sensors_data_with_adding_group_id_4567_duplicate_and_members_duplicate(
+        self,
+    ):
+        """
+        Test the main logic for the PurpleAirDataLogger.`_run_loop_for_storing_group_sensors_data` method.
+        """
+
+        # Setup
+        expected_url_request = "https://api.purpleair.com/v1/keys"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
+            json_config_file = {
+                "sensor_group_name": "A Name Goes Here",
+                "add_sensors_to_group": True,
+                "sensor_index_list": [77, 81, 95079, 167897],
+                "poll_interval_seconds": 60,
+                "fields": "name, fields",
+                "location_type": None,
+                "read_keys": None,
+                "show_only": None,
+                "modified_since": None,
+                "max_age": None,
+                "nwlng": None,
+                "nwlat": None,
+                "selng": None,
+                "selat": None,
+            }
+
+        expected_return_data_1 = {
+            "groups": [
+                {"name": "A Name Goes Here!", "id": 20},
+                {"name": "A Name Goes Here", "id": 4567},
+            ]
+        }
+        expected_return_data_2 = {
+            "error": 4567,
+            "description": "409: DuplicateGroupEntryError - This sensor already exists in this group."
+        }
+
+        expected_return_data_3 = {
+            "api_version": "V1.0.11-0.0.42",
+            "time_stamp": 1676784867,
+            "data_time_stamp": 1676784847,
+            "group_id": 4567,
+            "max_age": 604800,
+            "firmware_default_version": "7.02",
+            "fields": ["sensor_index", "name"],
+            "data": [[77, "Sunnyside"], [81, "Sherwood Hills 2"]],
+        }
+
+        # Action & Expected Result
+        expected_url_request_1 = "https://api.purpleair.com/v1/groups/"
+        expected_url_request_2 = "https://api.purpleair.com/v1/groups/4567/members"
+        expected_url_request_3 = "https://api.purpleair.com/v1/groups/4567/members?fields=name,fields"
+
+        with requests_mock.Mocker() as m1:
+            m1.get(
+                expected_url_request_1,
+                text=f"{dumps(expected_return_data_1)}",
+                status_code=200,
+            )
+            m1.post(
+                expected_url_request_2,
+                text=f"{dumps(expected_return_data_2)}",
+                status_code=409,
+            )
+            m1.get(
+                expected_url_request_3,
+                text=f"{dumps(expected_return_data_3)}",
+                status_code=200,
+            )
+            self.assertEqual(
+                logic_for_storing_group_sensors_data(padl, None, json_config_file), 4567
+            )
 
     def test_logic_for_storing_local_sensors_data(self):
         """ """

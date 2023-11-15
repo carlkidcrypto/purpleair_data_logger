@@ -314,7 +314,6 @@ def logic_for_storing_group_sensors_data(
             # Find the first name that matches our sensor_group_name. No use to continue further
             if bool(name == json_config_file["sensor_group_name"]):
                 does_sensor_group_name_exist = True
-                print("here")
                 group_id_to_use = id
                 break
 
