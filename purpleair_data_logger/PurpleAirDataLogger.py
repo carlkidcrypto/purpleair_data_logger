@@ -110,7 +110,7 @@ class PurpleAirDataLogger:
                 "_run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n"
             )
             logic_for_storing_single_sensor_data(
-                self._purpleair_api_obj, json_config_file
+                self, json_config_file
             )
             sleep(self.send_request_every_x_seconds)
 
@@ -130,7 +130,7 @@ class PurpleAirDataLogger:
                 "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n"
             )
             logic_for_storing_multiple_sensors_data(
-                self._purpleair_api_obj, json_config_file
+                self, json_config_file
             )
             sleep(self.send_request_every_x_seconds)
 
@@ -151,7 +151,7 @@ class PurpleAirDataLogger:
                 "_run_loop_for_storing_group_sensors_data - Beep boop I am alive...\n\n"
             )
             logic_for_storing_group_sensors_data(
-                self._purpleair_api_obj, group_id_to_use, json_config_file
+                self, group_id_to_use, json_config_file
             )
             sleep(self.send_request_every_x_seconds)
 
@@ -167,7 +167,7 @@ class PurpleAirDataLogger:
                 "_run_loop_for_storing_local_sensors_data - Beep boop I am alive...\n\n"
             )
             logic_for_storing_local_sensors_data(
-                self._purpleair_api_obj, json_config_file
+                self, json_config_file
             )
             sleep(json_config_file["poll_interval_seconds"])
 

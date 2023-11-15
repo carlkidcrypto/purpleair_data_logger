@@ -304,7 +304,7 @@ def logic_for_storing_group_sensors_data(
 
     if group_id_to_use is None:
         # Get a current list of sensors that the API key provided owns
-        group_dict_list_data = padl_obj.request_group_list_data()["groups"]
+        group_dict_list_data = padl_obj._purpleair_api_obj.request_group_list_data()["groups"]
 
         # Now make the sensor_group_name if it doesn't already exist.
         does_sensor_group_name_exist = False
@@ -321,7 +321,7 @@ def logic_for_storing_group_sensors_data(
             print(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created..."
             )
-            retval = padl_obj.post_create_group_data(
+            retval = padl_obj._purpleair_api_obj.post_create_group_data(
                 json_config_file["sensor_group_name"]
             )
             group_id_to_use = retval["group_id"]
@@ -345,7 +345,7 @@ def logic_for_storing_group_sensors_data(
             )
             for sensor_index_val in json_config_file["sensor_index_list"]:
                 try:
-                    retval = padl_obj.post_create_member(
+                    retval = padl_obj._purpleair_api_obj.post_create_member(
                         group_id=group_id_to_use, sensor_index=sensor_index_val
                     )
                     print(
@@ -368,7 +368,7 @@ def logic_for_storing_group_sensors_data(
             print(f"No sensors will be added to the `group_id` - {group_id_to_use}...")
 
     assert group_id_to_use is not None
-    members_data = padl_obj.request_members_data(
+    members_data = padl_obj._purpleair_api_obj.request_members_data(
         group_id=group_id_to_use,
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
@@ -382,7 +382,7 @@ def logic_for_storing_group_sensors_data(
         selat=json_config_file["selat"],
     )
 
-    assert group_id_to_use == members_data["group_id"]
+    assert int(group_id_to_use) == int(members_data["group_id"])
 
     # The sensors data will look something like this:
     # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
