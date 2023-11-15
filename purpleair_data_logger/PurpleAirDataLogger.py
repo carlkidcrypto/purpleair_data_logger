@@ -150,7 +150,7 @@ class PurpleAirDataLogger:
             print(
                 "_run_loop_for_storing_group_sensors_data - Beep boop I am alive...\n\n"
             )
-            logic_for_storing_group_sensors_data(
+            group_id_to_use = logic_for_storing_group_sensors_data(
                 self, group_id_to_use, json_config_file
             )
             sleep(self.send_request_every_x_seconds)

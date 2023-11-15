@@ -8,7 +8,7 @@
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError
 import argparse
-from time import sleep
+import time
 
 
 def generate_common_arg_parser(argparse_description=""):
@@ -292,14 +292,14 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
 
 def logic_for_storing_group_sensors_data(
     padl_obj, group_id_to_use, json_config_file
-) -> None:
+) -> int:
     """
     A method containing the run loop for inserting a group sensors' data into the data logger.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
     :param str: The group id to be used. Starts out being `None` then gets filled out.
     :param dict json_config_file: A dictionary object of the json config file using json load.
-    :return None
+    :return The group_id int
     """
 
     if group_id_to_use is None:
@@ -314,6 +314,7 @@ def logic_for_storing_group_sensors_data(
             # Find the first name that matches our sensor_group_name. No use to continue further
             if bool(name == json_config_file["sensor_group_name"]):
                 does_sensor_group_name_exist = True
+                print("here")
                 group_id_to_use = id
                 break
 
@@ -331,7 +332,7 @@ def logic_for_storing_group_sensors_data(
             print(
                 f"Waiting {padl_obj.send_request_every_x_seconds} seconds for group to be created on server..."
             )
-            sleep(padl_obj.send_request_every_x_seconds)
+            time.sleep(padl_obj.send_request_every_x_seconds)
 
         else:
             print(
@@ -401,6 +402,8 @@ def logic_for_storing_group_sensors_data(
         f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
                 requesting new data again..."""
     )
+
+    return members_data["group_id"]
 
 
 def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
