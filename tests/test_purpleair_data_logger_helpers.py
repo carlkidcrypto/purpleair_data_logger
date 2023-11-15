@@ -520,7 +520,7 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         }
         expected_return_data_2 = {
             "error": 4567,
-            "description": "409: DuplicateGroupEntryError - This sensor already exists in this group."
+            "description": "409: DuplicateGroupEntryError - This sensor already exists in this group.",
         }
 
         expected_return_data_3 = {
@@ -537,7 +537,9 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         # Action & Expected Result
         expected_url_request_1 = "https://api.purpleair.com/v1/groups/"
         expected_url_request_2 = "https://api.purpleair.com/v1/groups/4567/members"
-        expected_url_request_3 = "https://api.purpleair.com/v1/groups/4567/members?fields=name,fields"
+        expected_url_request_3 = (
+            "https://api.purpleair.com/v1/groups/4567/members?fields=name,fields"
+        )
 
         with requests_mock.Mocker() as m1:
             m1.get(

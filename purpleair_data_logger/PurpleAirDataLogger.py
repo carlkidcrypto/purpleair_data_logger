@@ -109,9 +109,7 @@ class PurpleAirDataLogger:
             print(
                 "_run_loop_for_storing_single_sensor_data - Beep boop I am alive...\n\n"
             )
-            logic_for_storing_single_sensor_data(
-                self, json_config_file
-            )
+            logic_for_storing_single_sensor_data(self, json_config_file)
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_multiple_sensors_data(self, json_config_file) -> None:
@@ -129,9 +127,7 @@ class PurpleAirDataLogger:
             print(
                 "_run_loop_for_storing_multiple_sensors_data - Beep boop I am alive...\n\n"
             )
-            logic_for_storing_multiple_sensors_data(
-                self, json_config_file
-            )
+            logic_for_storing_multiple_sensors_data(self, json_config_file)
             sleep(self.send_request_every_x_seconds)
 
     def _run_loop_for_storing_group_sensors_data(self, json_config_file) -> None:
@@ -166,9 +162,7 @@ class PurpleAirDataLogger:
             print(
                 "_run_loop_for_storing_local_sensors_data - Beep boop I am alive...\n\n"
             )
-            logic_for_storing_local_sensors_data(
-                self, json_config_file
-            )
+            logic_for_storing_local_sensors_data(self, json_config_file)
             sleep(json_config_file["poll_interval_seconds"])
 
     def validate_parameters_and_run(

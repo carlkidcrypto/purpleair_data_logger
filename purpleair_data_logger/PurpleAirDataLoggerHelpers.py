@@ -304,7 +304,9 @@ def logic_for_storing_group_sensors_data(
 
     if group_id_to_use is None:
         # Get a current list of sensors that the API key provided owns
-        group_dict_list_data = padl_obj._purpleair_api_obj.request_group_list_data()["groups"]
+        group_dict_list_data = padl_obj._purpleair_api_obj.request_group_list_data()[
+            "groups"
+        ]
 
         # Now make the sensor_group_name if it doesn't already exist.
         does_sensor_group_name_exist = False
