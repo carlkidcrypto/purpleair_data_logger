@@ -6,12 +6,10 @@
 
 
 import unittest
-from unittest.mock import MagicMock
+from unittest.mock import MagicMock, patch
 import requests_mock
 import sys
 from json import load, dumps
-import time
-from mock import patch
 
 sys.path.append("../")
 
