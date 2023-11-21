@@ -21,6 +21,7 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     logic_for_storing_single_sensor_data,
     logic_for_storing_multiple_sensors_data,
     logic_for_storing_group_sensors_data,
+    logic_for_storing_local_sensors_data,
 )
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
@@ -28,11 +29,13 @@ from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
 from helpers import (
     DATA_IN_1,
     DATA_IN_2,
+    DATA_IN_3,
     DATA_OUT_1,
     DATA_OUT_2,
     DATA_OUT_3,
     DATA_OUT_4,
     DATA_OUT_5,
+    DATA_OUT_6,
     EXPECTED_VALUE_1,
     EXPECTED_FILE_CONTENTS_1,
     EXPECTED_FILE_CONTENTS_2,
@@ -562,5 +565,34 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
             )
 
     def test_logic_for_storing_local_sensors_data(self):
-        """ """
-        pass
+        """
+        Test the main logic for the PurpleAirDataLogger.`_run_loop_for_storing_local_sensors_data` method.
+        """
+
+        # Setup
+        expected_url_request = "http://192.168.1.2/json"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text="{}",
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiIpv4Address=["192.168.1.2"])
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
+        json_config_file = {
+            "sensor_ip_list": ["192.168.1.2"],
+            "poll_interval_seconds": 1,
+        }
+
+        # Action & Expected Result
+        expected_url_request = "http://192.168.1.2/json"
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text=f"{dumps(DATA_IN_3)}",
+                status_code=200,
+            )
+            logic_for_storing_local_sensors_data(padl, json_config_file)
+            padl.store_sensor_data.return_value = None
+            padl.store_sensor_data.assert_called_once_with(DATA_OUT_6)

@@ -417,7 +417,7 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     """
 
     # Ask for our local sensor data
-    local_sensor_dict = padl_obj.request_local_sensor_data()
+    local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to
