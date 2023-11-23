@@ -1,2 +1,2 @@
-PyHamcrest==2.0.4
+PyHamcrest==2.1.0
 behave==1.2.6
