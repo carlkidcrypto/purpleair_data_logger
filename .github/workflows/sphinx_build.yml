@@ -1,4 +1,5 @@
 name: "Pull Request Sphinx Docs Check"
+
 on:
   push:
     branches: [ main ]
