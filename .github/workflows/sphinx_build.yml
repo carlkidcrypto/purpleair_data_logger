@@ -6,7 +6,13 @@ jobs:
   docs:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
     - uses: ammaraskar/sphinx-action@master
       with:
         docs-folder: "sphinx_docs_build/"
+        build-command: "make html"
+
+    - uses: actions/upload-artifact@v3
+      with:
+        name: DocumentationHTML
+        path: docs/
