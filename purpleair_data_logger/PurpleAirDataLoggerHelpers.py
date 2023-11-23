@@ -205,7 +205,9 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
     A method containing the run loop for inserting a single sensors' data into the data logger.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
+
     :param dict json_config_file: A dictionary object of the json config file using json load.
+
     :return None
     """
 
@@ -242,7 +244,9 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     A method containing the run loop for inserting a multiple sensors' data into the data logger.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
+
     :param dict json_config_file: A dictionary object of the json config file using json load.
+
     :return None
     """
 
@@ -297,8 +301,11 @@ def logic_for_storing_group_sensors_data(
     A method containing the run loop for inserting a group sensors' data into the data logger.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
+
     :param str: The group id to be used. Starts out being `None` then gets filled out.
+
     :param dict json_config_file: A dictionary object of the json config file using json load.
+
     :return The group_id int
     """
 
@@ -412,7 +419,9 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     A method containing the run loop for inserting a local sensors' data into the data logger.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
+
     :param dict json_config_file: A dictionary object of the json config file using json load.
+
     :return None
     """
 
