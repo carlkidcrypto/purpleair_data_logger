@@ -65,7 +65,7 @@
         "secondary_id_b": 1566366,
         "secondary_key_b": "8BZC8PVWJMB5CG20",
         "stats": {
-            "pm2.5": None,
+            "pm2.5": null,
             "pm2.5_10minute": 11.3,
             "pm2.5_30minute": 11.6,
             "pm2.5_60minute": 12.1,
@@ -85,7 +85,7 @@
             "time_stamp": 1675087378
         },
         "stats_b": {
-            "pm2.5": None,
+            "pm2.5": null,
             "pm2.5_10minute": 11.3,
             "pm2.5_30minute": 11.6,
             "pm2.5_60minute": 12.1,

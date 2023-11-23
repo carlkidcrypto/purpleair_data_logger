@@ -4,18 +4,18 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>purpleair_data_logger &mdash; PurpleAir Data Logger(s) V1.2.1 documentation</title>
+  <title>purpleair_data_logger &mdash; PurpleAir Data Logger(s) V1.3.0a1 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
-        <script src="_static/jquery.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
-        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
-        <script src="_static/doctools.js"></script>
-        <script src="_static/sphinx_highlight.js"></script>
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=c3a4fe22"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -48,6 +48,7 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
@@ -81,7 +82,7 @@
            <div itemprop="articleBody">
              
   <section id="purpleair-data-logger">
-<h1>purpleair_data_logger<a class="headerlink" href="#purpleair-data-logger" title="Permalink to this heading"></a></h1>
+<h1>purpleair_data_logger<a class="headerlink" href="#purpleair-data-logger" title="Link to this heading"></a></h1>
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a><ul>
@@ -120,7 +121,17 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.PurpleAirDataLoggerError"><code class="docutils literal notranslate"><span class="pre">PurpleAirDataLoggerError</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html#PurpleAirDataLogger.generate_common_arg_parser"><code class="docutils literal notranslate"><span class="pre">generate_common_arg_parser()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.construct_store_sensor_data_type"><code class="docutils literal notranslate"><span class="pre">construct_store_sensor_data_type()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.flatten_single_sensor_data"><code class="docutils literal notranslate"><span class="pre">flatten_single_sensor_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.generate_common_arg_parser"><code class="docutils literal notranslate"><span class="pre">generate_common_arg_parser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.logic_for_storing_group_sensors_data"><code class="docutils literal notranslate"><span class="pre">logic_for_storing_group_sensors_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.logic_for_storing_local_sensors_data"><code class="docutils literal notranslate"><span class="pre">logic_for_storing_local_sensors_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.logic_for_storing_multiple_sensors_data"><code class="docutils literal notranslate"><span class="pre">logic_for_storing_multiple_sensors_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.logic_for_storing_single_sensor_data"><code class="docutils literal notranslate"><span class="pre">logic_for_storing_single_sensor_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html#PurpleAirDataLoggerHelpers.validate_sensor_data_before_insert"><code class="docutils literal notranslate"><span class="pre">validate_sensor_data_before_insert()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a><ul>
