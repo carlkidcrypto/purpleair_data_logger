@@ -217,7 +217,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
         :param int unix_epoch_timestamp: A valid unix epoch timestamp
 
-        :return A valid psql UTC timestamp or None.
+        :return: A valid psql UTC timestamp or None.
         """
 
         if unix_epoch_timestamp is None:

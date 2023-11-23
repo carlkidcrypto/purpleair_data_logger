@@ -17,7 +17,7 @@ def generate_common_arg_parser(argparse_description=""):
 
     :param str argparse_description: A description for the argument parser that will be return
 
-    :return An instance of argparse with the common arguments added.
+    :return: An instance of argparse with the common arguments added.
     """
 
     parser = argparse.ArgumentParser(description=argparse_description)
@@ -117,7 +117,7 @@ def construct_store_sensor_data_type(raw_data) -> list:
     :param dict raw_data: The return value from either padl_obj.request_members_data or
                             padl_obj.request_multiple_sensors_data.
 
-    :return A list full of the dict data type that the store_sensor_data method expects.
+    :return: A list full of the dict data type that the store_sensor_data method expects.
     """
 
     # Extract the 'fields' and 'data' parts to make it easier on ourselves
@@ -156,7 +156,7 @@ def flatten_single_sensor_data(raw_data) -> dict:
 
     :param dict raw_data: The return value from padl_obj.request_sensor_data.
 
-    :return A single level dict full request_sensor_data data.
+    :return: A single level dict full request_sensor_data data.
     """
 
     # Let's make it easier on ourselves by making the sensor data one level deep.
@@ -208,7 +208,7 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
-    :return None
+    :return: None
     """
 
     # We will request data once every 65 seconds.
@@ -247,7 +247,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
-    :return None
+    :return: None
     """
 
     # We will request data once every 65 seconds.
@@ -306,7 +306,7 @@ def logic_for_storing_group_sensors_data(
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
-    :return The group_id int
+    :return: The group_id int
     """
 
     if group_id_to_use is None:
@@ -422,7 +422,7 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
-    :return None
+    :return: None
     """
 
     # Ask for our local sensor data
