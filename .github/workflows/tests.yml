@@ -2,7 +2,7 @@ name: Tests
 
 on:
   push:
-    branches: [ 59-behave-tests-improvement ]
+    branches: [ main ]
 
   pull_request:
     branches: [ main ]

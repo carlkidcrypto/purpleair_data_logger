@@ -3,6 +3,11 @@
 A set of data logger(s) that will query purple air sensor(s) for data. That data will then be ingested into a TimeScaleDB PostGreSQL database, CSV files, or a SQLite3 database. To use these tools a PurpleAPI key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
 | [![Behave Tests](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/behave_tests.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/behave_tests.yml) | [![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml) |
+| --------------- | --------------- | --------------- | --------------- | 
+
+
+
+| [![Pull Request Sphinx Docs Check](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml) | [![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment) | [![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql) | |
 | --------------- | --------------- | --------------- | --------------- |
 
 ## How to Support This Project
@@ -28,16 +33,14 @@ python3 setup.py install
 ## Usage PurpleAirPSQLDataLogger.py
 
 ```bash
-usage: PurpleAirPSQLDataLogger.py [-h] -paa_read_key PAA_READ_KEY -paa_write_key PAA_WRITE_KEY
-                                  [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
-                                  [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
-                                  [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
-                                  [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB [-db_port DB_PORT]
+usage: PurpleAirPSQLDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                  [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                  [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB [-db_port DB_PORT]
                                   [-db_pwd DB_PWD]
 
 Collect data from PurpleAir sensors and insert into a database!
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
   -paa_read_key PAA_READ_KEY
                         The PurpleAirAPI Read key
@@ -49,9 +52,10 @@ options:
                         The path to a json file containing the parameters to send a multiple sensor request.
   -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a group sensor request.
-  -db_drop_all_tables   Set this flag if you wish to drop all tables before loading in new data. Useful if a database
-                        change has happened. Note: Make sure to provide a db_usr with DROP rights. WARNING: ALL
-                        COLLECTED DATA WILL BE LOST!
+  -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a local sensor request.
+  -db_drop_all_tables   Set this flag if you wish to drop all tables before loading in new data. Useful if a database change has happened. Note: Make sure to provide a db_usr with DROP rights.
+                        WARNING: ALL COLLECTED DATA WILL BE LOST!
   -db_usr DB_USR        The PSQL database user
   -db_host DB_HOST      The PSQL database host
   -db DB                The PSQL database name
@@ -86,15 +90,13 @@ python3 -m  purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host 
 ## Usage PurpleAirCSVDataLogger.py
 
 ```bash
-usage: PurpleAirCSVDataLogger.py [-h] -paa_read_key PAA_READ_KEY -paa_write_key PAA_WRITE_KEY
-                                 [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
-                                 [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
-                                 [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
-                                 -save_file_path SAVE_FILE_PATH
+usage: PurpleAirCSVDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                 [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                 [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -save_file_path SAVE_FILE_PATH
 
 Collect data from PurpleAir sensors and store it in CSV files!
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
   -paa_read_key PAA_READ_KEY
                         The PurpleAirAPI Read key
@@ -106,6 +108,8 @@ options:
                         The path to a json file containing the parameters to send a multiple sensor request.
   -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a group sensor request.
+  -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a local sensor request.
   -save_file_path SAVE_FILE_PATH
                         The path to save CSV files in.
 ```
@@ -125,15 +129,13 @@ python3 -m  purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FI
 ## Usage PurpleAirSQLiteDataLogger.py
 
 ```bash
-usage: PurpleAirSQLiteDataLogger.py [-h] -paa_read_key PAA_READ_KEY -paa_write_key PAA_WRITE_KEY
-                                    [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
-                                    [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE]
-                                    [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE] -db_name
-                                    DB_NAME
+usage: PurpleAirSQLiteDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                    [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                    [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -db_name DB_NAME
 
 Collect data from PurpleAir sensors and store it a SQLite3 database file!
 
-options:
+optional arguments:
   -h, --help            show this help message and exit
   -paa_read_key PAA_READ_KEY
                         The PurpleAirAPI Read key
@@ -145,6 +147,8 @@ options:
                         The path to a json file containing the parameters to send a multiple sensor request.
   -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
                         The path to a json file containing the parameters to send a group sensor request.
+  -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a local sensor request.
   -db_name DB_NAME      The path and name for the SQLite3 database file! i.e database_name.db
 ```
 
@@ -166,40 +170,21 @@ The following sample json configuration files can be used with any of the data l
 
 ### PAA Single Sensor Request Example
 
-Out of the parameters listed below only "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
 
-```json
-{
-    "sensor_index": 53,
-    "read_key": null,
-    "fields": null
-}
-```
+See this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for an example.
 
-Or see this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for another example.
+> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
 
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensor-data>
 
 ### PAA Multiple Sensor Request Example
 
-Out of the parameters listed below only "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
 
-```json
-{
-    "fields": "A string comma delimited string of fields to retrieve. i.e fields,name,etc",
-    "location_type": null,
-    "read_keys": null,
-    "show_only": null,
-    "modified_since": null,
-    "max_age": null,
-    "nwlng" : null,
-    "nwlat": null,
-    "selng": null,
-    "selat": null
-}
-```
+See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for an example.
 
-Or see this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for another example.
+> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
 
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
@@ -277,7 +262,7 @@ The below snippet is taken From the PurpleAirAPI (PAA) documentation:
 
 ### PAA Group Sensor Request Example
 
-Out of the parameters below `sensor_group_name`, `add_sensors_to_group`, and `sensor_index_list` are custom settings not
+Out of the parameters in the file below `sensor_group_name`, `add_sensors_to_group`, and `sensor_index_list` are custom settings not
 defined in the official PAA documentation. These three setting help drive the `group` request feature.
 
 `sensor_group_name` - This will be the name assigned to your group. If it doesn't exist already, it will be created.
@@ -289,27 +274,17 @@ Otherwise, the first group matching the name will be used.
 
 The rest of the settings are official PAA settings. They are the same as the [### PAA Multiple Sensor Request Example](#paa-multiple-sensor-request-example). Refer above for details.
 
-```json
-{
-    "sensor_group_name": "A Name Goes Here",
-    "add_sensors_to_group": true,
-    "sensor_index_list": [
-        77,
-        81,
-        95079,
-        167897
-    ],
-    "fields": "A string comma delimited string of fields to retrieve. i.e fields,name,etc",
-    "location_type": null,
-    "read_keys": null,
-    "show_only": null,
-    "modified_since": null,
-    "max_age": null,
-    "nwlng" : null,
-    "nwlat": null,
-    "selng": null,
-    "selat": null
-}
-```
+> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
 
-Or see this [file](./sample_json_config_files/sample_group_sensor_request_json_file.json) for another example.
+See this [file](./sample_json_config_files/sample_group_sensor_request_json_file.json) for an example.
+
+
+### PAA Local Sensor Request Example
+
+Out of the parameters in the file below all are custom settings and are required.
+
+`sensor_ip_list` - A string list of IPv4 addresses with no CIDR.
+
+`poll_interval_seconds` - The poll interval to get information from local sensors on the network.
+
+See this [file](./sample_json_config_files/sample_local_sensor_request_json_file.json) for an example.

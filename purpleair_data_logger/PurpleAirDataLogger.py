@@ -99,7 +99,7 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting a single sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
-        :return None
+        :return: None
         """
 
         # Set the polling interval
@@ -117,7 +117,7 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting a multiple sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
-        :return None
+        :return: None
         """
 
         # Set the polling interval
@@ -135,7 +135,7 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting a group sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
-        :return None
+        :return: None
         """
 
         # Set the polling interval
