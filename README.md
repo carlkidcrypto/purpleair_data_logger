@@ -27,7 +27,7 @@ You can install PurpleAir Data Logger by cloning down this repo.
 ```bash
 git clone https://github.com/carlkidcrypto/purpleair_data_logger.git
 cd purpleair_data_logger
-python3 setup.py install 
+python3 -m pip install .
 ```
 
 ## Usage PurpleAirPSQLDataLogger.py

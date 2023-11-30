@@ -38,21 +38,21 @@ jobs:
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
                  python -m pip install -r behave_tests/requirements.txt ;
-                 python setup.py install
+                 python -m pip install . --user
 
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
                  python -m pip install -r behave_tests/requirements.txt ;
-                 python setup.py install
+                 python -m pip install . --user
 
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
                    python -m pip install --upgrade pip ;
                    python -m pip install -r behave_tests/requirements.txt ;
-                   python setup.py install --user
+                   python -m pip install . --user
       
       - name: Run behave tests...
         env:
