@@ -16,7 +16,7 @@ jobs:
       with:
         docs-folder: "sphinx_docs_build/"
         build-command: "pip --disable-pip-version-check list --outdated --format=json | \
-                        python3 -c "import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))" | \
+                        python3 -c 'import json, sys; print('\n'.join([x['name'] for x in json.load(sys.stdin)]))' | \
                         xargs -n1 pip install -U; make html"
 
     - uses: actions/upload-artifact@v3
