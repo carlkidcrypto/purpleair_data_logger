@@ -33,5 +33,5 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: Upload HTML Documentation
+          name: HTML Documentation
           path: docs/
