@@ -57,13 +57,13 @@ jobs:
         uses: knicknic/os-specific-run@v1.0.4
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
-                 coverage run -m unittest && coverage json ;
+                 coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
-                 coverage run -m unittest && coverage json ;
+                 coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
           
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\tests ;
-                   coverage run -m unittest && coverage json ;
+                   coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
