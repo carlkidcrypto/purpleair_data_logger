@@ -8,7 +8,7 @@ on:
     branches: [ main ]
 
 jobs:
-  docs:
+  sphinx_docs_build:
     runs-on: ubuntu-latest
     steps:
       - name: Check out repository code
@@ -19,19 +19,19 @@ jobs:
         with:
           python-version: "3.10"
 
-      - name: Install python3 requirements...
+      - name: Install python3 requirements and run sphinx...
         uses: knicknic/os-specific-run@v1.0.4
         with:
-          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
-                  python -m pip install --upgrade wheel ;
-                  python -m pip install --upgrade setuptools ;
-                  python -m pip install --upgrade pip ;
-                  python3 -m pip install -r sphinx_docs_build/requirements.txt ;
-                  python setup.py install --user ;
-                  cd sphinx_docs_build ;
-                  make html ;
+          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
+                  python -m pip install --upgrade wheel &&
+                  python -m pip install --upgrade setuptools &&
+                  python -m pip install --upgrade pip &&
+                  python -m pip install -r sphinx_docs_build/requirements.txt &&
+                  python setup.py install --user &&
+                  cd sphinx_docs_build &&
+                  make html
 
       - uses: actions/upload-artifact@v3
         with:
-          name: DocumentationHTML
+          name: Upload HTML Documentation
           path: docs/
