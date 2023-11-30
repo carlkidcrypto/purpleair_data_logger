@@ -8,17 +8,23 @@ on:
     branches: [ main ]
 
 jobs:
-  tests:
-    runs-on: ubuntu-latest
+  Unit_Tests:
+    name: ${{ matrix.os }} using Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ['3.9', '3.10', '3.11', '3.12']
 
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
 
-      - name: Set up Python 3.10 env for running unittest tests...
+      - name: Set up Python env for running unit tests...
         uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
 
       - name: Install python3 requirements...
         uses: knicknic/os-specific-run@v1.0.4
@@ -40,4 +46,5 @@ jobs:
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         env:
+          name: ${{matrix.os}}_${{matrix.python-version}}_coverage_report
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
