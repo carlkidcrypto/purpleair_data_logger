@@ -36,12 +36,34 @@ jobs:
                  python -m pip install coverage ;
                  python -m pip install requests_mock ;
                  python -m pip install purpleair_api ;
+            
+          macos: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+                 python -m pip install --upgrade wheel ;
+                 python -m pip install --upgrade setuptools ;
+                 python -m pip install --upgrade pip ;
+                 python -m pip install coverage ;
+                 python -m pip install requests_mock ;
+                 python -m pip install purpleair_api ;
+          
+          windows: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+                   python -m pip install --upgrade wheel ;
+                   python -m pip install --upgrade setuptools ;
+                   python -m pip install --upgrade pip ;
+                   python -m pip install coverage ;
+                   python -m pip install requests_mock ;
+                   python -m pip install purpleair_api ;
 
       - name: Run unit tests...
         uses: knicknic/os-specific-run@v1.0.4
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json ;
+
+          macos: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
+                 coverage run -m unittest && coverage json ;
+          
+          windows: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
+                   coverage run -m unittest && coverage json ;
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
