@@ -1,4 +1,4 @@
-name: Tests
+name: Unit Tests
 
 on:
   push:
@@ -37,7 +37,7 @@ jobs:
                  python -m pip install requests_mock ;
                  python -m pip install purpleair_api ;
             
-          macos: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
@@ -45,7 +45,7 @@ jobs:
                  python -m pip install requests_mock ;
                  python -m pip install purpleair_api ;
           
-          windows: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
+          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
                    python -m pip install --upgrade pip ;
@@ -59,10 +59,10 @@ jobs:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json ;
 
-          macos: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
+          macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json ;
           
-          windows: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
+          windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\tests ;
                    coverage run -m unittest && coverage json ;
 
       - name: Upload coverage reports to Codecov
