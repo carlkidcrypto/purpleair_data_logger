@@ -1,19 +1,21 @@
 <!DOCTYPE html>
-<html class="writer-html5" lang="en" >
+<html class="writer-html5" lang="en" data-content_root="./">
 <head>
-  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirDataLoggerHelpers module &mdash; PurpleAir Data Logger(s) V1.3.0a1 documentation</title>
-      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <title>PurpleAirDataLoggerHelpers module &mdash; PurpleAir Data Logger(s) V1.3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+
+  
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
   
         <script src="_static/jquery.js?v=5d32c60e"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=c3a4fe22"></script>
+        <script src="_static/documentation_options.js?v=6057c3a4"></script>
         <script src="_static/doctools.js?v=888ff710"></script>
         <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
@@ -105,8 +107,10 @@ A helper file that contains constants and functions for PurpleAirDataLogger* fil
 <dd class="field-odd"><p><strong>raw_data</strong> (<em>dict</em>) – The return value from either padl_obj.request_members_data or
 padl_obj.request_multiple_sensors_data.</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list full of the dict data type that the store_sensor_data method expects.</p>
+</dd>
 </dl>
-<p>:return A list full of the dict data type that the store_sensor_data method expects.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -117,8 +121,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>raw_data</strong> (<em>dict</em>) – The return value from padl_obj.request_sensor_data.</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A single level dict full request_sensor_data data.</p>
+</dd>
 </dl>
-<p>:return A single level dict full request_sensor_data data.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -129,8 +135,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>argparse_description</strong> (<em>str</em>) – A description for the argument parser that will be return</p>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An instance of argparse with the common arguments added.</p>
+</dd>
 </dl>
-<p>:return An instance of argparse with the common arguments added.</p>
 </dd></dl>
 
 <dl class="py function">
@@ -145,8 +153,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <li><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The group_id int</p>
+</dd>
 </dl>
-<p>:return The group_id int</p>
 </dd></dl>
 
 <dl class="py function">
@@ -160,8 +170,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <li><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
-<p>:return None</p>
 </dd></dl>
 
 <dl class="py function">
@@ -175,8 +187,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <li><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
-<p>:return None</p>
 </dd></dl>
 
 <dl class="py function">
@@ -190,8 +204,10 @@ padl_obj.request_multiple_sensors_data.</p>
 <li><p><strong>json_config_file</strong> (<em>dict</em>) – A dictionary object of the json config file using json load.</p></li>
 </ul>
 </dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
 </dl>
-<p>:return None</p>
 </dd></dl>
 
 <dl class="py function">
