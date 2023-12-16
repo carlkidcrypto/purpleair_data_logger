@@ -27,7 +27,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install python3 requirements...
-        uses: knicknic/os-specific-run@v1.0.4
+        uses: carlkidcrypto/os-specific-runner@v2.0.0
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
@@ -54,7 +54,7 @@ jobs:
                    python -m pip install purpleair_api ;
 
       - name: Run unit tests...
-        uses: knicknic/os-specific-run@v1.0.4
+        uses: carlkidcrypto/os-specific-runner@v2.0.0
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
