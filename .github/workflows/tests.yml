@@ -8,9 +8,30 @@ on:
     branches: [ main ]
 
 jobs:
+  check-source-changes:
+    runs-on: ubuntu-latest
+    outputs:
+      run_job: ${{ steps.changed-files.outputs.any_changed }}
+    steps:
+      - name: Checkout Sourcecode
+        uses: actions/checkout@v4
+
+      - name: Check for changes in source code
+        id: changed-files
+        uses: tj-actions/changed-files@v41.0.1
+        with:
+          files: |
+            purpleair_api/*.py
+            tests/*.py
+            tests/*.txt
+            setup.py
+            setup.cfg
+
   Unit_Tests:
     name: ${{ matrix.os }} using Python ${{ matrix.python-version }}
     runs-on: ${{ matrix.os }}
+    needs: check-source-changes
+    if: needs.check-source-changes.outputs.run_job == 'true'
     strategy:
       fail-fast: false
       matrix:
