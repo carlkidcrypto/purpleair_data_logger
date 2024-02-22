@@ -97,10 +97,10 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
         # Create some prepared statements
         self._db_prepared_statements = {}
-        self._db_prepared_statements[
-            "station_information_and_status_fields"
-        ] = self._db_conn.prepare(
-            PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS
+        self._db_prepared_statements["station_information_and_status_fields"] = (
+            self._db_conn.prepare(
+                PSQL_INSERT_STATEMENT_STATION_INFORMATION_AND_STATUS_FIELDS
+            )
         )
         self._db_prepared_statements["environmental_fields"] = self._db_conn.prepare(
             PSQL_INSERT_STATEMENT_ENVIRONMENTAL_FIELDS
@@ -114,9 +114,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         self._db_prepared_statements["pm2_5_fields"] = self._db_conn.prepare(
             PSQL_INSERT_STATEMENT_PM2_5_FIELDS
         )
-        self._db_prepared_statements[
-            "pm2_5_pseudo_average_fields"
-        ] = self._db_conn.prepare(PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS)
+        self._db_prepared_statements["pm2_5_pseudo_average_fields"] = (
+            self._db_conn.prepare(PSQL_INSERT_STATEMENT_PM2_5_PSEUDO_AVERAGE_FIELDS)
+        )
         self._db_prepared_statements["pm10_0_fields"] = self._db_conn.prepare(
             PSQL_INSERT_STATEMENT_PM10_0_FIELDS
         )
