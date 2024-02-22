@@ -23,7 +23,7 @@ copyright = "2024, carlkidcrypto"
 author = "carlkidcrypto"
 
 # The full version, including alpha/beta/rc tags
-release = "V1.3.2"
+release = "V1.3.3"
 
 
 # -- General configuration ---------------------------------------------------
