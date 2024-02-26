@@ -1,2 +1,2 @@
-coverage==7.4.2
+coverage==7.4.3
 requests-mock==1.11.0
