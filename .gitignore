@@ -1,5 +1,4 @@
 **/.pyc/**
-**/.DS_Store/**
 **/dist/**
 **/build/**
 **/__pycache__/**
@@ -7,4 +6,5 @@
 **/logs/**
 **.ini
 **.xml
-.DS_Store
+**.DS_Store**
+**venv**
