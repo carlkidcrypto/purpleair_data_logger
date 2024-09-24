@@ -8,7 +8,7 @@ A set of data logger(s) that will query purple air sensor(s) for data. That data
 | [![Pull Request Sphinx Docs Check](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml) | [![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment) | [![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql) | [![total download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/total.svg?style=flat-square&label=all%20downloads)](https://github.com/carlkidcrypto/purpleair_data_logger/releases) |
 | --------------- | --------------- | --------------- | --------------- |
 
-[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.3.1/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.3.1) | | | |
+[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.4.0a2/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.4.0a2) | | | |
 | --------------- | --------------- | --------------- | --------------- |
 
 ## How to Support This Project
