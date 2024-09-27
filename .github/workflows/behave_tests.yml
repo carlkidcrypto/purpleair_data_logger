@@ -50,7 +50,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install python3 requirements...
-        uses: carlkidcrypto/os-specific-runner@v2.1.0
+        uses: carlkidcrypto/os-specific-runner@v2.1.1
         with:
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ; 
@@ -77,7 +77,7 @@ jobs:
         env:
             PAA_API_READ_KEY: ${{secrets.PAA_API_READ_KEY}}
             PAA_API_WRITE_KEY: ${{secrets.PAA_API_WRITE_KEY}}
-        uses: carlkidcrypto/os-specific-runner@v2.1.0
+        uses: carlkidcrypto/os-specific-runner@v2.1.1
         with:
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/behave_tests/ ;
                  behave --junit --junit-directory junit_reports ;
