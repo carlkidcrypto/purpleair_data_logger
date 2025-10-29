@@ -7,14 +7,14 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) V1.4.1 documentation</title>
-      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=7ab3649f" />
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=6b9fc259"></script>
-      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/documentation_options.js?v=4a74b673"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
       <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
@@ -97,14 +97,14 @@
 A python base Data Logger class.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Base Data Logger class. Will define common methods used by other data loggers. For
 example, PSQLDataLogger, CSVDataLogger, or SQLiteDataLogger. Inheritors of this class
 will only need to define their own ‘store_sensor_data’ method.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_request_every_x_seconds</span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_request_every_x_seconds</span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds" title="Link to this definition"></a></dt>
 <dd><p>Return the current value of send_request_every_x_seconds.
 This value is how often we send requests to the Purple Air API. (PAA)</p>
 </dd></dl>
@@ -149,7 +149,7 @@ the parameters to send a local sensor request(s).</p></li>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLoggerError">
-<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLoggerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLoggerError" title="Link to this definition"></a></dt>
+<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLoggerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLoggerError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custom Exception for our PurpleAirDataLogger class.</p>
 </dd></dl>
