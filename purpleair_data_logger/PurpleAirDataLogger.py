@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkidcrypto, All rights reserved.
-    A python base Data Logger class.
+Copyright 2023 carlkidcrypto, All rights reserved.
+A python base Data Logger class.
 """
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPI

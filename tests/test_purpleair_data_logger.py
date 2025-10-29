@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkidcrypto, All rights reserved.
+Copyright 2023 carlkidcrypto, All rights reserved.
 """
 
 

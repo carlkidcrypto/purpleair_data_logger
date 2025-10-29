@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkidcrypto, All rights reserved.
-    Helpers and constants for the test files.
+Copyright 2023 carlkidcrypto, All rights reserved.
+Helpers and constants for the test files.
 """
 
 DATA_IN_1 = {

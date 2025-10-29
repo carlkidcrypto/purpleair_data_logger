@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkidcrypto, All rights reserved.
-    A helper file that contains constants and functions for PurpleAirDataLogger* files.
+Copyright 2023 carlkidcrypto, All rights reserved.
+A helper file that contains constants and functions for PurpleAirDataLogger* files.
 """
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT

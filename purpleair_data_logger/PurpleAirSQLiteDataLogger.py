@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2023 carlkidcrypto, All rights reserved.
-    A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
-    Data will be inserted into a SQLite3 database file.
-    
-    For best practice from PurpleAir:
-    "The data from individual sensors will update no less than every 30 seconds.
-    As a courtesy, we ask that you limit the number of requests to no more than
-    once every 1 to 10 minutes, assuming you are only using the API to obtain data
-    from sensors. If retrieving data from multiple sensors at once, please send a
-    single request rather than individual requests in succession."
+Copyright 2023 carlkidcrypto, All rights reserved.
+A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+Data will be inserted into a SQLite3 database file.
+
+For best practice from PurpleAir:
+"The data from individual sensors will update no less than every 30 seconds.
+As a courtesy, we ask that you limit the number of requests to no more than
+once every 1 to 10 minutes, assuming you are only using the API to obtain data
+from sensors. If retrieving data from multiple sensors at once, please send a
+single request rather than individual requests in succession."
 """
 
 from purpleair_data_logger.PurpleAirDataLogger import (

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkidcrypto, All rights reserved.
-    Steps for behavior driven tests for the purpleair_data_logger.
+Copyright 2022 carlkidcrypto, All rights reserved.
+Steps for behavior driven tests for the purpleair_data_logger.
 """
 
 from behave import given, when, then
