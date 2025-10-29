@@ -1,5 +1,7 @@
 name: Behave Tests
 concurrency: behave_tests
+permissions:
+  contents: read
 
 on:
   push:
