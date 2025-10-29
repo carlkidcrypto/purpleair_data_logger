@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkidcrypto, All rights reserved.
-    A file containing PSQL statements defined as constants.
-    Generate the PSQL query strings. For simplicity our table names will match
-    what the PurpleAir documentation says. We will do the same for table column names.
+Copyright 2022 carlkidcrypto, All rights reserved.
+A file containing PSQL statements defined as constants.
+Generate the PSQL query strings. For simplicity our table names will match
+what the PurpleAir documentation says. We will do the same for table column names.
 """
 
 #: PSQL statement for station_information_and_status_fields table

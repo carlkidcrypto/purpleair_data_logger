@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
 """
-    Copyright 2022 carlkidcrypto, All rights reserved.
-    Behavior driven tests for the purpleair_data_logger.
+Copyright 2022 carlkidcrypto, All rights reserved.
+Behavior driven tests for the purpleair_data_logger.
 """
 
 from os import mkdir, path, getcwd, environ

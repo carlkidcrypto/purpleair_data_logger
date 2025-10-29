@@ -20,9 +20,10 @@ jobs:
 
       - name: Check for changes in source code
         id: changed-files
-        uses: tj-actions/changed-files@v46.0.5
+        uses: tj-actions/changed-files@v47.0.0
         with:
           files: |
+            .github/workflows/sphinx_build.yml
             sphinx_docs_build/source/*.rst
             sphinx_docs_build/source/*.py
             sphinx_docs_build/*.txt
