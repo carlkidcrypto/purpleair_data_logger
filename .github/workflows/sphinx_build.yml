@@ -1,4 +1,6 @@
 name: "Pull Request Sphinx Docs Check"
+permissions:
+  contents: read
 
 on:
   push:
