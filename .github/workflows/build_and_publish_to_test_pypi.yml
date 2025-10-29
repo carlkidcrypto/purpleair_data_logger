@@ -2,6 +2,8 @@
 # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 
 name: TestPyPI Distributions
+permissions:
+  contents: read
 concurrency: build_and_publish_to_test_pypi
 on:
   push:

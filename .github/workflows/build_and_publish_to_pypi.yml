@@ -11,6 +11,8 @@ on:
 jobs:
   build-n-publish-pypi:
     name: Build and Publish
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
 
     steps:
