@@ -16,7 +16,7 @@ jobs:
       run_job: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Checkout Sourcecode
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check for changes in source code
         id: changed-files
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up Python env for running unit tests...
         uses: actions/setup-python@v6

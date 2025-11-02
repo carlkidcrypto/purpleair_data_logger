@@ -16,7 +16,7 @@ jobs:
       run_job: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Checkout Sourcecode
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Check for changes in source code
         id: changed-files
@@ -34,5 +34,5 @@ jobs:
     needs: check-source-changes
     if: needs.check-source-changes.outputs.run_job == 'true'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: psf/black@25.9.0
