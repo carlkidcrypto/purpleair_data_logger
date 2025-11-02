@@ -47,7 +47,7 @@ jobs:
         uses: actions/checkout@v5
 
       - name: Set up Python env for running behave tests...
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -101,7 +101,7 @@ jobs:
       
       - name: Upload Junit Reports
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: behave_junit_reports_${{matrix.os}}_${{matrix.python-version}}
           path: "**/junit_reports/*.xml"
