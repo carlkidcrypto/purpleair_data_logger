@@ -16,7 +16,7 @@ jobs:
       run_job: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Checkout Sourcecode
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Check for changes in source code
         id: changed-files
@@ -34,7 +34,7 @@ jobs:
     if: needs.check-source-changes.outputs.run_job == 'true'
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Set up Python 3.10 env for sphinx...
         uses: actions/setup-python@v6
