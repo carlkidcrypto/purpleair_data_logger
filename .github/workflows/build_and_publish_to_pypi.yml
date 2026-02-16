@@ -13,6 +13,7 @@ jobs:
     name: Build and Publish
     permissions:
       contents: read
+      id-token: write
     runs-on: ubuntu-latest
 
     steps:
@@ -42,4 +43,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1.13
         with:
           print_hash: true
-          password: ${{ secrets.PYPI_API_TOKEN }}
