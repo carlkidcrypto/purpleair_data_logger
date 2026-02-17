@@ -11,10 +11,11 @@ on:
 jobs:
   build-n-publish-pypi:
     name: Build and Publish
+    runs-on: ubuntu-latest
+    environment: build_and_publish_to_pypi
     permissions:
       contents: read
       id-token: write
-    runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v6
@@ -42,4 +43,4 @@ jobs:
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.13
         with:
-          print_hash: true
+          print-hash: true
