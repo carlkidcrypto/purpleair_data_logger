@@ -35,7 +35,8 @@ Trusted Publishing allows GitHub Actions workflows to publish packages to PyPI w
 - The repository name **must** match exactly: `purpleair_data_logger` (not `ezsnmp`)
 - The workflow name **must** match the filename in `.github/workflows/`
 - For TestPyPI, the environment name **must** be `build_and_publish_to_test_pypi`
-- The package must already exist on TestPyPI/PyPI, or you need to create it first with a manual upload
+- For production PyPI, the environment name **must** be `build_and_publish_to_pypi`
+- You can configure the trusted publisher before the package exists on PyPI (this is the recommended approach)
 
 ## Troubleshooting
 
