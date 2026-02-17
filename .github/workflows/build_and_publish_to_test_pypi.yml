@@ -30,6 +30,7 @@ jobs:
   build-n-publish-test-pypi:
     name: Build and Publish To Test PyPi
     runs-on: ubuntu-latest
+    environment: build_and_publish_to_test_pypi
     permissions:
       id-token: write
     needs: check-source-changes
@@ -61,6 +62,6 @@ jobs:
       - name: Publish distribution 📦 to Test PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.13
         with:
-          skip_existing: true
-          print_hash: true
-          repository_url: https://test.pypi.org/legacy/
+          skip-existing: true
+          print-hash: true
+          repository-url: https://test.pypi.org/legacy/
