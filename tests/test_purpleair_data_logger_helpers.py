@@ -4,7 +4,6 @@
 Copyright 2023 carlkidcrypto, All rights reserved.
 """
 
-
 import unittest
 from unittest.mock import MagicMock, patch
 import requests_mock
