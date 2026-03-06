@@ -212,10 +212,8 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
     """
 
     # We will request data once every 65 seconds.
-    debug_log(
-        f"""Requesting new data from a sensor with index
-                {json_config_file['sensor_index']}..."""
-    )
+    debug_log(f"""Requesting new data from a sensor with index
+                {json_config_file['sensor_index']}...""")
 
     sensor_data = None
     sensor_data = padl_obj._purpleair_api_obj.request_sensor_data(
@@ -229,10 +227,8 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
         the_modified_sensor_data
     )
     padl_obj.store_sensor_data(the_modified_sensor_data)
-    debug_log(
-        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
-            requesting new data again..."""
-    )
+    debug_log(f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
+            requesting new data again...""")
 
     # Delete some stuff
     del sensor_data
@@ -251,10 +247,8 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     """
 
     # We will request data once every 65 seconds.
-    debug_log(
-        f"""Requesting new data from multiple sensors with fields
-                    {json_config_file["fields"]}..."""
-    )
+    debug_log(f"""Requesting new data from multiple sensors with fields
+                    {json_config_file["fields"]}...""")
 
     sensors_data = None
     sensors_data = padl_obj._purpleair_api_obj.request_multiple_sensors_data(
@@ -284,10 +278,8 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
         # Store the current data
         padl_obj.store_sensor_data(store_sensor_data_type)
 
-    debug_log(
-        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
-                requesting new data again..."""
-    )
+    debug_log(f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
+                requesting new data again...""")
 
     # Delete some stuff
     del sensors_data
@@ -406,10 +398,8 @@ def logic_for_storing_group_sensors_data(
         # Store the current data
         padl_obj.store_sensor_data(store_sensor_data_type)
 
-    debug_log(
-        f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
-                requesting new data again..."""
-    )
+    debug_log(f"""Waiting {padl_obj.send_request_every_x_seconds} seconds before
+                requesting new data again...""")
 
     return members_data["group_id"]
 
@@ -683,9 +673,7 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
         )
         padl_obj.store_sensor_data(the_modified_sensor_data)
 
-    debug_log(
-        f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
-            requesting new data again..."""
-    )
+    debug_log(f"""Waiting {json_config_file["poll_interval_seconds"]} seconds before
+            requesting new data again...""")
 
     del local_sensor_dict
