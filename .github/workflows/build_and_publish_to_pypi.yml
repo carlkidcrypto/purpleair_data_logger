@@ -41,6 +41,6 @@ jobs:
           .
       
       - name: Publish distribution 📦 to PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.13
+        uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
           print-hash: true
