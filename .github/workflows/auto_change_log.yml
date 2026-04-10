@@ -1,0 +1,44 @@
+name: Update Changelog
+
+on:
+  release:
+    types: [published]
+  push:
+    paths:
+      - .github/workflows/auto_change_log.yml
+
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: false
+
+permissions:
+  actions: read
+  contents: write
+  pull-requests: write
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Check for existing automation PR
+        id: check_pr
+        run: |
+          count=$(gh pr list \
+            --state open \
+            --head automation/update-changelog \
+            --label documentation \
+            --label automated-pr \
+            --json number \
+            --jq 'length')
+          echo "count=$count" >> "$GITHUB_OUTPUT"
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run Copilot Agent
+        if: steps.check_pr.outputs.count == '0'
+        uses: github/copilot-coding-agent-action@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          prompt_file: .github/workflows/auto_change_log.md
+          model: auto
