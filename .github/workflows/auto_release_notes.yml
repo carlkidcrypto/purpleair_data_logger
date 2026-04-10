@@ -7,8 +7,9 @@ on:
     inputs:
       backfill_all:
         description: 'Backfill release notes for ALL existing releases'
+        type: boolean
         required: false
-        default: 'false'
+        default: false
   push:
     paths:
       - .github/workflows/auto_release_notes.yml
@@ -35,3 +36,5 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt_file: .github/workflows/auto_release_notes.md
           model: auto
+        env:
+          BACKFILL_ALL: ${{ inputs.backfill_all }}
