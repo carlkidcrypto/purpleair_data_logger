@@ -37,4 +37,4 @@ jobs:
           prompt_file: .github/workflows/auto_release_notes.md
           model: auto
         env:
-          BACKFILL_ALL: ${{ inputs.backfill_all }}
+          BACKFILL_ALL: ${{ inputs.backfill_all || 'false' }}
