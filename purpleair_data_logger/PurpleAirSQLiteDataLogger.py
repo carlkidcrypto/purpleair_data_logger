@@ -56,6 +56,8 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
     ):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
+        :param str PurpleAirAPIWriteKey: A valid PurpleAirAPI Write key
+        :param str sqlite_data_base_name: The path and name for the SQLite3 database file (e.g. database_name.db)
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
@@ -63,7 +65,7 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
         self._db_conn = sqlite3.connect(sqlite_data_base_name)
 
-        # Make our PSQL Tables
+        # Make our SQLite Tables
         self._create_sqlite_db_tables()
 
     def _create_sqlite_db_tables(self):

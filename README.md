@@ -134,7 +134,7 @@ usage: PurpleAirSQLiteDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_writ
                                     [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
                                     [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -db_name DB_NAME
 
-Collect data from PurpleAir sensors and store it a SQLite3 database file!
+Collect data from PurpleAir sensors and store it in a SQLite3 database file!
 
 optional arguments:
   -h, --help            show this help message and exit
