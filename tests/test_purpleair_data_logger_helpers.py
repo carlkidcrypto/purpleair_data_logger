@@ -604,3 +604,114 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 logic_for_storing_local_sensors_data(padl, json_config_file)
                 padl.store_sensor_data.return_value = None
                 padl.store_sensor_data.assert_called_once_with(test_data_out[index])
+
+    def test_logic_for_storing_group_sensors_data_with_add_sensors_false(self):
+        """
+        Test the branch where add_sensors_to_group is False — sensors should NOT be added.
+        """
+
+        expected_url_request = "https://api.purpleair.com/v1/keys"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
+            json_config_file = {
+                "sensor_group_name": "A Name Goes Here",
+                "add_sensors_to_group": False,
+                "sensor_index_list": [77],
+                "poll_interval_seconds": 60,
+                "fields": "name",
+                "location_type": None,
+                "read_keys": None,
+                "show_only": None,
+                "modified_since": None,
+                "max_age": None,
+                "nwlng": None,
+                "nwlat": None,
+                "selng": None,
+                "selat": None,
+            }
+
+        expected_groups = {"groups": [{"name": "A Name Goes Here", "id": 9999}]}
+        expected_members_data = {
+            "api_version": "V1.0.11-0.0.42",
+            "time_stamp": 1676784867,
+            "data_time_stamp": 1676784847,
+            "group_id": 9999,
+            "max_age": 604800,
+            "firmware_default_version": "7.02",
+            "fields": ["sensor_index", "name"],
+            "data": [[77, "Sunnyside"]],
+        }
+
+        with requests_mock.Mocker() as m1:
+            m1.get(
+                "https://api.purpleair.com/v1/groups/",
+                text=f"{dumps(expected_groups)}",
+                status_code=200,
+            )
+            m1.get(
+                "https://api.purpleair.com/v1/groups/9999/members?fields=name",
+                text=f"{dumps(expected_members_data)}",
+                status_code=200,
+            )
+            result = logic_for_storing_group_sensors_data(padl, None, json_config_file)
+            self.assertEqual(result, 9999)
+
+    def test_logic_for_storing_group_sensors_data_reraises_non_duplicate_error(self):
+        """
+        Test that a non-duplicate PurpleAirAPIError is re-raised when adding sensors.
+        """
+        from purpleair_api.PurpleAirAPI import PurpleAirAPIError
+
+        expected_url_request = "https://api.purpleair.com/v1/keys"
+        padl = None
+        with requests_mock.Mocker() as m:
+            m.get(
+                expected_url_request,
+                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl.store_sensor_data = MagicMock(name="store_sensor_data")
+            json_config_file = {
+                "sensor_group_name": "A Name Goes Here",
+                "add_sensors_to_group": True,
+                "sensor_index_list": [77],
+                "poll_interval_seconds": 60,
+                "fields": "name",
+                "location_type": None,
+                "read_keys": None,
+                "show_only": None,
+                "modified_since": None,
+                "max_age": None,
+                "nwlng": None,
+                "nwlat": None,
+                "selng": None,
+                "selat": None,
+            }
+
+        expected_groups = {"groups": [{"name": "A Name Goes Here", "id": 8888}]}
+        non_duplicate_error_response = {
+            "error": 403,
+            "description": "403: Forbidden - Access denied.",
+        }
+
+        with requests_mock.Mocker() as m1:
+            m1.get(
+                "https://api.purpleair.com/v1/groups/",
+                text=f"{dumps(expected_groups)}",
+                status_code=200,
+            )
+            m1.post(
+                "https://api.purpleair.com/v1/groups/8888/members",
+                text=f"{dumps(non_duplicate_error_response)}",
+                status_code=403,
+            )
+            with self.assertRaises(PurpleAirAPIError):
+                logic_for_storing_group_sensors_data(padl, None, json_config_file)
