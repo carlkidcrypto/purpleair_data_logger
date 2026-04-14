@@ -130,10 +130,13 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         Test that validate_parameters_and_run calls the single-sensor run loop.
         """
         padl = self._make_padl_with_mock()
-        config = {"poll_interval_seconds": 60, "sensor_index": 53, "read_key": None, "fields": None}
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        config = {
+            "poll_interval_seconds": 60,
+            "sensor_index": 53,
+            "read_key": None,
+            "fields": None,
+        }
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             tmp_path = f.name
         try:
@@ -153,9 +156,7 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         """
         padl = self._make_padl_with_mock()
         config = {"poll_interval_seconds": 60, "fields": "name"}
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             tmp_path = f.name
         try:
@@ -174,10 +175,14 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         Test that validate_parameters_and_run calls the group-sensor run loop.
         """
         padl = self._make_padl_with_mock()
-        config = {"poll_interval_seconds": 60, "sensor_group_name": "test", "add_sensors_to_group": False, "sensor_index_list": [], "fields": "name"}
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        config = {
+            "poll_interval_seconds": 60,
+            "sensor_group_name": "test",
+            "add_sensors_to_group": False,
+            "sensor_index_list": [],
+            "fields": "name",
+        }
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             tmp_path = f.name
         try:
@@ -197,9 +202,7 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         """
         padl = self._make_padl_with_mock()
         config = {"sensor_ip_list": ["192.168.1.1"], "poll_interval_seconds": 60}
-        with tempfile.NamedTemporaryFile(
-            mode="w", suffix=".json", delete=False
-        ) as f:
+        with tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False) as f:
             json.dump(config, f)
             tmp_path = f.name
         try:
@@ -219,7 +222,12 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         and calls logic once before sleep breaks out.
         """
         padl = self._make_padl_with_mock()
-        config = {"poll_interval_seconds": 65, "sensor_index": 53, "read_key": None, "fields": None}
+        config = {
+            "poll_interval_seconds": 65,
+            "sensor_index": 53,
+            "read_key": None,
+            "fields": None,
+        }
 
         with patch(
             "purpleair_data_logger.PurpleAirDataLogger.logic_for_storing_single_sensor_data"
@@ -257,7 +265,11 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         and calls logic once before sleep breaks out.
         """
         padl = self._make_padl_with_mock()
-        config = {"poll_interval_seconds": 65, "fields": "name", "sensor_group_name": "test"}
+        config = {
+            "poll_interval_seconds": 65,
+            "fields": "name",
+            "sensor_group_name": "test",
+        }
 
         with patch(
             "purpleair_data_logger.PurpleAirDataLogger.logic_for_storing_group_sensors_data",
