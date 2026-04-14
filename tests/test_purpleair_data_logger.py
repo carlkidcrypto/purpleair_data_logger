@@ -89,15 +89,7 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
         send_request_every_x_seconds to a value less than 60.
         """
 
-        expected_url_request = "https://api.purpleair.com/v1/keys"
-
-        with requests_mock.Mocker() as m:
-            m.get(
-                expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
-            )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+        padl = self._make_padl_with_mock()
 
         with self.assertRaises(PurpleAirDataLoggerError):
             padl.send_request_every_x_seconds = 59
