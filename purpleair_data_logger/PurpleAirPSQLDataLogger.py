@@ -61,6 +61,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, psql_db_conn):
         """
         :param str PurpleAirAPIReadKey: A valid PurpleAirAPI Read key
+        :param str PurpleAirAPIWriteKey: A valid PurpleAirAPI Write key
         :param object psql_db_conn: A valid PG8000 database connection
         """
 
