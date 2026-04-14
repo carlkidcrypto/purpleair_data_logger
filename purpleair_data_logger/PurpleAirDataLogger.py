@@ -41,7 +41,8 @@ class PurpleAirDataLogger:
     ):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
-        :param object psql_db_conn: A valid PG8000 database connection
+        :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses for local sensor access
         """
 
         # Make one instance of our PurpleAirAPI class
@@ -151,7 +152,7 @@ class PurpleAirDataLogger:
             )
             sleep(self.send_request_every_x_seconds)
 
-    def _run_loop_for_storing_local_sensors_data(self, json_config_file) -> dict:
+    def _run_loop_for_storing_local_sensors_data(self, json_config_file) -> None:
         """
         A method containing the run loop for inserting a local sensors' data into the data logger.
 
@@ -177,9 +178,9 @@ class PurpleAirDataLogger:
         This shall be considered the main entry point for and PurpleAirDataLogger.
 
         :param str paa_multiple_sensor_request_json_file: The path to a json file containing
-                                                          the parameters to send a single sensor request(s).
+                                                          the parameters to send a multiple sensor request(s).
         :param str paa_single_sensor_request_json_file: The path to a json file containing
-                                                        the parameters to send a multiple sensor request(s).
+                                                        the parameters to send a single sensor request(s).
         :param str paa_group_sensor_request_json_file: The path to a json file containing
                                                         the parameters to send a group sensor request(s).
         :param str paa_local_sensor_request_json_file: The path to a json file containing
