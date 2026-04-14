@@ -294,7 +294,7 @@ def logic_for_storing_group_sensors_data(
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
-    :param str group_id_to_use: The group id to be used. Starts out being `None` then gets filled out.
+    :param int group_id_to_use: The group id to be used. Starts out being `None` then gets filled out.
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
