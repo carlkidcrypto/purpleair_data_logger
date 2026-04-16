@@ -96,7 +96,7 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
                                              for insertion. If a sensor doesn't support
                                              a certain field make sure it is NULL and part
                                              of the dictionary. This method does no type
-                                             or error checking. That is upto the caller.
+                                             or error checking. That is up to the caller.
         """
 
         # Run the queries

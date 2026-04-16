@@ -88,7 +88,7 @@ class PurpleAirDataLogger:
                                              for insertion. If a sensor doesn't support
                                              a certain field make sure it is NULL and part
                                              of the dictionary. This method does no type
-                                             or error checking. That is upto the caller.
+                                             or error checking. That is up to the caller.
         """
 
         raise NotImplementedError(
@@ -244,10 +244,10 @@ class PurpleAirDataLogger:
             and paa_local_sensor_request_json_file is None
         ):
             raise PurpleAirDataLoggerError(
-                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' or 'and paa_local_sensor_request_json_file is' were provided. Please provide at least one!"""
+                """Neither '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file' or '-paa_local_sensor_request_json_file' were provided. Please provide at least one!"""
             )
 
         else:
             raise PurpleAirDataLoggerError(
-                """One parameter '-paa_multiple_sensor_request_json_file' or '-paa_single_sensor_request_json_file' or '-paa_group_sensor_request_json_file'  or 'and paa_local_sensor_request_json_file is must be provided. Not all!"""
+                """Only one of '-paa_multiple_sensor_request_json_file', '-paa_single_sensor_request_json_file', '-paa_group_sensor_request_json_file', or '-paa_local_sensor_request_json_file' must be provided. Not all!"""
             )
