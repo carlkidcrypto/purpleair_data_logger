@@ -54,8 +54,8 @@ import sys
 
 class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
     """
-    The logger class. For now we will ingest data into a TimeScaleDB PostgreSQL
-    database. Then we will use Grafana to visualize said data.
+    A data logger class that stores PurpleAir sensor data into a TimescaleDB PostgreSQL
+    database. Grafana can then be used to visualize the stored data.
     """
 
     def __init__(self, PurpleAirAPIReadKey, PurpleAirAPIWriteKey, psql_db_conn):
