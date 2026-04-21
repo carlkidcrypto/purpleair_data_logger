@@ -48,7 +48,7 @@ from os.path import exists
 
 class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     """
-    The logger class. For now we will insert data into a CSV file.
+    A data logger class that stores PurpleAir sensor data into CSV files.
     """
 
     def __init__(
@@ -81,7 +81,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
     @staticmethod
     def _open_csv_file(file_path_and_name):
         """
-        Create the given 'file_path_and_name'.
+        Open the given 'file_path_and_name' for appending, creating it if it does not exist.
 
         :param str file_path_and_name: A string of 'file_path_and_name'. i.e
                                        '/path_to_place/file_name.csv'.

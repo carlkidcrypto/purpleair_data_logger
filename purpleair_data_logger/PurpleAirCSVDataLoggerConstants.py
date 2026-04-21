@@ -5,12 +5,12 @@ Copyright 2022 carlkidcrypto, All rights reserved.
 A file containing CSVDataLogger constants.
 """
 
-#: Standard file name for -
+#: Standard file name for station_information_and_status_fields data
 STATION_INFORMATION_AND_STATUS_FIELDS_FILE_NAME = (
     """station_information_and_status_fields.csv"""
 )
 
-#: Standard CSV header for -
+#: Standard CSV header for station_information_and_status_fields data
 STATION_INFORMATION_AND_STATUS_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -43,10 +43,10 @@ STATION_INFORMATION_AND_STATUS_FIELDS_HEADER = (
     "confidence_auto"
 )
 
-#: Standard file name for -
+#: Standard file name for environmental_fields data
 ENVIRONMENTAL_FIELDS_FILE_NAME = """environmental_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for environmental_fields data
 ENVIRONMENTAL_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -61,18 +61,18 @@ ENVIRONMENTAL_FIELDS_HEADER = (
     "pressure_b"
 )
 
-#: Standard file name for -
+#: Standard file name for miscellaneous_fields data
 MISCELLANEOUS_FIELDS_FILE_NAME = """miscellaneous_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for miscellaneous_fields data
 MISCELLANEOUS_FIELDS_HEADER = (
     "data_time_stamp," "sensor_index," "voc," "voc_a," "voc_b," "ozone1," "analog_input"
 )
 
-#: Standard file name for -
+#: Standard file name for pm1.0_fields data
 PM1_0_FIELDS_FILE_NAME = """pm1.0_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for pm1.0_fields data
 PM1_0_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -87,10 +87,10 @@ PM1_0_FIELDS_HEADER = (
     "pm1.0_cf_1_b"
 )
 
-#: Standard file name for -
+#: Standard file name for pm2.5_fields data
 PM2_5_FIELDS_FILE_NAME = """pm2.5_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for pm2.5_fields data
 PM2_5_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -108,10 +108,10 @@ PM2_5_FIELDS_HEADER = (
     "pm2.5_cf_1_b"
 )
 
-#: Standard file name for -
+#: Standard file name for pm2.5_pseudo_average_fields data
 PM2_5_PSEUDO_AVERAGE_FIELDS_FILE_NAME = """pm2.5_pseudo_average_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for pm2.5_pseudo_average_fields data
 PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -135,10 +135,10 @@ PM2_5_PSEUDO_AVERAGE_FIELDS_HEADER = (
     "pm2.5_1week_b"
 )
 
-#: Standard file name for -
+#: Standard file name for pm10.0_fields data
 PM10_0_FIELDS_FILE_NAME = """pm10.0_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for pm10.0_fields data
 PM10_0_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -153,10 +153,10 @@ PM10_0_FIELDS_HEADER = (
     "pm10.0_cf_1_b"
 )
 
-#: Standard file name for -
+#: Standard file name for particle_count_fields data
 PARTICLE_COUNT_FIELDS_FILE_NAME = """particle_count_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for particle_count_fields data
 PARTICLE_COUNT_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"
@@ -180,10 +180,10 @@ PARTICLE_COUNT_FIELDS_HEADER = (
     "10.0_um_count_b"
 )
 
-#: Standard file name for -
+#: Standard file name for thingspeak_fields data
 THINGSPEAK_FIELDS_FILE_NAME = """thingspeak_fields.csv"""
 
-#: Standard CSV header for -
+#: Standard CSV header for thingspeak_fields data
 THINGSPEAK_FIELDS_HEADER = (
     "data_time_stamp,"
     "sensor_index,"

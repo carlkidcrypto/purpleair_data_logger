@@ -48,7 +48,7 @@ import sqlite3
 
 class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
     """
-    The logger class. For now we will insert data into a SQLite3 database file.
+    A data logger class that stores PurpleAir sensor data into a SQLite3 database file.
     """
 
     def __init__(

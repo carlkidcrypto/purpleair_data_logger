@@ -211,7 +211,7 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
     :return: None
     """
 
-    # We will request data once every 65 seconds.
+    # Request data from the sensor and store the result.
     debug_log(f"""Requesting new data from a sensor with index
                 {json_config_file['sensor_index']}...""")
 
@@ -246,7 +246,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     :return: None
     """
 
-    # We will request data once every 65 seconds.
+    # Request data from multiple sensors and store the results.
     debug_log(f"""Requesting new data from multiple sensors with fields
                     {json_config_file["fields"]}...""")
 
