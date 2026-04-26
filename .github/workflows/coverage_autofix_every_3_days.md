@@ -16,6 +16,7 @@ safe-outputs:
     draft: true
     preserve-branch-name: true
     if-no-changes: "ignore"
+    allowed-base-branches: [main]
   add-labels:
     target: "*"
     allowed: [coverage, tests, python]
