@@ -97,7 +97,7 @@ class PurpleAirDataLogger:
 
     def _run_loop_for_storing_single_sensor_data(self, json_config_file) -> None:
         """
-        A method containing the run loop for inserting a single sensors' data into the data logger.
+        A method containing the run loop for inserting a single sensor's data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         :return: None
@@ -115,7 +115,7 @@ class PurpleAirDataLogger:
 
     def _run_loop_for_storing_multiple_sensors_data(self, json_config_file) -> None:
         """
-        A method containing the run loop for inserting a multiple sensors' data into the data logger.
+        A method containing the run loop for inserting multiple sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         :return: None
@@ -133,7 +133,7 @@ class PurpleAirDataLogger:
 
     def _run_loop_for_storing_group_sensors_data(self, json_config_file) -> None:
         """
-        A method containing the run loop for inserting a group sensors' data into the data logger.
+        A method containing the run loop for inserting group sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         :return: None
@@ -154,7 +154,7 @@ class PurpleAirDataLogger:
 
     def _run_loop_for_storing_local_sensors_data(self, json_config_file) -> None:
         """
-        A method containing the run loop for inserting a local sensors' data into the data logger.
+        A method containing the run loop for inserting local sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
         """
@@ -175,7 +175,7 @@ class PurpleAirDataLogger:
     ) -> None:
         """
         A method to choose what run method to execute based on what config file is being used.
-        This shall be considered the main entry point for and PurpleAirDataLogger.
+        This shall be considered the main entry point for any PurpleAirDataLogger.
 
         :param str paa_multiple_sensor_request_json_file: The path to a json file containing
                                                           the parameters to send a multiple sensor request(s).
