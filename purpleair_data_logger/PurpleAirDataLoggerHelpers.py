@@ -112,7 +112,7 @@ def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
 
 def construct_store_sensor_data_type(raw_data) -> list:
     """
-    A function to build the dict data type that the store_sensor_data method expects.
+    A function to build a list of dictionaries that the store_sensor_data method expects.
 
     :param dict raw_data: The return value from either padl_obj.request_members_data or
                             padl_obj.request_multiple_sensors_data.
