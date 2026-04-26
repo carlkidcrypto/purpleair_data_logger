@@ -13,7 +13,7 @@ import time
 
 def generate_common_arg_parser(argparse_description=""):
     """
-    A function to generate the common arguments that all data loggers need
+    A function to generate the common arguments that all data loggers need.
 
     :param str argparse_description: A description for the argument parser that will be return
 
@@ -112,7 +112,7 @@ def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
 
 def construct_store_sensor_data_type(raw_data) -> list:
     """
-    A method to build the dict data type that the store_sensor_data method expects.
+    A function to build a list of dictionaries that the store_sensor_data method expects.
 
     :param dict raw_data: The return value from either padl_obj.request_members_data or
                             padl_obj.request_multiple_sensors_data.
@@ -152,7 +152,7 @@ def construct_store_sensor_data_type(raw_data) -> list:
 
 def flatten_single_sensor_data(raw_data) -> dict:
     """
-    A method to flatten the raw data from a single sensor request. This makes our logic downstream easier.
+    A function to flatten the raw data from a single sensor request. This makes our logic downstream easier.
 
     :param dict raw_data: The return value from padl_obj.request_sensor_data.
 
@@ -202,7 +202,7 @@ def flatten_single_sensor_data(raw_data) -> dict:
 
 def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
     """
-    A method containing the run loop for inserting a single sensors' data into the data logger.
+    A function that performs one data retrieval and storage cycle for a single sensor.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
@@ -237,7 +237,7 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
 
 def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     """
-    A method containing the run loop for inserting a multiple sensors' data into the data logger.
+    A function that performs one data retrieval and storage cycle for multiple sensors.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
@@ -290,7 +290,7 @@ def logic_for_storing_group_sensors_data(
     padl_obj, group_id_to_use, json_config_file
 ) -> int:
     """
-    A method containing the run loop for inserting a group sensors' data into the data logger.
+    A function that performs one data retrieval and storage cycle for a sensor group.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
@@ -406,7 +406,7 @@ def logic_for_storing_group_sensors_data(
 
 def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     """
-    A method containing the run loop for inserting a local sensors' data into the data logger.
+    A function that performs one data retrieval and storage cycle for local sensors.
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
