@@ -13,9 +13,30 @@ updates:
       interval: "daily"
     open-pull-requests-limit: 10
 
-  # Maintain dependencies for pip
+  # Maintain dependencies for pip (root)
   - package-ecosystem: "pip"
     directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for pip (tests)
+  - package-ecosystem: "pip"
+    directory: "/tests"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for pip (behave_tests)
+  - package-ecosystem: "pip"
+    directory: "/behave_tests"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for pip (sphinx_docs_build)
+  - package-ecosystem: "pip"
+    directory: "/sphinx_docs_build"
     schedule:
       interval: "daily"
     open-pull-requests-limit: 10
