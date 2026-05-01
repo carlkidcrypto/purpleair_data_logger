@@ -24,6 +24,190 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
 import json
 import requests
 
+# Mapping of Loki data_group label to the list of sensor data fields it carries.
+# 'data_time_stamp' and 'sensor_index' are included in every group so each log
+# entry is self-contained and can be queried independently in Grafana.
+_LOKI_DATA_GROUPS = [
+    (
+        "station_information_and_status_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "name",
+            "icon",
+            "model",
+            "hardware",
+            "location_type",
+            "private",
+            "latitude",
+            "longitude",
+            "altitude",
+            "position_rating",
+            "led_brightness",
+            "firmware_version",
+            "firmware_upgrade",
+            "rssi",
+            "uptime",
+            "pa_latency",
+            "memory",
+            "last_seen",
+            "last_modified",
+            "date_created",
+            "channel_state",
+            "channel_flags",
+            "channel_flags_manual",
+            "channel_flags_auto",
+            "confidence",
+            "confidence_manual",
+            "confidence_auto",
+        ],
+    ),
+    (
+        "environmental_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "humidity",
+            "humidity_a",
+            "humidity_b",
+            "temperature",
+            "temperature_a",
+            "temperature_b",
+            "pressure",
+            "pressure_a",
+            "pressure_b",
+        ],
+    ),
+    (
+        "miscellaneous_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "voc",
+            "voc_a",
+            "voc_b",
+            "ozone1",
+            "analog_input",
+        ],
+    ),
+    (
+        "pm1_0_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "pm1.0",
+            "pm1.0_a",
+            "pm1.0_b",
+            "pm1.0_atm",
+            "pm1.0_atm_a",
+            "pm1.0_atm_b",
+            "pm1.0_cf_1",
+            "pm1.0_cf_1_a",
+            "pm1.0_cf_1_b",
+        ],
+    ),
+    (
+        "pm2_5_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "pm2.5_alt",
+            "pm2.5_alt_a",
+            "pm2.5_alt_b",
+            "pm2.5",
+            "pm2.5_a",
+            "pm2.5_b",
+            "pm2.5_atm",
+            "pm2.5_atm_a",
+            "pm2.5_atm_b",
+            "pm2.5_cf_1",
+            "pm2.5_cf_1_a",
+            "pm2.5_cf_1_b",
+        ],
+    ),
+    (
+        "pm2_5_pseudo_average_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "pm2.5_10minute",
+            "pm2.5_10minute_a",
+            "pm2.5_10minute_b",
+            "pm2.5_30minute",
+            "pm2.5_30minute_a",
+            "pm2.5_30minute_b",
+            "pm2.5_60minute",
+            "pm2.5_60minute_a",
+            "pm2.5_60minute_b",
+            "pm2.5_6hour",
+            "pm2.5_6hour_a",
+            "pm2.5_6hour_b",
+            "pm2.5_24hour",
+            "pm2.5_24hour_a",
+            "pm2.5_24hour_b",
+            "pm2.5_1week",
+            "pm2.5_1week_a",
+            "pm2.5_1week_b",
+        ],
+    ),
+    (
+        "pm10_0_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "pm10.0",
+            "pm10.0_a",
+            "pm10.0_b",
+            "pm10.0_atm",
+            "pm10.0_atm_a",
+            "pm10.0_atm_b",
+            "pm10.0_cf_1",
+            "pm10.0_cf_1_a",
+            "pm10.0_cf_1_b",
+        ],
+    ),
+    (
+        "particle_count_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "0.3_um_count",
+            "0.3_um_count_a",
+            "0.3_um_count_b",
+            "0.5_um_count",
+            "0.5_um_count_a",
+            "0.5_um_count_b",
+            "1.0_um_count",
+            "1.0_um_count_a",
+            "1.0_um_count_b",
+            "2.5_um_count",
+            "2.5_um_count_a",
+            "2.5_um_count_b",
+            "5.0_um_count",
+            "5.0_um_count_a",
+            "5.0_um_count_b",
+            "10.0_um_count",
+            "10.0_um_count_a",
+            "10.0_um_count_b",
+        ],
+    ),
+    (
+        "thingspeak_fields",
+        [
+            "data_time_stamp",
+            "sensor_index",
+            "primary_id_a",
+            "primary_key_a",
+            "secondary_id_a",
+            "secondary_key_a",
+            "primary_id_b",
+            "primary_key_b",
+            "secondary_id_b",
+            "secondary_key_b",
+        ],
+    ),
+]
+
 
 class PurpleAirLokiDataLogger(PurpleAirDataLogger):
     """
@@ -55,7 +239,9 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         )
 
         # Save off the Loki connection details internally for later access
-        self._loki_url = f"{loki_url.rstrip('/')}/loki/api/v1/push" if loki_url else None
+        self._loki_url = (
+            f"{loki_url.rstrip('/')}/loki/api/v1/push" if loki_url else None
+        )
         self._loki_usr = loki_usr
         self._loki_pwd = loki_pwd
 
@@ -103,462 +289,18 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
             ts_ns = str(int(single_sensor_data_dict["data_time_stamp"]) * 1_000_000_000)
             sensor_index = str(single_sensor_data_dict["sensor_index"])
 
-            streams = [
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "station_information_and_status_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "name": single_sensor_data_dict["name"],
-                                    "icon": single_sensor_data_dict["icon"],
-                                    "model": single_sensor_data_dict["model"],
-                                    "hardware": single_sensor_data_dict["hardware"],
-                                    "location_type": single_sensor_data_dict[
-                                        "location_type"
-                                    ],
-                                    "private": single_sensor_data_dict["private"],
-                                    "latitude": single_sensor_data_dict["latitude"],
-                                    "longitude": single_sensor_data_dict["longitude"],
-                                    "altitude": single_sensor_data_dict["altitude"],
-                                    "position_rating": single_sensor_data_dict[
-                                        "position_rating"
-                                    ],
-                                    "led_brightness": single_sensor_data_dict[
-                                        "led_brightness"
-                                    ],
-                                    "firmware_version": single_sensor_data_dict[
-                                        "firmware_version"
-                                    ],
-                                    "firmware_upgrade": single_sensor_data_dict[
-                                        "firmware_upgrade"
-                                    ],
-                                    "rssi": single_sensor_data_dict["rssi"],
-                                    "uptime": single_sensor_data_dict["uptime"],
-                                    "pa_latency": single_sensor_data_dict["pa_latency"],
-                                    "memory": single_sensor_data_dict["memory"],
-                                    "last_seen": single_sensor_data_dict["last_seen"],
-                                    "last_modified": single_sensor_data_dict[
-                                        "last_modified"
-                                    ],
-                                    "date_created": single_sensor_data_dict[
-                                        "date_created"
-                                    ],
-                                    "channel_state": single_sensor_data_dict[
-                                        "channel_state"
-                                    ],
-                                    "channel_flags": single_sensor_data_dict[
-                                        "channel_flags"
-                                    ],
-                                    "channel_flags_manual": single_sensor_data_dict[
-                                        "channel_flags_manual"
-                                    ],
-                                    "channel_flags_auto": single_sensor_data_dict[
-                                        "channel_flags_auto"
-                                    ],
-                                    "confidence": single_sensor_data_dict["confidence"],
-                                    "confidence_manual": single_sensor_data_dict[
-                                        "confidence_manual"
-                                    ],
-                                    "confidence_auto": single_sensor_data_dict[
-                                        "confidence_auto"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "environmental_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "humidity": single_sensor_data_dict["humidity"],
-                                    "humidity_a": single_sensor_data_dict["humidity_a"],
-                                    "humidity_b": single_sensor_data_dict["humidity_b"],
-                                    "temperature": single_sensor_data_dict["temperature"],
-                                    "temperature_a": single_sensor_data_dict[
-                                        "temperature_a"
-                                    ],
-                                    "temperature_b": single_sensor_data_dict[
-                                        "temperature_b"
-                                    ],
-                                    "pressure": single_sensor_data_dict["pressure"],
-                                    "pressure_a": single_sensor_data_dict["pressure_a"],
-                                    "pressure_b": single_sensor_data_dict["pressure_b"],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "miscellaneous_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "voc": single_sensor_data_dict["voc"],
-                                    "voc_a": single_sensor_data_dict["voc_a"],
-                                    "voc_b": single_sensor_data_dict["voc_b"],
-                                    "ozone1": single_sensor_data_dict["ozone1"],
-                                    "analog_input": single_sensor_data_dict[
-                                        "analog_input"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "pm1_0_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "pm1.0": single_sensor_data_dict["pm1.0"],
-                                    "pm1.0_a": single_sensor_data_dict["pm1.0_a"],
-                                    "pm1.0_b": single_sensor_data_dict["pm1.0_b"],
-                                    "pm1.0_atm": single_sensor_data_dict["pm1.0_atm"],
-                                    "pm1.0_atm_a": single_sensor_data_dict[
-                                        "pm1.0_atm_a"
-                                    ],
-                                    "pm1.0_atm_b": single_sensor_data_dict[
-                                        "pm1.0_atm_b"
-                                    ],
-                                    "pm1.0_cf_1": single_sensor_data_dict["pm1.0_cf_1"],
-                                    "pm1.0_cf_1_a": single_sensor_data_dict[
-                                        "pm1.0_cf_1_a"
-                                    ],
-                                    "pm1.0_cf_1_b": single_sensor_data_dict[
-                                        "pm1.0_cf_1_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "pm2_5_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "pm2.5_alt": single_sensor_data_dict["pm2.5_alt"],
-                                    "pm2.5_alt_a": single_sensor_data_dict[
-                                        "pm2.5_alt_a"
-                                    ],
-                                    "pm2.5_alt_b": single_sensor_data_dict[
-                                        "pm2.5_alt_b"
-                                    ],
-                                    "pm2.5": single_sensor_data_dict["pm2.5"],
-                                    "pm2.5_a": single_sensor_data_dict["pm2.5_a"],
-                                    "pm2.5_b": single_sensor_data_dict["pm2.5_b"],
-                                    "pm2.5_atm": single_sensor_data_dict["pm2.5_atm"],
-                                    "pm2.5_atm_a": single_sensor_data_dict[
-                                        "pm2.5_atm_a"
-                                    ],
-                                    "pm2.5_atm_b": single_sensor_data_dict[
-                                        "pm2.5_atm_b"
-                                    ],
-                                    "pm2.5_cf_1": single_sensor_data_dict["pm2.5_cf_1"],
-                                    "pm2.5_cf_1_a": single_sensor_data_dict[
-                                        "pm2.5_cf_1_a"
-                                    ],
-                                    "pm2.5_cf_1_b": single_sensor_data_dict[
-                                        "pm2.5_cf_1_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "pm2_5_pseudo_average_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "pm2.5_10minute": single_sensor_data_dict[
-                                        "pm2.5_10minute"
-                                    ],
-                                    "pm2.5_10minute_a": single_sensor_data_dict[
-                                        "pm2.5_10minute_a"
-                                    ],
-                                    "pm2.5_10minute_b": single_sensor_data_dict[
-                                        "pm2.5_10minute_b"
-                                    ],
-                                    "pm2.5_30minute": single_sensor_data_dict[
-                                        "pm2.5_30minute"
-                                    ],
-                                    "pm2.5_30minute_a": single_sensor_data_dict[
-                                        "pm2.5_30minute_a"
-                                    ],
-                                    "pm2.5_30minute_b": single_sensor_data_dict[
-                                        "pm2.5_30minute_b"
-                                    ],
-                                    "pm2.5_60minute": single_sensor_data_dict[
-                                        "pm2.5_60minute"
-                                    ],
-                                    "pm2.5_60minute_a": single_sensor_data_dict[
-                                        "pm2.5_60minute_a"
-                                    ],
-                                    "pm2.5_60minute_b": single_sensor_data_dict[
-                                        "pm2.5_60minute_b"
-                                    ],
-                                    "pm2.5_6hour": single_sensor_data_dict[
-                                        "pm2.5_6hour"
-                                    ],
-                                    "pm2.5_6hour_a": single_sensor_data_dict[
-                                        "pm2.5_6hour_a"
-                                    ],
-                                    "pm2.5_6hour_b": single_sensor_data_dict[
-                                        "pm2.5_6hour_b"
-                                    ],
-                                    "pm2.5_24hour": single_sensor_data_dict[
-                                        "pm2.5_24hour"
-                                    ],
-                                    "pm2.5_24hour_a": single_sensor_data_dict[
-                                        "pm2.5_24hour_a"
-                                    ],
-                                    "pm2.5_24hour_b": single_sensor_data_dict[
-                                        "pm2.5_24hour_b"
-                                    ],
-                                    "pm2.5_1week": single_sensor_data_dict[
-                                        "pm2.5_1week"
-                                    ],
-                                    "pm2.5_1week_a": single_sensor_data_dict[
-                                        "pm2.5_1week_a"
-                                    ],
-                                    "pm2.5_1week_b": single_sensor_data_dict[
-                                        "pm2.5_1week_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "pm10_0_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "pm10.0": single_sensor_data_dict["pm10.0"],
-                                    "pm10.0_a": single_sensor_data_dict["pm10.0_a"],
-                                    "pm10.0_b": single_sensor_data_dict["pm10.0_b"],
-                                    "pm10.0_atm": single_sensor_data_dict["pm10.0_atm"],
-                                    "pm10.0_atm_a": single_sensor_data_dict[
-                                        "pm10.0_atm_a"
-                                    ],
-                                    "pm10.0_atm_b": single_sensor_data_dict[
-                                        "pm10.0_atm_b"
-                                    ],
-                                    "pm10.0_cf_1": single_sensor_data_dict[
-                                        "pm10.0_cf_1"
-                                    ],
-                                    "pm10.0_cf_1_a": single_sensor_data_dict[
-                                        "pm10.0_cf_1_a"
-                                    ],
-                                    "pm10.0_cf_1_b": single_sensor_data_dict[
-                                        "pm10.0_cf_1_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "particle_count_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "0.3_um_count": single_sensor_data_dict[
-                                        "0.3_um_count"
-                                    ],
-                                    "0.3_um_count_a": single_sensor_data_dict[
-                                        "0.3_um_count_a"
-                                    ],
-                                    "0.3_um_count_b": single_sensor_data_dict[
-                                        "0.3_um_count_b"
-                                    ],
-                                    "0.5_um_count": single_sensor_data_dict[
-                                        "0.5_um_count"
-                                    ],
-                                    "0.5_um_count_a": single_sensor_data_dict[
-                                        "0.5_um_count_a"
-                                    ],
-                                    "0.5_um_count_b": single_sensor_data_dict[
-                                        "0.5_um_count_b"
-                                    ],
-                                    "1.0_um_count": single_sensor_data_dict[
-                                        "1.0_um_count"
-                                    ],
-                                    "1.0_um_count_a": single_sensor_data_dict[
-                                        "1.0_um_count_a"
-                                    ],
-                                    "1.0_um_count_b": single_sensor_data_dict[
-                                        "1.0_um_count_b"
-                                    ],
-                                    "2.5_um_count": single_sensor_data_dict[
-                                        "2.5_um_count"
-                                    ],
-                                    "2.5_um_count_a": single_sensor_data_dict[
-                                        "2.5_um_count_a"
-                                    ],
-                                    "2.5_um_count_b": single_sensor_data_dict[
-                                        "2.5_um_count_b"
-                                    ],
-                                    "5.0_um_count": single_sensor_data_dict[
-                                        "5.0_um_count"
-                                    ],
-                                    "5.0_um_count_a": single_sensor_data_dict[
-                                        "5.0_um_count_a"
-                                    ],
-                                    "5.0_um_count_b": single_sensor_data_dict[
-                                        "5.0_um_count_b"
-                                    ],
-                                    "10.0_um_count": single_sensor_data_dict[
-                                        "10.0_um_count"
-                                    ],
-                                    "10.0_um_count_a": single_sensor_data_dict[
-                                        "10.0_um_count_a"
-                                    ],
-                                    "10.0_um_count_b": single_sensor_data_dict[
-                                        "10.0_um_count_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-                {
-                    "stream": {
-                        "sensor_index": sensor_index,
-                        "data_group": "thingspeak_fields",
-                    },
-                    "values": [
-                        [
-                            ts_ns,
-                            json.dumps(
-                                {
-                                    "data_time_stamp": single_sensor_data_dict[
-                                        "data_time_stamp"
-                                    ],
-                                    "sensor_index": single_sensor_data_dict[
-                                        "sensor_index"
-                                    ],
-                                    "primary_id_a": single_sensor_data_dict[
-                                        "primary_id_a"
-                                    ],
-                                    "primary_key_a": single_sensor_data_dict[
-                                        "primary_key_a"
-                                    ],
-                                    "secondary_id_a": single_sensor_data_dict[
-                                        "secondary_id_a"
-                                    ],
-                                    "secondary_key_a": single_sensor_data_dict[
-                                        "secondary_key_a"
-                                    ],
-                                    "primary_id_b": single_sensor_data_dict[
-                                        "primary_id_b"
-                                    ],
-                                    "primary_key_b": single_sensor_data_dict[
-                                        "primary_key_b"
-                                    ],
-                                    "secondary_id_b": single_sensor_data_dict[
-                                        "secondary_id_b"
-                                    ],
-                                    "secondary_key_b": single_sensor_data_dict[
-                                        "secondary_key_b"
-                                    ],
-                                }
-                            ),
-                        ]
-                    ],
-                },
-            ]
+            streams = []
+            for data_group, fields in _LOKI_DATA_GROUPS:
+                log_data = {field: single_sensor_data_dict[field] for field in fields}
+                streams.append(
+                    {
+                        "stream": {
+                            "sensor_index": sensor_index,
+                            "data_group": data_group,
+                        },
+                        "values": [[ts_ns, json.dumps(log_data)]],
+                    }
+                )
 
             self._push_to_loki(streams)
 
