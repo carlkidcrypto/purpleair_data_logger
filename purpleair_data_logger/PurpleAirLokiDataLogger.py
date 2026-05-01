@@ -55,7 +55,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         )
 
         # Save off the Loki connection details internally for later access
-        self._loki_url = loki_url.rstrip("/") + "/loki/api/v1/push"
+        self._loki_url = f"{loki_url.rstrip('/')}/loki/api/v1/push" if loki_url else None
         self._loki_usr = loki_usr
         self._loki_pwd = loki_pwd
 
