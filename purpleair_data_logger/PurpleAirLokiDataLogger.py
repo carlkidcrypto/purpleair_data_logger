@@ -78,9 +78,9 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
 
         response = requests.post(
             self._loki_url,
-            data=json.dumps(payload),
-            headers={"Content-Type": "application/json"},
+            json=payload,
             auth=auth,
+            timeout=10,
         )
         response.raise_for_status()
 
