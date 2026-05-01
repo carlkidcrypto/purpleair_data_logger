@@ -5,6 +5,7 @@ Copyright 2023 carlkidcrypto, All rights reserved.
 """
 
 import unittest
+import math
 import requests_mock
 import sys
 from unittest.mock import patch
@@ -96,15 +97,21 @@ class PurpleAirPrometheusDataLoggerTest(unittest.TestCase):
 
         sensor_index = str(sensor_data["sensor_index"])
         self.assertEqual(
-            logger._environmental_humidity.labels(sensor_index=sensor_index)._value.get(),
+            logger._environmental_humidity.labels(
+                sensor_index=sensor_index
+            )._value.get(),
             float(sensor_data["humidity"]),
         )
         self.assertEqual(
-            logger._environmental_temperature.labels(sensor_index=sensor_index)._value.get(),
+            logger._environmental_temperature.labels(
+                sensor_index=sensor_index
+            )._value.get(),
             float(sensor_data["temperature"]),
         )
         self.assertEqual(
-            logger._environmental_pressure.labels(sensor_index=sensor_index)._value.get(),
+            logger._environmental_pressure.labels(
+                sensor_index=sensor_index
+            )._value.get(),
             float(sensor_data["pressure"]),
         )
         self.assertEqual(
@@ -146,10 +153,10 @@ class PurpleAirPrometheusDataLoggerTest(unittest.TestCase):
 
     def test_safe_numeric_with_none(self):
         """
-        Test that _safe_numeric returns 0.0 for None values.
+        Test that _safe_numeric returns NaN for None values.
         """
         logger = self._make_prometheus_logger()
-        self.assertEqual(logger._safe_numeric(None), 0.0)
+        self.assertTrue(math.isnan(logger._safe_numeric(None)))
 
     def test_safe_numeric_with_valid_number(self):
         """
@@ -162,10 +169,10 @@ class PurpleAirPrometheusDataLoggerTest(unittest.TestCase):
 
     def test_safe_numeric_with_invalid_string(self):
         """
-        Test that _safe_numeric returns 0.0 for non-numeric strings.
+        Test that _safe_numeric returns NaN for non-numeric strings.
         """
         logger = self._make_prometheus_logger()
-        self.assertEqual(logger._safe_numeric("not_a_number"), 0.0)
+        self.assertTrue(math.isnan(logger._safe_numeric("not_a_number")))
 
     def test_default_prometheus_port_constant(self):
         """

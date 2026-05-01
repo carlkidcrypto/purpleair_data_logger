@@ -505,89 +505,131 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
 
         # ---- PM1.0 fields ----
         self._pm1_0 = Gauge(
-            PM1_0_METRIC_NAME, PM1_0_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_METRIC_NAME,
+            PM1_0_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_a = Gauge(
-            PM1_0_A_METRIC_NAME, PM1_0_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_A_METRIC_NAME,
+            PM1_0_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_b = Gauge(
-            PM1_0_B_METRIC_NAME, PM1_0_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_B_METRIC_NAME,
+            PM1_0_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_atm = Gauge(
-            PM1_0_ATM_METRIC_NAME, PM1_0_ATM_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_ATM_METRIC_NAME,
+            PM1_0_ATM_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_atm_a = Gauge(
-            PM1_0_ATM_A_METRIC_NAME, PM1_0_ATM_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_ATM_A_METRIC_NAME,
+            PM1_0_ATM_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_atm_b = Gauge(
-            PM1_0_ATM_B_METRIC_NAME, PM1_0_ATM_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_ATM_B_METRIC_NAME,
+            PM1_0_ATM_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_cf_1 = Gauge(
-            PM1_0_CF_1_METRIC_NAME, PM1_0_CF_1_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_CF_1_METRIC_NAME,
+            PM1_0_CF_1_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_cf_1_a = Gauge(
-            PM1_0_CF_1_A_METRIC_NAME, PM1_0_CF_1_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_CF_1_A_METRIC_NAME,
+            PM1_0_CF_1_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm1_0_cf_1_b = Gauge(
-            PM1_0_CF_1_B_METRIC_NAME, PM1_0_CF_1_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM1_0_CF_1_B_METRIC_NAME,
+            PM1_0_CF_1_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
 
         # ---- PM2.5 fields ----
         self._pm2_5_alt = Gauge(
-            PM2_5_ALT_METRIC_NAME, PM2_5_ALT_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ALT_METRIC_NAME,
+            PM2_5_ALT_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_alt_a = Gauge(
-            PM2_5_ALT_A_METRIC_NAME, PM2_5_ALT_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ALT_A_METRIC_NAME,
+            PM2_5_ALT_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_alt_b = Gauge(
-            PM2_5_ALT_B_METRIC_NAME, PM2_5_ALT_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ALT_B_METRIC_NAME,
+            PM2_5_ALT_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5 = Gauge(
-            PM2_5_METRIC_NAME, PM2_5_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_METRIC_NAME,
+            PM2_5_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_a = Gauge(
-            PM2_5_A_METRIC_NAME, PM2_5_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_A_METRIC_NAME,
+            PM2_5_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_b = Gauge(
-            PM2_5_B_METRIC_NAME, PM2_5_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_B_METRIC_NAME,
+            PM2_5_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_atm = Gauge(
-            PM2_5_ATM_METRIC_NAME, PM2_5_ATM_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ATM_METRIC_NAME,
+            PM2_5_ATM_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_atm_a = Gauge(
-            PM2_5_ATM_A_METRIC_NAME, PM2_5_ATM_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ATM_A_METRIC_NAME,
+            PM2_5_ATM_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_atm_b = Gauge(
-            PM2_5_ATM_B_METRIC_NAME, PM2_5_ATM_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_ATM_B_METRIC_NAME,
+            PM2_5_ATM_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_cf_1 = Gauge(
-            PM2_5_CF_1_METRIC_NAME, PM2_5_CF_1_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_CF_1_METRIC_NAME,
+            PM2_5_CF_1_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_cf_1_a = Gauge(
-            PM2_5_CF_1_A_METRIC_NAME, PM2_5_CF_1_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_CF_1_A_METRIC_NAME,
+            PM2_5_CF_1_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_cf_1_b = Gauge(
-            PM2_5_CF_1_B_METRIC_NAME, PM2_5_CF_1_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_CF_1_B_METRIC_NAME,
+            PM2_5_CF_1_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
 
@@ -647,7 +689,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._pm2_5_6hour = Gauge(
-            PM2_5_6HOUR_METRIC_NAME, PM2_5_6HOUR_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_6HOUR_METRIC_NAME,
+            PM2_5_6HOUR_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_6hour_a = Gauge(
@@ -663,7 +707,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._pm2_5_24hour = Gauge(
-            PM2_5_24HOUR_METRIC_NAME, PM2_5_24HOUR_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_24HOUR_METRIC_NAME,
+            PM2_5_24HOUR_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_24hour_a = Gauge(
@@ -679,7 +725,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._pm2_5_1week = Gauge(
-            PM2_5_1WEEK_METRIC_NAME, PM2_5_1WEEK_METRIC_DESCRIPTION, ["sensor_index"],
+            PM2_5_1WEEK_METRIC_NAME,
+            PM2_5_1WEEK_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm2_5_1week_a = Gauge(
@@ -697,31 +745,45 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
 
         # ---- PM10.0 fields ----
         self._pm10_0 = Gauge(
-            PM10_0_METRIC_NAME, PM10_0_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_METRIC_NAME,
+            PM10_0_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_a = Gauge(
-            PM10_0_A_METRIC_NAME, PM10_0_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_A_METRIC_NAME,
+            PM10_0_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_b = Gauge(
-            PM10_0_B_METRIC_NAME, PM10_0_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_B_METRIC_NAME,
+            PM10_0_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_atm = Gauge(
-            PM10_0_ATM_METRIC_NAME, PM10_0_ATM_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_ATM_METRIC_NAME,
+            PM10_0_ATM_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_atm_a = Gauge(
-            PM10_0_ATM_A_METRIC_NAME, PM10_0_ATM_A_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_ATM_A_METRIC_NAME,
+            PM10_0_ATM_A_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_atm_b = Gauge(
-            PM10_0_ATM_B_METRIC_NAME, PM10_0_ATM_B_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_ATM_B_METRIC_NAME,
+            PM10_0_ATM_B_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_cf_1 = Gauge(
-            PM10_0_CF_1_METRIC_NAME, PM10_0_CF_1_METRIC_DESCRIPTION, ["sensor_index"],
+            PM10_0_CF_1_METRIC_NAME,
+            PM10_0_CF_1_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._pm10_0_cf_1_a = Gauge(
@@ -739,7 +801,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
 
         # ---- Particle count fields ----
         self._um_count_0_3 = Gauge(
-            UM_COUNT_0_3_METRIC_NAME, UM_COUNT_0_3_METRIC_DESCRIPTION, ["sensor_index"],
+            UM_COUNT_0_3_METRIC_NAME,
+            UM_COUNT_0_3_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._um_count_0_3_a = Gauge(
@@ -755,7 +819,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._um_count_0_5 = Gauge(
-            UM_COUNT_0_5_METRIC_NAME, UM_COUNT_0_5_METRIC_DESCRIPTION, ["sensor_index"],
+            UM_COUNT_0_5_METRIC_NAME,
+            UM_COUNT_0_5_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._um_count_0_5_a = Gauge(
@@ -771,7 +837,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._um_count_1_0 = Gauge(
-            UM_COUNT_1_0_METRIC_NAME, UM_COUNT_1_0_METRIC_DESCRIPTION, ["sensor_index"],
+            UM_COUNT_1_0_METRIC_NAME,
+            UM_COUNT_1_0_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._um_count_1_0_a = Gauge(
@@ -787,7 +855,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._um_count_2_5 = Gauge(
-            UM_COUNT_2_5_METRIC_NAME, UM_COUNT_2_5_METRIC_DESCRIPTION, ["sensor_index"],
+            UM_COUNT_2_5_METRIC_NAME,
+            UM_COUNT_2_5_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._um_count_2_5_a = Gauge(
@@ -803,7 +873,9 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             registry=self._registry,
         )
         self._um_count_5_0 = Gauge(
-            UM_COUNT_5_0_METRIC_NAME, UM_COUNT_5_0_METRIC_DESCRIPTION, ["sensor_index"],
+            UM_COUNT_5_0_METRIC_NAME,
+            UM_COUNT_5_0_METRIC_DESCRIPTION,
+            ["sensor_index"],
             registry=self._registry,
         )
         self._um_count_5_0_a = Gauge(
@@ -866,7 +938,6 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         # Start the Prometheus HTTP server so metrics can be scraped
         start_http_server(self._prometheus_port, registry=self._registry)
 
-    @staticmethod
     @staticmethod
     def _safe_numeric(value):
         """
@@ -1238,9 +1309,6 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
             self._safe_numeric(single_sensor_data_dict["secondary_id_b"])
         )
 
-        # Delete some stuff
-        del single_sensor_data_dict
-
 
 if __name__ == "__main__":
     parser = generate_common_arg_parser(
@@ -1254,16 +1322,10 @@ if __name__ == "__main__":
         dest="prometheus_port",
         type=int,
         help="""The port number the Prometheus HTTP metrics endpoint will listen on.
-                Defaults to {}.""".format(
-            PROMETHEUS_DATA_LOGGER_DEFAULT_PORT
-        ),
+                Defaults to {}.""".format(PROMETHEUS_DATA_LOGGER_DEFAULT_PORT),
     )
 
     args = parser.parse_args()
-
-    # Place holders that are used later down
-    the_json_file = None
-    file_obj = None
 
     # Make an instance of our data logger
     the_paa_prometheus_data_logger = PurpleAirPrometheusDataLogger(
