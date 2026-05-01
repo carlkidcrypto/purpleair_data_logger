@@ -867,23 +867,24 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         start_http_server(self._prometheus_port, registry=self._registry)
 
     @staticmethod
+    @staticmethod
     def _safe_numeric(value):
         """
         Convert a value to float for use with Prometheus Gauges.
-        Returns 0.0 when the value is None or cannot be converted.
+        Returns NaN when the value is None or cannot be converted.
 
         :param value: The value to convert.
-        :return: A float representation of the value, or 0.0 on failure.
+        :return: A float representation of the value, or NaN on failure.
         """
 
         if value is None:
-            return 0.0
+            return float("nan")
 
         try:
             return float(value)
 
         except (TypeError, ValueError):
-            return 0.0
+            return float("nan")
 
     def store_sensor_data(self, single_sensor_data_dict):
         """
