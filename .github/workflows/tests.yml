@@ -57,28 +57,22 @@ jobs:
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
-                 python -m pip install coverage ;
-                 python -m pip install requests_mock ;
+                 python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
-                 python -m pip install prometheus_client ;
             
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
-                 python -m pip install coverage ;
-                 python -m pip install requests_mock ;
+                 python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
-                 python -m pip install prometheus_client ;
           
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
                    python -m pip install --upgrade pip ;
-                   python -m pip install coverage ;
-                   python -m pip install requests_mock ;
+                   python -m pip install -r tests/requirements.txt ;
                    python -m pip install purpleair_api ;
-                   python -m pip install prometheus_client ;
 
       - name: Run unit tests...
         uses: carlkidcrypto/os-specific-runner@v2.3.0
