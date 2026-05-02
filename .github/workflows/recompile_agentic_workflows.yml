@@ -1,0 +1,56 @@
+name: Recompile Agentic Workflows
+
+# Triggered when:
+# 1. Dependabot bumps action versions inside .lock.yml files on a dependabot/** branch.
+# 2. A contributor edits a .md source file (e.g. changes the model) on any branch.
+#
+# In both cases the job installs gh-aw, runs `gh aw compile` to regenerate the
+# lock files from their canonical .md sources, and pushes any changes back to the
+# same branch so the PR stays consistent.
+on:
+  push:
+    branches-ignore:
+      - main
+    paths:
+      - '.github/workflows/*.md'
+      - '.github/workflows/*.lock.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  recompile:
+    # Prevent an infinite loop: skip runs that were triggered by our own push.
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install gh aw extension
+        # Pin to the same version used to compile the existing lock files.
+        # Update this pin together with `gh aw compile` when upgrading gh-aw.
+        run: gh extension install github/gh-aw --pin v0.71.1
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Compile agentic workflows
+        run: gh aw compile
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push recompiled lock files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add .github/workflows/*.lock.yml
+          if git diff --staged --quiet; then
+            echo "Lock files are already up to date — nothing to commit."
+          else
+            git commit -m "chore: recompile agentic workflows"
+            git push
+          fi
