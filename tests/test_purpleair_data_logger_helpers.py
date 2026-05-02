@@ -194,10 +194,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
         json_config_file = {
             "sensor_index": "1111",
@@ -228,10 +238,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
         json_config_file = {
             "poll_interval_seconds": 60,
@@ -274,10 +294,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
@@ -358,10 +388,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
@@ -416,10 +456,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
@@ -494,10 +544,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
@@ -615,10 +675,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
@@ -674,10 +744,20 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(
                 expected_url_request,
-                text='{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
-                status_code=200,
+                [
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "READ"}',
+                        "status_code": 200,
+                    },
+                    {
+                        "text": '{"api_version" : "1.1.1", "time_stamp": 123456789, "api_key_type": "WRITE"}',
+                        "status_code": 200,
+                    },
+                ],
             )
-            padl = PurpleAirDataLogger(PurpleAirApiReadKey="123456789")
+            padl = PurpleAirDataLogger(
+                PurpleAirApiReadKey="123456789", PurpleAirApiWriteKey="write-key-789"
+            )
             padl.store_sensor_data = MagicMock(name="store_sensor_data")
             json_config_file = {
                 "sensor_group_name": "A Name Goes Here",
