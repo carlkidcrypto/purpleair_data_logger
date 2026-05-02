@@ -16,7 +16,6 @@ from purpleair_data_logger.PurpleAirLokiDataLogger import PurpleAirLokiDataLogge
 
 from helpers import DATA_OUT_1
 
-
 LOKI_PUSH_URL = "http://localhost:3100/loki/api/v1/push"
 PURPLEAIR_KEYS_URL = "https://api.purpleair.com/v1/keys"
 
@@ -31,7 +30,9 @@ class PurpleAirLokiDataLoggerTest(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def _make_loki_logger(self, loki_url="http://localhost:3100", loki_usr=None, loki_pwd=None):
+    def _make_loki_logger(
+        self, loki_url="http://localhost:3100", loki_usr=None, loki_pwd=None
+    ):
         """Helper to create a PurpleAirLokiDataLogger with mocked PurpleAir API key validation."""
         with requests_mock_module.Mocker() as m:
             m.get(

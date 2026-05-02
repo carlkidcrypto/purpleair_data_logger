@@ -314,7 +314,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         del single_sensor_data_dict
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = generate_common_arg_parser(
         "Collect data from PurpleAir sensors and push it to a Grafana Loki instance!"
     )
