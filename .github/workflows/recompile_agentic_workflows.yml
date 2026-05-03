@@ -7,8 +7,13 @@ name: Recompile Agentic Workflows
 # In both cases the job installs gh-aw, runs `gh aw compile` to regenerate the
 # lock files from their canonical .md sources, and pushes any changes back to the
 # same branch so the PR stays consistent.
+#
+# Pushes to main are excluded at the trigger level (branches-ignore) to avoid the
+# "0 jobs → failure" outcome that occurs when all jobs are skipped via a job-level if.
 on:
   push:
+    branches-ignore:
+      - main
     paths:
       - '.github/workflows/*.md'
       - '.github/workflows/*.lock.yml'
@@ -20,11 +25,8 @@ permissions:
 
 jobs:
   recompile:
-    # Prevent an infinite loop: skip runs that were triggered by our own push.
-    # Also skip pushes to main (merges are handled by PRs; this avoids the
-    # 0-jobs → "failure" outcome that occurs when branches-ignore filters at
-    # the trigger level rather than the job level).
-    if: github.actor != 'github-actions[bot]' && github.ref != 'refs/heads/main'
+    # Prevent an infinite loop: skip runs triggered by our own push.
+    if: github.actor != 'github-actions[bot]'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
