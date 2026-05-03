@@ -39,7 +39,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        python-version: ['3.9', '3.10', '3.11', '3.12', '3.13']
+        python-version: ['3.10', '3.11', '3.12', '3.13']
 
     steps:
       - name: Check out repository code
@@ -57,24 +57,21 @@ jobs:
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
-                 python -m pip install coverage ;
-                 python -m pip install requests_mock ;
+                 python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
             
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
-                 python -m pip install coverage ;
-                 python -m pip install requests_mock ;
+                 python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
           
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
                    python -m pip install --upgrade pip ;
-                   python -m pip install coverage ;
-                   python -m pip install requests_mock ;
+                   python -m pip install -r tests/requirements.txt ;
                    python -m pip install purpleair_api ;
 
       - name: Run unit tests...
