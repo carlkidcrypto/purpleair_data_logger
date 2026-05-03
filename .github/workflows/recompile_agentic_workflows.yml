@@ -15,6 +15,7 @@ on:
     branches-ignore:
       - main
     paths:
+      - '.github/workflows/recompile_agentic_workflows.yml'
       - '.github/workflows/*.md'
       - '.github/workflows/*.lock.yml'
   workflow_dispatch:
