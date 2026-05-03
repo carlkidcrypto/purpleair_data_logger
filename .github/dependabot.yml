@@ -12,6 +12,10 @@ updates:
       # Check for updates to GitHub Actions every weekday
       interval: "daily"
     open-pull-requests-limit: 10
+    ignore:
+      # gh-aw-actions versions are managed internally by `gh aw compile`.
+      # Allowing Dependabot to patch them directly breaks lock file consistency.
+      - dependency-name: "github/gh-aw-actions"
 
   # Maintain dependencies for pip (root)
   - package-ecosystem: "pip"
