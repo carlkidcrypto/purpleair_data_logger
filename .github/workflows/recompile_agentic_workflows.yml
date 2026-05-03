@@ -21,7 +21,6 @@ on:
 
 permissions:
   contents: write
-  workflows: write
 
 jobs:
   recompile:
@@ -30,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
