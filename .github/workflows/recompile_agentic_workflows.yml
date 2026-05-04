@@ -1,15 +1,5 @@
 name: Recompile Agentic Workflows
 
-# Triggered when:
-# 1. Dependabot bumps action versions inside .lock.yml files on a dependabot/** branch.
-# 2. A contributor edits a .md source file (e.g. changes the model) on any branch.
-#
-# In both cases the job installs gh-aw, runs `gh aw compile` to regenerate the
-# lock files from their canonical .md sources, and pushes any changes back to the
-# same branch so the PR stays consistent.
-#
-# Pushes to main are excluded at the trigger level (branches-ignore) to avoid the
-# "0 jobs → failure" outcome that occurs when all jobs are skipped via a job-level if.
 on:
   push:
     branches-ignore:
@@ -22,7 +12,6 @@ on:
 
 permissions:
   contents: write
-  pull-requests: write
 
 jobs:
   recompile:
@@ -37,8 +26,6 @@ jobs:
           token: ${{ github.token }}
 
       - name: Install gh aw extension
-        # Pin to the same version used to compile the existing lock files.
-        # Update this pin together with `gh aw compile` when upgrading gh-aw.
         run: gh extension install github/gh-aw --pin v0.71.1
         env:
           GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
@@ -48,9 +35,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
 
-      - name: Open PR with recompiled lock files
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Commit and push recompiled lock files
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
@@ -59,18 +44,5 @@ jobs:
             echo "Lock files are already up to date — nothing to commit."
             exit 0
           fi
-
-          # Derive a short, sanitized name for the source branch.
-          SOURCE_BRANCH="${{ github.ref_name }}"
-          SAFE_BRANCH=$(echo "$SOURCE_BRANCH" | sed 's|[^a-zA-Z0-9._-]|-|g' | cut -c1-60)
-          PR_BRANCH="bot/recompile-${SAFE_BRANCH}-${{ github.run_id }}"
-
-          git checkout -b "$PR_BRANCH"
           git commit -m "chore: recompile agentic workflows"
-          git push origin "$PR_BRANCH"
-
-          gh pr create \
-            --base "$SOURCE_BRANCH" \
-            --head "$PR_BRANCH" \
-            --title "chore: recompile agentic workflows" \
-            --body "Automated recompilation of agentic workflow lock files triggered by changes on \`${SOURCE_BRANCH}\`."
+          git push origin HEAD:${{ github.ref }}
