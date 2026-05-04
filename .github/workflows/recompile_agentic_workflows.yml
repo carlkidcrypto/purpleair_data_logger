@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  pull-requests: write
 
 jobs:
   recompile:
@@ -47,14 +48,29 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
 
-      - name: Commit and push recompiled lock files
+      - name: Open PR with recompiled lock files
+        env:
+          GH_TOKEN: ${{ secrets.COPILOT_GITHUB_TOKEN }}
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add .github/workflows/*.lock.yml
           if git diff --staged --quiet; then
             echo "Lock files are already up to date — nothing to commit."
-          else
-            git commit -m "chore: recompile agentic workflows"
-            git push
+            exit 0
           fi
+
+          # Derive a short, sanitized name for the source branch.
+          SOURCE_BRANCH="${{ github.ref_name }}"
+          SAFE_BRANCH=$(echo "$SOURCE_BRANCH" | sed 's|[^a-zA-Z0-9._-]|-|g' | cut -c1-60)
+          PR_BRANCH="bot/recompile-${SAFE_BRANCH}-${{ github.run_id }}"
+
+          git checkout -b "$PR_BRANCH"
+          git commit -m "chore: recompile agentic workflows"
+          git push origin "$PR_BRANCH"
+
+          gh pr create \
+            --base "$SOURCE_BRANCH" \
+            --head "$PR_BRANCH" \
+            --title "chore: recompile agentic workflows" \
+            --body "Automated recompilation of agentic workflow lock files triggered by changes on \`${SOURCE_BRANCH}\`."
