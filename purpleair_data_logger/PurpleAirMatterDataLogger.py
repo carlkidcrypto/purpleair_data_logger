@@ -383,6 +383,16 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 self._matter_devices.clear()
                 self._matter_devices.update(devices)
 
+            # NOTE: a prior revision used an atomic dict-reference swap
+            # (``self._matter_devices = dict(devices)``) to avoid the clear/update
+            # race.  This broke the HTTP server tests because the server holds a
+            # reference to the original empty dict passed at construction — the swap
+            # left it pointing at a stale object while the server kept serving the
+            # initial empty dict.  Switching to lock+clear+update keeps the same dict
+            # object identity so the HTTP server sees every update, while the lock
+            # prevents concurrent-read/during-write tears.
+            # See: commit 141b063d525620cf033cff7a2be9d8d7f40125ef
+
             logger.info(
                 "Matter devices updated: %d/%d sensors converted successfully.",
                 len(devices), len(sensor_indexes),
