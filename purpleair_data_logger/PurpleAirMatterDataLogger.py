@@ -220,6 +220,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._matter_devices: dict[int, dict[str, Any]] = {}
         self._httpd: _MatterHTTPServer | None = None
         self._http_thread: threading.Thread | None = None
+        self._lock = threading.Lock()
 
         # Configure logging
         logging.basicConfig(
@@ -374,10 +375,13 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 sensor_indexes, sensor_names, primary_keys
             )
 
-            # Atomically update the shared map so the HTTP thread sees fresh data.
-            # Assigning a new dict reference is thread-safe for readers that
-            # hold a reference to the old dict (they see a consistent snapshot).
-            self._matter_devices = dict(devices)
+            # Thread-safe in-place update of the shared device map.
+            # The lock ensures no other thread sees an inconsistent intermediate state
+            # during clear() + update(), while keeping the same dict object reference
+            # so that the HTTP server (which holds the same reference) sees updates.
+            with self._lock:
+                self._matter_devices.clear()
+                self._matter_devices.update(devices)
 
             logger.info(
                 "Matter devices updated: %d/%d sensors converted successfully.",
