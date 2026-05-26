@@ -7,6 +7,7 @@ Unit tests for PurpleAirMatterDataLogger.
 
 import json
 import sys
+import os
 import tempfile
 import threading
 import unittest
