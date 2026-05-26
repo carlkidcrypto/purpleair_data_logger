@@ -385,17 +385,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             )
 
             # Optionally also persist raw PurpleAir data (non-matter_only mode)
-            if not self._matter_only:
-                for idx in sensor_indexes:
-                    if idx in devices:
-                        try:
-                            self.store_sensor_data(devices[idx]["_raw"])
-                        except NotImplementedError:
-                            pass  # subclass may not implement store_sensor_data
-                    else:
-                        logger.warning(
-                            "Sensor %s failed — skipping raw-store", idx
-                        )
+            # In non-matter_only mode, subclasses that override
+            # store_sensor_data may persist raw PurpleAir data here.
+            # (store_sensor_data calls removed — not implemented in this class)
 
             sleep(self._poll_interval)
 
