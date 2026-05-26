@@ -9,11 +9,9 @@ import json
 import sys
 import tempfile
 import threading
-import time
 import unittest
 import urllib.request
 import urllib.error
-from unittest.mock import MagicMock, patch
 
 import requests_mock
 
@@ -263,9 +261,8 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
         with requests_mock.Mocker() as m:
             m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
-            with tempfile.NamedTemporaryFile(
-                mode="w", suffix=".json", delete=False
-            ) as f:
+            f = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
+            try:
                 json.dump({"poll_interval_seconds": 65, "sensor_indexes": [1]}, f)
                 f.flush()
                 with self.assertRaises(Exception) as ctx:
@@ -274,7 +271,9 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
                         paa_single_sensor_request_json_file=f.name,
                     )
                 self.assertIn("Only one config", str(ctx.exception))
-
+            finally:
+                f.close()
+                os.unlink(f.name)
 
 # =============================================================================
 # Tests — Matter device type correctness
