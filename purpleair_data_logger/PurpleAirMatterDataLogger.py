@@ -44,15 +44,11 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import json
 import logging
 import threading
+from time import sleep
 from typing import Any
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPI, PurpleAirAPIError
-from purpleair_api.matter import (
-    PurpleAirMatterConverter,
-    MATTER_DEVICE_TYPE_AIR_QUALITY_SENSOR,
-    MATTER_DEVICE_TYPE_TEMPERATURE_SENSOR,
-    MATTER_DEVICE_TYPE_ENVIRONMENTAL_SENSOR,
-)
+from purpleair_api.PurpleAirAPI import PurpleAirAPIError
+from purpleair_api.matter import PurpleAirMatterConverter
 
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
@@ -64,10 +60,7 @@ from purpleair_data_logger.PurpleAirMatterDataLoggerConstants import (
     MATTER_ALL_SENSORS_PATH,
     MATTER_SENSOR_PATH_PREFIX,
     HEALTH_PATH,
-    STATION_DATA_TIME_STAMP_METRIC_NAME,
-    STATION_DATA_TIME_STAMP_METRIC_DESCRIPTION,
-    STATION_SENSOR_COUNT_METRIC_NAME,
-    STATION_SENSOR_COUNT_METRIC_DESCRIPTION,
+    MATTER_DATA_LOGGER_LOG_LEVEL,
 )
 
 logger = logging.getLogger(__name__)
@@ -225,13 +218,12 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
-        self._converter = PurpleAirMatterConverter()
         self._httpd: _MatterHTTPServer | None = None
         self._http_thread: threading.Thread | None = None
 
         # Configure logging
         logging.basicConfig(
-            level=logging.INFO,
+            level=MATTER_DATA_LOGGER_LOG_LEVEL,
             format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
         )
 
@@ -369,10 +361,6 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         sensor_names: dict[int, str] = json_config_file.get("sensor_names", {})
         primary_keys: dict[int, str] = json_config_file.get("read_keys", {})
 
-        if not sensor_indexes:
-            logger.error("No 'sensor_indexes' in config file — nothing to poll.")
-            return
-
         logger.info(
             "Starting Matter conversion loop for %d sensor(s)", len(sensor_indexes)
         )
@@ -386,9 +374,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 sensor_indexes, sensor_names, primary_keys
             )
 
-            # Update the shared map so the HTTP thread sees fresh data
-            self._matter_devices.clear()
-            self._matter_devices.update(devices)
+            # Atomically update the shared map so the HTTP thread sees fresh data.
+            # Assigning a new dict reference is thread-safe for readers that
+            # hold a reference to the old dict (they see a consistent snapshot).
+            self._matter_devices = dict(devices)
 
             logger.info(
                 "Matter devices updated: %d/%d sensors converted successfully.",
@@ -398,10 +387,14 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             # Optionally also persist raw PurpleAir data (non-matter_only mode)
             if not self._matter_only:
                 for idx in sensor_indexes:
-                    if idx not in devices:
-                        # This sensor failed — try to pass None for its data
+                    if idx in devices:
+                        try:
+                            self.store_sensor_data(devices[idx]["_raw"])
+                        except NotImplementedError:
+                            pass  # subclass may not implement store_sensor_data
+                    else:
                         logger.warning(
-                            "Sensor %s failed conversion; skipping raw-store", idx
+                            "Sensor %s failed — skipping raw-store", idx
                         )
 
             sleep(self._poll_interval)
@@ -467,14 +460,18 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             self._http_host = config.get("http_host", self._http_host)
             self._matter_only = config.get("matter_only", self._matter_only)
 
+        # Validate that we have sensors to poll before starting the server
+        sensor_indexes: list[int] = config.get("sensor_indexes", [])
+        if not sensor_indexes:
+            raise PurpleAirDataLoggerError(
+                "No 'sensor_indexes' in config file — nothing to poll."
+            )
+
         # Start the HTTP server
         self._start_http_server()
 
         # Run the loop
         self._run_loop_matter(config)
 
-
-# Make sleep available in module scope for the loop
-from time import sleep
 
 __all__ = ["PurpleAirMatterDataLogger"]
