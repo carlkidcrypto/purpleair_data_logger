@@ -41,7 +41,6 @@ References:
 from __future__ import annotations
 
 from http.server import HTTPServer, BaseHTTPRequestHandler
-from time import sleep
 import json
 import logging
 import threading
@@ -151,9 +150,11 @@ class _MatterHTTPServer(HTTPServer):
         server_address: tuple[str, int],
         RequestHandlerClass: type[BaseHTTPRequestHandler],
         matter_devices: dict[int, dict[str, Any]],
+        lock: threading.Lock,
     ) -> None:
         # Share the device map across all request handlers
         self.matter_devices = matter_devices
+        self.lock = lock
         super().__init__(server_address, RequestHandlerClass)
 
 
@@ -359,9 +360,13 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         :param json_config_file: Configuration dict loaded from the JSON config file.
         """
-        sensor_indexes: list[int] = json_config_file.get("sensor_indexes", [])
-        sensor_names: dict[int, str] = json_config_file.get("sensor_names", {})
-        primary_keys: dict[int, str] = json_config_file.get("read_keys", {})
+        sensor_indexes: list[int] = json_config_file.get("sensor_indexes", self._sensor_indexes)
+        sensor_names: dict[int, str] = {
+            int(k): v for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
+        }
+        primary_keys: dict[int, str] = {
+            int(k): v for k, v in json_config_file.get("read_keys", self._read_keys).items()
+        }
 
         logger.info(
             "Starting Matter conversion loop for %d sensor(s)", len(sensor_indexes)
@@ -468,10 +473,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             self._matter_only = config.get("matter_only", self._matter_only)
 
         # Validate that we have sensors to poll before starting the server
-        sensor_indexes: list[int] = config.get("sensor_indexes", [])
+        sensor_indexes: list[int] = config.get("sensor_indexes", self._sensor_indexes)
         if not sensor_indexes:
             raise PurpleAirDataLoggerError(
-                "No 'sensor_indexes' in config file — nothing to poll."
+                "No 'sensor_indexes' provided — nothing to poll."
             )
 
         # Start the HTTP server
