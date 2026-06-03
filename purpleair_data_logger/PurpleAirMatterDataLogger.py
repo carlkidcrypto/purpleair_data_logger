@@ -23,6 +23,7 @@ Usage::
     logger = PurpleAirMatterDataLogger(
         PurpleAirApiReadKey="YOUR_READ_KEY",
         PurpleAirApiIpv4Address=["192.168.1.100"],
+        sensor_indexes=[123456],
         poll_interval_seconds=65,
         http_port=9855,
     )
@@ -197,7 +198,13 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
     :param int poll_interval_seconds: How often to poll PurpleAir (default 65).
         Must be >= 60. Ignored in one-shot mode.
     :param int http_port: HTTP server port (default 9855).
-    :param str http_host: HTTP server bind host (default 0.0.0.0).
+    :param str http_host: HTTP server bind host (default 127.0.0.1).
+    :param list[int] sensor_indexes: Optional constructor defaults for sensors to
+        poll when no config file is provided.
+    :param dict[int, str] sensor_names: Optional constructor defaults for sensor
+        display names when no config file is provided.
+    :param dict[int, str] read_keys: Optional constructor defaults for per-sensor
+        read keys when no config file is provided.
     :param bool matter_only: If True, the forever loop runs without any
         database or file sink (Matter conversion only).
     """
@@ -210,6 +217,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         poll_interval_seconds: int = 65,
         http_port: int = MATTER_DATA_LOGGER_DEFAULT_PORT,
         http_host: str = MATTER_DATA_LOGGER_DEFAULT_HOST,
+        sensor_indexes: list[int] | None = None,
+        sensor_names: dict[int, str] | None = None,
+        read_keys: dict[int, str] | None = None,
         matter_only: bool = False,
     ) -> None:
         super().__init__(
@@ -223,9 +233,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._matter_only = matter_only
 
         # Config defaults (populated from JSON config files / CLI args)
-        self._sensor_indexes: list[int] = []
-        self._sensor_names: dict[int, str] = {}
-        self._read_keys: dict[int, str] = {}
+        self._sensor_indexes: list[int] = list(sensor_indexes or [])
+        self._sensor_names: dict[int, str] = dict(sensor_names or {})
+        self._read_keys: dict[int, str] = dict(read_keys or {})
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}

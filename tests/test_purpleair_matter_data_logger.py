@@ -296,6 +296,33 @@ class MatterHTTPServerEndpointsTest(unittest.TestCase):
 class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
     """Tests for config file loading in validate_parameters_and_run."""
 
+    def test_validate_uses_constructor_defaults_without_config(self):
+        """Constructor sensor defaults are used when no config file is passed."""
+        with requests_mock.Mocker() as m:
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            logger = PurpleAirMatterDataLogger(
+                PurpleAirApiReadKey="test",
+                sensor_indexes=[282168],
+                sensor_names={282168: "Default Name"},
+                read_keys={282168: "sensor-read-key"},
+            )
+            started = {"value": False}
+            received_config = {"value": None}
+
+            logger._start_http_server = lambda: started.__setitem__("value", True)
+            logger._run_loop_matter = lambda config: received_config.__setitem__(
+                "value", config
+            )
+
+            logger.validate_parameters_and_run()
+
+        self.assertTrue(started["value"])
+        self.assertEqual(received_config["value"], {})
+
     def test_validate_rejects_multiple_config_files(self):
         """Providing more than one config file raises PurpleAirDataLoggerError."""
         with requests_mock.Mocker() as m:
