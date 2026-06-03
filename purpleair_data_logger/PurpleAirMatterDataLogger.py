@@ -14,6 +14,9 @@ one-shot converter when ``poll_interval_seconds`` is omitted.
 
 Requires purpleair_api >= 1.5.0a1 (includes
 ``purpleair_api.PurpleAirMatterConverter``).
+When calling ``validate_parameters_and_run()`` without a JSON config file,
+pass ``sensor_indexes`` via the constructor.
+
 Usage::
 
     from purpleair_data_logger.PurpleAirMatterDataLogger import (
