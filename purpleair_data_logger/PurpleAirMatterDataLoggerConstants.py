@@ -7,7 +7,7 @@ Matter Data Logger constants for PurpleAir sensors.
 Maps PurpleAir sensor fields to Matter device type structures per the
 Connectivity Standards Alliance Matter 1.5.1 Specification.
 
-Requires: purpleair_api >= 1.5.0 (includes purpleair_api.matter)
+Requires: purpleair_api >= 1.5.0a1 (includes purpleair_api.matter)
 """
 
 # =============================================================================
@@ -16,9 +16,8 @@ Requires: purpleair_api >= 1.5.0 (includes purpleair_api.matter)
 
 #: Default HTTP server port for the Matter data logger web interface.
 MATTER_DATA_LOGGER_DEFAULT_PORT = 9855
-
-#: Default host to bind the HTTP server to.
-MATTER_DATA_LOGGER_DEFAULT_HOST = "0.0.0.0"
+#: Default host to bind the HTTP server to (use 127.0.0.1 to avoid exposing the API by default).
+MATTER_DATA_LOGGER_DEFAULT_HOST = "127.0.0.1"
 
 # =============================================================================
 # API Routes

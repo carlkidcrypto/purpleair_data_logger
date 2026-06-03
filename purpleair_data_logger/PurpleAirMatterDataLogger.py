@@ -12,8 +12,7 @@ Performs two roles:
 Designed to run as a long-lived daemon (forever loop) or as a
 one-shot converter when ``poll_interval_seconds`` is omitted.
 
-Requires purpleair_api >= 1.5.0 (includes ``purpleair_api.matter``).
-
+Requires purpleair_api >= 1.5.0a1 (includes ``purpleair_api.matter``).
 Usage::
 
     from purpleair_data_logger.PurpleAirMatterDataLogger import (
@@ -102,18 +101,19 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:
         if self.path == HEALTH_PATH or self.path == "/":
-            self._send_json(200, {
-                "status": "ok",
-                "sensor_count": len(self.server.matter_devices),
-            })
+            with self.server.lock:
+                sensor_count = len(self.server.matter_devices)
+            self._send_json(200, {"status": "ok", "sensor_count": sensor_count})
 
         elif self.path == MATTER_ALL_SENSORS_PATH:
+            with self.server.lock:
+                items = list(self.server.matter_devices.items())
+
             payload = {
                 "sensors": [
-                    {"sensor_index": idx, "device": dev}
-                    for idx, dev in self.server.matter_devices.items()
+                    {"sensor_index": idx, "device": dev} for idx, dev in items
                 ],
-                "count": len(self.server.matter_devices),
+                "count": len(items),
             }
             self._send_json(200, payload)
 
@@ -124,7 +124,8 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
                 self._send_json(400, {"error": "Invalid sensor_index"})
                 return
 
-            device = self.server.matter_devices.get(idx)
+            with self.server.lock:
+                device = self.server.matter_devices.get(idx)
             if device is None:
                 self._send_json(404, {
                     "error": f"Sensor {idx} not found or not yet polled."
@@ -218,17 +219,22 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._http_host = http_host
         self._matter_only = matter_only
 
+        # Config defaults (populated from JSON config files / CLI args)
+        self._sensor_indexes: list[int] = []
+        self._sensor_names: dict[int, str] = {}
+        self._read_keys: dict[int, str] = {}
+
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
         self._httpd: _MatterHTTPServer | None = None
         self._http_thread: threading.Thread | None = None
         self._lock = threading.Lock()
-
-        # Configure logging
-        logging.basicConfig(
-            level=MATTER_DATA_LOGGER_LOG_LEVEL,
-            format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
-        )
+        # Configure logging only if the application hasn't configured it yet
+        if not logging.getLogger().handlers:
+            logging.basicConfig(
+                level=MATTER_DATA_LOGGER_LOG_LEVEL,
+                format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+            )
 
     def _start_http_server(self) -> None:
         """Start the HTTP server in a background thread."""
@@ -236,6 +242,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             server_address=(self._http_host, self._http_port),
             RequestHandlerClass=_MatterDataLoggerHandler,
             matter_devices=self._matter_devices,
+            lock=self._lock,
         )
         self._http_thread = threading.Thread(
             target=self._httpd.serve_forever,

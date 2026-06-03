@@ -19,6 +19,7 @@ import requests_mock
 sys.path.append("../")
 
 from purpleair_data_logger.PurpleAirMatterDataLogger import (
+    PurpleAirDataLoggerError,
     PurpleAirMatterDataLogger,
     _MatterHTTPServer,
     _MatterDataLoggerHandler,
@@ -197,7 +198,8 @@ class MatterHTTPServerEndpointsTest(unittest.TestCase):
     @classmethod
     def tearDownClass(cls):
         cls.httpd.shutdown()
-
+        cls.httpd.server_close()
+        cls.thread.join(timeout=2)
     def _get(self, path: str) -> tuple[int, dict]:
         """Make a GET request and return (status_code, json_body)."""
         try:
@@ -267,7 +269,7 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
             try:
                 json.dump({"poll_interval_seconds": 65, "sensor_indexes": [1]}, f)
                 f.flush()
-                with self.assertRaises(Exception) as ctx:
+                with self.assertRaises(PurpleAirDataLoggerError) as ctx:
                     logger.validate_parameters_and_run(
                         paa_multiple_sensor_request_json_file=f.name,
                         paa_single_sensor_request_json_file=f.name,
