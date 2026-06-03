@@ -32,7 +32,6 @@ from purpleair_data_logger.PurpleAirMatterDataLoggerConstants import (
     HEALTH_PATH,
 )
 
-
 # =============================================================================
 # Fixtures
 # =============================================================================
@@ -67,28 +66,44 @@ class PurpleAirMatterDataLoggerConstructorTest(unittest.TestCase):
     def test_default_port(self):
         """Default HTTP port is MATTER_DATA_LOGGER_DEFAULT_PORT."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
         self.assertEqual(logger._http_port, MATTER_DATA_LOGGER_DEFAULT_PORT)
 
     def test_default_host(self):
         """Default HTTP host is MATTER_DATA_LOGGER_DEFAULT_HOST."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
         self.assertEqual(logger._http_host, MATTER_DATA_LOGGER_DEFAULT_HOST)
 
     def test_matter_only_default_false(self):
         """matter_only defaults to False."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
         self.assertFalse(logger._matter_only)
 
     def test_custom_port_and_host(self):
         """Custom port and host are accepted."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(
                 PurpleAirApiReadKey="test",
                 http_port=9876,
@@ -100,7 +115,11 @@ class PurpleAirMatterDataLoggerConstructorTest(unittest.TestCase):
     def test_poll_interval_minimum_enforced(self):
         """poll_interval_seconds below 60 is clamped to 60."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(
                 PurpleAirApiReadKey="test",
                 poll_interval_seconds=10,
@@ -141,11 +160,23 @@ class PurpleAirMatterDataLoggerRunOnceTest(unittest.TestCase):
     def test_run_once_multiple_sensors(self):
         """run_once converts multiple sensors."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             sensor_a = dict(PA_SENSOR_PAYLOAD["sensor"], sensor_index=111111, name="A")
             sensor_b = dict(PA_SENSOR_PAYLOAD["sensor"], sensor_index=222222, name="B")
-            m.get("https://api.purpleair.com/v1/sensors/111111", json={"sensor": sensor_a}, status_code=200)
-            m.get("https://api.purpleair.com/v1/sensors/222222", json={"sensor": sensor_b}, status_code=200)
+            m.get(
+                "https://api.purpleair.com/v1/sensors/111111",
+                json={"sensor": sensor_a},
+                status_code=200,
+            )
+            m.get(
+                "https://api.purpleair.com/v1/sensors/222222",
+                json={"sensor": sensor_b},
+                status_code=200,
+            )
 
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
             result = logger.run_once([111111, 222222])
@@ -157,7 +188,11 @@ class PurpleAirMatterDataLoggerRunOnceTest(unittest.TestCase):
     def test_run_once_unknown_sensor(self):
         """run_once returns an empty dict when no sensors are found."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
             result = logger.run_once([])
 
@@ -200,6 +235,7 @@ class MatterHTTPServerEndpointsTest(unittest.TestCase):
         cls.httpd.shutdown()
         cls.httpd.server_close()
         cls.thread.join(timeout=2)
+
     def _get(self, path: str) -> tuple[int, dict]:
         """Make a GET request and return (status_code, json_body)."""
         try:
@@ -263,7 +299,11 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
     def test_validate_rejects_multiple_config_files(self):
         """Providing more than one config file raises PurpleAirDataLoggerError."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="test")
             f = tempfile.NamedTemporaryFile(mode="w", suffix=".json", delete=False)
             try:
@@ -279,6 +319,7 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
                 f.close()
                 os.unlink(f.name)
 
+
 # =============================================================================
 # Tests — Matter device type correctness
 # =============================================================================
@@ -290,7 +331,11 @@ class MatterDeviceTypeCorrectnessTest(unittest.TestCase):
     def test_air_quality_sensor_device_type_id(self):
         """Device type id is 0x002D (Air Quality Sensor)."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             m.get(
                 "https://api.purpleair.com/v1/sensors/282168",
                 json=PA_SENSOR_PAYLOAD,
@@ -306,7 +351,11 @@ class MatterDeviceTypeCorrectnessTest(unittest.TestCase):
     def test_air_quality_clusters_present(self):
         """Air Quality, Temperature, Humidity, and Pressure clusters are present."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             m.get(
                 "https://api.purpleair.com/v1/sensors/282168",
                 json=PA_SENSOR_PAYLOAD,
@@ -324,7 +373,11 @@ class MatterDeviceTypeCorrectnessTest(unittest.TestCase):
     def test_sensor_name_override_applied(self):
         """sensor_names in run_once overrides the PurpleAir name."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             m.get(
                 "https://api.purpleair.com/v1/sensors/282168",
                 json=PA_SENSOR_PAYLOAD,
@@ -341,7 +394,11 @@ class MatterDeviceTypeCorrectnessTest(unittest.TestCase):
     def test_epa_aqi_computed_in_output(self):
         """EPA AQI is present in the air quality summary."""
         with requests_mock.Mocker() as m:
-            m.get(requests_mock.ANY, text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}', status_code=200)
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
             m.get(
                 "https://api.purpleair.com/v1/sensors/282168",
                 json=PA_SENSOR_PAYLOAD,

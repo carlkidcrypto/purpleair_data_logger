@@ -7,7 +7,8 @@ Matter Data Logger constants for PurpleAir sensors.
 Maps PurpleAir sensor fields to Matter device type structures per the
 Connectivity Standards Alliance Matter 1.5.1 Specification.
 
-Requires: purpleair_api >= 1.5.0a1 (includes purpleair_api.matter)
+Requires: purpleair_api >= 1.5.0a1 (includes
+purpleair_api.PurpleAirMatterConverter)
 """
 
 # =============================================================================

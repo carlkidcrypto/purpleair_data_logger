@@ -12,7 +12,8 @@ Performs two roles:
 Designed to run as a long-lived daemon (forever loop) or as a
 one-shot converter when ``poll_interval_seconds`` is omitted.
 
-Requires purpleair_api >= 1.5.0a1 (includes ``purpleair_api.matter``).
+Requires purpleair_api >= 1.5.0a1 (includes
+``purpleair_api.PurpleAirMatterConverter``).
 Usage::
 
     from purpleair_data_logger.PurpleAirMatterDataLogger import (
@@ -47,7 +48,11 @@ from time import sleep
 from typing import Any
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPIError
-from purpleair_api.matter import PurpleAirMatterConverter
+
+try:
+    from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
+except ImportError:  # pragma: no cover - compatibility with alternate layouts
+    from purpleair_api.matter import PurpleAirMatterConverter
 
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
@@ -110,16 +115,14 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
                 items = list(self.server.matter_devices.items())
 
             payload = {
-                "sensors": [
-                    {"sensor_index": idx, "device": dev} for idx, dev in items
-                ],
+                "sensors": [{"sensor_index": idx, "device": dev} for idx, dev in items],
                 "count": len(items),
             }
             self._send_json(200, payload)
 
         elif self.path.startswith(MATTER_SENSOR_PATH_PREFIX + "/"):
             try:
-                idx = int(self.path[len(MATTER_SENSOR_PATH_PREFIX) + 1:])
+                idx = int(self.path[len(MATTER_SENSOR_PATH_PREFIX) + 1 :])
             except ValueError:
                 self._send_json(400, {"error": "Invalid sensor_index"})
                 return
@@ -127,9 +130,9 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
             with self.server.lock:
                 device = self.server.matter_devices.get(idx)
             if device is None:
-                self._send_json(404, {
-                    "error": f"Sensor {idx} not found or not yet polled."
-                })
+                self._send_json(
+                    404, {"error": f"Sensor {idx} not found or not yet polled."}
+                )
                 return
 
             self._send_json(200, {"device": device})
@@ -255,15 +258,21 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         )
         logger.info(
             "  → All sensors:   GET http://%s:%d%s",
-            self._http_host, self._http_port, MATTER_ALL_SENSORS_PATH,
+            self._http_host,
+            self._http_port,
+            MATTER_ALL_SENSORS_PATH,
         )
         logger.info(
             "  → Single sensor: GET http://%s:%d%s/<sensor_index>",
-            self._http_host, self._http_port, MATTER_SENSOR_PATH_PREFIX,
+            self._http_host,
+            self._http_port,
+            MATTER_SENSOR_PATH_PREFIX,
         )
         logger.info(
             "  → Health check:  GET http://%s:%d%s",
-            self._http_host, self._http_port, HEALTH_PATH,
+            self._http_host,
+            self._http_port,
+            HEALTH_PATH,
         )
 
     # -------------------------------------------------------------------------
@@ -287,7 +296,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         try:
             raw = self._purpleair_api_obj.request_sensor_data(
                 sensor_index,
-                your_api_read_key=primary_key,
+                read_key=primary_key,
             )
         except PurpleAirAPIError as exc:
             logger.warning("Sensor %s: PurpleAir API error: %s", sensor_index, exc)
@@ -367,12 +376,16 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         :param json_config_file: Configuration dict loaded from the JSON config file.
         """
-        sensor_indexes: list[int] = json_config_file.get("sensor_indexes", self._sensor_indexes)
+        sensor_indexes: list[int] = json_config_file.get(
+            "sensor_indexes", self._sensor_indexes
+        )
         sensor_names: dict[int, str] = {
-            int(k): v for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
+            int(k): v
+            for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
         }
         primary_keys: dict[int, str] = {
-            int(k): v for k, v in json_config_file.get("read_keys", self._read_keys).items()
+            int(k): v
+            for k, v in json_config_file.get("read_keys", self._read_keys).items()
         }
 
         logger.info(
@@ -382,7 +395,8 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         while True:
             logger.info(
                 "Polling %d sensor(s) at poll interval %ds...",
-                len(sensor_indexes), self._poll_interval,
+                len(sensor_indexes),
+                self._poll_interval,
             )
             devices = self._poll_and_convert_multiple(
                 sensor_indexes, sensor_names, primary_keys
@@ -408,7 +422,8 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
             logger.info(
                 "Matter devices updated: %d/%d sensors converted successfully.",
-                len(devices), len(sensor_indexes),
+                len(devices),
+                len(sensor_indexes),
             )
 
             # Optionally also persist raw PurpleAir data (non-matter_only mode)
