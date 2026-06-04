@@ -1,24 +1,31 @@
-updates:
-- directory: /
-  ignore:
-  - dependency-name: "github/gh-aw-actions/**" # Managed by gh aw compile. Version-locked to the gh-aw compiler; do not bump.
-  open-pull-requests-limit: 10
-  package-ecosystem: github-actions
-  schedule:
-    interval: daily
-- directory: /
-  open-pull-requests-limit: 10
-  package-ecosystem: pip
-  schedule:
-    interval: daily
-- directory: /tests
-  open-pull-requests-limit: 10
-  package-ecosystem: pip
-  schedule:
-    interval: daily
-- directory: /sphinx_docs_build
-  open-pull-requests-limit: 10
-  package-ecosystem: pip
-  schedule:
-    interval: daily
 version: 2
+updates:
+  # Maintain dependencies for github-actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+    ignore:
+      - dependency-name: "github/gh-aw-actions/**" # Managed by gh aw compile. Version-locked to the gh-aw compiler; do not bump.
+
+  # Maintain dependencies for pip (root)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for pip (tests)
+  - package-ecosystem: "pip"
+    directory: "/tests"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
+
+  # Maintain dependencies for pip (sphinx_docs_build)
+  - package-ecosystem: "pip"
+    directory: "/sphinx_docs_build"
+    schedule:
+      interval: "daily"
+    open-pull-requests-limit: 10
