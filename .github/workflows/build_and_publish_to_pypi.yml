@@ -45,4 +45,3 @@ jobs:
         uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
           print-hash: true
-          pypi-token: ${{ secrets.PYPI_API_TOKEN }}
