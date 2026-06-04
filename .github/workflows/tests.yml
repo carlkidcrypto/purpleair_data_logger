@@ -59,14 +59,14 @@ jobs:
                  python -m pip install --upgrade pip ;
                  python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
-            
+
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
                  python -m pip install -r tests/requirements.txt ;
                  python -m pip install purpleair_api ;
-          
+
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
@@ -82,7 +82,7 @@ jobs:
 
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
-          
+
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\tests ;
                    coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
