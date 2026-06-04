@@ -26,6 +26,6 @@ jobs:
       - name: Lint workflow YAML files
         run: |
           set -e
-          echo "Linting all workflow YAML files in .github/workflows/ ..."
-          yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}}}" .github/workflows/*.yml
+          echo "Linting all workflow YAML files (excluding lock files) in .github/workflows/ ..."
+          find .github/workflows/ -name "*.yml" ! -name "*.lock.yml" | xargs yamllint -d "{extends: relaxed, rules: {line-length: {max: 200}}}"
           echo "All workflow YAML files passed linting."
