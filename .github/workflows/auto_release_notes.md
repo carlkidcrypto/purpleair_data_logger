@@ -20,7 +20,7 @@ safe-outputs:
 timeout-minutes: 60
 engine:
   id: copilot
-  model: gpt-5.3-codex
+  model: copilot/claude-opus-4.5?effort=medium
 network:
   allowed: [defaults, github]
 tools:
