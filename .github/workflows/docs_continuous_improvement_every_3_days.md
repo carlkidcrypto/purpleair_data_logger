@@ -19,7 +19,7 @@ safe-outputs:
 timeout-minutes: 45
 engine:
   id: copilot
-  model: gpt-5.3-codex
+  model: copilot/claude-opus-4.5?effort=medium
 ---
 
 # Documentation Continuous Improvement
