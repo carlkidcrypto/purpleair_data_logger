@@ -4,7 +4,6 @@ on:
   push:
     paths:
       - '.github/workflows/*.yml'
-      - '.github/workflows/recompile_agentic_workflows.yml'
   pull_request:
     paths:
       - '.github/workflows/*.yml'
