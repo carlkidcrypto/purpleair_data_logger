@@ -31,7 +31,7 @@ tools:
 
 engine:
   id: copilot
-  model: copilot/claude-opus-4.5?effort=medium
+  model: claude-sonnet-4.6
 ---
 
 ## Python Version Watcher and Auto-Sync

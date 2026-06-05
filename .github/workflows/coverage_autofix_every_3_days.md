@@ -24,7 +24,7 @@ safe-outputs:
 timeout-minutes: 45
 engine:
   id: copilot
-  model: copilot/claude-opus-4.5?effort=medium
+  model: claude-sonnet-4.6
 network:
   allowed: [defaults, python]
 tools:
