@@ -24,14 +24,14 @@ jobs:
         uses: actions/setup-python@v6
         with:
           python-version: "3.11"
-      
+
       - name: Install pypa/build
         run: >-
           python -m
           pip install
           build
           --user
-    
+
       - name: Build a binary wheel and a source tarball
         run: >-
           python -m
@@ -40,8 +40,9 @@ jobs:
           --wheel
           --outdir dist/
           .
-      
+
       - name: Publish distribution 📦 to PyPI
         uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
           print-hash: true
+          pypi-token: ${{ secrets.PYPI_API_TOKEN }}
