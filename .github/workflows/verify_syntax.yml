@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Install yamllint
-        run: python -m pip install yamllint
+        run: pip install yamllint
 
       - name: Lint workflow YAML files
         run: |
