@@ -90,7 +90,7 @@ def generate_common_arg_parser(argparse_description=""):
 def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
     """
     Before we store the data, we must make sure all fields have been included.
-    Our psql/sqlite store statements expect all fields regardless of what we request.
+    Our store statements expect all fields regardless of what we request.
 
     :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
 
