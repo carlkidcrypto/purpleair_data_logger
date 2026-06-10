@@ -214,7 +214,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
-        A method to covert a unix epoch timestamp to a psql timestamp.
+        A method to convert a unix epoch timestamp to a psql timestamp.
 
         :param int unix_epoch_timestamp: A valid unix epoch timestamp
 
@@ -486,7 +486,7 @@ if __name__ == "__main__":
     the_json_file = None
     file_obj = None
 
-    # Second make the PSQL DB connection with CML args
+    # Second make the PSQL DB connection with CLI args
     the_psql_db_conn = pg8000.connect(
         user=args.db_usr,
         host=args.db_host,

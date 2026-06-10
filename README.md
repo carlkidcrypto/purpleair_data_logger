@@ -165,6 +165,85 @@ Using it with multiple sensor requests...
 python3 -m purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
 ```
 
+## Usage PurpleAirLokiDataLogger.py
+
+```bash
+usage: PurpleAirLokiDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                   [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                   [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -loki_url LOKI_URL [-loki_usr LOKI_USR] [-loki_pwd LOKI_PWD]
+
+Collect data from PurpleAir sensors and push it to a Grafana Loki instance!
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -paa_read_key PAA_READ_KEY
+                        The PurpleAirAPI Read key
+  -paa_write_key PAA_WRITE_KEY
+                        The PurpleAirAPI write key
+  -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a single sensor request.
+  -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a multiple sensor request.
+  -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a group sensor request.
+  -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a local sensor request.
+  -loki_url LOKI_URL    The base URL of the Loki instance (e.g. 'http://localhost:3100').
+  -loki_usr LOKI_USR    The Loki username for basic authentication.
+  -loki_pwd LOKI_PWD    The Loki password for basic authentication.
+```
+
+Using it with single sensor requests...
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirLokiDataLogger -loki_url http://localhost:3100 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirLokiDataLogger -loki_url http://localhost:3100 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+## Usage PurpleAirPrometheusDataLogger.py
+
+```bash
+usage: PurpleAirPrometheusDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                         [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                         [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] [-prometheus_port PROMETHEUS_PORT]
+
+Collect data from PurpleAir sensors and expose it as Prometheus metrics!
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -paa_read_key PAA_READ_KEY
+                        The PurpleAirAPI Read key
+  -paa_write_key PAA_WRITE_KEY
+                        The PurpleAirAPI write key
+  -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a single sensor request.
+  -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a multiple sensor request.
+  -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a group sensor request.
+  -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                        The path to a json file containing the parameters to send a local sensor request.
+  -prometheus_port PROMETHEUS_PORT
+                        The port number the Prometheus HTTP metrics endpoint will listen on. Defaults to 9760.
+```
+
+Using it with single sensor requests...
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirPrometheusDataLogger -prometheus_port 9760 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
+Using it with multiple sensor requests...
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirPrometheusDataLogger -prometheus_port 9760 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+```
+
 ## Sample JSON Configuration File(s)
 
 The following sample json configuration files can be used with any of the data loggers.

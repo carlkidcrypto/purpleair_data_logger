@@ -293,7 +293,7 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
 if __name__ == "__main__":
     parser = generate_common_arg_parser(
-        "Collect data from PurpleAir sensors and store it a SQLite3 database file!"
+        "Collect data from PurpleAir sensors and store it in a SQLite3 database file!"
     )
 
     parser.add_argument(
