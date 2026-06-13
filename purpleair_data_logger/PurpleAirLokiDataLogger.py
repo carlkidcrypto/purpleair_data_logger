@@ -227,7 +227,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param str loki_url: The base URL of the Loki instance (e.g. 'http://localhost:3100').
         :param str loki_usr: Optional username for Loki basic authentication.
         :param str loki_pwd: Optional password for Loki basic authentication.

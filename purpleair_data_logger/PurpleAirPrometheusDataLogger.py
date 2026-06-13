@@ -260,7 +260,7 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param int prometheus_port: The TCP port on which the Prometheus HTTP endpoint will listen.
         :param CollectorRegistry registry: The Prometheus registry to register metrics with.
                                            Defaults to the global REGISTRY. Pass a custom
