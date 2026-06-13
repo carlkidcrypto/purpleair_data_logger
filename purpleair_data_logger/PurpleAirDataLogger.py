@@ -157,6 +157,7 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting local sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
+        :return: None
         """
 
         while True:
@@ -185,6 +186,7 @@ class PurpleAirDataLogger:
                                                         the parameters to send a group sensor request(s).
         :param str paa_local_sensor_request_json_file: The path to a json file containing
                                                         the parameters to send a local sensor request(s).
+        :return: None
         """
 
         # Choose what run method to execute depending on
