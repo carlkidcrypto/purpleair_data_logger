@@ -15,7 +15,7 @@ def generate_common_arg_parser(argparse_description=""):
     """
     A function to generate the common arguments that all data loggers need.
 
-    :param str argparse_description: A description for the argument parser that will be return
+    :param str argparse_description: A description for the argument parser that will be returned
 
     :return: An instance of argparse with the common arguments added.
     """
@@ -156,7 +156,7 @@ def flatten_single_sensor_data(raw_data) -> dict:
 
     :param dict raw_data: The return value from padl_obj.request_sensor_data.
 
-    :return: A single level dict full request_sensor_data data.
+    :return: A single-level dictionary containing the flattened sensor data from a request_sensor_data call.
     """
 
     # Let's make it easier on ourselves by making the sensor data one level deep.
