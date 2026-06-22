@@ -1310,7 +1310,7 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = generate_common_arg_parser(
         "Collect data from PurpleAir sensors and expose it as Prometheus metrics!"
     )
