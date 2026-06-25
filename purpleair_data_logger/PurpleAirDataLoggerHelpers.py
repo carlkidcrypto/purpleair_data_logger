@@ -17,7 +17,7 @@ def generate_common_arg_parser(argparse_description=""):
 
     :param str argparse_description: A description for the argument parser that will be returned
 
-    :return: An instance of argparse with the common arguments added.
+    :return: An ``argparse.ArgumentParser`` instance with the common arguments added.
     """
 
     parser = argparse.ArgumentParser(description=argparse_description)
@@ -155,7 +155,7 @@ def flatten_single_sensor_data(raw_data) -> dict:
     """
     A function to flatten the raw data from a single sensor request. This makes our logic downstream easier.
 
-    :param dict raw_data: The return value from padl_obj.request_sensor_data.
+    :param dict raw_data: The return value from ``PurpleAirAPI.request_sensor_data``.
 
     :return: A single-level dictionary containing the flattened sensor data from a request_sensor_data call.
     """
@@ -295,7 +295,9 @@ def logic_for_storing_group_sensors_data(
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
-    :param int group_id_to_use: The group id to be used. Starts out being `None` then gets filled out.
+    :param group_id_to_use: The group id to be used. Initially ``None``; populated with
+                            the group id after the first call.
+    :type group_id_to_use: int or None
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 

@@ -254,7 +254,7 @@ Out of the parameters in the file below "sensor_index" is required. The others a
 
 See this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for an example.
 
-> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
+> Note: `poll_interval_seconds` is also required. It cannot be lower than `60`. This is a custom field not defined by the PAA documentation.
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensor-data>
 
 ### PAA Multiple Sensor Request Example
@@ -263,7 +263,7 @@ Out of the parameters in the file below "fields" is required. The others are all
 
 See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for an example.
 
-> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
+> Note: `poll_interval_seconds` is also required. It cannot be lower than `60`. This is a custom field not defined by the PAA documentation.
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
 The below snippet is taken From the PurpleAirAPI (PAA) documentation:
@@ -350,9 +350,9 @@ Otherwise, the first group matching the name will be used.
 
 `sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
 
-The rest of the settings are official PAA settings. They are the same as the [### PAA Multiple Sensor Request Example](#paa-multiple-sensor-request-example). Refer above for details.
+The rest of the settings are official PAA settings. They are the same as the [PAA Multiple Sensor Request Example](#paa-multiple-sensor-request-example). Refer above for details.
 
-> Note: `poll_interval_seconds` is also required. It can not be lower than `60`. This is a custom field not defined by the PAA documentation.
+> Note: `poll_interval_seconds` is also required. It cannot be lower than `60`. This is a custom field not defined by the PAA documentation.
 
 See this [file](./sample_json_config_files/sample_group_sensor_request_json_file.json) for an example.
 
