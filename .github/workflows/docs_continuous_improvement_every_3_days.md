@@ -8,6 +8,7 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
     title-prefix: "[docs-improvement] "
