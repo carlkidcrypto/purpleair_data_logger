@@ -1,4 +1,4 @@
 # Internal Network Hardware Variant Json Samples
 
-This directory contains response from different devices (hardware variants) that
-are privatley accessible via the local network Purpleair API.
+This directory contains responses from different devices (hardware variants) that
+are privately accessible via the local network PurpleAir API.
