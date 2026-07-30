@@ -70,7 +70,7 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
 
     def _create_sqlite_db_tables(self):
         """
-        Create the SQLITE database tables if they don't exist already
+        Create the SQLite database tables if they don't exist already
 
         We will create one table for different data groups. Simply following the
         official PurpleAir documentation. Think Station information and status fields,
