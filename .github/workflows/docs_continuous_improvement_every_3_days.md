@@ -15,6 +15,7 @@ safe-outputs:
     labels: [documentation, automated-pr]
     draft: true
     preserve-branch-name: true
+    recreate-ref: true
     if-no-changes: "ignore"
     base-branch: main
 timeout-minutes: 45

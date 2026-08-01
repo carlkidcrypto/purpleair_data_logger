@@ -250,7 +250,7 @@ The following sample json configuration files can be used with any of the data l
 
 ### PAA Single Sensor Request Example
 
-Out of the parameters in the file below "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below, "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it `null`.
 
 See this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for an example.
 
@@ -259,7 +259,7 @@ See this [file](./sample_json_config_files/sample_single_sensor_request_json_fil
 
 ### PAA Multiple Sensor Request Example
 
-Out of the parameters in the file below "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below, "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it `null`.
 
 See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for an example.
 
@@ -346,7 +346,7 @@ defined in the official PAA documentation. These three setting help drive the `g
 `sensor_group_name` - This will be the name assigned to your group. If it doesn't exist already, it will be created.
 Otherwise, the first group matching the name will be used.
 
-`add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list`. If false, `sensor_index_list` is ignored.
+`add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list` to the group. If false, `sensor_index_list` is ignored.
 
 `sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
 

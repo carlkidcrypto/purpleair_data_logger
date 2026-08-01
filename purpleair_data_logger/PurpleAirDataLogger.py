@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python base Data Logger class.
+A Python base Data Logger class.
 """
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPI

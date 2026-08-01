@@ -272,7 +272,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     # ... ]}
     # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
     # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
-    # Now lets build and feed what the store_sensor_data() method expects.
+    # Now let's build and feed what the store_sensor_data() method expects.
     store_sensor_data_type_list = construct_store_sensor_data_type(sensors_data)
 
     for store_sensor_data_type in store_sensor_data_type_list:
@@ -394,7 +394,7 @@ def logic_for_storing_group_sensors_data(
     # [81, 'Sherwood Hills 2']]}
     # It is important to know that the order of 'fields' provided as an argument to request_members_data()
     # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
-    # Now lets build and feed what the store_sensor_data() method expects.
+    # Now let's build and feed what the store_sensor_data() method expects.
     store_sensor_data_type_list = construct_store_sensor_data_type(members_data)
 
     for store_sensor_data_type in store_sensor_data_type_list:
