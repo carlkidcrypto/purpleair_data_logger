@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be pushed to a Grafana Loki instance via the Loki HTTP push API.
 
 For best practice from PurpleAir:
