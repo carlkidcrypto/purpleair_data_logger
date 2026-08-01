@@ -317,9 +317,10 @@ if __name__ == "__main__":
     )
 
     # Third choose what run method to execute depending on
-    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file/paa_local_sensor_request_json_file
     the_paa_sqlite_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
         args.paa_group_sensor_request_json_file,
+        args.paa_local_sensor_request_json_file,
     )
