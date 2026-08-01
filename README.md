@@ -1,6 +1,6 @@
 # Purple Air Data Logger(s) (PADLs)
 
-A set of data logger(s) that will query PurpleAir sensor(s) for data. That data will then be ingested into a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, a Grafana Loki instance, or exposed as Prometheus metrics. To use these tools a PurpleAir API key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
+A set of data logger(s) that will query PurpleAir sensor(s) for data. That data will then be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, a Grafana Loki instance, or exposed via Prometheus metrics. To use these tools a PurpleAir API key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
 
 | [![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml) |
 | --------------- | --------------- | --------------- |
@@ -8,8 +8,8 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 | [![Pull Request Sphinx Docs Check](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml) | [![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment) | [![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql) | [![total download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/total.svg?style=flat-square&label=all%20downloads)](https://github.com/carlkidcrypto/purpleair_data_logger/releases) |
 | --------------- | --------------- | --------------- | --------------- |
 
-[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.5.0a0/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.5.0a0) | | | |
-| --------------- | --------------- | --------------- | --------------- |
+[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.5.0a0/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.5.0a0) |
+| --------------- |
 
 ## How to Support This Project
 
@@ -250,7 +250,7 @@ The following sample json configuration files can be used with any of the data l
 
 ### PAA Single Sensor Request Example
 
-Out of the parameters in the file below "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below, "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it `null`.
 
 See this [file](./sample_json_config_files/sample_single_sensor_request_json_file.json) for an example.
 
@@ -259,7 +259,7 @@ See this [file](./sample_json_config_files/sample_single_sensor_request_json_fil
 
 ### PAA Multiple Sensor Request Example
 
-Out of the parameters in the file below "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it 'null' without the single quotes.
+Out of the parameters in the file below, "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it `null`.
 
 See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_file.json) for an example.
 
@@ -346,7 +346,7 @@ defined in the official PAA documentation. These three setting help drive the `g
 `sensor_group_name` - This will be the name assigned to your group. If it doesn't exist already, it will be created.
 Otherwise, the first group matching the name will be used.
 
-`add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list`. If false, `sensor_index_list` is ignored.
+`add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list` to the group. If false, `sensor_index_list` is ignored.
 
 `sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
 

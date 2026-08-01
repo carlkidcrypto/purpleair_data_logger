@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be inserted into CSV files.
 
 For best practice from PurpleAir:
@@ -85,6 +85,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         :param str file_path_and_name: A string of 'file_path_and_name'. i.e
                                        '/path_to_place/file_name.csv'.
+        :return: An open file stream for the CSV file.
+        :rtype: file object
         """
         the_file_stream = open(file_path_and_name, "a")
         return the_file_stream
