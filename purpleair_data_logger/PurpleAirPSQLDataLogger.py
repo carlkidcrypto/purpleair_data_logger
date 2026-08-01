@@ -2,8 +2,8 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
-Data will be inserted into a PSQL database.
+A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+Data will be inserted into a PostgreSQL (TimescaleDB) database.
 
 For best practice from PurpleAir:
 "The data from individual sensors will update no less than every 30 seconds.
@@ -522,9 +522,10 @@ if __name__ == "__main__":
     )
 
     # Fourth choose what run method to execute depending on
-    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file/paa_local_sensor_request_json_file
     the_paa_psql_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
         args.paa_group_sensor_request_json_file,
+        args.paa_local_sensor_request_json_file,
     )

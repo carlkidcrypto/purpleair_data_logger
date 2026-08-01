@@ -392,7 +392,7 @@ def logic_for_storing_group_sensors_data(
     # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
     # 'max_age': 604800, 'firmware_default_version': '7.02', 'fields': ['sensor_index', 'name'], 'data': [[77, 'Sunnyside'],
     # [81, 'Sherwood Hills 2']]}
-    # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
+    # It is important to know that the order of 'fields' provided as an argument to request_members_data()
     # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
     # Now let's build and feed what the store_sensor_data() method expects.
     store_sensor_data_type_list = construct_store_sensor_data_type(members_data)
