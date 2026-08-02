@@ -15,6 +15,7 @@
     "dist",
     "README.md",
     "Requirements.rst",
+    "TROUBLESHOOTING-WINDOWS-WSL.md",
     "*.config.json",
     "*.schema.json"
   ],
