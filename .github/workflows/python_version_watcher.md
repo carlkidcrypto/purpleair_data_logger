@@ -30,9 +30,9 @@ tools:
   edit:
   bash: true
 
+model: gpt-5.6-terra
 engine:
   id: copilot
-  model: claude-sonnet-4.6
 ---
 
 ## Python Version Watcher and Auto-Sync
@@ -55,7 +55,7 @@ versions and automatically update the repository to stay in sync.
 ### 1. Fetch the Python versions page
 
 ```bash
-curl -s --max-time 30 "https://devguide.python.org/versions/" -o /tmp/python_versions.html
+curl -s --max-time 30 "https://devguide.python.org/versions/" -o /tmp/gh-aw/agent/python_versions.html
 ```
 
 If the fetch fails (non-zero exit, empty file, or the file contains fewer than 500 bytes — the
@@ -75,7 +75,7 @@ Use the following Python snippet (or equivalent logic) to extract the data:
 ```python
 import re
 
-with open("/tmp/python_versions.html", "r", encoding="utf-8", errors="replace") as f:
+with open("/tmp/gh-aw/agent/python_versions.html", "r", encoding="utf-8", errors="replace") as f:
     html = f.read()
 
 # Find table rows; each row contains version number and status
