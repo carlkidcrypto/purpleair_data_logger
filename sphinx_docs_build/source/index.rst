@@ -11,6 +11,7 @@ Welcome to PurpleAir Data Logger(s)'s documentation!
    :caption: Contents:
 
 
+   Requirements
    modules
 
 Indices and tables
