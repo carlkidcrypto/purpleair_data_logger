@@ -52,12 +52,7 @@ from time import sleep
 from typing import Any
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPIError
-
-try:
-    from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
-except ImportError:  # pragma: no cover - compatibility with alternate layouts
-    from purpleair_api.matter import PurpleAirMatterConverter
-
+from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
     PurpleAirDataLoggerError,
