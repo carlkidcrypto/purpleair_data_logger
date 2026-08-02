@@ -6,7 +6,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirPSQLDataLogger module &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
+  <title>PurpleAirPrometheusDataLogger module &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="PurpleAirPSQLQueryStatements module" href="PurpleAirPSQLQueryStatements.html" />
-    <link rel="prev" title="PurpleAirPrometheusDataLogger module" href="PurpleAirPrometheusDataLogger.html" /> 
+    <link rel="next" title="PurpleAirPSQLDataLogger module" href="PurpleAirPSQLDataLogger.html" />
+    <link rel="prev" title="PurpleAirLokiDataLogger module" href="PurpleAirLokiDataLogger.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -50,15 +50,14 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
-<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPSQLDataLogger module</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger</span></code></a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger.store_sensor_data()</span></code></a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirPrometheusDataLogger module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirPrometheusDataLogger</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirPrometheusDataLogger.store_sensor_data()</span></code></a></li>
 </ul>
 </li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
@@ -81,9 +80,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
-      <li class="breadcrumb-item active">PurpleAirPSQLDataLogger module</li>
+      <li class="breadcrumb-item active">PurpleAirPrometheusDataLogger module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/PurpleAirPSQLDataLogger.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/PurpleAirPrometheusDataLogger.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -91,11 +90,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-PurpleAirPSQLDataLogger">
-<span id="purpleairpsqldatalogger-module"></span><h1>PurpleAirPSQLDataLogger module<a class="headerlink" href="#module-PurpleAirPSQLDataLogger" title="Link to this heading"></a></h1>
+  <section id="module-PurpleAirPrometheusDataLogger">
+<span id="purpleairprometheusdatalogger-module"></span><h1>PurpleAirPrometheusDataLogger module<a class="headerlink" href="#module-PurpleAirPrometheusDataLogger" title="Link to this heading"></a></h1>
 <p>Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
-Data will be inserted into a PostgreSQL (TimescaleDB) database.</p>
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+Data will be exposed via a Prometheus-compatible HTTP endpoint.</p>
 <p>For best practice from PurpleAir:
 “The data from individual sensors will update no less than every 30 seconds.
 As a courtesy, we ask that you limit the number of requests to no more than
@@ -103,31 +102,16 @@ once every 1 to 10 minutes, assuming you are only using the API to obtain data
 from sensors. If retrieving data from multiple sensors at once, please send a
 single request rather than individual requests in succession.”</p>
 <dl class="py class">
-<dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirPSQLDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirPSQLDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIReadKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirAPIWriteKey</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psql_db_conn</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirPrometheusDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirPrometheusDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prometheus_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">9760</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">registry</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;prometheus_client.registry.CollectorRegistry</span> <span class="pre">object&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></p>
-<p>A data logger class that stores PurpleAir sensor data into a TimescaleDB PostgreSQL
-database. Grafana can then be used to visualize the stored data.</p>
-<dl class="py property">
-<dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_acceptable_table_names_string_list</span></span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.get_acceptable_table_names_string_list" title="Link to this definition"></a></dt>
-<dd><p>A getter method that will simply return the contents of
-the acceptable_table_names_string_list. This is a list
-of all the tables that this DataLogger uses and knows about.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p>A list of acceptable table name strings.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>list</p>
-</dd>
-</dl>
-</dd></dl>
-
+<p>A data logger class that exposes PurpleAir sensor data as Prometheus metrics.
+Each numeric sensor field is represented as a Gauge with a ‘sensor_index’ label,
+allowing multiple sensors to share the same metric names.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data">
-<span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPSQLDataLogger.PurpleAirPSQLDataLogger.store_sensor_data" title="Link to this definition"></a></dt>
-<dd><p>Insert the sensor data into the database.</p>
+<dt class="sig sig-object py" id="PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger.store_sensor_data">
+<span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger.store_sensor_data" title="Link to this definition"></a></dt>
+<dd><p>Update Prometheus Gauges with the latest sensor data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>single_sensor_data_dict</strong> (<em>dict</em>) – A python dictionary containing all fields
@@ -147,8 +131,8 @@ or error checking. That is up to the caller.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="PurpleAirPrometheusDataLogger.html" class="btn btn-neutral float-left" title="PurpleAirPrometheusDataLogger module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="PurpleAirPSQLQueryStatements.html" class="btn btn-neutral float-right" title="PurpleAirPSQLQueryStatements module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="PurpleAirLokiDataLogger.html" class="btn btn-neutral float-left" title="PurpleAirLokiDataLogger module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PurpleAirPSQLDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirPSQLDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
