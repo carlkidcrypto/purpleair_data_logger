@@ -9,6 +9,10 @@ like a Matter 1.5.1 Air Quality Sensor device type (``0x002D``). The conversion
 is provided by ``purpleair_api.PurpleAirMatterConverter``. This logger does not
 implement Matter transport, discovery, commissioning, fabrics, or certification.
 
+To publish this JSON as commissionable Matter devices for Google Home or Home
+Assistant, use the proposed companion bridge described in
+:doc:`JSONToMatterBridge`.
+
 Continuous HTTP service
 -----------------------
 
