@@ -1,0 +1,67 @@
+{
+  "title": "PurpleAir",
+  "description": "Expose PurpleAir Matter JSON as bridged Matter Air Quality Sensors.",
+  "type": "object",
+  "properties": {
+    "name": {
+      "title": "Plugin Name",
+      "type": "string",
+      "readOnly": true,
+      "ui:widget": "hidden"
+    },
+    "type": {
+      "title": "Plugin Type",
+      "type": "string",
+      "readOnly": true,
+      "ui:widget": "hidden"
+    },
+    "feedUrl": {
+      "title": "PurpleAir Matter Feed URL",
+      "description": "URL of the PurpleAirMatterDataLogger all-sensors endpoint.",
+      "type": "string",
+      "format": "uri",
+      "default": "http://127.0.0.1:9855/matter/sensors"
+    },
+    "pollIntervalSeconds": {
+      "title": "Poll Interval",
+      "description": "Seconds between feed polls.",
+      "type": "integer",
+      "minimum": 1,
+      "default": 60
+    },
+    "requestTimeoutSeconds": {
+      "title": "Request Timeout",
+      "description": "Seconds before an HTTP feed request is aborted.",
+      "type": "integer",
+      "minimum": 1,
+      "default": 10
+    },
+    "whiteList": {
+      "title": "White List",
+      "description": "Expose only selected sensors when the list is non-empty.",
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "selectFrom": "name"
+    },
+    "blackList": {
+      "title": "Black List",
+      "description": "Do not expose selected sensors.",
+      "type": "array",
+      "items": { "type": "string" },
+      "uniqueItems": true,
+      "selectFrom": "name"
+    },
+    "debug": {
+      "title": "Enable Debug",
+      "type": "boolean",
+      "default": false
+    },
+    "unregisterOnShutdown": {
+      "title": "Unregister On Shutdown",
+      "description": "Remove all plugin devices during shutdown. Intended for development only.",
+      "type": "boolean",
+      "default": false
+    }
+  }
+}

@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PurpleAirMatterDataLogger module &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=387b12dc"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="PurpleAirMatterDataLoggerConstants module" href="PurpleAirMatterDataLoggerConstants.html" />
+    <link rel="prev" title="PurpleAirLokiDataLogger module" href="PurpleAirLokiDataLogger.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PurpleAir Data Logger(s)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Requirements.html">Software requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">purpleair_data_logger</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PurpleAirMatterDataLogger module</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#continuous-http-service">Continuous HTTP service</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#one-shot-conversion">One-shot conversion</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#http-api">HTTP API</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#security">Security</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-PurpleAirMatterDataLogger">Python API</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#PurpleAirMatterDataLogger.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html">PurpleAirMatterDataLoggerConstants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteQueryStatements.html">PurpleAirSQLiteQueryStatements module</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PurpleAir Data Logger(s)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="modules.html">purpleair_data_logger</a></li>
+      <li class="breadcrumb-item active">PurpleAirMatterDataLogger module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/PurpleAirMatterDataLogger.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="purpleairmatterdatalogger-module">
+<h1>PurpleAirMatterDataLogger module<a class="headerlink" href="#purpleairmatterdatalogger-module" title="Link to this heading"></a></h1>
+<section id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Link to this heading"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger</span></code> converts PurpleAir sensor readings to JSON shaped
+like a Matter 1.5.1 Air Quality Sensor device type (<code class="docutils literal notranslate"><span class="pre">0x002D</span></code>). The conversion
+is provided by <code class="docutils literal notranslate"><span class="pre">purpleair_api.PurpleAirMatterConverter</span></code>. This logger does not
+implement Matter transport, discovery, commissioning, fabrics, or certification.</p>
+<p>To publish this JSON as commissionable Matter devices for Google Home or Home
+Assistant, use the proposed companion bridge described in
+<a class="reference internal" href="JSONToMatterBridge.html"><span class="doc">JSON to Matter bridge</span></a>.</p>
+</section>
+<section id="continuous-http-service">
+<h2>Continuous HTTP service<a class="headerlink" href="#continuous-http-service" title="Link to this heading"></a></h2>
+<p>The command-line interface polls configured sensors, retains the latest
+successful reading for each sensor, and serves the converted devices over HTTP.
+The default bind address is <code class="docutils literal notranslate"><span class="pre">127.0.0.1:9855</span></code>.</p>
+<p>Cloud sensors require a PurpleAir Read API key and a configuration containing
+<code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code>:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">purpleair_data_logger</span><span class="o">.</span><span class="n">PurpleAirMatterDataLogger</span> \
+    <span class="o">-</span><span class="n">paa_read_key</span> <span class="n">YOUR_READ_KEY</span> \
+    <span class="o">-</span><span class="n">paa_multiple_sensor_request_json_file</span> \
+    <span class="o">./</span><span class="n">sample_json_config_files</span><span class="o">/</span><span class="n">sample_matter_request_json_file</span><span class="o">.</span><span class="n">json</span> \
+    <span class="o">--</span><span class="n">matter</span><span class="o">-</span><span class="n">only</span>
+</pre></div>
+</div>
+<p>Local-network sensors use a configuration containing <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> and do
+not require a cloud API key:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">python3</span> <span class="o">-</span><span class="n">m</span> <span class="n">purpleair_data_logger</span><span class="o">.</span><span class="n">PurpleAirMatterDataLogger</span> \
+    <span class="o">-</span><span class="n">paa_local_sensor_request_json_file</span> \
+    <span class="o">./</span><span class="n">sample_json_config_files</span><span class="o">/</span><span class="n">sample_local_sensor_request_json_file</span><span class="o">.</span><span class="n">json</span> \
+    <span class="o">--</span><span class="n">matter</span><span class="o">-</span><span class="n">only</span>
+</pre></div>
+</div>
+<p>Only one JSON configuration file may be supplied. The logger clamps polling
+intervals below 60 seconds to 60 seconds. An individual cloud polling failure is
+isolated so other configured sensors continue updating, and the HTTP API retains
+the failed sensor’s last-known-good value.</p>
+</section>
+<section id="one-shot-conversion">
+<h2>One-shot conversion<a class="headerlink" href="#one-shot-conversion" title="Link to this heading"></a></h2>
+<p>Call <code class="xref py py-meth docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger.run_once()</span></code> to convert cloud sensor readings
+without starting the HTTP server or polling loop:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">purpleair_data_logger.PurpleAirMatterDataLogger</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PurpleAirMatterDataLogger</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">matter_logger</span> <span class="o">=</span> <span class="n">PurpleAirMatterDataLogger</span><span class="p">(</span>
+    <span class="n">PurpleAirApiReadKey</span><span class="o">=</span><span class="s2">&quot;YOUR_READ_KEY&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">devices</span> <span class="o">=</span> <span class="n">matter_logger</span><span class="o">.</span><span class="n">run_once</span><span class="p">([</span><span class="mi">123456</span><span class="p">])</span>
+</pre></div>
+</div>
+</section>
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading"></a></h2>
+<p>Continuous cloud mode recognizes these fields:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code></dt><dd><p>Required list of integer PurpleAir sensor indexes.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">sensor_names</span></code></dt><dd><p>Optional object mapping sensor indexes to display-name overrides. JSON object
+keys are strings and are converted to integers while loading.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">read_keys</span></code></dt><dd><p>Optional object mapping private sensor indexes to sensor Read keys.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code></dt><dd><p>Poll delay. Values below 60 are clamped to 60.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">http_host</span></code> and <code class="docutils literal notranslate"><span class="pre">http_port</span></code></dt><dd><p>HTTP bind address and port. Defaults are <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">9855</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">matter_only</span></code></dt><dd><p>Describes the Matter-only service mode. The current class has no raw-data
+persistence sink, so this option does not change persistence behavior.</p>
+</dd>
+</dl>
+<p>Continuous local mode requires <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> and accepts the same polling
+and HTTP fields. Group configuration is not supported because <code class="docutils literal notranslate"><span class="pre">group_id</span></code> is
+not resolved into sensor indexes. The standard single-sensor sample uses
+<code class="docutils literal notranslate"><span class="pre">sensor_index</span></code> rather than the required <code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code> list and therefore
+cannot be used unchanged.</p>
+</section>
+<section id="http-api">
+<h2>HTTP API<a class="headerlink" href="#http-api" title="Link to this heading"></a></h2>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span></code> or <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code></dt><dd><p>Returns <code class="docutils literal notranslate"><span class="pre">{&quot;status&quot;:</span> <span class="pre">&quot;ok&quot;,</span> <span class="pre">&quot;sensor_count&quot;:</span> <span class="pre">N}</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/matter/sensors</span></code></dt><dd><p>Returns all current devices and their sensor indexes, plus a <code class="docutils literal notranslate"><span class="pre">count</span></code>.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/matter/sensor/&lt;sensor_index&gt;</span></code></dt><dd><p>Returns one device. A non-integer index returns 400 and an unavailable index
+returns 404. Query parameters do not affect route matching.</p>
+</dd>
+</dl>
+</section>
+<section id="security">
+<h2>Security<a class="headerlink" href="#security" title="Link to this heading"></a></h2>
+<p>The HTTP service does not provide authentication or TLS. Keep the default
+loopback bind unless another trusted network layer protects access. Binding to
+<code class="docutils literal notranslate"><span class="pre">0.0.0.0</span></code> exposes the service to reachable networks.</p>
+</section>
+<section id="module-PurpleAirMatterDataLogger">
+<span id="python-api"></span><h2>Python API<a class="headerlink" href="#module-PurpleAirMatterDataLogger" title="Link to this heading"></a></h2>
+<p>Copyright 2025 carlkidcrypto, All rights reserved.</p>
+<p>Matter Data Logger — exposes PurpleAir sensors as Matter device type
+structures via a lightweight HTTP API.</p>
+<dl class="simple">
+<dt>Performs two roles:</dt><dd><ol class="arabic simple">
+<li><p>Fetches raw sensor data from PurpleAir on a configurable interval.</p></li>
+<li><p>Converts readings to Matter device type JSON and exposes them via HTTP.</p></li>
+</ol>
+</dd>
+</dl>
+<p>Designed to run as a long-lived daemon (forever loop) or as a
+one-shot converter when <code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code> is omitted.</p>
+<p>Requires purpleair_api &gt;= 1.5.0a1 (includes
+<code class="docutils literal notranslate"><span class="pre">purpleair_api.PurpleAirMatterConverter</span></code>).
+When calling <code class="docutils literal notranslate"><span class="pre">validate_parameters_and_run()</span></code> without a JSON config file,
+pass <code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code> via the constructor.</p>
+<p>Usage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">purpleair_data_logger.PurpleAirMatterDataLogger</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PurpleAirMatterDataLogger</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">logger</span> <span class="o">=</span> <span class="n">PurpleAirMatterDataLogger</span><span class="p">(</span>
+    <span class="n">PurpleAirApiReadKey</span><span class="o">=</span><span class="s2">&quot;YOUR_READ_KEY&quot;</span><span class="p">,</span>
+    <span class="n">PurpleAirApiIpv4Address</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;192.168.1.100&quot;</span><span class="p">],</span>
+    <span class="n">sensor_indexes</span><span class="o">=</span><span class="p">[</span><span class="mi">123456</span><span class="p">],</span>
+    <span class="n">poll_interval_seconds</span><span class="o">=</span><span class="mi">65</span><span class="p">,</span>
+    <span class="n">http_port</span><span class="o">=</span><span class="mi">9855</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">logger</span><span class="o">.</span><span class="n">validate_parameters_and_run</span><span class="p">()</span>
+</pre></div>
+</div>
+<dl class="simple">
+<dt>References:</dt><dd><ul class="simple">
+<li><p>Matter 1.5.1 Core Specification (CSA, 2024)
+&lt;<a class="reference external" href="https://csa-iot.org/developer-resource/specifications/">https://csa-iot.org/developer-resource/specifications/</a>&gt;</p></li>
+<li><p>Air Quality Sensor Device Type (Device Type 0x002D)</p></li>
+<li><p>Air Quality Measurement Cluster (Cluster 0x005D)</p></li>
+<li><p>Temperature Measurement Cluster (Cluster 0x0402)</p></li>
+<li><p>Relative Humidity Measurement Cluster (Cluster 0x0405)</p></li>
+<li><p>Barometric Pressure Measurement Cluster (Cluster 0x0403)</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py class">
+<dt class="sig sig-object py" id="PurpleAirMatterDataLogger.PurpleAirMatterDataLogger">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirMatterDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirMatterDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">poll_interval_seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">65</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">http_port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">9855</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">http_host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'127.0.0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">read_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matter_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></p>
+<p>Fetches PurpleAir sensors and exposes them as Matter device type JSON
+via an embedded HTTP server.</p>
+<p>Inherits from <a class="reference internal" href="PurpleAirDataLogger.html#module-PurpleAirDataLogger" title="PurpleAirDataLogger"><code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></a> and reuses its polling loop
+infrastructure. The run methods are overridden to perform
+PurpleAir → Matter conversion instead of database insertion.</p>
+<dl class="simple">
+<dt><strong>Matter mode</strong> (default):</dt><dd><p>Runs a forever loop: fetch → convert → expose via HTTP.
+The <code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code> config field controls the loop delay.</p>
+</dd>
+<dt><strong>One-shot mode</strong>:</dt><dd><p>Call <a class="reference internal" href="#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.run_once" title="PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.run_once"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_once()</span></code></a> directly to convert current readings
+without starting the HTTP server or the polling loop.</p>
+</dd>
+<dt><strong>Matter-only mode</strong> (<code class="docutils literal notranslate"><span class="pre">--matter-only</span></code> CLI flag):</dt><dd><p>When invoked via CLI with the <code class="docutils literal notranslate"><span class="pre">--matter-only</span></code> flag, the HTTP server
+is started without an associated database/CSV sink — only the
+Matter conversion runs, suitable for feeding a Matter bridge
+(e.g. <code class="docutils literal notranslate"><span class="pre">python-matter-server</span></code> or Home Assistant Matter integration).</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>PurpleAirApiReadKey</strong> (<em>str</em>) – PurpleAir Read API key.</p></li>
+<li><p><strong>PurpleAirApiWriteKey</strong> (<em>str</em>) – PurpleAir Write API key (optional).</p></li>
+<li><p><strong>PurpleAirApiIpv4Address</strong> (<em>list</em>) – List of IPv4 addresses for local
+sensor access (optional).</p></li>
+<li><p><strong>poll_interval_seconds</strong> (<em>int</em>) – How often to poll PurpleAir (default 65).
+Must be &gt;= 60. Ignored in one-shot mode.</p></li>
+<li><p><strong>http_port</strong> (<em>int</em>) – HTTP server port (default 9855).</p></li>
+<li><p><strong>http_host</strong> (<em>str</em>) – HTTP server bind host (default 127.0.0.1).</p></li>
+<li><p><strong>sensor_indexes</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional constructor defaults for sensors to
+poll when no config file is provided.</p></li>
+<li><p><strong>sensor_names</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em>) – Optional constructor defaults for sensor
+display names when no config file is provided.</p></li>
+<li><p><strong>read_keys</strong> (<em>dict</em><em>[</em><em>int</em><em>, </em><em>str</em><em>]</em>) – Optional constructor defaults for per-sensor
+read keys when no config file is provided.</p></li>
+<li><p><strong>matter_only</strong> (<em>bool</em>) – If True, the forever loop runs without any
+database or file sink (Matter conversion only).</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.run_once">
+<span class="sig-name descname"><span class="pre">run_once</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">sensor_indexes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sensor_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">primary_keys</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.run_once" title="Link to this definition"></a></dt>
+<dd><p>Fetch and convert sensors once (no HTTP server, no forever loop).</p>
+<p>Returns the current Matter device map without starting any background
+service. Suitable for scripting or one-off exports.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>sensor_indexes</strong> – List of PurpleAir sensor indexes to poll.</p></li>
+<li><p><strong>sensor_names</strong> – Optional dict mapping sensor_index → display name.</p></li>
+<li><p><strong>primary_keys</strong> – Optional dict mapping sensor_index → Read key.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dict mapping sensor_index → Matter device dict.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.validate_parameters_and_run">
+<span class="sig-name descname"><span class="pre">validate_parameters_and_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paa_multiple_sensor_request_json_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_single_sensor_request_json_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_group_sensor_request_json_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_local_sensor_request_json_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">matter_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.validate_parameters_and_run" title="Link to this definition"></a></dt>
+<dd><p>Main entry point for <code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger</span></code>.</p>
+<p>Accepts the same JSON config file arguments as the base class, but all
+four are mutually exclusive (only one config file per run). If no
+config file is provided, the logger runs with defaults from the
+constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>paa_multiple_sensor_request_json_file</strong> (<em>str</em>) – Path to a multi-sensor
+config file. Required fields: <code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code> (list of ints),
+<code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code> (int, &gt;= 60), <code class="docutils literal notranslate"><span class="pre">http_port</span></code> (int, optional),
+<code class="docutils literal notranslate"><span class="pre">http_host</span></code> (str, optional), <code class="docutils literal notranslate"><span class="pre">sensor_names</span></code> (dict, optional),
+<code class="docutils literal notranslate"><span class="pre">read_keys</span></code> (dict, optional).</p></li>
+<li><p><strong>paa_single_sensor_request_json_file</strong> (<em>str</em>) – Path to a single-sensor
+config file. Same fields as the multi-sensor file.</p></li>
+<li><p><strong>paa_group_sensor_request_json_file</strong> (<em>str</em>) – Path to a group config
+file (uses <code class="docutils literal notranslate"><span class="pre">group_id</span></code> to fetch sensors).</p></li>
+<li><p><strong>paa_local_sensor_request_json_file</strong> (<em>str</em>) – Path to a local-only
+config file (uses <code class="docutils literal notranslate"><span class="pre">ipv4_address</span></code> filters).</p></li>
+<li><p><strong>matter_only</strong> (<em>bool</em>) – If True, disables any non-Matter side effects
+(e.g. raw data persistence). Overrides the constructor value.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="PurpleAirMatterDataLogger.main">
+<span class="sig-prename descclassname"><span class="pre">PurpleAirMatterDataLogger.</span></span><span class="sig-name descname"><span class="pre">main</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">argv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PurpleAirMatterDataLogger.main" title="Link to this definition"></a></dt>
+<dd><p>Run the Matter data logger from the command line.</p>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="PurpleAirLokiDataLogger.html" class="btn btn-neutral float-left" title="PurpleAirLokiDataLogger module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="PurpleAirMatterDataLoggerConstants.html" class="btn btn-neutral float-right" title="PurpleAirMatterDataLoggerConstants module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, carlkidcrypto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
