@@ -13,6 +13,7 @@ import threading
 import unittest
 import urllib.request
 import urllib.error
+from unittest.mock import Mock, patch
 
 import requests_mock
 
@@ -253,6 +254,17 @@ class MatterHTTPServerEndpointsTest(unittest.TestCase):
         self.assertEqual(body["status"], "ok")
         self.assertEqual(body["sensor_count"], 1)
 
+    def test_endpoints_accept_query_parameters(self):
+        """Query parameters do not interfere with endpoint routing."""
+        health_status, _ = self._get(f"{HEALTH_PATH}?probe=true")
+        sensor_status, _ = self._get(f"{MATTER_SENSOR_PATH_PREFIX}/282168?precision=2")
+        self.assertEqual(health_status, 200)
+        self.assertEqual(sensor_status, 200)
+
+    def test_server_reuses_address(self):
+        """The HTTP server allows quick restarts on the same address."""
+        self.assertTrue(_MatterHTTPServer.allow_reuse_address)
+
     def test_health_root_endpoint_returns_200(self):
         """GET / returns 200 (redirects to health)."""
         status, body = self._get("/")
@@ -345,6 +357,38 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
             finally:
                 f.close()
                 os.unlink(f.name)
+
+
+class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
+    """Tests for failures encountered by the long-running polling loop."""
+
+    def test_unexpected_sensor_error_is_isolated(self):
+        """An unexpected client exception does not escape the sensor poll."""
+        logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
+        logger._purpleair_api_obj = Mock()
+        logger._purpleair_api_obj.request_sensor_data.side_effect = TimeoutError
+
+        self.assertIsNone(logger._poll_and_convert_sensor(282168))
+
+    def test_loop_preserves_last_known_good_reading(self):
+        """A failed poll does not remove the previous device reading."""
+        logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
+        logger._poll_interval = 60
+        logger._sensor_indexes = []
+        logger._sensor_names = {}
+        logger._read_keys = {}
+        logger._matter_devices = {1: {"reading": "last-known-good"}}
+        logger._lock = threading.Lock()
+        logger._poll_and_convert_multiple = Mock(return_value={})
+
+        with patch(
+            "purpleair_data_logger.PurpleAirMatterDataLogger.sleep",
+            side_effect=StopIteration,
+        ):
+            with self.assertRaises(StopIteration):
+                logger._run_loop_matter({"sensor_indexes": [1]})
+
+        self.assertEqual(logger._matter_devices[1]["reading"], "last-known-good")
 
 
 # =============================================================================

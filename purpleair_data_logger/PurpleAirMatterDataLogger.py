@@ -50,6 +50,7 @@ import logging
 import threading
 from time import sleep
 from typing import Any
+from urllib.parse import urlsplit
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPIError
 from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
@@ -57,6 +58,7 @@ from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
     PurpleAirDataLoggerError,
 )
+from purpleair_data_logger.PurpleAirDataLoggerHelpers import generate_common_arg_parser
 from purpleair_data_logger.PurpleAirMatterDataLoggerConstants import (
     MATTER_DATA_LOGGER_DEFAULT_HOST,
     MATTER_DATA_LOGGER_DEFAULT_PORT,
@@ -104,12 +106,14 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data, indent=2).encode("utf-8"))
 
     def do_GET(self) -> None:
-        if self.path == HEALTH_PATH or self.path == "/":
+        path = urlsplit(self.path).path
+
+        if path == HEALTH_PATH or path == "/":
             with self.server.lock:
                 sensor_count = len(self.server.matter_devices)
             self._send_json(200, {"status": "ok", "sensor_count": sensor_count})
 
-        elif self.path == MATTER_ALL_SENSORS_PATH:
+        elif path == MATTER_ALL_SENSORS_PATH:
             with self.server.lock:
                 items = list(self.server.matter_devices.items())
 
@@ -119,9 +123,9 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
             }
             self._send_json(200, payload)
 
-        elif self.path.startswith(MATTER_SENSOR_PATH_PREFIX + "/"):
+        elif path.startswith(MATTER_SENSOR_PATH_PREFIX + "/"):
             try:
-                idx = int(self.path[len(MATTER_SENSOR_PATH_PREFIX) + 1 :])
+                idx = int(path[len(MATTER_SENSOR_PATH_PREFIX) + 1 :])
             except ValueError:
                 self._send_json(400, {"error": "Invalid sensor_index"})
                 return
@@ -147,6 +151,8 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
 
 class _MatterHTTPServer(HTTPServer):
     """HTTP server that holds the current Matter device map for all handlers."""
+
+    allow_reuse_address = True
 
     def __init__(
         self,
@@ -306,14 +312,16 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 sensor_index,
                 read_key=primary_key,
             )
+            return PurpleAirMatterConverter.to_air_quality_sensor(
+                raw,
+                sensor_name=sensor_name,
+            )
         except PurpleAirAPIError as exc:
             logger.warning("Sensor %s: PurpleAir API error: %s", sensor_index, exc)
             return None
-
-        return PurpleAirMatterConverter.to_air_quality_sensor(
-            raw,
-            sensor_name=sensor_name,
-        )
+        except Exception:
+            logger.exception("Sensor %s: unexpected polling error", sensor_index)
+            return None
 
     def _poll_and_convert_multiple(
         self,
@@ -336,6 +344,58 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             device = self._poll_and_convert_sensor(idx, name, key)
             if device is not None:
                 results[idx] = device
+        return results
+
+    @staticmethod
+    def _local_average(raw: dict[str, Any], primary: str, secondary: str) -> Any:
+        """Return one local reading, averaging a secondary channel when present."""
+        primary_value = raw.get(primary)
+        secondary_value = raw.get(secondary)
+        if primary_value is None or secondary_value is None:
+            return primary_value
+        return (float(primary_value) + float(secondary_value)) / 2
+
+    def _poll_and_convert_local(self) -> dict[int, dict[str, Any]]:
+        """Poll configured local sensors and convert their payloads to Matter JSON."""
+        try:
+            local_sensors = self._purpleair_api_obj.request_local_sensor_data()
+        except PurpleAirAPIError as exc:
+            logger.warning("PurpleAir local API error: %s", exc)
+            return {}
+
+        results: dict[int, dict[str, Any]] = {}
+        for address, raw in local_sensors.items():
+            try:
+                sensor_id = str(raw["SensorId"])
+                sensor_index = int(sensor_id.replace(":", ""), 16)
+                pressure_hpa = self._local_average(raw, "pressure", "pressure_680")
+                canonical = {
+                    "sensor_index": sensor_index,
+                    "name": sensor_id,
+                    "hardware": raw.get("hardwarediscovered"),
+                    "firmware_version": raw.get("version"),
+                    "latitude": raw.get("lat"),
+                    "longitude": raw.get("lon"),
+                    "temperature": self._local_average(
+                        raw, "current_temp_f", "current_temp_f_680"
+                    ),
+                    "humidity": self._local_average(
+                        raw, "current_humidity", "current_humidity_680"
+                    ),
+                    "pressure": (
+                        float(pressure_hpa) / 68.9476
+                        if pressure_hpa is not None
+                        else None
+                    ),
+                    "pm1.0": self._local_average(raw, "pm1_0_atm", "pm1_0_atm_b"),
+                    "pm2.5": self._local_average(raw, "pm2_5_atm", "pm2_5_atm_b"),
+                    "pm10.0": self._local_average(raw, "pm10_0_atm", "pm10_0_atm_b"),
+                }
+                results[sensor_index] = PurpleAirMatterConverter.to_air_quality_sensor(
+                    canonical
+                )
+            except (KeyError, TypeError, ValueError) as exc:
+                logger.warning("Local sensor %s: invalid payload: %s", address, exc)
         return results
 
     # -------------------------------------------------------------------------
@@ -387,6 +447,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         sensor_indexes: list[int] = json_config_file.get(
             "sensor_indexes", self._sensor_indexes
         )
+        local_mode = bool(json_config_file.get("sensor_ip_list"))
         sensor_names: dict[int, str] = {
             int(k): v
             for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
@@ -396,42 +457,38 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             for k, v in json_config_file.get("read_keys", self._read_keys).items()
         }
 
+        configured_sensor_count = (
+            len(json_config_file["sensor_ip_list"])
+            if local_mode
+            else len(sensor_indexes)
+        )
         logger.info(
-            "Starting Matter conversion loop for %d sensor(s)", len(sensor_indexes)
+            "Starting Matter conversion loop for %d sensor(s)",
+            configured_sensor_count,
         )
 
         while True:
             logger.info(
                 "Polling %d sensor(s) at poll interval %ds...",
-                len(sensor_indexes),
+                configured_sensor_count,
                 self._poll_interval,
             )
-            devices = self._poll_and_convert_multiple(
-                sensor_indexes, sensor_names, primary_keys
+            devices = (
+                self._poll_and_convert_local()
+                if local_mode
+                else self._poll_and_convert_multiple(
+                    sensor_indexes, sensor_names, primary_keys
+                )
             )
 
-            # Thread-safe in-place update of the shared device map.
-            # The lock ensures no other thread sees an inconsistent intermediate state
-            # during clear() + update(), while keeping the same dict object reference
-            # so that the HTTP server (which holds the same reference) sees updates.
+            # Keep last-known-good readings when a sensor has a transient failure.
             with self._lock:
-                self._matter_devices.clear()
                 self._matter_devices.update(devices)
-
-            # NOTE: a prior revision used an atomic dict-reference swap
-            # (``self._matter_devices = dict(devices)``) to avoid the clear/update
-            # race.  This broke the HTTP server tests because the server holds a
-            # reference to the original empty dict passed at construction — the swap
-            # left it pointing at a stale object while the server kept serving the
-            # initial empty dict.  Switching to lock+clear+update keeps the same dict
-            # object identity so the HTTP server sees every update, while the lock
-            # prevents concurrent-read/during-write tears.
-            # See: commit 141b063d525620cf033cff7a2be9d8d7f40125ef
 
             logger.info(
                 "Matter devices updated: %d/%d sensors converted successfully.",
                 len(devices),
-                len(sensor_indexes),
+                configured_sensor_count,
             )
 
             # Optionally also persist raw PurpleAir data (non-matter_only mode)
@@ -504,9 +561,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         # Validate that we have sensors to poll before starting the server
         sensor_indexes: list[int] = config.get("sensor_indexes", self._sensor_indexes)
-        if not sensor_indexes:
+        if not sensor_indexes and not config.get("sensor_ip_list"):
             raise PurpleAirDataLoggerError(
-                "No 'sensor_indexes' provided — nothing to poll."
+                "No 'sensor_indexes' or 'sensor_ip_list' provided — nothing to poll."
             )
 
         # Start the HTTP server
@@ -516,4 +573,63 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._run_loop_matter(config)
 
 
-__all__ = ["PurpleAirMatterDataLogger"]
+def main(argv: list[str] | None = None) -> None:
+    """Run the Matter data logger from the command line."""
+    parser = generate_common_arg_parser(
+        "Collect data from PurpleAir sensors and expose it as Matter device JSON!"
+    )
+    parser.add_argument(
+        "--http-host",
+        default=MATTER_DATA_LOGGER_DEFAULT_HOST,
+        help="Host address for the Matter HTTP API.",
+    )
+    parser.add_argument(
+        "--http-port",
+        default=MATTER_DATA_LOGGER_DEFAULT_PORT,
+        type=int,
+        help="Port for the Matter HTTP API.",
+    )
+    parser.add_argument(
+        "--matter-only",
+        action="store_true",
+        help="Run only the Matter conversion and HTTP API.",
+    )
+    parser.add_argument(
+        "-save_file_path",
+        default=None,
+        help="Compatibility option; Matter output is served over HTTP, not saved.",
+    )
+    args = parser.parse_args(argv)
+
+    ipv4_addresses: list[str] = []
+    if args.paa_local_sensor_request_json_file:
+        with open(args.paa_local_sensor_request_json_file) as config_file:
+            local_config = json.load(config_file)
+        ipv4_addresses = local_config.get("sensor_ip_list", [])
+
+    matter_logger = PurpleAirMatterDataLogger(
+        PurpleAirApiReadKey=args.paa_read_key,
+        PurpleAirApiWriteKey=args.paa_write_key,
+        PurpleAirApiIpv4Address=ipv4_addresses or None,
+        http_host=args.http_host,
+        http_port=args.http_port,
+        matter_only=args.matter_only,
+    )
+    if args.save_file_path:
+        logger.warning(
+            "-save_file_path is ignored; Matter output is available from the HTTP API."
+        )
+    matter_logger.validate_parameters_and_run(
+        args.paa_multiple_sensor_request_json_file,
+        args.paa_single_sensor_request_json_file,
+        args.paa_group_sensor_request_json_file,
+        args.paa_local_sensor_request_json_file,
+        matter_only=args.matter_only,
+    )
+
+
+if __name__ == "__main__":  # pragma: no cover
+    main()
+
+
+__all__ = ["PurpleAirMatterDataLogger", "main"]
