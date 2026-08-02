@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirCSVDataLogger module &mdash; PurpleAir Data Logger(s) V1.4.1 documentation</title>
+  <title>PurpleAirCSVDataLogger module &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=4a74b673"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=387b12dc"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -55,6 +55,8 @@
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
@@ -91,7 +93,7 @@
   <section id="module-PurpleAirCSVDataLogger">
 <span id="purpleaircsvdatalogger-module"></span><h1>PurpleAirCSVDataLogger module<a class="headerlink" href="#module-PurpleAirCSVDataLogger" title="Link to this heading"></a></h1>
 <p>Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be inserted into CSV files.</p>
 <p>For best practice from PurpleAir:
 “The data from individual sensors will update no less than every 30 seconds.
@@ -101,9 +103,9 @@ from sensors. If retrieving data from multiple sensors at once, please send a
 single request rather than individual requests in succession.”</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirCSVDataLogger.PurpleAirCSVDataLogger">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirCSVDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirCSVDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_save_csv_files_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirCSVDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirCSVDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path_to_save_csv_files_in</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">PurpleAirDataLogger</span></code></p>
-<p>The logger class. For now we will insert data into a CSV file.</p>
+<p>A data logger class that stores PurpleAir sensor data into CSV files.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="PurpleAirCSVDataLogger.PurpleAirCSVDataLogger.store_sensor_data">
 <span class="sig-name descname"><span class="pre">store_sensor_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">single_sensor_data_dict</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirCSVDataLogger.PurpleAirCSVDataLogger.store_sensor_data" title="Link to this definition"></a></dt>
@@ -112,9 +114,9 @@ single request rather than individual requests in succession.”</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>single_sensor_data_dict</strong> (<em>dict</em>) – A python dictionary containing all fields
 for insertion. If a sensor doesn’t support
-a certain field make sure it is NULL and part
+a certain field make sure it is <code class="docutils literal notranslate"><span class="pre">None</span></code> and part
 of the dictionary. This method does no type
-or error checking. That is upto the caller.</p>
+or error checking. That is up to the caller.</p>
 </dd>
 </dl>
 </dd></dl>
