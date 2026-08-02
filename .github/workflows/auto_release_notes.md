@@ -19,7 +19,7 @@ permissions:
 safe-outputs:
   update-release:
 timeout-minutes: 60
-model: gpt-5.6-terra
+model: claude-sonnet-4.6
 engine:
   id: copilot
 network:

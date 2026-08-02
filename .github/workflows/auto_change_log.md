@@ -20,7 +20,7 @@ safe-outputs:
     preserve-branch-name: true
     if-no-changes: "ignore"
 timeout-minutes: 30
-model: gpt-5.6-terra
+model: claude-sonnet-4.6
 engine:
   id: copilot
 network:
