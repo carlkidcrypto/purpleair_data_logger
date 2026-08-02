@@ -1,12 +1,12 @@
-import { defineConfig } from 'vitest/config';
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
     preserveSymlinks: true,
   },
   test: {
-    environment: 'node',
+    environment: "node",
     globals: true,
-    include: ['vitest/**/*.test.ts'],
+    include: ["vitest/**/*.test.ts"],
   },
 });

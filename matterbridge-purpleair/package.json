@@ -3,7 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "description": "Matterbridge plugin that exposes PurpleAir Matter JSON as bridged Matter air quality sensors",
+  "homepage": "https://github.com/carlkidcrypto/purpleair_data_logger/tree/main/matterbridge-purpleair",
   "license": "MIT",
+  "author": "carlkidcrypto",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlkidcrypto/purpleair_data_logger.git",
+    "directory": "matterbridge-purpleair"
+  },
   "files": [
     "dist",
     "README.md",

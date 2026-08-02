@@ -42,12 +42,16 @@ python3.12.venv/bin/python -m purpleair_data_logger.PurpleAirMatterDataLogger \
   --matter-only
 ```
 
-Install the local plugin and start Matterbridge:
+From the repository root, register the local plugin once and start Matterbridge:
 
 ```bash
-"$HOME/.local/bin/matterbridge" --add .
+"$HOME/.local/bin/matterbridge" --add ./matterbridge-purpleair
 "$HOME/.local/bin/matterbridge" --bridge
 ```
+
+If the current directory is already `matterbridge-purpleair`, use `--add .`
+instead. Registration persists, so later starts only need the `--bridge`
+command.
 
 Matterbridge serves its frontend at `http://localhost:8283` by default. Use the
 frontend or console commissioning code to add the bridge to a Matter fabric.
@@ -56,7 +60,7 @@ frontend or console commissioning code to add the bridge to a Matter fabric.
 
 `feedUrl`
 : Full URL of the all-sensors endpoint. Default:
-  `http://127.0.0.1:9855/matter/sensors`.
+`http://127.0.0.1:9855/matter/sensors`.
 
 `pollIntervalSeconds`
 : Seconds between polls. Default: `60`.
@@ -66,11 +70,11 @@ frontend or console commissioning code to add the bridge to a Matter fabric.
 
 `whiteList` / `blackList`
 : Matterbridge device filters populated from discovered sensor names and stable
-  `purpleair-<sensor_index>` serial numbers.
+`purpleair-<sensor_index>` serial numbers.
 
 `unregisterOnShutdown`
 : Development option that removes endpoints at shutdown. Keep `false` in normal
-  use to preserve endpoint identity.
+use to preserve endpoint identity.
 
 The plugin retains registered endpoints and their last values across transient
 HTTP or payload failures. Sensors are not removed merely because one response
