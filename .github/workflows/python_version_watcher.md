@@ -30,7 +30,7 @@ tools:
   edit:
   bash: true
 
-model: gpt-5.6-terra
+model: claude-sonnet-5
 engine:
   id: copilot
 ---

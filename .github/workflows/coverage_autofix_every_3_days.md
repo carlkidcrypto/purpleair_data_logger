@@ -23,7 +23,7 @@ safe-outputs:
     allowed: [coverage, tests, python]
     max: 3
 timeout-minutes: 45
-model: gpt-5.6-terra
+model: claude-sonnet-5
 engine:
   id: copilot
 network:
