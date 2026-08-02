@@ -11,6 +11,7 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
     title-prefix: "[changelog] "
@@ -19,9 +20,9 @@ safe-outputs:
     preserve-branch-name: true
     if-no-changes: "ignore"
 timeout-minutes: 30
+model: claude-sonnet-5
 engine:
   id: copilot
-  model: gpt-5.3-codex
 network:
   allowed: [defaults, github]
 tools:

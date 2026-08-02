@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A helper file that contains constants and functions for PurpleAirDataLogger* files.
+A helper file that contains functions for PurpleAirDataLogger* files.
 """
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
@@ -15,9 +15,9 @@ def generate_common_arg_parser(argparse_description=""):
     """
     A function to generate the common arguments that all data loggers need.
 
-    :param str argparse_description: A description for the argument parser that will be return
+    :param str argparse_description: A description for the argument parser that will be returned
 
-    :return: An instance of argparse with the common arguments added.
+    :return: An ``argparse.ArgumentParser`` instance with the common arguments added.
     """
 
     parser = argparse.ArgumentParser(description=argparse_description)
@@ -90,7 +90,7 @@ def generate_common_arg_parser(argparse_description=""):
 def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
     """
     Before we store the data, we must make sure all fields have been included.
-    Our psql/sqlite store statements expect all fields regardless of what we request.
+    Our store statements expect all fields regardless of what we request.
 
     :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
 
@@ -114,8 +114,9 @@ def construct_store_sensor_data_type(raw_data) -> list:
     """
     A function to build a list of dictionaries that the store_sensor_data method expects.
 
-    :param dict raw_data: The return value from either padl_obj.request_members_data or
-                            padl_obj.request_multiple_sensors_data.
+    :param dict raw_data: The return value from either
+                            ``PurpleAirAPI.request_members_data`` or
+                            ``PurpleAirAPI.request_multiple_sensors_data``.
 
     :return: A list full of the dict data type that the store_sensor_data method expects.
     """
@@ -154,9 +155,9 @@ def flatten_single_sensor_data(raw_data) -> dict:
     """
     A function to flatten the raw data from a single sensor request. This makes our logic downstream easier.
 
-    :param dict raw_data: The return value from padl_obj.request_sensor_data.
+    :param dict raw_data: The return value from ``PurpleAirAPI.request_sensor_data``.
 
-    :return: A single level dict full request_sensor_data data.
+    :return: A single-level dictionary containing the flattened sensor data from a request_sensor_data call.
     """
 
     # Let's make it easier on ourselves by making the sensor data one level deep.
@@ -271,7 +272,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
     # ... ]}
     # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
     # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
-    # Now lets build and feed what the store_sensor_data() method expects.
+    # Now let's build and feed what the store_sensor_data() method expects.
     store_sensor_data_type_list = construct_store_sensor_data_type(sensors_data)
 
     for store_sensor_data_type in store_sensor_data_type_list:
@@ -294,7 +295,9 @@ def logic_for_storing_group_sensors_data(
 
     :param PurpleAirDataLogger padl_obj: A valid instance of PurpleAirDataLogger.
 
-    :param int group_id_to_use: The group id to be used. Starts out being `None` then gets filled out.
+    :param group_id_to_use: The group id to be used. Initially ``None``; populated with
+                            the group id after the first call.
+    :type group_id_to_use: int or None
 
     :param dict json_config_file: A dictionary object of the json config file using json load.
 
@@ -389,9 +392,9 @@ def logic_for_storing_group_sensors_data(
     # {'api_version': 'V1.0.11-0.0.42', 'time_stamp': 1676784867, 'data_time_stamp': 1676784847, 'group_id': 1654,
     # 'max_age': 604800, 'firmware_default_version': '7.02', 'fields': ['sensor_index', 'name'], 'data': [[77, 'Sunnyside'],
     # [81, 'Sherwood Hills 2']]}
-    # It is important to know that the order of 'fields' provided as an argument to request_multiple_sensors_data()
+    # It is important to know that the order of 'fields' provided as an argument to request_members_data()
     # will determine the order of data items. In a nutshell it is a 1:1 mapping from fields to data.
-    # Now lets build and feed what the store_sensor_data() method expects.
+    # Now let's build and feed what the store_sensor_data() method expects.
     store_sensor_data_type_list = construct_store_sensor_data_type(members_data)
 
     for store_sensor_data_type in store_sensor_data_type_list:

@@ -14,7 +14,7 @@ python3 -m pip install coverage
 python3 -m pip install requests-mock
 ```
 
-3. Remove any currenlty installed versions of PurpleAirDataLogger
+3. Remove any currently installed versions of PurpleAirDataLogger
 
 ```bash
 python3 -m pip uninstall purpleair_data_logger

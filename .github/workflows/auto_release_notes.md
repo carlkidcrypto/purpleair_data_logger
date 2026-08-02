@@ -15,12 +15,13 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
 safe-outputs:
   update-release:
 timeout-minutes: 60
+model: claude-sonnet-5
 engine:
   id: copilot
-  model: gpt-5.3-codex
 network:
   allowed: [defaults, github]
 tools:

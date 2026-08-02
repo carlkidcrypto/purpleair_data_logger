@@ -9,6 +9,7 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
     title-prefix: "[coverage-autofix] "
@@ -22,9 +23,9 @@ safe-outputs:
     allowed: [coverage, tests, python]
     max: 3
 timeout-minutes: 45
+model: claude-sonnet-5
 engine:
   id: copilot
-  model: gpt-5.3-codex
 network:
   allowed: [defaults, python]
 tools:

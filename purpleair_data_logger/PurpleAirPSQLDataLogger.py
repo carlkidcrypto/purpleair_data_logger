@@ -3,7 +3,7 @@
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
 A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
-Data will be inserted into a PSQL database.
+Data will be inserted into a PostgreSQL (TimescaleDB) database.
 
 For best practice from PurpleAir:
 "The data from individual sensors will update no less than every 30 seconds.
@@ -137,6 +137,9 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
         A getter method that will simply return the contents of
         the acceptable_table_names_string_list. This is a list
         of all the tables that this DataLogger uses and knows about.
+
+        :return: A list of acceptable table name strings.
+        :rtype: list
         """
 
         return self._acceptable_table_names_string_list
@@ -214,11 +217,12 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
     def _convert_unix_epoch_timestamp_to_psql_timestamp(self, unix_epoch_timestamp):
         """
-        A method to covert a unix epoch timestamp to a psql timestamp.
+        A method to convert a unix epoch timestamp to a psql timestamp.
 
         :param int unix_epoch_timestamp: A valid unix epoch timestamp
 
         :return: A valid psql UTC timestamp or None.
+        :rtype: str or None
         """
 
         if unix_epoch_timestamp is None:
@@ -233,7 +237,7 @@ class PurpleAirPSQLDataLogger(PurpleAirDataLogger):
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
-                                             a certain field make sure it is NULL and part
+                                             a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
         """
@@ -486,7 +490,7 @@ if __name__ == "__main__":
     the_json_file = None
     file_obj = None
 
-    # Second make the PSQL DB connection with CML args
+    # Second make the PSQL DB connection with CLI args
     the_psql_db_conn = pg8000.connect(
         user=args.db_usr,
         host=args.db_host,
@@ -518,9 +522,10 @@ if __name__ == "__main__":
     )
 
     # Fourth choose what run method to execute depending on
-    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file
+    # paa_multiple_sensor_request_json_file/paa_single_sensor_request_json_file/paa_group_sensor_request_json_file/paa_local_sensor_request_json_file
     the_paa_psql_data_logger.validate_parameters_and_run(
         args.paa_multiple_sensor_request_json_file,
         args.paa_single_sensor_request_json_file,
         args.paa_group_sensor_request_json_file,
+        args.paa_local_sensor_request_json_file,
     )

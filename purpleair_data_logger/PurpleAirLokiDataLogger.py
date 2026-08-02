@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be pushed to a Grafana Loki instance via the Loki HTTP push API.
 
 For best practice from PurpleAir:
@@ -227,7 +227,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param str loki_url: The base URL of the Loki instance (e.g. 'http://localhost:3100').
         :param str loki_usr: Optional username for Loki basic authentication.
         :param str loki_pwd: Optional password for Loki basic authentication.
@@ -278,7 +278,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
-                                             a certain field make sure it is NULL and part
+                                             a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
         """

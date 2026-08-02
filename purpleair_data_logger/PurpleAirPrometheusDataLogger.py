@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be exposed via a Prometheus-compatible HTTP endpoint.
 
 For best practice from PurpleAir:
@@ -260,7 +260,7 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param int prometheus_port: The TCP port on which the Prometheus HTTP endpoint will listen.
         :param CollectorRegistry registry: The Prometheus registry to register metrics with.
                                            Defaults to the global REGISTRY. Pass a custom
@@ -963,7 +963,7 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
-                                             a certain field make sure it is NULL and part
+                                             a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
         """
@@ -1310,7 +1310,7 @@ class PurpleAirPrometheusDataLogger(PurpleAirDataLogger):
         )
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     parser = generate_common_arg_parser(
         "Collect data from PurpleAir sensors and expose it as Prometheus metrics!"
     )

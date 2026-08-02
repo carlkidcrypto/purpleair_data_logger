@@ -16,7 +16,7 @@ jobs:
       run_job: ${{ steps.changed-files.outputs.any_changed }}
     steps:
       - name: Checkout Sourcecode
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Check for changes in source code
         id: changed-files
@@ -43,51 +43,51 @@ jobs:
 
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Set up Python env for running unit tests...
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
 
       - name: Install python3 requirements...
-        uses: carlkidcrypto/os-specific-runner@v2.3.0
+        uses: carlkidcrypto/os-specific-runner@v2.3.1
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
                  python -m pip install -r tests/requirements.txt ;
-                 python -m pip install "purpleair_api==1.5.0a1" ;
+                 python -m pip install "purpleair_api==1.5.0a2" ;
             
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
                  python -m pip install --upgrade setuptools ;
                  python -m pip install --upgrade pip ;
                  python -m pip install -r tests/requirements.txt ;
-                 python -m pip install "purpleair_api==1.5.0a1" ;
+                 python -m pip install "purpleair_api==1.5.0a2" ;
           
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\ ;
                    python -m pip install --upgrade wheel ;
                    python -m pip install --upgrade setuptools ;
                    python -m pip install --upgrade pip ;
                    python -m pip install -r tests/requirements.txt ;
-                   python -m pip install "purpleair_api==1.5.0a1" ;
+                   python -m pip install "purpleair_api==1.5.0a2" ;
 
       - name: Run unit tests...
-        uses: carlkidcrypto/os-specific-runner@v2.3.0
+        uses: carlkidcrypto/os-specific-runner@v2.3.1
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
                  coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
-          
+
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\tests ;
                    coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v6
+        uses: codecov/codecov-action@v7
         env:
           name: ${{matrix.os}}_${{matrix.python-version}}_coverage_report
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

@@ -8,18 +8,20 @@ on:
 permissions:
   actions: read
   contents: read
+  copilot-requests: write
 safe-outputs:
   create-pull-request:
     title-prefix: "[docs-improvement] "
     labels: [documentation, automated-pr]
     draft: true
     preserve-branch-name: true
+    recreate-ref: true
     if-no-changes: "ignore"
     base-branch: main
 timeout-minutes: 45
+model: claude-sonnet-5
 engine:
   id: copilot
-  model: gpt-5.3-codex
 ---
 
 # Documentation Continuous Improvement

@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python class designed to use the PurpleAirAPI for requesting sensor(s) data.
+A Python class designed to use the PurpleAirAPI for requesting sensor(s) data.
 Data will be inserted into CSV files.
 
 For best practice from PurpleAir:
@@ -61,7 +61,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDR's.
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param str path_to_save_csv_files_in: A string directory path
                                                  to save files in.
         """
@@ -85,6 +85,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         :param str file_path_and_name: A string of 'file_path_and_name'. i.e
                                        '/path_to_place/file_name.csv'.
+        :return: An open file stream for the CSV file.
+        :rtype: file object
         """
         the_file_stream = open(file_path_and_name, "a")
         return the_file_stream
@@ -105,7 +107,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
-                                             a certain field make sure it is NULL and part
+                                             a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
         """

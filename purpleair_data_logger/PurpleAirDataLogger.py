@@ -2,7 +2,7 @@
 
 """
 Copyright 2023 carlkidcrypto, All rights reserved.
-A python base Data Logger class.
+A Python base Data Logger class.
 """
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPI
@@ -60,6 +60,9 @@ class PurpleAirDataLogger:
         """
         Return the current value of send_request_every_x_seconds.
         This value is how often we send requests to the Purple Air API. (PAA)
+
+        :return: The polling interval in seconds.
+        :rtype: int
         """
 
         return self._send_request_every_x_seconds
@@ -70,6 +73,9 @@ class PurpleAirDataLogger:
         Set the current value of send_request_every_x_seconds.
         This value is how often we send requests to the Purple Air API. (PAA)
         Value shall be greater than or equal to 60. The value is in seconds.
+
+        :param int new_value: The desired polling interval in seconds. Must be >= 60.
+        :raises PurpleAirDataLoggerError: If ``new_value`` is less than 60.
         """
 
         if new_value >= 60:
@@ -86,7 +92,7 @@ class PurpleAirDataLogger:
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
-                                             a certain field make sure it is NULL and part
+                                             a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
         """
@@ -157,6 +163,7 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting local sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
+        :return: None
         """
 
         while True:
@@ -185,6 +192,7 @@ class PurpleAirDataLogger:
                                                         the parameters to send a group sensor request(s).
         :param str paa_local_sensor_request_json_file: The path to a json file containing
                                                         the parameters to send a local sensor request(s).
+        :return: None
         """
 
         # Choose what run method to execute depending on
