@@ -93,6 +93,12 @@ MBPA-025
    Matterbridge SHALL allocate and persist numeric endpoint assignments from
    the plugin's stable endpoint IDs.
 
+MBPA-026
+   When a source sensor name is a MAC address, the plugin SHALL expose its
+   device name as ``purple-air-<last-three-MAC-octets>`` using lowercase,
+   hyphen-separated octets. The plugin SHALL preserve source sensor names that
+   are not MAC addresses.
+
 Resilience and lifecycle
 ------------------------
 

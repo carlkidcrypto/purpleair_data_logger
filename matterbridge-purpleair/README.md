@@ -48,12 +48,14 @@ From the repository root, register the local plugin once and start Matterbridge:
 
 ```bash
 "$HOME/.local/bin/matterbridge" --add ./matterbridge-purpleair
-"$HOME/.local/bin/matterbridge" --bridge
+"$HOME/.local/bin/matterbridge" --bridge --novirtual --nosudo
 ```
 
 If the current directory is already `matterbridge-purpleair`, use `--add .`
-instead. Registration persists, so later starts only need the `--bridge`
-command.
+instead. Registration persists, so later starts only need the second command.
+`--novirtual` prevents controllers from exposing Matterbridge's own restart and
+update switches, while `--nosudo` prevents controller activity from opening an
+interactive privilege prompt.
 
 Matterbridge serves its frontend at `http://localhost:8283` by default. Use the
 frontend or console commissioning code to add the bridge to a Matter fabric.
@@ -68,7 +70,7 @@ use the existing controller's sharing mode to add it to another Matter fabric.
 Windows and WSL commissioning requires a Hyper-V firewall exception for inbound
 Matter traffic. See
 [Windows and WSL troubleshooting](TROUBLESHOOTING-WINDOWS-WSL.md) for the
-verified IPv6, mDNS, firewall, and Home Assistant checks.
+verified IPv6, mDNS, firewall, Home Assistant, and persistent logging checks.
 
 ## Configuration
 
