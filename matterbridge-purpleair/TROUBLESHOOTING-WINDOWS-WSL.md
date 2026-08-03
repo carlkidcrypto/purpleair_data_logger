@@ -146,15 +146,61 @@ already commissioned the bridge.
 Keep the phone on the same LAN, enable Bluetooth, and ensure the Home Assistant
 Matter server can reach the Windows host over IPv6.
 
+### Android succeeds but Home Assistant reports an error
+
+On Android, the commissioning flow can first add Matterbridge to an Android
+Local Fabric and then open a temporary multi-admin window for the Home Assistant
+Matter server. These Matterbridge log entries show that the first stage
+succeeded:
+
+- `addNoc success`
+- `commissioningComplete` with `errorCode: 0`
+- `Server node for Matterbridge commissioned successfully`
+- `openCommissioningWindow`
+
+Home Assistant must then make a second PASE connection and add its own fabric.
+If no second pairing request appears before the temporary window expires, the
+failure is in the handoff from Android to the Home Assistant Matter server, not
+in the initial Matterbridge commissioning.
+
+Check all of the following before retrying:
+
+1. In Home Assistant, open **Settings > System > Network** and set IPv6 on the
+  active adapter to **Automatic** or **Static**, not disabled.
+2. Prefer Home Assistant OS with the official Matter Server app. A custom Matter
+  Server container must use host networking and meet its IPv6 and mDNS
+  requirements.
+3. On Android, set the Home Assistant Companion app's Location permission to
+  **Allow all the time**. The Google Matter UI is in the foreground during the
+  handoff, so **Only while using the app** can prevent the Companion app from
+  reading the Wi-Fi network information it needs.
+4. Keep Android, Home Assistant, and the Windows/WSL host on the same flat LAN
+  without client isolation, VLAN filtering, or multicast optimization.
+
+After this partial success, the original Matterbridge setup code is no longer
+valid because one fabric exists. Remove Matterbridge from Android under
+**Settings > Google > Devices & sharing > Matter devices** if it is listed. If
+that does not remove the fabric, stop Matterbridge and reset commissioning:
+
+```bash
+"$HOME/.local/bin/matterbridge" --reset
+"$HOME/.local/bin/matterbridge" --bridge
+```
+
+The reset removes Matterbridge commissioning fabrics but preserves the plugin
+registration and PurpleAir configuration. Use the newly displayed QR code for
+the next new-device attempt.
+
 ## Symptom guide
 
-| Symptom                                      | Likely cause                              | Check                                                              |
-| -------------------------------------------- | ----------------------------------------- | ------------------------------------------------------------------ |
-| Matterbridge never appears                   | mDNS cannot cross the network boundary    | UDP 5353 listeners, multicast membership, VLAN and Wi-Fi isolation |
-| The code is accepted, then pairing times out | Matter traffic is blocked after discovery | Hyper-V inbound UDP 5540 rule                                      |
-| Home Assistant requests a sharing code       | The already-in-use flow was selected      | Use the new-device flow for first commissioning                    |
-| Matterbridge reports `not commissioned`      | No fabric has completed commissioning     | Expected before the first successful pairing                       |
-| Pairing fails after firewall changes         | Stale WSL or Matterbridge process         | Run `wsl --shutdown`, restart both services, and retry             |
+| Symptom | Likely cause | Check |
+| --- | --- | --- |
+| Matterbridge never appears | mDNS cannot cross the network boundary | UDP 5353 listeners, multicast membership, VLAN and Wi-Fi isolation |
+| The code is accepted, then pairing times out | Matter traffic is blocked after discovery | Hyper-V inbound UDP 5540 rule |
+| Home Assistant requests a sharing code | The already-in-use flow was selected | Use the new-device flow for first commissioning |
+| Matterbridge reports success but Home Assistant reports an error | Android fabric succeeded but the HA Matter server handoff failed | HA IPv6, Matter Server networking, and Companion Location permission |
+| Matterbridge reports `not commissioned` | No fabric has completed commissioning | Expected before the first successful pairing |
+| Pairing fails after firewall changes | Stale WSL or Matterbridge process | Run `wsl --shutdown`, restart both services, and retry |
 
 ## Collect useful diagnostics
 
