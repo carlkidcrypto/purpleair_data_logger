@@ -1,6 +1,6 @@
 # Purple Air Data Logger(s) (PADLs)
 
-A set of data logger(s) that will query PurpleAir sensor(s) for data. That data will then be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, a Grafana Loki instance, or exposed via Prometheus metrics. To use these tools a PurpleAir API key is required. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to.
+A set of data logger(s) that will query PurpleAir sensor(s) for data. That data can be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, or a Grafana Loki instance; exposed as Prometheus metrics; or converted to Matter-shaped device JSON over HTTP. Cloud requests require a PurpleAir API key. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to. Local-network requests use sensor IPv4 addresses instead.
 
 | [![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml) |
 | --------------- | --------------- | --------------- |
@@ -243,6 +243,53 @@ Using it with multiple sensor requests...
 ```bash
 python3 -m purpleair_data_logger.PurpleAirPrometheusDataLogger -prometheus_port 9760 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
 ```
+
+## Usage PurpleAirMatterDataLogger.py
+
+`PurpleAirMatterDataLogger` converts PurpleAir readings to Matter 1.5.1 Air Quality Sensor-shaped JSON and serves the latest readings through an embedded HTTP API. It does not implement Matter transport, discovery, commissioning, fabrics, or certification.
+
+```text
+usage: PurpleAirMatterDataLogger.py [-h] [-paa_read_key PAA_READ_KEY]
+                                    [-paa_write_key PAA_WRITE_KEY]
+                                    [-paa_single_sensor_request_json_file FILE]
+                                    [-paa_multiple_sensor_request_json_file FILE]
+                                    [-paa_group_sensor_request_json_file FILE]
+                                    [-paa_local_sensor_request_json_file FILE]
+                                    [--http-host HTTP_HOST]
+                                    [--http-port HTTP_PORT] [--matter-only]
+                                    [-save_file_path SAVE_FILE_PATH]
+```
+
+Run the continuous HTTP service with the Matter sample configuration:
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirMatterDataLogger -paa_read_key YOUR_READ_KEY -paa_multiple_sensor_request_json_file ./sample_json_config_files/sample_matter_request_json_file.json --matter-only
+```
+
+Run against sensors on the local network without a cloud API key:
+
+```bash
+python3 -m purpleair_data_logger.PurpleAirMatterDataLogger -paa_local_sensor_request_json_file ./sample_json_config_files/sample_local_sensor_request_json_file.json --matter-only
+```
+
+The service binds to `127.0.0.1:9855` by default and provides:
+
+- `GET /` or `GET /health` for service status and converted sensor count.
+- `GET /matter/sensors` for all current Matter-shaped devices.
+- `GET /matter/sensor/<sensor_index>` for one current device.
+
+Use `--http-host` and `--http-port` to override the bind address. Binding to `0.0.0.0` exposes the unauthenticated, unencrypted HTTP API to reachable networks. The compatibility option `-save_file_path` is ignored because Matter output is served over HTTP.
+
+For one-shot conversion without an HTTP server or polling loop, use the Python API:
+
+```python
+from purpleair_data_logger.PurpleAirMatterDataLogger import PurpleAirMatterDataLogger
+
+matter_logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="YOUR_READ_KEY")
+devices = matter_logger.run_once([123456])
+```
+
+Continuous cloud configuration requires `sensor_indexes`; local configuration requires `sensor_ip_list`. Only one JSON configuration file may be supplied. Poll intervals below 60 seconds are clamped to 60 seconds. Individual polling failures retain the last-known-good device reading.
 
 ## Sample JSON Configuration File(s)
 

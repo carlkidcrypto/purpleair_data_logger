@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="purpleair_data_logger" href="modules.html" /> 
+    <link rel="next" title="Software requirements" href="Requirements.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -43,6 +43,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="Requirements.html">Software requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">purpleair_data_logger</a></li>
 </ul>
 
@@ -75,12 +77,41 @@
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="Requirements.html">Software requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#purpose-and-conventions">Purpose and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#shared-data-logger-requirements">Shared data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#configuration-requirements">Configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#current-implementation-constraints">Current implementation constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#csv-data-logger-requirements">CSV data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#sqlite-data-logger-requirements">SQLite data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#postgresql-data-logger-requirements">PostgreSQL data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#loki-data-logger-requirements">Loki data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#prometheus-data-logger-requirements">Prometheus data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Requirements.html#matter-data-logger-requirements">Matter data logger requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#architecture">Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#plugin-responsibilities">Plugin responsibilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#matter-data-mapping">Matter data mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#companion-project">Companion project</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#running-the-data-source">Running the data source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#installing-and-pairing">Installing and pairing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#network-requirements">Network requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#compatibility-and-certification">Compatibility and certification</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#acceptance-criteria">Acceptance criteria</a></li>
+<li class="toctree-l2"><a class="reference internal" href="JSONToMatterBridge.html#references">References</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">purpleair_data_logger</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html">PurpleAirMatterDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html">PurpleAirMatterDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
@@ -104,7 +135,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="modules.html" class="btn btn-neutral float-right" title="purpleair_data_logger" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="Requirements.html" class="btn btn-neutral float-right" title="Software requirements" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

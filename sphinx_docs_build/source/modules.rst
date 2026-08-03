@@ -9,6 +9,8 @@ purpleair_data_logger
    PurpleAirDataLogger
    PurpleAirDataLoggerHelpers
    PurpleAirLokiDataLogger
+   PurpleAirMatterDataLogger
+   PurpleAirMatterDataLoggerConstants
    PurpleAirPrometheusDataLogger
    PurpleAirPSQLDataLogger
    PurpleAirPSQLQueryStatements

@@ -1,0 +1,18 @@
+{
+    "poll_interval_seconds": 65,
+    "http_port": 9855,
+    "http_host": "0.0.0.0",
+    "matter_only": true,
+    "sensor_indexes": [
+        123456,
+        789012
+    ],
+    "sensor_names": {
+        "123456": "Backyard Sensor",
+        "789012": "Garage Sensor"
+    },
+    "read_keys": {
+        "123456": "YOUR_SENSOR_READ_KEY_A",
+        "789012": "YOUR_SENSOR_READ_KEY_B"
+    }
+}

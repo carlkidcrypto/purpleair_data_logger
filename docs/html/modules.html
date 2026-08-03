@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="PurpleAirCSVDataLogger module" href="PurpleAirCSVDataLogger.html" />
-    <link rel="prev" title="Welcome to PurpleAir Data Logger(s)’s documentation!" href="index.html" /> 
+    <link rel="prev" title="JSON to Matter bridge" href="JSONToMatterBridge.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -44,12 +44,16 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Requirements.html">Software requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">purpleair_data_logger</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLogger.html">PurpleAirDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html">PurpleAirMatterDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html">PurpleAirMatterDataLoggerConstants module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
@@ -143,6 +147,35 @@
 </li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirMatterDataLogger.html">PurpleAirMatterDataLogger module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#continuous-http-service">Continuous HTTP service</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#one-shot-conversion">One-shot conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#http-api">HTTP API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#security">Security</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html#module-PurpleAirMatterDataLogger">Python API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirMatterDataLogger.html#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="PurpleAirMatterDataLogger.html#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.run_once"><code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger.run_once()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="PurpleAirMatterDataLogger.html#PurpleAirMatterDataLogger.PurpleAirMatterDataLogger.validate_parameters_and_run"><code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger.validate_parameters_and_run()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="PurpleAirMatterDataLogger.html#PurpleAirMatterDataLogger.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html">PurpleAirMatterDataLoggerConstants module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.HEALTH_PATH"><code class="docutils literal notranslate"><span class="pre">HEALTH_PATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.MATTER_ALL_SENSORS_PATH"><code class="docutils literal notranslate"><span class="pre">MATTER_ALL_SENSORS_PATH</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.MATTER_DATA_LOGGER_DEFAULT_HOST"><code class="docutils literal notranslate"><span class="pre">MATTER_DATA_LOGGER_DEFAULT_HOST</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.MATTER_DATA_LOGGER_DEFAULT_PORT"><code class="docutils literal notranslate"><span class="pre">MATTER_DATA_LOGGER_DEFAULT_PORT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.MATTER_DATA_LOGGER_LOG_LEVEL"><code class="docutils literal notranslate"><span class="pre">MATTER_DATA_LOGGER_LOG_LEVEL</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.MATTER_SENSOR_PATH_PREFIX"><code class="docutils literal notranslate"><span class="pre">MATTER_SENSOR_PATH_PREFIX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.STATION_DATA_TIME_STAMP_METRIC_NAME"><code class="docutils literal notranslate"><span class="pre">STATION_DATA_TIME_STAMP_METRIC_NAME</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html#PurpleAirMatterDataLoggerConstants.STATION_SENSOR_COUNT_METRIC_NAME"><code class="docutils literal notranslate"><span class="pre">STATION_SENSOR_COUNT_METRIC_NAME</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger"><code class="docutils literal notranslate"><span class="pre">PurpleAirPrometheusDataLogger</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html#PurpleAirPrometheusDataLogger.PurpleAirPrometheusDataLogger.store_sensor_data"><code class="docutils literal notranslate"><span class="pre">PurpleAirPrometheusDataLogger.store_sensor_data()</span></code></a></li>
@@ -221,7 +254,7 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PurpleAir Data Logger(s)’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="JSONToMatterBridge.html" class="btn btn-neutral float-left" title="JSON to Matter bridge" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="PurpleAirCSVDataLogger.html" class="btn btn-neutral float-right" title="PurpleAirCSVDataLogger module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
