@@ -146,6 +146,51 @@ already commissioned the bridge.
 Keep the phone on the same LAN, enable Bluetooth, and ensure the Home Assistant
 Matter server can reach the Windows host over IPv6.
 
+### Show a pairing code again
+
+An uncommissioned Matterbridge prints its QR code and manual setup code during
+startup and shows them in the frontend at `http://localhost:8283`. Keep setup
+codes private.
+
+After the bridge joins a fabric, restarting it does not display the original
+first-commissioning code. To add the commissioned bridge to another controller,
+open a temporary sharing or multi-admin window from its current controller and
+use the temporary code that controller provides.
+
+If the only fabric is a failed Android Local Fabric handoff and the bridge must
+be treated as new again:
+
+1. Remove Matterbridge from **Settings > Google > Devices & sharing > Matter
+   devices** if Android lists it.
+2. Stop the running Matterbridge process.
+3. Reset commissioning and restart:
+
+```bash
+"$HOME/.local/bin/matterbridge" --reset
+"$HOME/.local/bin/matterbridge" --bridge
+```
+
+4. Confirm startup says `not commissioned` and publishes a commissionable
+   `_matterc._udp.local` service. Use the newly displayed code, not an older
+   screenshot.
+
+Matterbridge 3.10.3 can restore the old fabric from its storage backup after
+`--reset`. If startup still says `already commissioned`, use the clean fallback
+below. `--factoryreset` removes Matterbridge's internal storage, plugin
+registrations, configuration, fabrics, and backups, so record the plugin path
+and configuration first:
+
+```bash
+"$HOME/.local/bin/matterbridge" --factoryreset
+"$HOME/.local/bin/matterbridge" \
+  --add /absolute/path/to/purpleair_data_logger/matterbridge-purpleair
+"$HOME/.local/bin/matterbridge" --bridge
+```
+
+Restore any non-default plugin settings after re-registration. A successful
+clean fallback says `not commissioned`, advertises `_matterc._udp.local`, and
+displays a new QR and manual pairing code.
+
 ### Android succeeds but Home Assistant reports an error
 
 On Android, the commissioning flow can first add Matterbridge to an Android
@@ -166,41 +211,33 @@ in the initial Matterbridge commissioning.
 Check all of the following before retrying:
 
 1. In Home Assistant, open **Settings > System > Network** and set IPv6 on the
-  active adapter to **Automatic** or **Static**, not disabled.
+   active adapter to **Automatic** or **Static**, not disabled.
 2. Prefer Home Assistant OS with the official Matter Server app. A custom Matter
-  Server container must use host networking and meet its IPv6 and mDNS
-  requirements.
+   Server container must use host networking and meet its IPv6 and mDNS
+   requirements.
 3. On Android, set the Home Assistant Companion app's Location permission to
-  **Allow all the time**. The Google Matter UI is in the foreground during the
-  handoff, so **Only while using the app** can prevent the Companion app from
-  reading the Wi-Fi network information it needs.
+   **Allow all the time**. The Google Matter UI is in the foreground during the
+   handoff, so **Only while using the app** can prevent the Companion app from
+   reading the Wi-Fi network information it needs.
 4. Keep Android, Home Assistant, and the Windows/WSL host on the same flat LAN
-  without client isolation, VLAN filtering, or multicast optimization.
+   without client isolation, VLAN filtering, or multicast optimization.
 
-After this partial success, the original Matterbridge setup code is no longer
-valid because one fabric exists. Remove Matterbridge from Android under
-**Settings > Google > Devices & sharing > Matter devices** if it is listed. If
-that does not remove the fabric, stop Matterbridge and reset commissioning:
-
-```bash
-"$HOME/.local/bin/matterbridge" --reset
-"$HOME/.local/bin/matterbridge" --bridge
-```
-
-The reset removes Matterbridge commissioning fabrics but preserves the plugin
-registration and PurpleAir configuration. Use the newly displayed QR code for
-the next new-device attempt.
+After this partial success, the original setup code is no longer valid because
+one fabric exists. Follow [Show a pairing code again](#show-a-pairing-code-again)
+for cleanup and use the newly displayed code for the next new-device attempt.
 
 ## Symptom guide
 
-| Symptom | Likely cause | Check |
-| --- | --- | --- |
-| Matterbridge never appears | mDNS cannot cross the network boundary | UDP 5353 listeners, multicast membership, VLAN and Wi-Fi isolation |
-| The code is accepted, then pairing times out | Matter traffic is blocked after discovery | Hyper-V inbound UDP 5540 rule |
-| Home Assistant requests a sharing code | The already-in-use flow was selected | Use the new-device flow for first commissioning |
-| Matterbridge reports success but Home Assistant reports an error | Android fabric succeeded but the HA Matter server handoff failed | HA IPv6, Matter Server networking, and Companion Location permission |
-| Matterbridge reports `not commissioned` | No fabric has completed commissioning | Expected before the first successful pairing |
-| Pairing fails after firewall changes | Stale WSL or Matterbridge process | Run `wsl --shutdown`, restart both services, and retry |
+| Symptom                                                           | Likely cause                                                     | Check                                                                 |
+| ----------------------------------------------------------------- | ---------------------------------------------------------------- | --------------------------------------------------------------------- |
+| Matterbridge never appears                                        | mDNS cannot cross the network boundary                           | UDP 5353 listeners, multicast membership, VLAN and Wi-Fi isolation    |
+| The code is accepted, then pairing times out                      | Matter traffic is blocked after discovery                        | Hyper-V inbound UDP 5540 rule                                         |
+| Home Assistant requests a sharing code                            | The already-in-use flow was selected                             | Use the new-device flow for first commissioning                       |
+| Matterbridge reports success but Home Assistant reports an error  | Android fabric succeeded but the HA Matter server handoff failed | HA IPv6, Matter Server networking, and Companion Location permission  |
+| Matterbridge reports `not commissioned`                           | No fabric has completed commissioning                            | Expected before the first successful pairing                          |
+| Restart does not show a setup code                                | Matterbridge is already commissioned                             | Share from the current controller, or reset stale commissioning state |
+| `--reset` completes but startup still says `already commissioned` | Matterbridge restored its storage backup                         | Use the documented factory-reset and re-registration fallback         |
+| Pairing fails after firewall changes                              | Stale WSL or Matterbridge process                                | Run `wsl --shutdown`, restart both services, and retry                |
 
 ## Collect useful diagnostics
 

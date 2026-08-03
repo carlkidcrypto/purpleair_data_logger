@@ -14,6 +14,8 @@ endpoints.
 - LAN IPv6 and mDNS connectivity for Matter commissioning
 
 Normative behavior is specified in [Requirements.rst](Requirements.rst).
+See [Platforms tested](PLATFORMS-TESTED.md) for the current Matter controller
+compatibility results.
 
 ## Development
 
