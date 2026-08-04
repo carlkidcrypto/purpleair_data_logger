@@ -6,16 +6,16 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) V1.4.1 documentation</title>
+  <title>PurpleAirDataLogger module &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
 
   
       <script src="_static/jquery.js?v=5d32c60e"></script>
       <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-      <script src="_static/documentation_options.js?v=4a74b673"></script>
-      <script src="_static/doctools.js?v=9bcbadda"></script>
-      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/documentation_options.js?v=387b12dc"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -44,6 +44,8 @@
         </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="Requirements.html">Software requirements</a></li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">purpleair_data_logger</a><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLogger.html">PurpleAirCSVDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirCSVDataLoggerConstants.html">PurpleAirCSVDataLoggerConstants module</a></li>
@@ -58,6 +60,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirDataLoggerHelpers.html">PurpleAirDataLoggerHelpers module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirLokiDataLogger.html">PurpleAirLokiDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLogger.html">PurpleAirMatterDataLogger module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirMatterDataLoggerConstants.html">PurpleAirMatterDataLoggerConstants module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PurpleAirPrometheusDataLogger.html">PurpleAirPrometheusDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLDataLogger.html">PurpleAirPSQLDataLogger module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirPSQLQueryStatements.html">PurpleAirPSQLQueryStatements module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="PurpleAirSQLiteDataLogger.html">PurpleAirSQLiteDataLogger module</a></li>
@@ -94,19 +100,27 @@
   <section id="module-PurpleAirDataLogger">
 <span id="purpleairdatalogger-module"></span><h1>PurpleAirDataLogger module<a class="headerlink" href="#module-PurpleAirDataLogger" title="Link to this heading"></a></h1>
 <p>Copyright 2023 carlkidcrypto, All rights reserved.
-A python base Data Logger class.</p>
+A Python base Data Logger class.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger">
-<em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PurpleAirApiReadKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiWriteKey</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PurpleAirApiIpv4Address</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>The Base Data Logger class. Will define common methods used by other data loggers. For
 example, PSQLDataLogger, CSVDataLogger, or SQLiteDataLogger. Inheritors of this class
 will only need to define their own ‘store_sensor_data’ method.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds">
-<em class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send_request_every_x_seconds</span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">send_request_every_x_seconds</span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.send_request_every_x_seconds" title="Link to this definition"></a></dt>
 <dd><p>Return the current value of send_request_every_x_seconds.
 This value is how often we send requests to the Purple Air API. (PAA)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The polling interval in seconds.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>int</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="py method">
@@ -117,9 +131,9 @@ This value is how often we send requests to the Purple Air API. (PAA)</p>
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><p><strong>single_sensor_data_dict</strong> (<em>dict</em>) – A python dictionary containing all fields
 for insertion. If a sensor doesn’t support
-a certain field make sure it is NULL and part
+a certain field make sure it is <code class="docutils literal notranslate"><span class="pre">None</span></code> and part
 of the dictionary. This method does no type
-or error checking. That is upto the caller.</p>
+or error checking. That is up to the caller.</p>
 </dd>
 </dl>
 </dd></dl>
@@ -128,19 +142,22 @@ or error checking. That is upto the caller.</p>
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLogger.validate_parameters_and_run">
 <span class="sig-name descname"><span class="pre">validate_parameters_and_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">paa_multiple_sensor_request_json_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_single_sensor_request_json_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_group_sensor_request_json_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paa_local_sensor_request_json_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLogger.validate_parameters_and_run" title="Link to this definition"></a></dt>
 <dd><p>A method to choose what run method to execute based on what config file is being used.
-This shall be considered the main entry point for and PurpleAirDataLogger.</p>
+This shall be considered the main entry point for any PurpleAirDataLogger.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>paa_multiple_sensor_request_json_file</strong> (<em>str</em>) – The path to a json file containing
-the parameters to send a single sensor request(s).</p></li>
-<li><p><strong>paa_single_sensor_request_json_file</strong> (<em>str</em>) – The path to a json file containing
 the parameters to send a multiple sensor request(s).</p></li>
+<li><p><strong>paa_single_sensor_request_json_file</strong> (<em>str</em>) – The path to a json file containing
+the parameters to send a single sensor request(s).</p></li>
 <li><p><strong>paa_group_sensor_request_json_file</strong> (<em>str</em>) – The path to a json file containing
 the parameters to send a group sensor request(s).</p></li>
 <li><p><strong>paa_local_sensor_request_json_file</strong> (<em>str</em>) – The path to a json file containing
 the parameters to send a local sensor request(s).</p></li>
 </ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,7 +166,7 @@ the parameters to send a local sensor request(s).</p></li>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="PurpleAirDataLogger.PurpleAirDataLoggerError">
-<em class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLoggerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLoggerError" title="Link to this definition"></a></dt>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">PurpleAirDataLogger.</span></span><span class="sig-name descname"><span class="pre">PurpleAirDataLoggerError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message_string</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#PurpleAirDataLogger.PurpleAirDataLoggerError" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></p>
 <p>Custom Exception for our PurpleAirDataLogger class.</p>
 </dd></dl>

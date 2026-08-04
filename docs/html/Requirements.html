@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Software requirements &mdash; PurpleAir Data Logger(s) v1.5.0a1 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=387b12dc"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="JSON to Matter bridge" href="JSONToMatterBridge.html" />
+    <link rel="prev" title="Welcome to PurpleAir Data Logger(s)’s documentation!" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            PurpleAir Data Logger(s)
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Software requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#purpose-and-conventions">Purpose and conventions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#shared-data-logger-requirements">Shared data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration-requirements">Configuration requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#current-implementation-constraints">Current implementation constraints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#csv-data-logger-requirements">CSV data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#sqlite-data-logger-requirements">SQLite data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#postgresql-data-logger-requirements">PostgreSQL data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#loki-data-logger-requirements">Loki data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prometheus-data-logger-requirements">Prometheus data logger requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#matter-data-logger-requirements">Matter data logger requirements</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="JSONToMatterBridge.html">JSON to Matter bridge</a></li>
+<li class="toctree-l1"><a class="reference internal" href="modules.html">purpleair_data_logger</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">PurpleAir Data Logger(s)</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Software requirements</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/Requirements.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="software-requirements">
+<h1>Software requirements<a class="headerlink" href="#software-requirements" title="Link to this heading"></a></h1>
+<section id="purpose-and-conventions">
+<h2>Purpose and conventions<a class="headerlink" href="#purpose-and-conventions" title="Link to this heading"></a></h2>
+<p>This document defines the externally observable requirements for the PurpleAir
+data logger modules. Each requirement has a stable identifier for use in tests,
+issues, and change reviews. <code class="docutils literal notranslate"><span class="pre">Shall</span></code> indicates required behavior. CLI option
+names and JSON field names are case-sensitive.</p>
+</section>
+<section id="shared-data-logger-requirements">
+<h2>Shared data logger requirements<a class="headerlink" href="#shared-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[GEN-001]</strong> The software shall support Python 3.10 through Python 3.13.</p>
+<p><strong>[GEN-002]</strong> Each executable data logger module shall support invocation with
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">purpleair_data_logger.&lt;ModuleName&gt;</span></code>.</p>
+<p><strong>[GEN-003]</strong> Each executable data logger module shall provide <code class="docutils literal notranslate"><span class="pre">-h</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--help</span></code> options that print usage information without starting a polling loop.</p>
+<p><strong>[GEN-004]</strong> The package initializer <code class="docutils literal notranslate"><span class="pre">purpleair_data_logger/__init__.py</span></code> shall
+remain free of executable-module imports so module invocation does not emit a
+duplicate-module <code class="docutils literal notranslate"><span class="pre">RuntimeWarning</span></code>.</p>
+<p><strong>[GEN-005]</strong> The common CLI parser shall provide these optional string options:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-paa_read_key</span></code> for the PurpleAir cloud Read API key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-paa_write_key</span></code> for the PurpleAir cloud Write API key.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-paa_single_sensor_request_json_file</span></code> for a single-sensor configuration.</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">-paa_multiple_sensor_request_json_file</span></code> for a multiple-sensor</dt><dd><p>configuration.</p>
+</dd>
+</dl>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-paa_group_sensor_request_json_file</span></code> for a group configuration.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-paa_local_sensor_request_json_file</span></code> for a local-network configuration.</p></li>
+</ul>
+<p><strong>[GEN-006]</strong> A cloud request shall initialize the PurpleAir API client with the
+provided Read and Write API keys.</p>
+<p><strong>[GEN-007]</strong> A supported local-network request shall initialize the PurpleAir
+API client with the IPv4 addresses in <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> and shall not require a
+cloud API key.</p>
+<p><strong>[GEN-008]</strong> Storage logger modules shall normalize every sensor record to the
+complete accepted PurpleAir field set before passing the record to the output
+sink, using default values for fields absent from the response.</p>
+<p><strong>[GEN-009]</strong> Storage logger modules shall poll continuously until interrupted
+or until an unrecoverable error terminates the process.</p>
+</section>
+<section id="configuration-requirements">
+<h2>Configuration requirements<a class="headerlink" href="#configuration-requirements" title="Link to this heading"></a></h2>
+<p><strong>[CFG-001]</strong> A storage logger invocation shall provide exactly one of the four
+common JSON configuration options.</p>
+<p><strong>[CFG-002]</strong> A storage logger shall raise <code class="docutils literal notranslate"><span class="pre">PurpleAirDataLoggerError</span></code> when no
+configuration option is provided or when more than one configuration option is
+provided.</p>
+<p><strong>[CFG-003]</strong> A single-sensor configuration shall contain
+<code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">sensor_index</span></code>, <code class="docutils literal notranslate"><span class="pre">read_key</span></code>, and <code class="docutils literal notranslate"><span class="pre">fields</span></code>.</p>
+<p><strong>[CFG-004]</strong> A multiple-sensor configuration shall contain
+<code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code> and the PurpleAir multiple-sensor request fields
+<code class="docutils literal notranslate"><span class="pre">fields</span></code>, <code class="docutils literal notranslate"><span class="pre">location_type</span></code>, <code class="docutils literal notranslate"><span class="pre">read_keys</span></code>, <code class="docutils literal notranslate"><span class="pre">show_only</span></code>,
+<code class="docutils literal notranslate"><span class="pre">modified_since</span></code>, <code class="docutils literal notranslate"><span class="pre">max_age</span></code>, <code class="docutils literal notranslate"><span class="pre">nwlng</span></code>, <code class="docutils literal notranslate"><span class="pre">nwlat</span></code>, <code class="docutils literal notranslate"><span class="pre">selng</span></code>, and <code class="docutils literal notranslate"><span class="pre">selat</span></code>.</p>
+<p><strong>[CFG-005]</strong> A group configuration shall contain
+<code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code>, <code class="docutils literal notranslate"><span class="pre">sensor_group_name</span></code>, <code class="docutils literal notranslate"><span class="pre">add_sensors_to_group</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sensor_index_list</span></code>, and all request fields listed in <strong>[CFG-004]</strong>.</p>
+<p><strong>[CFG-006]</strong> When <code class="docutils literal notranslate"><span class="pre">add_sensors_to_group</span></code> is true, the group logger shall add
+each sensor in <code class="docutils literal notranslate"><span class="pre">sensor_index_list</span></code> to the selected group and shall tolerate a
+sensor that is already a member of that group.</p>
+<p><strong>[CFG-007]</strong> A local-network configuration shall contain <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> as
+a list of IPv4-address strings and <code class="docutils literal notranslate"><span class="pre">poll_interval_seconds</span></code> as the polling
+delay in seconds.</p>
+<p><strong>[CFG-008]</strong> Cloud single-, multiple-, and group-sensor polling intervals shall
+be at least 60 seconds; a lower value shall raise
+<code class="docutils literal notranslate"><span class="pre">PurpleAirDataLoggerError</span></code>.</p>
+<p><strong>[CFG-009]</strong> Each completed storage polling cycle shall wait for the configured
+polling interval before beginning the next cycle.</p>
+</section>
+<section id="current-implementation-constraints">
+<h2>Current implementation constraints<a class="headerlink" href="#current-implementation-constraints" title="Link to this heading"></a></h2>
+<p>This section is informative rather than normative. The common parser presents
+<code class="docutils literal notranslate"><span class="pre">-paa_local_sensor_request_json_file</span></code> to every logger. The CSV, Loki, and
+Matter CLIs initialize their PurpleAir API clients from <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> and
+support that mode. The SQLite, PostgreSQL, and Prometheus CLIs do not currently
+pass <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> to their API clients, so local-network operation is not
+supported by those three module CLIs.</p>
+</section>
+<section id="csv-data-logger-requirements">
+<h2>CSV data logger requirements<a class="headerlink" href="#csv-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[CSV-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirCSVDataLogger</span></code> shall require the CLI option
+<code class="docutils literal notranslate"><span class="pre">-save_file_path</span></code>.</p>
+<p><strong>[CSV-002]</strong> The CSV logger shall support single-sensor, multiple-sensor,
+group-sensor, and local-network configurations.</p>
+<p><strong>[CSV-003]</strong> For local-network operation, the CSV CLI shall read
+<code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> before constructing <code class="docutils literal notranslate"><span class="pre">PurpleAirCSVDataLogger</span></code>.</p>
+<p><strong>[CSV-004]</strong> The CSV logger shall create <code class="docutils literal notranslate"><span class="pre">-save_file_path</span></code> when the directory
+does not exist.</p>
+<p><strong>[CSV-005]</strong> The CSV logger shall maintain separate files for station and
+status, environmental, miscellaneous, PM1.0, PM2.5, PM2.5 pseudo-average,
+PM10.0, particle-count, and ThingSpeak field groups.</p>
+<p><strong>[CSV-006]</strong> The CSV logger shall append sensor records to the field-group
+files and shall flush and close every file after each stored record.</p>
+<p><strong>[CSV-007]</strong> The CSV logger shall write one header row per field-group file for
+each logger process before writing its first sensor record.</p>
+<p><strong>[CSV-008]</strong> A CSV <code class="docutils literal notranslate"><span class="pre">UnicodeEncodeError</span></code> shall increment the logger’s data
+error counter and shall report the failure without preventing the file streams
+from being closed.</p>
+</section>
+<section id="sqlite-data-logger-requirements">
+<h2>SQLite data logger requirements<a class="headerlink" href="#sqlite-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[SQLITE-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirSQLiteDataLogger</span></code> shall require the CLI option
+<code class="docutils literal notranslate"><span class="pre">-db_name</span></code> containing the path and file name of the SQLite database.</p>
+<p><strong>[SQLITE-002]</strong> The SQLite CLI shall support cloud single-sensor,
+multiple-sensor, and group-sensor configurations.</p>
+<p><strong>[SQLITE-003]</strong> The SQLite logger shall create its field-group tables when they
+do not already exist.</p>
+<p><strong>[SQLITE-004]</strong> The SQLite logger shall store each normalized sensor record in
+the station and status, environmental, miscellaneous, PM1.0, PM2.5, PM2.5
+pseudo-average, PM10.0, particle-count, and ThingSpeak tables.</p>
+<p><strong>[SQLITE-005]</strong> The SQLite logger shall commit the database transaction after
+storing a sensor record in all field-group tables.</p>
+</section>
+<section id="postgresql-data-logger-requirements">
+<h2>PostgreSQL data logger requirements<a class="headerlink" href="#postgresql-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[PSQL-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirPSQLDataLogger</span></code> shall require <code class="docutils literal notranslate"><span class="pre">-db_usr</span></code> and <code class="docutils literal notranslate"><span class="pre">-db</span></code>
+CLI options.</p>
+<p><strong>[PSQL-002]</strong> The PostgreSQL CLI shall accept <code class="docutils literal notranslate"><span class="pre">-db_host</span></code> with a default of
+<code class="docutils literal notranslate"><span class="pre">localhost</span></code>, <code class="docutils literal notranslate"><span class="pre">-db_port</span></code> with a default of <code class="docutils literal notranslate"><span class="pre">5432</span></code>, and optional <code class="docutils literal notranslate"><span class="pre">-db_pwd</span></code>.</p>
+<p><strong>[PSQL-003]</strong> The PostgreSQL CLI shall support cloud single-sensor,
+multiple-sensor, and group-sensor configurations.</p>
+<p><strong>[PSQL-004]</strong> The PostgreSQL logger shall connect with <code class="docutils literal notranslate"><span class="pre">pg8000</span></code> using the
+provided user, host, database, port, and password values.</p>
+<p><strong>[PSQL-005]</strong> On initialization, the PostgreSQL logger shall create missing
+field-group tables, convert them to TimescaleDB hypertables, configure
+compression policies, configure continuous aggregates, and prepare insertion
+statements.</p>
+<p><strong>[PSQL-006]</strong> The PostgreSQL logger shall store each normalized sensor record
+in all field-group tables and commit the transaction after the record is stored.</p>
+<p><strong>[PSQL-007]</strong> Unix epoch values written to PostgreSQL timestamp columns shall be
+converted to UTC timestamps; <code class="docutils literal notranslate"><span class="pre">None</span></code> timestamp values shall remain <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
+<p><strong>[PSQL-008]</strong> The optional <code class="docutils literal notranslate"><span class="pre">-db_drop_all_tables</span></code> flag shall display a
+destructive-operation warning and require interactive confirmation before
+dropping tables.</p>
+<p><strong>[PSQL-009]</strong> When table deletion is confirmed with <code class="docutils literal notranslate"><span class="pre">yes</span></code>, the PostgreSQL
+logger shall run the drop statements, commit the transaction, and exit without
+starting the polling loop.</p>
+<p><strong>[PSQL-010]</strong> When table deletion is declined with <code class="docutils literal notranslate"><span class="pre">no</span></code>, the PostgreSQL logger
+shall exit without dropping tables or starting the polling loop.</p>
+</section>
+<section id="loki-data-logger-requirements">
+<h2>Loki data logger requirements<a class="headerlink" href="#loki-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[LOKI-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirLokiDataLogger</span></code> shall require the CLI option
+<code class="docutils literal notranslate"><span class="pre">-loki_url</span></code>.</p>
+<p><strong>[LOKI-002]</strong> The Loki CLI shall accept optional <code class="docutils literal notranslate"><span class="pre">-loki_usr</span></code> and <code class="docutils literal notranslate"><span class="pre">-loki_pwd</span></code>
+options for HTTP Basic authentication.</p>
+<p><strong>[LOKI-003]</strong> The Loki logger shall support single-sensor, multiple-sensor,
+group-sensor, and local-network configurations.</p>
+<p><strong>[LOKI-004]</strong> For local-network operation, the Loki CLI shall read
+<code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> before constructing <code class="docutils literal notranslate"><span class="pre">PurpleAirLokiDataLogger</span></code>.</p>
+<p><strong>[LOKI-005]</strong> The Loki logger shall send data to
+<code class="docutils literal notranslate"><span class="pre">&lt;loki_url&gt;/loki/api/v1/push</span></code> and shall avoid adding a duplicate slash when the
+base URL ends in <code class="docutils literal notranslate"><span class="pre">/</span></code>.</p>
+<p><strong>[LOKI-006]</strong> The Loki logger shall use a 10-second HTTP request timeout.</p>
+<p><strong>[LOKI-007]</strong> The Loki logger shall use Basic authentication only when both a
+username and password are provided.</p>
+<p><strong>[LOKI-008]</strong> Each sensor record shall produce separate Loki streams for the
+nine PurpleAir field groups, labeled with <code class="docutils literal notranslate"><span class="pre">sensor_index</span></code> and <code class="docutils literal notranslate"><span class="pre">data_group</span></code>.</p>
+<p><strong>[LOKI-009]</strong> Loki event timestamps shall be represented as decimal-string Unix
+timestamps in nanoseconds.</p>
+<p><strong>[LOKI-010]</strong> A Loki push failure shall increment the data error counter and
+report the failure without terminating the polling loop.</p>
+</section>
+<section id="prometheus-data-logger-requirements">
+<h2>Prometheus data logger requirements<a class="headerlink" href="#prometheus-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[PROM-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirPrometheusDataLogger</span></code> shall accept the optional
+integer CLI option <code class="docutils literal notranslate"><span class="pre">-prometheus_port</span></code> and shall default it to <code class="docutils literal notranslate"><span class="pre">9760</span></code>.</p>
+<p><strong>[PROM-002]</strong> The Prometheus CLI shall support cloud single-sensor,
+multiple-sensor, and group-sensor configurations.</p>
+<p><strong>[PROM-003]</strong> The Prometheus logger shall start an HTTP metrics server on the
+configured port during logger initialization.</p>
+<p><strong>[PROM-004]</strong> The Prometheus logger shall expose supported numeric PurpleAir
+fields as Gauges labeled by <code class="docutils literal notranslate"><span class="pre">sensor_index</span></code>.</p>
+<p><strong>[PROM-005]</strong> The Prometheus logger shall convert numeric values to floating
+point before assigning Gauge values.</p>
+<p><strong>[PROM-006]</strong> A missing or non-numeric PurpleAir value shall be represented as
+<code class="docutils literal notranslate"><span class="pre">NaN</span></code> rather than terminating metric collection.</p>
+<p><strong>[PROM-007]</strong> The Python API shall permit a caller-provided
+<code class="docutils literal notranslate"><span class="pre">CollectorRegistry</span></code> and shall default to the global Prometheus registry.</p>
+</section>
+<section id="matter-data-logger-requirements">
+<h2>Matter data logger requirements<a class="headerlink" href="#matter-data-logger-requirements" title="Link to this heading"></a></h2>
+<p><strong>[MAT-001]</strong> <code class="docutils literal notranslate"><span class="pre">PurpleAirMatterDataLogger</span></code> shall provide a module CLI through
+<code class="docutils literal notranslate"><span class="pre">main</span></code> and an <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">&quot;__main__&quot;</span></code> guard.</p>
+<p><strong>[MAT-002]</strong> The Matter CLI shall accept optional <code class="docutils literal notranslate"><span class="pre">--http-host</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--http-port</span></code> options with defaults of <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> and <code class="docutils literal notranslate"><span class="pre">9855</span></code>.</p>
+<p><strong>[MAT-003]</strong> The Matter CLI shall accept <code class="docutils literal notranslate"><span class="pre">--matter-only</span></code> as a Boolean flag.</p>
+<p><strong>[MAT-004]</strong> The Matter CLI shall accept <code class="docutils literal notranslate"><span class="pre">-save_file_path</span></code> for compatibility,
+shall warn when it is supplied, and shall not write Matter output to that path.</p>
+<p><strong>[MAT-005]</strong> Continuous cloud operation shall require a non-empty
+<code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code> list supplied by the selected JSON configuration or by the
+Python constructor.</p>
+<p><strong>[MAT-006]</strong> Continuous local operation shall require a non-empty
+<code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> and shall initialize the PurpleAir API client with those
+addresses before polling.</p>
+<p><strong>[MAT-007]</strong> The Matter logger shall reject more than one JSON configuration
+file in a single invocation.</p>
+<p><strong>[MAT-008]</strong> The Matter logger shall reject continuous operation when neither
+<code class="docutils literal notranslate"><span class="pre">sensor_indexes</span></code> nor <code class="docutils literal notranslate"><span class="pre">sensor_ip_list</span></code> is available.</p>
+<p><strong>[MAT-009]</strong> Matter polling intervals below 60 seconds shall be clamped to 60
+seconds.</p>
+<p><strong>[MAT-010]</strong> Cloud configuration shall support optional <code class="docutils literal notranslate"><span class="pre">sensor_names</span></code> and
+<code class="docutils literal notranslate"><span class="pre">read_keys</span></code> objects keyed by sensor index, and JSON string keys shall be
+converted to integer keys before lookup.</p>
+<p><strong>[MAT-011]</strong> The Matter logger shall convert successful PurpleAir readings to
+Matter 1.5.1 Air Quality Sensor-shaped JSON using device type <code class="docutils literal notranslate"><span class="pre">0x002D</span></code>.</p>
+<p><strong>[MAT-012]</strong> The Matter logger shall expose Air Quality, Temperature,
+Relative Humidity, and Pressure measurement clusters when the corresponding
+readings are available.</p>
+<p><strong>[MAT-013]</strong> <code class="docutils literal notranslate"><span class="pre">run_once</span></code> shall return a dictionary keyed by sensor index and
+shall not start an HTTP server or continuous polling loop.</p>
+<p><strong>[MAT-014]</strong> Continuous mode shall start the HTTP server before entering the
+polling loop.</p>
+<p><strong>[MAT-015]</strong> <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/</span></code> and <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/health</span></code> shall return HTTP 200 with service
+status and the current converted-sensor count.</p>
+<p><strong>[MAT-016]</strong> <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/matter/sensors</span></code> shall return HTTP 200 with every current
+sensor index, its converted device, and a total count.</p>
+<p><strong>[MAT-017]</strong> <code class="docutils literal notranslate"><span class="pre">GET</span> <span class="pre">/matter/sensor/&lt;sensor_index&gt;</span></code> shall return HTTP 200 for an
+available integer sensor index, HTTP 400 for a non-integer index, and HTTP 404
+for an unavailable index.</p>
+<p><strong>[MAT-018]</strong> Unknown HTTP paths shall return HTTP 404, and query parameters
+shall not alter route matching.</p>
+<p><strong>[MAT-019]</strong> HTTP responses shall use JSON UTF-8 content type and shall include
+<code class="docutils literal notranslate"><span class="pre">Cache-Control:</span> <span class="pre">no-store</span></code>.</p>
+<p><strong>[MAT-020]</strong> HTTP <code class="docutils literal notranslate"><span class="pre">HEAD</span></code> requests shall return HTTP 204.</p>
+<p><strong>[MAT-021]</strong> Access to the shared Matter device dictionary shall be protected
+by a shared lock, and updates shall preserve the dictionary object referenced by
+the HTTP server.</p>
+<p><strong>[MAT-022]</strong> A failed sensor poll shall not remove that sensor’s last-known-good
+reading from the HTTP API.</p>
+<p><strong>[MAT-023]</strong> An individual cloud sensor polling or conversion exception shall
+be logged and isolated so polling can continue for other sensors.</p>
+<p><strong>[MAT-024]</strong> The Matter HTTP server shall permit socket-address reuse for quick
+service restarts.</p>
+<p><strong>[MAT-025]</strong> The Matter HTTP API shall be documented as unauthenticated and
+unencrypted, and the default host shall remain loopback-only.</p>
+<p><strong>[MAT-026]</strong> The Matter logger shall be described as producing Matter-shaped
+JSON and shall not be described as implementing Matter transport, discovery,
+commissioning, fabrics, or certification.</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Welcome to PurpleAir Data Logger(s)’s documentation!" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="JSONToMatterBridge.html" class="btn btn-neutral float-right" title="JSON to Matter bridge" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, carlkidcrypto.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

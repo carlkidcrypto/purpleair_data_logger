@@ -11,6 +11,8 @@ Welcome to PurpleAir Data Logger(s)'s documentation!
    :caption: Contents:
 
 
+   Requirements
+   JSONToMatterBridge
    modules
 
 Indices and tables

@@ -8,6 +8,10 @@ purpleair_data_logger
    PurpleAirCSVDataLoggerConstants
    PurpleAirDataLogger
    PurpleAirDataLoggerHelpers
+   PurpleAirLokiDataLogger
+   PurpleAirMatterDataLogger
+   PurpleAirMatterDataLoggerConstants
+   PurpleAirPrometheusDataLogger
    PurpleAirPSQLDataLogger
    PurpleAirPSQLQueryStatements
    PurpleAirSQLiteDataLogger
