@@ -1,5 +1,11 @@
 # matterbridge-purpleair
 
+WARNING MOVING TO A NEW REPO.
+Just the matterbridge will.
+https://github.com/carlkidcrypto/purpleair-matterbridge.
+Currently private until ready.
+
+
 Matterbridge DynamicPlatform plugin that turns the JSON from
 `PurpleAirMatterDataLogger` into commissionable Matter Air Quality Sensor
 endpoints.
@@ -9,8 +15,9 @@ endpoints.
 - Node.js 20.19, 22.13, 24, or 26
 - A globally installed Matterbridge 3.10 or newer, linked into this package for
   development
-- A running PurpleAir Matter feed, normally
-  `http://127.0.0.1:9855/matter/sensors`
+- A running PurpleAir Matter (PAM) feed, normally `http://127.0.0.1:9855/matter/sensors`.
+  See [Usage PurpleAirMatterDataLogger](https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/README.md#usage-purpleairmatterdataloggerpy)
+  for steps on spinning up a PAM feed.
 - LAN IPv6 and mDNS connectivity for Matter commissioning
 
 Normative behavior is specified in [Requirements.rst](Requirements.rst).
