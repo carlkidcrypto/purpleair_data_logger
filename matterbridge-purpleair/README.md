@@ -1,5 +1,11 @@
 # matterbridge-purpleair
 
+WARNING MOVING TO A NEW REPO.
+Just the matterbridge will.
+https://github.com/carlkidcrypto/purpleair-matterbridge.
+Currently private until ready.
+
+
 Matterbridge DynamicPlatform plugin that turns the JSON from
 `PurpleAirMatterDataLogger` into commissionable Matter Air Quality Sensor
 endpoints.
