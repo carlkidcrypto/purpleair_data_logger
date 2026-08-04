@@ -48,14 +48,21 @@ From the repository root, register the local plugin once and start Matterbridge:
 
 ```bash
 "$HOME/.local/bin/matterbridge" --add ./matterbridge-purpleair
-"$HOME/.local/bin/matterbridge" --bridge --novirtual --nosudo
+"$HOME/.local/bin/matterbridge" --bridge \
+  --productName "Purple Air Matterbridge" \
+  --novirtual \
+  --nosudo
 ```
 
 If the current directory is already `matterbridge-purpleair`, use `--add .`
 instead. Registration persists, so later starts only need the second command.
 `--novirtual` prevents controllers from exposing Matterbridge's own restart and
 update switches, while `--nosudo` prevents controller activity from opening an
-interactive privilege prompt.
+interactive privilege prompt. The product-name override identifies the bridge
+as `Purple Air Matterbridge` in Matter Basic Information. A controller can cache
+or assign its own display label independently. Matterbridge 3.10.3 hardcodes
+the root node label as `Matterbridge`, so controllers that prefer the node label
+can still show that name until it is renamed in the controller.
 
 Matterbridge serves its frontend at `http://localhost:8283` by default. Use the
 frontend or console commissioning code to add the bridge to a Matter fabric.

@@ -34,6 +34,11 @@ MBPA-006
    SHALL use ``npm link matterbridge --no-save`` so runtime and plugin code
    share one matter.js instance without modifying ``package.json``.
 
+MBPA-007
+   The documented bridge launch command SHALL set the Matterbridge aggregator
+   product name to ``Purple Air Matterbridge`` using Matterbridge's supported
+   ``--productName`` option.
+
 Feed handling
 -------------
 
