@@ -52,19 +52,19 @@ Plugin responsibilities
 
 The companion plugin:
 
-* Accept the logger base URL and polling interval as configuration.
-* Read ``GET /matter/sensors`` when it starts and on every polling cycle.
-* Validate the top-level ``sensors`` list and each ``sensor_index`` and
+* Accepts the logger base URL and polling interval as configuration.
+* Reads ``GET /matter/sensors`` when it starts and on every polling cycle.
+* Validates the top-level ``sensors`` list and each ``sensor_index`` and
   ``device`` object before applying updates.
-* Assign one stable bridged endpoint to each unique ``sensor_index``.
-* Persist the ``sensor_index`` to endpoint mapping across restarts.
-* Add newly discovered sensors without changing existing endpoint identities.
-* Retain the last-known-good Matter attributes when the HTTP request or one
+* Assigns one stable bridged endpoint to each unique ``sensor_index``.
+* Persists the ``sensor_index`` to endpoint mapping across restarts.
+* Adds newly discovered sensors without changing existing endpoint identities.
+* Retains the last-known-good Matter attributes when the HTTP request or one
   sensor payload fails.
-* Update Matter attributes only after a complete sensor payload has been
+* Updates Matter attributes only after a complete sensor payload has been
   validated.
-* Report connection and payload errors without terminating the bridge.
-* Remove or disable a sensor only through explicit configuration, not because
+* Reports connection and payload errors without terminating the bridge.
+* Removes or disables a sensor only through explicit configuration, not because
   it is absent from one response.
 
 The ``device.endpoint`` value in the JSON payload is descriptive and is ``1``
