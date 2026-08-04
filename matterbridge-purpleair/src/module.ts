@@ -9,6 +9,7 @@ import type { AnsiLogger } from "matterbridge/logger";
 import { PurpleAirClient } from "./purpleair-client.js";
 import {
   createPurpleAirEndpoint,
+  purpleAirDeviceName,
   purpleAirSerialNumber,
   updatePurpleAirEndpoint,
 } from "./purpleair-endpoint.js";
@@ -117,12 +118,13 @@ export class PurpleAirPlatform extends MatterbridgeDynamicPlatform {
         }
 
         const endpoint = createPurpleAirEndpoint(reading, this.matterbridge.aggregatorVendorId);
+        const deviceName = purpleAirDeviceName(reading.sensorName);
         const serialNumber = purpleAirSerialNumber(reading.sensorIndex);
-        this.setSelectDevice(serialNumber, reading.sensorName);
-        if (!this.validateDevice([reading.sensorName, serialNumber])) continue;
+        this.setSelectDevice(serialNumber, deviceName);
+        if (!this.validateDevice([reading.sensorName, deviceName, serialNumber])) continue;
         await this.registerDevice(endpoint);
         this.endpoints.set(reading.sensorIndex, endpoint);
-        this.log.info(`Registered PurpleAir sensor ${reading.sensorName} (${reading.sensorIndex})`);
+        this.log.info(`Registered PurpleAir sensor ${deviceName} (${reading.sensorIndex})`);
       }
     } catch (error) {
       this.log.error(

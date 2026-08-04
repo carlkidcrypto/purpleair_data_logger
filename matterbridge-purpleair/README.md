@@ -1,5 +1,11 @@
 # matterbridge-purpleair
 
+WARNING MOVING TO A NEW REPO.
+Just the matterbridge will.
+https://github.com/carlkidcrypto/purpleair-matterbridge.
+Currently private until ready.
+
+
 Matterbridge DynamicPlatform plugin that turns the JSON from
 `PurpleAirMatterDataLogger` into commissionable Matter Air Quality Sensor
 endpoints.
@@ -9,11 +15,14 @@ endpoints.
 - Node.js 20.19, 22.13, 24, or 26
 - A globally installed Matterbridge 3.10 or newer, linked into this package for
   development
-- A running PurpleAir Matter feed, normally
-  `http://127.0.0.1:9855/matter/sensors`
+- A running PurpleAir Matter (PAM) feed, normally `http://127.0.0.1:9855/matter/sensors`.
+  See [Usage PurpleAirMatterDataLogger](https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/README.md#usage-purpleairmatterdataloggerpy)
+  for steps on spinning up a PAM feed.
 - LAN IPv6 and mDNS connectivity for Matter commissioning
 
 Normative behavior is specified in [Requirements.rst](Requirements.rst).
+See [Platforms tested](PLATFORMS-TESTED.md) for the current Matter controller
+compatibility results.
 
 ## Development
 
@@ -46,12 +55,21 @@ From the repository root, register the local plugin once and start Matterbridge:
 
 ```bash
 "$HOME/.local/bin/matterbridge" --add ./matterbridge-purpleair
-"$HOME/.local/bin/matterbridge" --bridge
+"$HOME/.local/bin/matterbridge" --bridge \
+  --productName "Purple Air Matterbridge" \
+  --novirtual \
+  --nosudo
 ```
 
 If the current directory is already `matterbridge-purpleair`, use `--add .`
-instead. Registration persists, so later starts only need the `--bridge`
-command.
+instead. Registration persists, so later starts only need the second command.
+`--novirtual` prevents controllers from exposing Matterbridge's own restart and
+update switches, while `--nosudo` prevents controller activity from opening an
+interactive privilege prompt. The product-name override identifies the bridge
+as `Purple Air Matterbridge` in Matter Basic Information. A controller can cache
+or assign its own display label independently. Matterbridge 3.10.3 hardcodes
+the root node label as `Matterbridge`, so controllers that prefer the node label
+can still show that name until it is renamed in the controller.
 
 Matterbridge serves its frontend at `http://localhost:8283` by default. Use the
 frontend or console commissioning code to add the bridge to a Matter fabric.
@@ -66,7 +84,7 @@ use the existing controller's sharing mode to add it to another Matter fabric.
 Windows and WSL commissioning requires a Hyper-V firewall exception for inbound
 Matter traffic. See
 [Windows and WSL troubleshooting](TROUBLESHOOTING-WINDOWS-WSL.md) for the
-verified IPv6, mDNS, firewall, and Home Assistant checks.
+verified IPv6, mDNS, firewall, Home Assistant, and persistent logging checks.
 
 ## Configuration
 

@@ -13,6 +13,7 @@
   },
   "files": [
     "dist",
+    "PLATFORMS-TESTED.md",
     "README.md",
     "Requirements.rst",
     "TROUBLESHOOTING-WINDOWS-WSL.md",
