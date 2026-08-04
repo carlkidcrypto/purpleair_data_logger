@@ -12,6 +12,13 @@ import {
 
 import type { PurpleAirReading } from "./purpleair-client.js";
 
+const MAC_ADDRESS_PATTERN = /^(?:[0-9a-f]{2}[:-]){5}[0-9a-f]{2}$/i;
+
+export function purpleAirDeviceName(sensorName: string): string {
+  if (!MAC_ADDRESS_PATTERN.test(sensorName)) return sensorName;
+  return `purple-air-${sensorName.toLowerCase().split(/[:-]/).slice(-3).join("-")}`;
+}
+
 export function purpleAirSerialNumber(sensorIndex: string): string {
   return `purpleair-${sensorIndex}`;
 }
@@ -20,10 +27,11 @@ export function createPurpleAirEndpoint(
   reading: PurpleAirReading,
   vendorId: number,
 ): MatterbridgeEndpoint {
+  const deviceName = purpleAirDeviceName(reading.sensorName);
   const serialNumber = purpleAirSerialNumber(reading.sensorIndex);
   const endpoint = new MatterbridgeEndpoint(airQualitySensor, { id: serialNumber })
     .createDefaultBridgedDeviceBasicInformationClusterServer(
-      reading.sensorName,
+      deviceName,
       serialNumber,
       vendorId,
       "PurpleAir",

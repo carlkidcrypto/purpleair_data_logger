@@ -15,6 +15,7 @@ import {
 import type { PurpleAirReading } from "../src/purpleair-client.js";
 import {
   createPurpleAirEndpoint,
+  purpleAirDeviceName,
   purpleAirSerialNumber,
   updatePurpleAirEndpoint,
 } from "../src/purpleair-endpoint.js";
@@ -86,5 +87,16 @@ describe("PurpleAir Matter endpoint", () => {
 
   it("derives a stable serial number from the sensor index", () => {
     expect(purpleAirSerialNumber("273450761757003")).toBe("purpleair-273450761757003");
+  });
+
+  it("uses the last three MAC octets in place of a raw MAC device name", () => {
+    expect(purpleAirDeviceName("F8:B3:B7:84:A1:4B")).toBe("purple-air-84-a1-4b");
+    expect(purpleAirDeviceName("Back porch")).toBe("Back porch");
+
+    const endpoint = createPurpleAirEndpoint(
+      { ...reading, sensorName: "F8:B3:B7:84:A1:4B" },
+      0xfff1,
+    );
+    expect(endpoint.deviceName).toBe("purple-air-84-a1-4b");
   });
 });
