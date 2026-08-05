@@ -1,65 +1,156 @@
-name: "Pull Request Sphinx Docs Check"
-permissions:
-  contents: read
+name: Sphinx Docs Build
 
 on:
   push:
-    branches: [ main ]
-
-  pull_request:
-    branches: [ main ]
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
-  check-source-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      run_job: ${{ steps.changed-files.outputs.any_changed }}
-    steps:
-      - name: Checkout Sourcecode
-        uses: actions/checkout@v7
-
-      - name: Check for changes in source code
-        id: changed-files
-        uses: tj-actions/changed-files@v47.0.6
-        with:
-          files: |
-            .github/workflows/sphinx_build.yml
-            sphinx_docs_build/source/*.rst
-            sphinx_docs_build/source/*.py
-            sphinx_docs_build/*.txt
-
   sphinx_docs_build:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
-    needs: check-source-changes
-    if: needs.check-source-changes.outputs.run_job == 'true'
+    permissions:
+      contents: read
     steps:
       - name: Check out repository code
         uses: actions/checkout@v7
 
-      - name: Set up Python 3.12 env for sphinx...
+      - name: Set up Python 3.12 for Sphinx
         uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
-      - name: Install python3/os requirements...
-        uses: carlkidcrypto/os-specific-runner@v2.3.1
+      - name: Cache pip dependencies
+        uses: actions/cache@v4
         with:
-          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ &&
-                 python -m pip install --upgrade wheel &&
-                 python -m pip install --upgrade setuptools &&
-                 python -m pip install --upgrade pip &&
-                 python -m pip install -r sphinx_docs_build/requirements.txt &&
-                 python -m pip install . --user;
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-sphinx-
+            ${{ runner.os }}-pip-
 
-      - name: Run sphinx...
-        uses: carlkidcrypto/os-specific-runner@v2.3.1
-        with:
-          linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/sphinx_docs_build;
-                 mkdir source/_static;
-                 mkdir source/_templates;
-                 make clean && make html SPHINXOPTS="-W"
+      - name: Install documentation requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r sphinx_docs_build/requirements.txt
+          python -m pip install -r sphinx_docs_build/landing/requirements.txt
+          python -m pip install .
 
-      - uses: actions/upload-artifact@v7
+      - name: Build latest documentation
+        run: |
+          mkdir -p sphinx_docs_build/source/_static sphinx_docs_build/source/_templates
+          mkdir -p sphinx_docs_build/landing/source/_static sphinx_docs_build/landing/source/_templates
+          make -C sphinx_docs_build clean
+          make -C sphinx_docs_build html SPHINXOPTS="-W"
+          make -C sphinx_docs_build/landing clean
+          make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
+
+      - name: Upload artifact for GitHub Pages
+        uses: actions/upload-pages-artifact@v4
         with:
-          name: HTML Documentation
           path: docs/
+
+  deploy_pages:
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: sphinx_docs_build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
+
+  sphinx_docs_build_release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Check out repository code at release tag
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+          ref: ${{ github.event.release.tag_name }}
+
+      - name: Set up Python 3.12 for Sphinx
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install documentation requirements
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r sphinx_docs_build/requirements.txt
+          python -m pip install -r sphinx_docs_build/landing/requirements.txt
+          python -m pip install .
+
+      - name: Build versioned documentation
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+        run: sphinx-build -b html -W sphinx_docs_build/source "/tmp/html_${VERSION}/"
+
+      - name: Switch to main branch and copy versioned documentation
+        env:
+          VERSION: ${{ github.event.release.tag_name }}
+        run: |
+          git fetch origin main
+          git checkout main
+          git pull origin main
+          rm -rf "docs/html_${VERSION}"
+          cp -r "/tmp/html_${VERSION}" "docs/html_${VERSION}"
+
+      - name: Update landing page version list
+        run: |
+          python - <<'PY'
+          import pathlib
+          import re
+
+          docs_dir = pathlib.Path("docs")
+          index_rst = pathlib.Path("sphinx_docs_build/landing/source/index.rst")
+          versions = sorted(
+              (directory.name for directory in docs_dir.iterdir()
+               if directory.is_dir() and directory.name.startswith("html_v")),
+              reverse=True,
+          )
+          entries = ["* `Latest Version <./html/index.html>`_"]
+          entries.extend(
+              f"* `{version.removeprefix('html_')} <./{version}/index.html>`_"
+              for version in versions
+          )
+          content = index_rst.read_text(encoding="utf-8")
+          updated, replacements = re.subn(
+              r"\.\. VERSION_LIST_START\n.*?\.\. VERSION_LIST_END",
+              ".. VERSION_LIST_START\n\n" + "\n".join(entries) + "\n\n.. VERSION_LIST_END",
+              content,
+              flags=re.DOTALL,
+          )
+          if replacements != 1:
+              raise SystemExit("Version list sentinels not found exactly once")
+          index_rst.write_text(updated, encoding="utf-8")
+          PY
+
+      - name: Build landing page with updated version list
+        run: |
+          make -C sphinx_docs_build/landing clean
+          make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
+
+      - name: Create pull request with versioned docs
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "docs: add versioned documentation for ${{ github.event.release.tag_name }}"
+          title: "docs: add versioned documentation for ${{ github.event.release.tag_name }}"
+          body: "Adds Sphinx documentation for release ${{ github.event.release.tag_name }}."
+          branch: docs/add-versioned-docs-${{ github.event.release.tag_name }}
+          base: main
+          delete-branch: true
+          add-paths: |
+            docs/
+            sphinx_docs_build/landing/source/index.rst
