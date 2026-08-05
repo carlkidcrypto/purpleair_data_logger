@@ -94,13 +94,16 @@
 Matter-shaped JSON. Google Home and Home Assistant cannot commission that HTTP
 API directly because it does not implement Matter discovery, commissioning,
 secure sessions, fabrics, or subscriptions.</p>
-<p>A <code class="docutils literal notranslate"><span class="pre">matterbridge-purpleair</span></code> plugin provides the missing protocol boundary.
+<p>A companion plugin in the
+<a class="reference external" href="https://github.com/carlkidcrypto/purpleair-matterbridge">purpleair-matterbridge repository</a>
+provides the missing protocol boundary.
 The plugin reads the logger’s JSON API and registers each PurpleAir sensor as a
 bridged Matter Air Quality Sensor. Matterbridge then provides the commissionable
 Matter bridge, QR code, network discovery, security, and fabric storage.</p>
-<p>The plugin is developed in the repository’s <code class="docutils literal notranslate"><span class="pre">matterbridge-purpleair</span></code>
-directory. It is currently a local development package and is not published to
-npm.</p>
+<p>The companion plugin is maintained in the
+<a class="reference external" href="https://github.com/carlkidcrypto/purpleair-matterbridge">purpleair-matterbridge repository</a>.
+Follow that repository’s README for current installation and development
+instructions.</p>
 </section>
 <section id="architecture">
 <h2>Architecture<a class="headerlink" href="#architecture" title="Link to this heading"></a></h2>
@@ -238,22 +241,11 @@ untyped JSON manipulation.</p>
 </section>
 <section id="companion-project">
 <h2>Companion project<a class="headerlink" href="#companion-project" title="Link to this heading"></a></h2>
-<p>The companion is maintained in a subdirectory at the repository root:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">matterbridge</span><span class="o">-</span><span class="n">purpleair</span><span class="o">/</span>
-  <span class="n">package</span><span class="o">.</span><span class="n">json</span>
-  <span class="n">Requirements</span><span class="o">.</span><span class="n">rst</span>
-  <span class="n">tsconfig</span><span class="o">.</span><span class="n">json</span>
-  <span class="n">src</span><span class="o">/</span>
-    <span class="n">module</span><span class="o">.</span><span class="n">ts</span>
-    <span class="n">purpleair</span><span class="o">-</span><span class="n">client</span><span class="o">.</span><span class="n">ts</span>
-    <span class="n">purpleair</span><span class="o">-</span><span class="n">endpoint</span><span class="o">.</span><span class="n">ts</span>
-  <span class="n">vitest</span><span class="o">/</span>
-</pre></div>
-</div>
-<p>The implementation follows the official Matterbridge plugin template and uses
-TypeScript, Vitest, oxlint, and oxfmt. See
-<code class="docutils literal notranslate"><span class="pre">matterbridge-purpleair/Requirements.rst</span></code> for its normative requirements.
-Its main configuration fields are:</p>
+<p>The companion plugin is maintained at
+<a class="reference external" href="https://github.com/carlkidcrypto/purpleair-matterbridge">github.com/carlkidcrypto/purpleair-matterbridge</a>.
+Clone that repository and follow its README for the current installation and
+development workflow. The implementation uses TypeScript, Vitest, oxlint, and
+oxfmt. Its main configuration fields are:</p>
 <dl class="simple">
 <dt><code class="docutils literal notranslate"><span class="pre">feedUrl</span></code></dt><dd><p>Full PurpleAir Matter feed URL. Default:
 <code class="docutils literal notranslate"><span class="pre">http://127.0.0.1:9855/matter/sensors</span></code>.</p>
@@ -291,9 +283,11 @@ host with a firewall and do not expose it to the internet.</p>
 </section>
 <section id="installing-and-pairing">
 <h2>Installing and pairing<a class="headerlink" href="#installing-and-pairing" title="Link to this heading"></a></h2>
-<p>The local development flow from <code class="docutils literal notranslate"><span class="pre">matterbridge-purpleair</span></code> is:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">npm</span> <span class="n">install</span> <span class="o">--</span><span class="k">global</span> <span class="o">--</span><span class="n">prefix</span> <span class="s2">&quot;$HOME/.local&quot;</span> <span class="n">matterbridge</span><span class="o">@</span><span class="mf">3.10.3</span>
- <span class="n">npm</span> <span class="n">install</span>
+<p>After cloning the companion repository, its local development flow is:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="pre">https://github.com/carlkidcrypto/purpleair-matterbridge.git</span>
+<span class="n">cd</span> <span class="n">purpleair</span><span class="o">-</span><span class="n">matterbridge</span>
+<span class="n">npm</span> <span class="n">install</span> <span class="o">--</span><span class="k">global</span> <span class="o">--</span><span class="n">prefix</span> <span class="s2">&quot;$HOME/.local&quot;</span> <span class="n">matterbridge</span><span class="o">@</span><span class="mf">3.10.3</span>
+<span class="n">npm</span> <span class="n">install</span>
 <span class="n">npm_config_prefix</span><span class="o">=</span><span class="s2">&quot;$HOME/.local&quot;</span> <span class="n">npm</span> <span class="n">link</span> <span class="n">matterbridge</span> <span class="o">--</span><span class="n">no</span><span class="o">-</span><span class="n">save</span>
  <span class="n">npm</span> <span class="n">run</span> <span class="n">build</span>
  <span class="n">npm</span> <span class="n">test</span>
@@ -368,6 +362,7 @@ measurements update after subsequent JSON polls.</p></li>
 <section id="references">
 <h2>References<a class="headerlink" href="#references" title="Link to this heading"></a></h2>
 <ul class="simple">
+<li><p><a class="reference external" href="https://github.com/carlkidcrypto/purpleair-matterbridge">PurpleAir Matterbridge companion plugin</a></p></li>
 <li><p><a class="reference external" href="https://github.com/Luligu/matterbridge">Matterbridge</a></p></li>
 <li><p><a class="reference external" href="https://github.com/Luligu/matterbridge-plugin-template">Matterbridge plugin template</a></p></li>
 <li><p><a class="reference external" href="https://developers.home.google.com/matter/supported-devices">Google Home supported Matter devices</a></p></li>
