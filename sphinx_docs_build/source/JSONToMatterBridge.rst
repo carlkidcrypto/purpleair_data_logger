@@ -9,14 +9,17 @@ Matter-shaped JSON. Google Home and Home Assistant cannot commission that HTTP
 API directly because it does not implement Matter discovery, commissioning,
 secure sessions, fabrics, or subscriptions.
 
-A ``matterbridge-purpleair`` plugin provides the missing protocol boundary.
+A companion plugin in the
+`purpleair-matterbridge repository <https://github.com/carlkidcrypto/purpleair-matterbridge>`_
+provides the missing protocol boundary.
 The plugin reads the logger's JSON API and registers each PurpleAir sensor as a
 bridged Matter Air Quality Sensor. Matterbridge then provides the commissionable
 Matter bridge, QR code, network discovery, security, and fabric storage.
 
-The plugin is developed in the repository's ``matterbridge-purpleair``
-directory. It is currently a local development package and is not published to
-npm.
+The companion plugin is maintained in the
+`purpleair-matterbridge repository <https://github.com/carlkidcrypto/purpleair-matterbridge>`_.
+Follow that repository's README for current installation and development
+instructions.
 
 Architecture
 ------------
@@ -143,21 +146,11 @@ untyped JSON manipulation.
 Companion project
 -----------------
 
-The companion is maintained in a subdirectory at the repository root::
-
-   matterbridge-purpleair/
-     package.json
-     Requirements.rst
-     tsconfig.json
-     src/
-       module.ts
-       purpleair-client.ts
-       purpleair-endpoint.ts
-     vitest/
-
-The implementation follows the official Matterbridge plugin template and uses
-TypeScript, Vitest, oxlint, and oxfmt. See
-``matterbridge-purpleair/Requirements.rst`` for its normative requirements.
+The companion plugin is maintained at
+`github.com/carlkidcrypto/purpleair-matterbridge <https://github.com/carlkidcrypto/purpleair-matterbridge>`_.
+Clone that repository and follow its README for the current installation and
+development workflow. The implementation uses TypeScript, Vitest, oxlint, and
+oxfmt.
 Its main configuration fields are:
 
 ``feedUrl``
@@ -200,13 +193,16 @@ host with a firewall and do not expose it to the internet.
 Installing and pairing
 ----------------------
 
-The local development flow from ``matterbridge-purpleair`` is::
+After cloning the companion repository, its local development flow is::
+
+  git clone https://github.com/carlkidcrypto/purpleair-matterbridge.git
+  cd purpleair-matterbridge
 
   npm install --global --prefix "$HOME/.local" matterbridge@3.10.3
-   npm install
+  npm install
   npm_config_prefix="$HOME/.local" npm link matterbridge --no-save
-   npm run build
-   npm test
+  npm run build
+  npm test
   "$HOME/.local/bin/matterbridge" --add .
   "$HOME/.local/bin/matterbridge" --bridge
 
@@ -283,6 +279,7 @@ The first usable plugin release should demonstrate all of the following:
 References
 ----------
 
+* `PurpleAir Matterbridge companion plugin <https://github.com/carlkidcrypto/purpleair-matterbridge>`_
 * `Matterbridge <https://github.com/Luligu/matterbridge>`_
 * `Matterbridge plugin template <https://github.com/Luligu/matterbridge-plugin-template>`_
 * `Google Home supported Matter devices <https://developers.home.google.com/matter/supported-devices>`_
