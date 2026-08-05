@@ -28,7 +28,7 @@ Focus on the following instructions:
     sphinx documentation and attaching it as an artifact
 - Ensure that `.github/workflows/tests.yml` focuses on running the
     unit tests (`tests/`) across Ubuntu, macOS, and Windows runners using
-    Python 3.9 through 3.13
+    Python 3.10 through 3.14
 - Ensure that workflows cache items that are commonly downloaded like pip
     updates/packages
 - Ensure that workflows all trigger when they are updated
