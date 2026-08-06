@@ -342,7 +342,7 @@ def logic_for_storing_group_sensors_data(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` already exists. A new one will not be created..."
             )
 
-        # By now we have a group_id_to_use. Let see if the user wants us to add members
+        # By now we have a group_id_to_use. Let's see if the user wants us to add members
         if bool(json_config_file["add_sensors_to_group"]):
             print(
                 f"Attempting to add the sensors in `sensor_index_list` to the `group_id` - {group_id_to_use}..."

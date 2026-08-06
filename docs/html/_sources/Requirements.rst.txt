@@ -12,7 +12,7 @@ names and JSON field names are case-sensitive.
 Shared data logger requirements
 -------------------------------
 
-**[GEN-001]** The software shall support Python 3.10 through Python 3.13.
+**[GEN-001]** The software shall support Python 3.10 through Python 3.14.
 
 **[GEN-002]** Each executable data logger module shall support invocation with
 ``python -m purpleair_data_logger.<ModuleName>``.

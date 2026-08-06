@@ -10,7 +10,7 @@ outside project-wide settings unless explicitly instructed. You are an expert
 in Python 3.
 
 Focus on the following instructions:
-- Ensure that the code adheres to Python 3.9+ standards
+- Ensure that the code adheres to Python 3.10+ standards
 - Ensure that code changes happen only to files inside `purpleair_data_logger/`
 - Ensure that the code runs on Ubuntu, macOS, and Windows
 - Ensure that python code is linted/formatted with Black

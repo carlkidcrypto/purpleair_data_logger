@@ -20,10 +20,10 @@ Focus on the following instructions:
 - Ensure that `tests/` have high coverage and use `coverage` for reporting
 - Ensure tests are skipped as a last resort if they cannot run in certain
     environments (e.g., tests requiring a live PurpleAir API key)
-- Ensure tests are compatible with Python 3.9 through 3.13
+- Ensure tests are compatible with Python 3.10 through 3.14
 
 Tools needed:
-- Python (3.9 - 3.13)
+- Python (3.10 - 3.14)
 - unittest (stdlib)
 - coverage
 - behave

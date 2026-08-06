@@ -395,7 +395,7 @@ Otherwise, the first group matching the name will be used.
 
 `add_sensors_to_group` - If true, adds the sensors in the `sensor_index_list` to the group. If false, `sensor_index_list` is ignored.
 
-`sensor_index_list` -  A list of sensor indexes that will be added to your group if they don't already exist.
+`sensor_index_list` - A list of sensor indexes that will be added to your group if they don't already exist.
 
 The rest of the settings are official PAA settings. They are the same as the [PAA Multiple Sensor Request Example](#paa-multiple-sensor-request-example). Refer above for details.
 
