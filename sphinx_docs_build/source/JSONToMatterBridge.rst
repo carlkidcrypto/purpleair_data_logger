@@ -111,7 +111,7 @@ attribute.
      - Matter representation
      - Notes
    * - ``device.device_type.id``
-     - Air Quality Sensor ``0x002C``
+     - Air Quality Sensor ``0x002D``
      - The legacy converter currently emits decimal ``45``. The plugin uses
        Matterbridge's canonical Matter 1.6 device definition instead.
    * - ``air_quality_measurement.attributes.airQuality``
