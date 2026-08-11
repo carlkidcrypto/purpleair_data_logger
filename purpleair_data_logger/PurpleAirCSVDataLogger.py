@@ -523,7 +523,7 @@ if __name__ == "__main__":
     the_json_file = None
     file_obj = None
 
-    # Second make an instance our our data logger
+    # Second make an instance of our data logger
     ipv4_address_list = []
     if args.paa_local_sensor_request_json_file:
         # This is a temp working solution. We will need to redo this at some point.
