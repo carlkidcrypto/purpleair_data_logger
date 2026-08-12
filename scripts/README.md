@@ -54,6 +54,7 @@ It deliberately excludes:
 - `build/`
 - The local `python3.12.venv/`
 - Generated workflow lock files under `.github/workflows/`
+	- `tests/requirements.txt`, whose `purpleair_api` pin is maintained independently by Dependabot
 
 After an actual bump, it checks that no old-version references remain in the active tracked scope. If the requested version is already current, it exits without changes.
 

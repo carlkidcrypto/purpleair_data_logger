@@ -60,6 +60,7 @@ pathspecs=(
     ':(exclude)docs/html_v*/**'
     ':(exclude)docs/doctrees/**'
     ':(exclude)python3.12.venv/**'
+    ':(exclude)tests/requirements.txt'
     ':(exclude).github/workflows/*.lock.yml'
 )
 
