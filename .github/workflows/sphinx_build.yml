@@ -63,7 +63,7 @@ jobs:
       name: github-pages
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   sphinx_docs_build_release:
     if: github.event_name == 'release'
