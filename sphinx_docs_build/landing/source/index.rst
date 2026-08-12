@@ -1,0 +1,14 @@
+PurpleAir Data Logger Documentation
+===================================
+
+Select a version of the documentation to browse:
+
+.. VERSION_LIST_START
+
+* `Latest Version <./html/index.html>`_
+
+.. VERSION_LIST_END
+
+For general project information, installation instructions, and source code,
+see the `PurpleAir Data Logger GitHub repository
+<https://github.com/carlkidcrypto/purpleair_data_logger>`_.

@@ -311,7 +311,7 @@ if __name__ == "__main__":
     the_json_file = None
     file_obj = None
 
-    # Second make an instance our our data logger
+    # Second make an instance of our data logger
     the_paa_sqlite_data_logger = PurpleAirSQLiteDataLogger(
         args.paa_read_key, args.paa_write_key, args.db_name
     )
