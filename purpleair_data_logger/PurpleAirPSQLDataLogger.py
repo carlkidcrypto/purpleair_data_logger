@@ -516,7 +516,7 @@ if __name__ == "__main__":
                 """All database tables have been dropped. Please rerun with a db_usr who only has insert rights provided..."""
             )
 
-    # Third make an instance our our data logger
+    # Third make an instance of our data logger
     the_paa_psql_data_logger = PurpleAirPSQLDataLogger(
         args.paa_read_key, args.paa_write_key, the_psql_db_conn
     )
