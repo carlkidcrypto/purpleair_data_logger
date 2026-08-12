@@ -1,4 +1,16 @@
-Last Updated: 2026-08-02 04:02:31 UTC
+Last Updated: 2026-08-06 02:23:17 UTC
+
+
+<a name="v1.5.0a2"></a>
+## [v1.5.0a2] - 2026-08-05
+
+### Chores
+
+* **docs:** update changelog ([#419](https://github.com/carlkidcrypto/purpleair_data_logger/issues/419))
+
+### Documentation
+
+* fix typos and grammar in README, JSONToMatterBridge, and helper comment ([#420](https://github.com/carlkidcrypto/purpleair_data_logger/issues/420))
 
 
 <a name="v1.5.0a1"></a>
