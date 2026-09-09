@@ -313,7 +313,7 @@ See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_f
 > Note: `poll_interval_seconds` is also required. It cannot be lower than `60`. This is a custom field not defined by the PAA documentation.
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
-The below snippet is taken From the PurpleAirAPI (PAA) documentation:
+The below snippet is taken from the PurpleAirAPI (PAA) documentation:
 
 ```text
   Field Type Description
