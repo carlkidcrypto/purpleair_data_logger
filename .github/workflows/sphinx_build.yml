@@ -23,7 +23,7 @@ jobs:
           python-version: "3.12"
 
       - name: Cache pip dependencies
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
@@ -48,7 +48,7 @@ jobs:
           make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v4
+        uses: actions/upload-pages-artifact@v5
         with:
           path: docs/
 
@@ -63,7 +63,7 @@ jobs:
       name: github-pages
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
 
   sphinx_docs_build_release:
     if: github.event_name == 'release'
@@ -142,7 +142,7 @@ jobs:
           make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
 
       - name: Create pull request with versioned docs
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs: add versioned documentation for ${{ github.event.release.tag_name }}"
