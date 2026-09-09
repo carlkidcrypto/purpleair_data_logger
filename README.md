@@ -8,7 +8,7 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 | [![Pull Request Sphinx Docs Check](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml) | [![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment) | [![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql) | [![total download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/total.svg?style=flat-square&label=all%20downloads)](https://github.com/carlkidcrypto/purpleair_data_logger/releases) |
 | --------------- | --------------- | --------------- | --------------- |
 
-[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.5.0a1/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.5.0a1) |
+[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v1.5.0/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v1.5.0) |
 | --------------- |
 
 ## How to Support This Project
@@ -313,7 +313,7 @@ See this [file](./sample_json_config_files/sample_multiple_sensor_request_json_f
 > Note: `poll_interval_seconds` is also required. It cannot be lower than `60`. This is a custom field not defined by the PAA documentation.
 > Note: Refer to the PurpleAirAPI (PAA) documentation for more information. <https://api.purpleair.com/#api-sensors-get-sensors-data>
 
-The below snippet is taken From the PurpleAirAPI (PAA) documentation:
+The below snippet is taken from the PurpleAirAPI (PAA) documentation:
 
 ```text
   Field Type Description
