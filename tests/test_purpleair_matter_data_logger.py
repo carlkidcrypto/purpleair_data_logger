@@ -130,6 +130,39 @@ class PurpleAirMatterDataLoggerConstructorTest(unittest.TestCase):
             )
         self.assertEqual(logger._poll_interval, 60)
 
+    def test_start_http_server_starts_thread_and_serves(self):
+        """_start_http_server spins up a live HTTP server on a background thread."""
+        with requests_mock.Mocker() as m:
+            m.get(
+                requests_mock.ANY,
+                text='{"api_version": "1.1.1", "time_stamp": 0, "api_key_type": "READ"}',
+                status_code=200,
+            )
+            logger = PurpleAirMatterDataLogger(
+                PurpleAirApiReadKey="test",
+                http_port=0,
+                http_host="127.0.0.1",
+            )
+        try:
+            logger._start_http_server()
+            self.assertIsNotNone(logger._httpd)
+            self.assertIsInstance(logger._http_thread, threading.Thread)
+            self.assertTrue(logger._http_thread.is_alive())
+
+            actual_port = logger._httpd.server_address[1]
+            conn = http.client.HTTPConnection("127.0.0.1", actual_port, timeout=5)
+            conn.request("GET", HEALTH_PATH)
+            resp = conn.getresponse()
+            resp.read()
+            conn.close()
+            self.assertEqual(resp.status, 200)
+        finally:
+            if logger._httpd is not None:
+                logger._httpd.shutdown()
+                logger._httpd.server_close()
+            if logger._http_thread is not None:
+                logger._http_thread.join(timeout=5)
+
 
 # =============================================================================
 # Tests — One-shot conversion

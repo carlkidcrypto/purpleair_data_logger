@@ -3,6 +3,7 @@ name: Auto Update Release Notes
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
+  job-discriminator: ${{ github.run_id }}
 on:
   release:
     types: [published]
