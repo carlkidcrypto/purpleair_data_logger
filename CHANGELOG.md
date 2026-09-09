@@ -1,4 +1,22 @@
-Last Updated: 2026-08-06 02:23:17 UTC
+
+<a name="v1.5.0"></a>
+## [v1.5.0] - 2026-08-11
+
+### Build System
+
+* **deps:** Bump coverage from 7.15.2 to 7.15.3 in /tests ([#427](https://github.com/carlkidcrypto/purpleair_data_logger/issues/427))
+* **deps:** Bump coverage from 7.15.2 to 7.15.3 ([#424](https://github.com/carlkidcrypto/purpleair_data_logger/issues/424))
+* **deps:** Bump actions/checkout from 6 to 7 ([#413](https://github.com/carlkidcrypto/purpleair_data_logger/issues/413))
+
+### Chores
+
+* **docs:** update changelog ([#439](https://github.com/carlkidcrypto/purpleair_data_logger/issues/439))
+
+### Documentation
+
+* fix typos and grammar in README, JSONToMatterBridge, and helper comment ([#440](https://github.com/carlkidcrypto/purpleair_data_logger/issues/440))
+* fix duplicated word typo in inline comments ([#430](https://github.com/carlkidcrypto/purpleair_data_logger/issues/430))
+* fix incorrect Air Quality Sensor device type ID in JSONToMatterBridge.rst ([#428](https://github.com/carlkidcrypto/purpleair_data_logger/issues/428))
 
 
 <a name="v1.5.0a2"></a>
