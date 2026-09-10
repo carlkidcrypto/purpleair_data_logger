@@ -99,6 +99,14 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
         pass
 
     def _send_json(self, status: int, data: dict) -> None:
+        """
+        Write a JSON response with the given HTTP status code.
+
+        :param int status: The HTTP status code to send.
+        :param dict data: The JSON-serializable payload to write in the response body.
+        :return: None
+        """
+
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Cache-Control", "no-store")
@@ -106,6 +114,13 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(data, indent=2).encode("utf-8"))
 
     def do_GET(self) -> None:
+        """
+        Route an incoming HTTP GET request to the matching endpoint handler
+        and write the corresponding JSON response.
+
+        :return: None
+        """
+
         path = urlsplit(self.path).path
 
         if path == HEALTH_PATH or path == "/":
@@ -144,6 +159,12 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
             self._send_json(404, {"error": "Not found"})
 
     def do_HEAD(self) -> None:
+        """
+        Respond to an HTTP HEAD request with an empty ``204 No Content`` body.
+
+        :return: None
+        """
+
         self.send_response(204)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.end_headers()
@@ -161,6 +182,19 @@ class _MatterHTTPServer(HTTPServer):
         matter_devices: dict[int, dict[str, Any]],
         lock: threading.Lock,
     ) -> None:
+        """
+        Initialize the HTTP server, storing shared references to the Matter
+        device map and its lock so every request handler can access them.
+
+        :param tuple[str, int] server_address: The (host, port) to bind the server to.
+        :param type[BaseHTTPRequestHandler] RequestHandlerClass: The handler class used
+            to process each incoming request.
+        :param dict[int, dict[str, Any]] matter_devices: The shared, mutable map of
+            sensor index to converted Matter device JSON.
+        :param threading.Lock lock: Lock guarding concurrent access to ``matter_devices``.
+        :return: None
+        """
+
         # Share the device map across all request handlers
         self.matter_devices = matter_devices
         self.lock = lock
