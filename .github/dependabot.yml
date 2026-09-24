@@ -20,6 +20,10 @@ updates:
     directory: "/"
     schedule:
       interval: "daily"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
     open-pull-requests-limit: 10
 
   # Maintain dependencies for pip (tests)
@@ -27,6 +31,10 @@ updates:
     directory: "/tests"
     schedule:
       interval: "daily"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
     open-pull-requests-limit: 10
 
   # Maintain dependencies for pip (sphinx_docs_build)
@@ -34,4 +42,8 @@ updates:
     directory: "/sphinx_docs_build"
     schedule:
       interval: "daily"
+    groups:
+      python-dependencies:
+        patterns:
+          - "*"
     open-pull-requests-limit: 10

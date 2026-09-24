@@ -92,12 +92,12 @@ def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
     Before we store the data, we must make sure all fields have been included.
     Our store statements expect all fields regardless of what we request.
 
-    :param dict the_modified_sensor_data: A single layer dictionary containing a single sensors data.
+    :param dict the_modified_sensor_data: A single layer dictionary containing a single sensor's data.
 
     :return: A dictionary with all the data fields filled out.
     """
 
-    # Make a copy first
+    # Note: this is a reference, not a copy, since dicts are mutable in Python.
     temp_the_modified_sensor_data = the_modified_sensor_data
     for field in ACCEPTED_FIELD_NAMES_DICT.keys():
         if field not in temp_the_modified_sensor_data.keys():

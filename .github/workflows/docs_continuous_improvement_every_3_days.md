@@ -18,7 +18,8 @@ safe-outputs:
     recreate-ref: true
     if-no-changes: "ignore"
     base-branch: main
-timeout-minutes: 45
+timeout-minutes: 15
+max-ai-credits: 25
 model: claude-sonnet-5
 engine:
   id: copilot
@@ -36,6 +37,12 @@ Audit and improve:
 - `sphinx_docs_build/source/*.rst`
 - inline docstrings in Python files under `purpleair_data_logger/**`
 - comments/doc text in interface/docs-related files where clearly incorrect or missing
+
+## Hard Requirements & Scope Limits (Token Optimization)
+
+- **Single-Target Scope**: Limit each run to at most 1–2 documentation files or 1 Python module's docstrings (1–3 focused improvements maximum). Do not attempt a repo-wide audit in a single run.
+- **Bounded file reads**: Files larger than 20 KB must **not** be read in full. Use targeted `grep`, `head`, `tail`, or line-range views.
+- **Turn Budget**: Complete inspection and edits within 10–12 turns. If no clear improvements are found, stop cleanly without editing.
 
 ## Goals
 
