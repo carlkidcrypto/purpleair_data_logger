@@ -12,8 +12,6 @@ Performs two roles:
 Designed to run as a long-lived daemon (forever loop) or as a
 one-shot converter when ``poll_interval_seconds`` is omitted.
 
-Requires purpleair_api >= 1.5.1a1 (includes
-``purpleair_api.PurpleAirMatterConverter``).
 When calling ``validate_parameters_and_run()`` without a JSON config file,
 pass ``sensor_indexes`` via the constructor.
 

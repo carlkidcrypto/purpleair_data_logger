@@ -161,15 +161,15 @@ def test_categorize_item():
 
 
 def test_parse_semver():
-    assert parse_semver("v1.5.1") == (1, 5, 0, 1, "")
-    assert parse_semver("v1.5.1a2") == (1, 5, 0, 0, "a2")
+    assert parse_semver("v1.5.0") == (1, 5, 0, 1, "")
+    assert parse_semver("v1.5.0a2") == (1, 5, 0, 0, "a2")
     assert parse_semver("0.0.8b1") == (0, 0, 8, 0, "b1")
     assert parse_semver("invalid-tag") is None
 
 
 def test_determine_base_tag_priority_1_override():
     rel = {
-        "tag_name": "v1.5.1",
+        "tag_name": "v1.5.0",
         "prerelease": False,
         "body": "Some body\n<!-- BASE_TAG: v1.4.0-custom -->\nMore text",
     }
@@ -181,11 +181,11 @@ def test_determine_base_tag_priority_2_stable():
     releases = [
         {"tag_name": "v1.3.0", "prerelease": False},
         {"tag_name": "v1.4.0", "prerelease": False},
-        {"tag_name": "v1.5.1a1", "prerelease": True},
-        {"tag_name": "v1.5.1a2", "prerelease": True},
-        {"tag_name": "v1.5.1", "prerelease": False},
+        {"tag_name": "v1.5.0a1", "prerelease": True},
+        {"tag_name": "v1.5.0a2", "prerelease": True},
+        {"tag_name": "v1.5.0", "prerelease": False},
     ]
-    # For v1.5.1 (stable), the base must skip prereleases and pick v1.4.0
+    # For v1.5.0 (stable), the base must skip prereleases and pick v1.4.0
     base = determine_base_tag(releases[-1], releases, set())
     assert base == "v1.4.0"
 
@@ -193,17 +193,17 @@ def test_determine_base_tag_priority_2_stable():
 def test_determine_base_tag_priority_3_prerelease():
     releases = [
         {"tag_name": "v1.4.0", "prerelease": False},
-        {"tag_name": "v1.5.1a1", "prerelease": True},
-        {"tag_name": "v1.5.1a2", "prerelease": True},
+        {"tag_name": "v1.5.0a1", "prerelease": True},
+        {"tag_name": "v1.5.0a2", "prerelease": True},
     ]
-    # For v1.5.1a2 (prerelease), base picks the immediately preceding release
+    # For v1.5.0a2 (prerelease), base picks the immediately preceding release
     base = determine_base_tag(releases[-1], releases, set())
-    assert base == "v1.5.1a1"
+    assert base == "v1.5.0a1"
 
 
 def test_determine_base_tag_priority_4_semver_fallback():
-    current_rel = {"tag_name": "v1.5.1", "prerelease": False, "body": ""}
-    git_tags = {"v1.0.0", "v1.3.0", "v1.4.2", "v1.5.1", "v2.0.0"}
+    current_rel = {"tag_name": "v1.5.0", "prerelease": False, "body": ""}
+    git_tags = {"v1.0.0", "v1.3.0", "v1.4.2", "v1.5.0", "v2.0.0"}
     base = determine_base_tag(current_rel, [current_rel], git_tags)
     assert base == "v1.4.2"
 
@@ -262,7 +262,7 @@ def test_synthesize_summary():
 
 def test_build_release_notes():
     release = {
-        "tag_name": "v1.5.1",
+        "tag_name": "v1.5.0",
         "prerelease": False,
         "body": (
             "* Add Matter protocol logger by @carlkidcrypto in"
@@ -282,15 +282,15 @@ def test_build_release_notes():
     notes = build_release_notes(release, "v1.4.2", git_commits)
 
     assert "Compared to: v1.4.2" in notes
-    assert "pip install purpleair_data_logger==1.5.1" in notes
-    assert "https://pypi.org/project/purpleair_data_logger/1.5.1/" in notes
+    assert "pip install purpleair_data_logger==1.5.0" in notes
+    assert "https://pypi.org/project/purpleair_data_logger/1.5.0/" in notes
     assert "## Features / Enhancements" in notes
     assert "- Adds Matter protocol logger (#50)" in notes
     assert "## Bug Fixes" in notes
     assert "- Fixes query formatting in PSQL (#51)" in notes
     assert (
         "**Full Changelog**:"
-        " https://github.com/carlkidcrypto/purpleair_data_logger/compare/v1.4.2...v1.5.1"
+        " https://github.com/carlkidcrypto/purpleair_data_logger/compare/v1.4.2...v1.5.0"
         in notes
     )
 

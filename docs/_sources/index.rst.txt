@@ -6,7 +6,7 @@ Select a version of the documentation to browse:
 .. VERSION_LIST_START
 
 * `Latest Version <./html/index.html>`_
-* `v1.5.1 <./html_v1.5.1/index.html>`_
+* `v1.6.0a0 <./html_v1.6.0a0/index.html>`_
 
 .. VERSION_LIST_END
 

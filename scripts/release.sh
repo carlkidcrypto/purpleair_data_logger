@@ -59,8 +59,15 @@ pathspecs=(
     ':(exclude)docs/html/**'
     ':(exclude)docs/html_v*/**'
     ':(exclude)docs/doctrees/**'
+    ':(exclude)docs/_static/**'
     ':(exclude)python3.12.venv/**'
-    ':(exclude)tests/requirements.txt'
+    ':(exclude)tests/**'
+    ':(exclude).github/scripts/**'
+    ':(exclude)scripts/README.md'
+    ':(exclude)purpleair_data_logger/PurpleAirMatterDataLogger.py'
+    ':(exclude)purpleair_data_logger/PurpleAirMatterDataLoggerConstants.py'
+    ':(exclude)sphinx_docs_build/source/Requirements.rst'
+    ':(exclude)sphinx_docs_build/source/PurpleAirMatterDataLogger.rst'
     ':(exclude).github/workflows/*.lock.yml'
 )
 
@@ -99,9 +106,15 @@ if [[ "$dry_run" == true ]]; then
     exit 0
 fi
 
-OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
-    's/\Qv$ENV{OLD_VERSION}\E/v$ENV{NEW_VERSION}/g; s/\Q$ENV{OLD_VERSION}\E/$ENV{NEW_VERSION}/g' \
-    "${version_files[@]}"
+for file in "${version_files[@]}"; do
+    if [[ "$file" == "setup.cfg" ]]; then
+        OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
+            's/^version\s*=\s*\Q$ENV{OLD_VERSION}\E$/version = $ENV{NEW_VERSION}/m' "$file"
+    else
+        OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
+            's/\Qv$ENV{OLD_VERSION}\E/v$ENV{NEW_VERSION}/g; s/\Q$ENV{OLD_VERSION}\E/$ENV{NEW_VERSION}/g' "$file"
+    fi
+done
 
 remaining=()
 while IFS= read -r file; do

@@ -15,10 +15,10 @@ It deterministically:
 
 Usage:
     # Process a single release tag (dry-run):
-    python3 .github/scripts/generate_release_notes.py --tag v1.5.1
+    python3 .github/scripts/generate_release_notes.py --tag v1.5.0
 
     # Process and publish a single release tag:
-    python3 .github/scripts/generate_release_notes.py --tag v1.5.1 --publish
+    python3 .github/scripts/generate_release_notes.py --tag v1.5.0 --publish
 
     # Process the latest published release:
     python3 .github/scripts/generate_release_notes.py --latest --publish
@@ -716,7 +716,7 @@ def main() -> int:
         description="Generate and update purpleair_data_logger GitHub release notes."
     )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument("--tag", help="Process a specific release tag (e.g. v1.5.1).")
+    group.add_argument("--tag", help="Process a specific release tag (e.g. v1.5.0).")
     group.add_argument(
         "--latest",
         action="store_true",
