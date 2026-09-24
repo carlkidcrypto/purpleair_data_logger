@@ -4,7 +4,9 @@
 name: TestPyPI Distributions
 permissions:
   contents: read
-concurrency: build_and_publish_to_test_pypi
+concurrency:
+  group: build_and_publish_to_test_pypi
+  cancel-in-progress: true
 on:
   push:
     branches: [ main ]

@@ -347,3 +347,18 @@ metadata alongside device records.
 level instead of ERROR level to avoid log spam for routine transient network
 outages.
 
+Continuous integration and deployment requirements
+--------------------------------------------------
+
+**[CICD-001]** Every GitHub Actions workflow shall configure a workflow-level concurrency group
+named after the workflow file name (excluding the ``.yml`` extension).
+
+**[CICD-002]** Every GitHub Actions workflow concurrency configuration shall set
+``cancel-in-progress: true`` so that only one run of each workflow executes at a time.
+
+**[CICD-003]** When new commits are pushed to an open pull request, any obsolete in-progress
+workflow runs for that workflow shall be cancelled immediately.
+
+**[CICD-004]** When new commits are pushed to the ``main`` branch, any obsolete in-progress
+workflow runs for that workflow shall be cancelled immediately.
+
