@@ -24,7 +24,7 @@ jobs:
         with:
           files: |
             .github/workflows/tests.yml
-            purpleair_api/*.py
+            purpleair_data_logger/*.py
             tests/*.py
             tests/*.txt
             setup.py

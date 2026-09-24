@@ -22,9 +22,13 @@ safe-outputs:
     preserve-branch-name: true
     if-no-changes: ignore
 
-timeout-minutes: 45
+timeout-minutes: 15
+max-ai-credits: 25
 
-network: defaults
+network:
+  allowed:
+    - defaults
+    - devguide.python.org
 
 tools:
   edit:
