@@ -1,5 +1,9 @@
 name: Validate Workflow Files
 
+concurrency:
+  group: verify_syntax
+  cancel-in-progress: true
+
 on:
   push:
     paths:

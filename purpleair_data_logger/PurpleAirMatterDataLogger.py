@@ -12,8 +12,6 @@ Performs two roles:
 Designed to run as a long-lived daemon (forever loop) or as a
 one-shot converter when ``poll_interval_seconds`` is omitted.
 
-Requires purpleair_api >= 1.5.0a1 (includes
-``purpleair_api.PurpleAirMatterConverter``).
 When calling ``validate_parameters_and_run()`` without a JSON config file,
 pass ``sensor_indexes`` via the constructor.
 
@@ -68,7 +66,24 @@ from purpleair_data_logger.PurpleAirMatterDataLoggerConstants import (
     MATTER_DATA_LOGGER_LOG_LEVEL,
 )
 
+from dataclasses import dataclass
+import time
+
 logger = logging.getLogger(__name__)
+
+
+# =============================================================================
+# Cached Sensor Structure
+# =============================================================================
+
+
+@dataclass
+class CachedSensor:
+    """Cached sensor reading and timestamp for offline and stale state handling."""
+
+    data: dict[str, Any]
+    last_seen: float
+    is_stale: bool = False
 
 
 # =============================================================================
@@ -133,7 +148,15 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
                 items = list(self.server.matter_devices.items())
 
             payload = {
-                "sensors": [{"sensor_index": idx, "device": dev} for idx, dev in items],
+                "sensors": [
+                    {
+                        "sensor_index": idx,
+                        "device": dev,
+                        "_status": dev.get("_status", "online"),
+                        "_last_seen": dev.get("_last_seen"),
+                    }
+                    for idx, dev in items
+                ],
                 "count": len(items),
             }
             self._send_json(200, payload)
@@ -153,7 +176,14 @@ class _MatterDataLoggerHandler(BaseHTTPRequestHandler):
                 )
                 return
 
-            self._send_json(200, {"device": device})
+            self._send_json(
+                200,
+                {
+                    "device": device,
+                    "_status": device.get("_status", "online"),
+                    "_last_seen": device.get("_last_seen"),
+                },
+            )
 
         else:
             self._send_json(404, {"error": "Not found"})
@@ -259,6 +289,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         sensor_names: dict[int, str] | None = None,
         read_keys: dict[int, str] | None = None,
         matter_only: bool = False,
+        offline_grace_seconds: int = 600,
+        max_retries: int = 3,
+        retry_backoff_factor: float = 0.05,
     ) -> None:
         super().__init__(
             PurpleAirApiReadKey=PurpleAirApiReadKey,
@@ -269,6 +302,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._http_port = http_port
         self._http_host = http_host
         self._matter_only = matter_only
+        self._offline_grace_seconds = offline_grace_seconds
+        self._max_retries = max_retries
+        self._retry_backoff_factor = retry_backoff_factor
 
         # Config defaults (populated from JSON config files / CLI args)
         self._sensor_indexes: list[int] = list(sensor_indexes or [])
@@ -277,6 +313,8 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
+        # Cache of sensor readings for offline and stale state handling
+        self._sensor_cache: dict[int, CachedSensor] = {}
         self._httpd: _MatterHTTPServer | None = None
         self._http_thread: threading.Thread | None = None
         self._lock = threading.Lock()
@@ -336,26 +374,78 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         """
         Fetch one sensor's data from PurpleAir and convert to Matter format.
 
+        Handles retries with exponential backoff on transient errors, and
+        gracefully serves cached data (stale or offline) when unreachable.
+
         :param sensor_index: PurpleAir sensor index.
         :param sensor_name: Optional display name override for Matter output.
         :param primary_key: Optional Read key for this specific sensor.
-        :return: Matter device dict, or None on error.
+        :return: Matter device dict, or fallback offline device dict.
         """
-        try:
-            raw = self._purpleair_api_obj.request_sensor_data(
-                sensor_index,
-                read_key=primary_key,
-            )
-            return PurpleAirMatterConverter.to_air_quality_sensor(
-                raw,
-                sensor_name=sensor_name,
-            )
-        except PurpleAirAPIError as exc:
-            logger.warning("Sensor %s: PurpleAir API error: %s", sensor_index, exc)
-            return None
-        except Exception:
-            logger.exception("Sensor %s: unexpected polling error", sensor_index)
-            return None
+        max_retries = getattr(self, "_max_retries", 3)
+        backoff_factor = getattr(self, "_retry_backoff_factor", 0.05)
+        grace_seconds = getattr(self, "_offline_grace_seconds", 600)
+        cache = getattr(self, "_sensor_cache", None)
+        if cache is None:
+            cache = {}
+            self._sensor_cache = cache
+
+        last_exception = None
+        for attempt in range(max_retries + 1):
+            try:
+                raw = self._purpleair_api_obj.request_sensor_data(
+                    sensor_index,
+                    read_key=primary_key,
+                )
+                device = PurpleAirMatterConverter.to_air_quality_sensor(
+                    raw,
+                    sensor_name=sensor_name,
+                )
+                now = time.time()
+                device["_status"] = "online"
+                device["_last_seen"] = now
+                cache[sensor_index] = CachedSensor(
+                    data=device,
+                    last_seen=now,
+                    is_stale=False,
+                )
+                return device
+            except Exception as exc:
+                last_exception = exc
+                if attempt < max_retries:
+                    delay = backoff_factor * (2 ** attempt)
+                    if delay > 0:
+                        sleep(delay)
+
+        # All attempts failed — handle offline / stale fallback
+        logger.warning("Sensor %s offline: %s", sensor_index, last_exception)
+        now = time.time()
+        cached = cache.get(sensor_index)
+        if cached:
+            time_since_last_seen = now - cached.last_seen
+            device = dict(cached.data)
+            if time_since_last_seen <= grace_seconds:
+                cached.is_stale = True
+                device["_status"] = "stale"
+                device["_last_seen"] = cached.last_seen
+                return device
+            else:
+                cached.is_stale = True
+                device["_status"] = "offline"
+                device["_last_seen"] = cached.last_seen
+                self._mark_device_offline_clusters(device)
+                return device
+
+        # Never seen before: construct minimal offline device
+        fallback_data = {
+            "sensor_index": sensor_index,
+            "name": sensor_name or f"PurpleAir Sensor {sensor_index}",
+        }
+        device = PurpleAirMatterConverter.to_air_quality_sensor(fallback_data)
+        device["_status"] = "offline"
+        device["_last_seen"] = None
+        self._mark_device_offline_clusters(device)
+        return device
 
     def _poll_and_convert_multiple(
         self,
@@ -373,12 +463,27 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         """
         results: dict[int, dict[str, Any]] = {}
         for idx in sensor_indexes:
-            name = sensor_names.get(idx) if sensor_names else None
-            key = primary_keys.get(idx) if primary_keys else None
-            device = self._poll_and_convert_sensor(idx, name, key)
-            if device is not None:
-                results[idx] = device
+            try:
+                name = sensor_names.get(idx) if sensor_names else None
+                key = primary_keys.get(idx) if primary_keys else None
+                device = self._poll_and_convert_sensor(idx, name, key)
+                if device is not None:
+                    results[idx] = device
+            except Exception as exc:
+                logger.warning("Sensor %s: unexpected error during polling: %s", idx, exc)
         return results
+
+    @staticmethod
+    def _mark_device_offline_clusters(device: dict[str, Any]) -> None:
+        """Set airQuality and aqiRating to 0 (kUnknown) for an offline device."""
+        clusters = device.get("clusters")
+        if isinstance(clusters, dict):
+            aq = clusters.get("air_quality_measurement")
+            if isinstance(aq, dict):
+                attrs = aq.get("attributes")
+                if isinstance(attrs, dict):
+                    attrs["airQuality"] = 0
+                    attrs["aqiRating"] = 0
 
     @staticmethod
     def _local_average(raw: dict[str, Any], primary: str, secondary: str) -> Any:
@@ -391,13 +496,22 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
     def _poll_and_convert_local(self) -> dict[int, dict[str, Any]]:
         """Poll configured local sensors and convert their payloads to Matter JSON."""
+        now = time.time()
+        results: dict[int, dict[str, Any]] = {}
+        cache = getattr(self, "_sensor_cache", None)
+        if cache is None:
+            cache = {}
+            self._sensor_cache = cache
+        grace_seconds = getattr(self, "_offline_grace_seconds", 600)
+
+        local_sensors = {}
         try:
             local_sensors = self._purpleair_api_obj.request_local_sensor_data()
         except PurpleAirAPIError as exc:
             logger.warning("PurpleAir local API error: %s", exc)
-            return {}
+        except Exception as exc:
+            logger.warning("PurpleAir local API unexpected error: %s", exc)
 
-        results: dict[int, dict[str, Any]] = {}
         for address, raw in local_sensors.items():
             try:
                 sensor_id = str(raw["SensorId"])
@@ -425,11 +539,34 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                     "pm2.5": self._local_average(raw, "pm2_5_atm", "pm2_5_atm_b"),
                     "pm10.0": self._local_average(raw, "pm10_0_atm", "pm10_0_atm_b"),
                 }
-                results[sensor_index] = PurpleAirMatterConverter.to_air_quality_sensor(
-                    canonical
+                device = PurpleAirMatterConverter.to_air_quality_sensor(canonical)
+                device["_status"] = "online"
+                device["_last_seen"] = now
+                cache[sensor_index] = CachedSensor(
+                    data=device,
+                    last_seen=now,
+                    is_stale=False,
                 )
+                results[sensor_index] = device
             except (KeyError, TypeError, ValueError) as exc:
                 logger.warning("Local sensor %s: invalid payload: %s", address, exc)
+
+        # For any previously cached local sensors not seen in this poll:
+        for sensor_index, cached in list(cache.items()):
+            if sensor_index not in results:
+                time_since_last_seen = now - cached.last_seen
+                device = dict(cached.data)
+                if time_since_last_seen <= grace_seconds:
+                    cached.is_stale = True
+                    device["_status"] = "stale"
+                    device["_last_seen"] = cached.last_seen
+                else:
+                    cached.is_stale = True
+                    device["_status"] = "offline"
+                    device["_last_seen"] = cached.last_seen
+                    self._mark_device_offline_clusters(device)
+                results[sensor_index] = device
+
         return results
 
     # -------------------------------------------------------------------------
@@ -592,6 +729,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             self._http_port = config.get("http_port", self._http_port)
             self._http_host = config.get("http_host", self._http_host)
             self._matter_only = config.get("matter_only", self._matter_only)
+            self._offline_grace_seconds = config.get(
+                "offline_grace_seconds", self._offline_grace_seconds
+            )
+            self._max_retries = config.get("max_retries", self._max_retries)
 
         # Validate that we have sensors to poll before starting the server
         sensor_indexes: list[int] = config.get("sensor_indexes", self._sensor_indexes)
@@ -629,6 +770,12 @@ def main(argv: list[str] | None = None) -> None:
         help="Run only the Matter conversion and HTTP API.",
     )
     parser.add_argument(
+        "--offline-grace-seconds",
+        default=600,
+        type=int,
+        help="Grace period in seconds before an unreachable sensor is marked offline.",
+    )
+    parser.add_argument(
         "-save_file_path",
         default=None,
         help="Compatibility option; Matter output is served over HTTP, not saved.",
@@ -648,6 +795,7 @@ def main(argv: list[str] | None = None) -> None:
         http_host=args.http_host,
         http_port=args.http_port,
         matter_only=args.matter_only,
+        offline_grace_seconds=args.offline_grace_seconds,
     )
     if args.save_file_path:
         logger.warning(
@@ -666,4 +814,4 @@ if __name__ == "__main__":  # pragma: no cover
     main()
 
 
-__all__ = ["PurpleAirMatterDataLogger", "main"]
+__all__ = ["CachedSensor", "PurpleAirMatterDataLogger", "main"]

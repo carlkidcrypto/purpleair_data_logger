@@ -323,3 +323,42 @@ unencrypted, and the default host shall remain loopback-only.
 JSON and shall not be described as implementing Matter transport, discovery,
 commissioning, fabrics, or certification.
 
+**[MAT-027]** Sensor polling shall retry failed requests up to a configurable
+number of retries (default 3) using exponential backoff before marking a
+request failed.
+
+**[MAT-028]** When a sensor request fails, the Matter logger shall serve cached
+readings marked with status ``stale`` during an offline grace period (default 600
+seconds).
+
+**[MAT-029]** When a sensor exceeds the offline grace period without successful
+responses, the Matter logger shall report status ``offline`` with ``airQuality``
+cluster attributes set to 0 (``kUnknown``).
+
+**[MAT-030]** When a previously failed sensor successfully responds to a poll,
+the Matter logger shall restore status ``online`` and update the ``_last_seen``
+timestamp.
+
+**[MAT-031]** HTTP endpoints ``/matter/sensors`` and
+``/matter/sensor/<sensor_index>`` shall expose ``_status`` and ``_last_seen``
+metadata alongside device records.
+
+**[MAT-032]** Offline or unreachable sensor events shall be logged at WARNING
+level instead of ERROR level to avoid log spam for routine transient network
+outages.
+
+Continuous integration and deployment requirements
+--------------------------------------------------
+
+**[CICD-001]** Every GitHub Actions workflow shall configure a workflow-level concurrency group
+named after the workflow file name (excluding the ``.yml`` extension).
+
+**[CICD-002]** Every GitHub Actions workflow concurrency configuration shall set
+``cancel-in-progress: true`` so that only one run of each workflow executes at a time.
+
+**[CICD-003]** When new commits are pushed to an open pull request, any obsolete in-progress
+workflow runs for that workflow shall be cancelled immediately.
+
+**[CICD-004]** When new commits are pushed to the ``main`` branch, any obsolete in-progress
+workflow runs for that workflow shall be cancelled immediately.
+
