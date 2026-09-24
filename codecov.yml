@@ -1,0 +1,36 @@
+# CodeCov configuration for purpleair_data_logger
+# Documentation: https://docs.codecov.com/docs/codecov-yaml
+
+# Coverage configuration
+coverage:
+  precision: 2
+  round: down
+  range: "70...100"
+
+  status:
+    project:
+      default:
+        target: auto
+        threshold: 1%
+        informational: false
+    patch:
+      default:
+        target: auto
+        threshold: 1%
+        informational: false
+
+# Ignore paths - exclude test files and configuration from coverage reports
+ignore:
+  - "tests/**"
+  - "behave_tests/**"
+  - "setup.py"
+  - "setup.cfg"
+  - ".github/**"
+
+# Comment configuration for pull requests
+comment:
+  layout: "header, diff, files, footer"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true

@@ -19,7 +19,8 @@ safe-outputs:
     draft: false
     preserve-branch-name: true
     if-no-changes: "ignore"
-timeout-minutes: 30
+timeout-minutes: 15
+max-ai-credits: 25
 model: claude-sonnet-5
 engine:
   id: copilot
@@ -47,8 +48,14 @@ Generate and open a changelog update PR only when substantive changelog content 
    - Ensure full git history and tags are available.
    - Use local repository history for all commit analysis steps.
    - Do not call GitHub commit-reading APIs/tools (for example `list_commits`, `get_commit`) for changelog intelligence.
-   - If `git-chglog` is missing, install it with:
-     - `go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest`
+   - If `git-chglog` is missing, install it using the pre-built binary (fast — no compilation):
+     ```bash
+     curl -sSfL https://github.com/git-chglog/git-chglog/releases/download/v0.15.4/git-chglog_0.15.4_linux_amd64.tar.gz \
+       | tar xz -C /usr/local/bin git-chglog
+     ```
+   - If the curl download fails, fall back to: `go install github.com/git-chglog/git-chglog/cmd/git-chglog@latest`
+   - After installation, verify it works: `git-chglog --version`
+   - **If git-chglog cannot be installed by either method, stop immediately with a clear error message. Do NOT attempt to re-implement changelog generation using Python, shell, or any other scripting language.**
 
 2. Generate candidate changelog content:
    - `git-chglog --config .chglog/config.yml -o CHANGELOG.tmp`

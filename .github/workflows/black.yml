@@ -1,39 +1,88 @@
 name: Black
-permissions:
-  contents: read
 
 on:
   push:
     branches: [ main ]
-
+    paths:
+      - '**/*.py'
+      - '*.py'
+      - 'setup.cfg'
+      - '.github/workflows/black.yml'
   pull_request:
     branches: [ main ]
+    paths:
+      - '**/*.py'
+      - '*.py'
+      - 'setup.cfg'
+      - '.github/workflows/black.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
-  check-source-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      run_job: ${{ steps.changed-files.outputs.any_changed }}
-    steps:
-      - name: Checkout Sourcecode
-        uses: actions/checkout@v7
-
-      - name: Check for changes in source code
-        id: changed-files
-        uses: tj-actions/changed-files@v47.0.6
-        with:
-          files: |
-            .github/workflows/black.yml
-            purpleair_api/*.py
-            tests/*.py
-            tests/*.txt
-            setup.py
-            setup.cfg
-
+  verify-syntax:
+    permissions: { contents: read }
+    uses: ./.github/workflows/verify_syntax.yml
   black:
+    needs: verify-syntax
     runs-on: ubuntu-latest
-    needs: check-source-changes
-    if: needs.check-source-changes.outputs.run_job == 'true'
     steps:
       - uses: actions/checkout@v7
-      - uses: psf/black@26.5.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: '3.x'
+
+      - name: Install Black
+        run: pip install black==26.5.1
+
+      - name: Run Black
+        run: black .
+
+      - name: Check for changes
+        id: changed
+        run: |
+          if git diff --exit-code; then
+            echo "changed=false" >> $GITHUB_OUTPUT
+          else
+            echo "changed=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create PR for formatting fixes
+        if: steps.changed.outputs.changed == 'true' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          BASE_BRANCH: ${{ github.event_name == 'pull_request' && github.head_ref || github.ref_name }}
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          SAFE_BASE_BRANCH=$(echo "$BASE_BRANCH" | tr '/' '-')
+          BRANCH_NAME="auto-black-$SAFE_BASE_BRANCH"
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            git checkout -B "$BASE_BRANCH"
+            git commit -am "style: auto-format with black" || echo "No changes to commit"
+            git push origin "$BASE_BRANCH"
+          else
+            git checkout -b "$BRANCH_NAME"
+            git commit -am "style: auto-format with black" || echo "No changes to commit"
+            git push -f origin "$BRANCH_NAME"
+            gh pr create \
+              --base "$BASE_BRANCH" \
+              --head "$BRANCH_NAME" \
+              --title "style: auto-format with black" \
+              --body "Automated pull request to fix code style formatting issues using black." || echo "PR already exists"
+          fi
+
+      - name: Fail if changes were needed
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          echo "Code formatting issues were detected and a commit or pull request was created."
+          exit 1
