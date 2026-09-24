@@ -1,18 +1,18 @@
 ---
-name: Coverage Autofix Every 3 Days
+name: Coverage Autofix Python
 on:
   schedule:
     - cron: "0 9 */3 * *"
   workflow_dispatch:
   skip-if-match:
-    query: 'is:pr is:open head:automation/coverage-autofix-every-3-days label:automated-pr'
+    query: 'is:pr is:open head:automation/coverage-autofix-python label:automated-pr'
 permissions:
   actions: read
   contents: read
   copilot-requests: write
 safe-outputs:
   create-pull-request:
-    title-prefix: "[coverage-autofix] "
+    title-prefix: "[coverage-autofix-py] "
     labels: [automated-pr]
     draft: true
     preserve-branch-name: true
@@ -22,7 +22,8 @@ safe-outputs:
     target: "*"
     allowed: [coverage, tests, python]
     max: 3
-timeout-minutes: 45
+timeout-minutes: 20
+max-ai-credits: 40
 model: claude-sonnet-5
 engine:
   id: copilot
@@ -41,11 +42,14 @@ implement minimal, safe fixes that improve coverage and reliability.
 ## Hard Requirements
 
 - Focus only on this repository.
-- Keep changes scoped and low-risk.
+- Keep changes scoped and low-risk. Limit each run to at most 1 target test file (1–3 focused test cases).
 - Prefer tests first when improving coverage.
 - Do not open a new pull request if an open automation PR already exists for
   branch `automation/coverage-autofix-every-3-days`.
 - If no meaningful change is needed, make no file edits and end cleanly.
+- **Bounded file reads (Token Optimization)**:
+  Files larger than 20 KB must **not** be read in full. Use targeted `grep`, `head`,
+  `tail`, or line-range views. Avoid dumping full source or test files into context.
 
 ## Coverage Check Procedure
 
@@ -83,15 +87,20 @@ implement minimal, safe fixes that improve coverage and reliability.
 - Do not modify `behave_tests/` unless the fix is specifically for a behaviour
   described there.
 - Avoid broad refactors or unrelated formatting churn.
+- Run `black` on all modified Python files before creating the PR:
+  ```bash
+  python -m pip install black
+  black <modified_files>
+  ```
 - Keep commits coherent and reviewable.
 
 ## Pull Request Output
 
 When changes exist, create exactly one PR using this fixed branch name:
 
-- Branch: `automation/coverage-autofix-every-3-days`
+- Branch: `automation/coverage-autofix-python`
 - Base: `main`
-- Title style: `[coverage-autofix] <short summary>`
+- Title style: `[coverage-autofix-py] <short summary>`
 - PR body must include:
   - Python coverage before/after (if measurable)
   - Summary of tests added/updated

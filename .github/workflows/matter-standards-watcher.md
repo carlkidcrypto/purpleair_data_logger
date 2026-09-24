@@ -30,7 +30,8 @@ safe-outputs:
       - sphinx_docs_build/source/**
 
 # Matter standards research should have enough time for authoritative source checks and tests.
-timeout-minutes: 45
+timeout-minutes: 30
+max-ai-credits: 40
 
 network:
   allowed:
