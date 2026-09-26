@@ -6,9 +6,11 @@ concurrency:
 
 on:
   push:
+    branches: [main]
     paths:
       - '.github/workflows/*.yml'
   pull_request:
+    branches: [main]
     paths:
       - '.github/workflows/*.yml'
   workflow_dispatch:
