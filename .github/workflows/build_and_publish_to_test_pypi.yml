@@ -10,6 +10,7 @@ concurrency:
 on:
   push:
     branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   check-source-changes:
@@ -26,7 +27,7 @@ jobs:
         with:
           files: |
             .github/workflows/build_and_publish_to_test_pypi.yml
-            .github/actions/build-and-publish-distribution/action.yml
+            .github/actions/build-distribution/action.yml
             setup.py
             setup.cfg
 
@@ -37,11 +38,16 @@ jobs:
     permissions:
       id-token: write
     needs: check-source-changes
-    if: needs.check-source-changes.outputs.run_job == 'true'
+    if: needs.check-source-changes.outputs.run_job == 'true' || github.event_name == 'workflow_dispatch'
 
     steps:
       - uses: actions/checkout@v7
-      - name: Build and Publish Distribution
-        uses: ./.github/actions/build-and-publish-distribution
+      - name: Build distribution
+        uses: ./.github/actions/build-distribution
+
+      - name: Publish distribution 📦 to Test PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
-          target: "test_pypi"
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
+          print-hash: true

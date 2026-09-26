@@ -1,0 +1,27 @@
+name: Build Distribution
+description: Build binary wheel and source tarball.
+
+inputs:
+  packages-dir:
+    description: Directory containing distributions to build
+    required: false
+    default: "dist/"
+
+runs:
+  using: composite
+  steps:
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v7
+      with:
+        python-version: "3.11"
+        cache: 'pip'
+
+    - name: Install pypa/build
+      shell: bash
+      run: |
+        python -m pip install build --user
+
+    - name: Build a binary wheel and a source tarball
+      shell: bash
+      run: |
+        python -m build --sdist --wheel --outdir ${{ inputs.packages-dir }} .
