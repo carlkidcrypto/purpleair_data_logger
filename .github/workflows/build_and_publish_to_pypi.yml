@@ -22,8 +22,11 @@ jobs:
 
     steps:
       - uses: actions/checkout@v7
-      - name: Build and Publish Distribution
-        uses: ./.github/actions/build-and-publish-distribution
+      - name: Build distribution
+        uses: ./.github/actions/build-distribution
+
+      - name: Publish distribution 📦 to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1.14
         with:
-          target: "pypi"
-          pypi-token: ${{ secrets.PYPI_API_TOKEN }}
+          print-hash: true
+          password: ${{ secrets.PYPI_API_TOKEN }}
