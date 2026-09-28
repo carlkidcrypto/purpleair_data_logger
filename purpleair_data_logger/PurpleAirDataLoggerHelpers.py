@@ -7,6 +7,10 @@ A helper file that contains functions for PurpleAirDataLogger* files.
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
 from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError
+try:
+    from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
+except ImportError:  # pragma: no cover
+    PurpleAirDeviceOfflineError = PurpleAirAPIError
 import argparse
 import time
 
@@ -419,7 +423,31 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     """
 
     # Ask for our local sensor data
-    local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
+    configured_addrs = getattr(
+        padl_obj._purpleair_api_obj, "_base_api_local_network_request_string_dict", {}
+    )
+    local_sensor_dict = {}
+    if isinstance(configured_addrs, dict) and configured_addrs:
+        for addr in configured_addrs.keys():
+            try:
+                single_data = padl_obj._purpleair_api_obj.request_local_sensor_data(addr)
+                if single_data and addr in single_data:
+                    local_sensor_dict[addr] = single_data[addr]
+            except PurpleAirDeviceOfflineError as exc:
+                debug_log(f"Local sensor {addr} is offline: {exc}")
+            except PurpleAirAPIError as exc:
+                debug_log(f"Local sensor {addr} API error: {exc}")
+            except Exception as exc:
+                debug_log(f"Local sensor {addr} unexpected error: {exc}")
+    else:
+        try:
+            local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
+        except PurpleAirDeviceOfflineError as exc:
+            debug_log(f"Local sensor is offline: {exc}")
+        except PurpleAirAPIError as exc:
+            debug_log(f"Local sensor API error: {exc}")
+        except Exception as exc:
+            debug_log(f"Local sensor unexpected error: {exc}")
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to

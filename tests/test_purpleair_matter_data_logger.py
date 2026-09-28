@@ -25,6 +25,7 @@ from purpleair_api.PurpleAirAPI import PurpleAirAPIError
 from purpleair_data_logger.PurpleAirMatterDataLogger import (
     CachedSensor,
     PurpleAirDataLoggerError,
+    PurpleAirDeviceOfflineError,
     PurpleAirMatterDataLogger,
     _MatterHTTPServer,
     _MatterDataLoggerHandler,
@@ -734,34 +735,32 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertEqual(result[expected_index]["_status"], "online")
 
     def test_fallback_per_sensor_polling_on_bulk_error(self):
-        """When bulk request fails with an exception, fallback queries each configured IP."""
+        """When 1 of 2 configured local sensors raises PurpleAirDeviceOfflineError, the other is converted."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
         mock_api = Mock()
-        mock_api.request_local_sensor_data.side_effect = RuntimeError("Connection refused")
+
+        def side_effect(addr=None):
+            if addr == "192.168.1.50":
+                return {
+                    "192.168.1.50": {
+                        "SensorId": "aa:bb:cc:dd:ee:ff",
+                        "hardwarediscovered": "PMS5003",
+                        "version": "7.0",
+                        "pm2_5_atm": 5.0,
+                    }
+                }
+            elif addr == "192.168.1.51":
+                raise PurpleAirDeviceOfflineError("Device at 192.168.1.51 is offline")
+            raise RuntimeError(f"Unexpected address {addr}")
+
+        mock_api.request_local_sensor_data.side_effect = side_effect
         mock_api._base_api_local_network_request_string_dict = {
             "192.168.1.50": "http://192.168.1.50/json",
             "192.168.1.51": "http://192.168.1.51/json",
         }
         logger._purpleair_api_obj = mock_api
 
-        with patch("purpleair_api.PurpleAirLocalAPI.PurpleAirLocalAPI") as MockLocalAPI:
-            def side_effect(addrs):
-                inst = Mock()
-                if "192.168.1.50" in addrs:
-                    inst.request_local_sensor_data.return_value = {
-                        "192.168.1.50": {
-                            "SensorId": "aa:bb:cc:dd:ee:ff",
-                            "hardwarediscovered": "PMS5003",
-                            "version": "7.0",
-                            "pm2_5_atm": 5.0,
-                        }
-                    }
-                else:
-                    inst.request_local_sensor_data.side_effect = RuntimeError("No route to host")
-                return inst
-
-            MockLocalAPI.side_effect = side_effect
-            result = logger._poll_and_convert_local()
+        result = logger._poll_and_convert_local()
 
         expected_index = int("aabbccddeeff", 16)
         self.assertEqual(len(result), 1)
