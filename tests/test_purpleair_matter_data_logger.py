@@ -712,6 +712,62 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["device_type"]["id"], 0x002D)
 
+    def test_partial_sensor_failure_still_converts_available_sensors(self):
+        """When 1 of 2 configured local sensors responds, it is converted successfully."""
+        logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
+        logger._purpleair_api_obj = Mock()
+        logger._purpleair_api_obj.request_local_sensor_data.return_value = {
+            "192.168.1.50": {
+                "SensorId": "aa:bb:cc:dd:ee:ff",
+                "hardwarediscovered": "PMS5003",
+                "version": "7.0",
+                "current_temp_f": 70,
+                "current_humidity": 50,
+                "pm2_5_atm": 5.0,
+            }
+        }
+
+        result = logger._poll_and_convert_local()
+        expected_index = int("aabbccddeeff", 16)
+        self.assertEqual(len(result), 1)
+        self.assertIn(expected_index, result)
+        self.assertEqual(result[expected_index]["_status"], "online")
+
+    def test_fallback_per_sensor_polling_on_bulk_error(self):
+        """When bulk request fails with an exception, fallback queries each configured IP."""
+        logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
+        mock_api = Mock()
+        mock_api.request_local_sensor_data.side_effect = RuntimeError("Connection refused")
+        mock_api._base_api_local_network_request_string_dict = {
+            "192.168.1.50": "http://192.168.1.50/json",
+            "192.168.1.51": "http://192.168.1.51/json",
+        }
+        logger._purpleair_api_obj = mock_api
+
+        with patch("purpleair_api.PurpleAirLocalAPI.PurpleAirLocalAPI") as MockLocalAPI:
+            def side_effect(addrs):
+                inst = Mock()
+                if "192.168.1.50" in addrs:
+                    inst.request_local_sensor_data.return_value = {
+                        "192.168.1.50": {
+                            "SensorId": "aa:bb:cc:dd:ee:ff",
+                            "hardwarediscovered": "PMS5003",
+                            "version": "7.0",
+                            "pm2_5_atm": 5.0,
+                        }
+                    }
+                else:
+                    inst.request_local_sensor_data.side_effect = RuntimeError("No route to host")
+                return inst
+
+            MockLocalAPI.side_effect = side_effect
+            result = logger._poll_and_convert_local()
+
+        expected_index = int("aabbccddeeff", 16)
+        self.assertEqual(len(result), 1)
+        self.assertIn(expected_index, result)
+        self.assertEqual(result[expected_index]["_status"], "online")
+
     def test_invalid_payload_is_skipped(self):
         """A local sensor payload missing required keys is skipped, not raised."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)

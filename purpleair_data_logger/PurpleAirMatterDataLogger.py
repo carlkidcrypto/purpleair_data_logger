@@ -512,6 +512,21 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         except Exception as exc:
             logger.warning("PurpleAir local API unexpected error: %s", exc)
 
+        configured_addrs = getattr(
+            self._purpleair_api_obj, "_base_api_local_network_request_string_dict", {}
+        )
+        if not local_sensors and isinstance(configured_addrs, dict) and configured_addrs:
+            from purpleair_api.PurpleAirLocalAPI import PurpleAirLocalAPI
+
+            for address in configured_addrs.keys():
+                try:
+                    single_api = PurpleAirLocalAPI([address])
+                    single_data = single_api.request_local_sensor_data()
+                    if single_data and address in single_data:
+                        local_sensors[address] = single_data[address]
+                except Exception as addr_exc:
+                    logger.warning("Local sensor %s error: %s", address, addr_exc)
+
         for address, raw in local_sensors.items():
             try:
                 sensor_id = str(raw["SensorId"])
