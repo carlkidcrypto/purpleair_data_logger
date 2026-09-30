@@ -50,7 +50,8 @@ from time import sleep
 from typing import Any
 from urllib.parse import urlsplit
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPIError
+from purpleair_api.PurpleAirAPI import PurpleAirAPI, PurpleAirAPIError
+
 try:
     from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
 except ImportError:  # pragma: no cover
@@ -417,7 +418,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             except Exception as exc:
                 last_exception = exc
                 if attempt < max_retries:
-                    delay = backoff_factor * (2 ** attempt)
+                    delay = backoff_factor * (2**attempt)
                     if delay > 0:
                         sleep(delay)
 
@@ -474,7 +475,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 if device is not None:
                     results[idx] = device
             except Exception as exc:
-                logger.warning("Sensor %s: unexpected error during polling: %s", idx, exc)
+                logger.warning(
+                    "Sensor %s: unexpected error during polling: %s", idx, exc
+                )
         return results
 
     @staticmethod
@@ -509,19 +512,31 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         grace_seconds = getattr(self, "_offline_grace_seconds", 600)
 
         local_sensors = {}
-        configured_addrs = getattr(
-            self._purpleair_api_obj, "_base_api_local_network_request_string_dict", {}
-        )
-        if isinstance(configured_addrs, dict) and configured_addrs:
-            for address in configured_addrs.keys():
+        local_api_objs = getattr(self, "_local_sensor_api_objs", None)
+        if not local_api_objs:
+            configured_addrs = getattr(
+                self._purpleair_api_obj,
+                "_base_api_local_network_request_string_dict",
+                {},
+            )
+            if isinstance(configured_addrs, dict) and len(configured_addrs) > 1:
+                local_api_objs = {
+                    addr: PurpleAirAPI(your_ipv4_address=[addr])
+                    for addr in configured_addrs.keys()
+                }
+
+        if local_api_objs:
+            for address, api_obj in local_api_objs.items():
                 try:
-                    single_data = self._purpleair_api_obj.request_local_sensor_data(address)
+                    single_data = api_obj.request_local_sensor_data()
                     if single_data and address in single_data:
                         local_sensors[address] = single_data[address]
                 except PurpleAirDeviceOfflineError as exc:
                     logger.warning("Local sensor %s is offline: %s", address, exc)
                 except PurpleAirAPIError as exc:
-                    logger.warning("PurpleAir local API error for sensor %s: %s", address, exc)
+                    logger.warning(
+                        "PurpleAir local API error for sensor %s: %s", address, exc
+                    )
                 except Exception as exc:
                     logger.warning("Local sensor %s error: %s", address, exc)
         else:

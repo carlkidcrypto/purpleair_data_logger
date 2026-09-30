@@ -6,7 +6,8 @@ A helper file that contains functions for PurpleAirDataLogger* files.
 """
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
-from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError
+from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError, PurpleAirAPI
+
 try:
     from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
 except ImportError:  # pragma: no cover
@@ -423,14 +424,24 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     """
 
     # Ask for our local sensor data
-    configured_addrs = getattr(
-        padl_obj._purpleair_api_obj, "_base_api_local_network_request_string_dict", {}
-    )
     local_sensor_dict = {}
-    if isinstance(configured_addrs, dict) and configured_addrs:
-        for addr in configured_addrs.keys():
+    local_api_objs = getattr(padl_obj, "_local_sensor_api_objs", None)
+    if not local_api_objs:
+        configured_addrs = getattr(
+            padl_obj._purpleair_api_obj,
+            "_base_api_local_network_request_string_dict",
+            {},
+        )
+        if isinstance(configured_addrs, dict) and len(configured_addrs) > 1:
+            local_api_objs = {
+                addr: PurpleAirAPI(your_ipv4_address=[addr])
+                for addr in configured_addrs.keys()
+            }
+
+    if local_api_objs:
+        for addr, api_obj in local_api_objs.items():
             try:
-                single_data = padl_obj._purpleair_api_obj.request_local_sensor_data(addr)
+                single_data = api_obj.request_local_sensor_data()
                 if single_data and addr in single_data:
                     local_sensor_dict[addr] = single_data[addr]
             except PurpleAirDeviceOfflineError as exc:

@@ -534,7 +534,9 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
         """Sensor within offline grace period returns stale cached reading."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
         logger._purpleair_api_obj = Mock()
-        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError("fail")
+        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError(
+            "fail"
+        )
         logger._max_retries = 1
         logger._retry_backoff_factor = 0.001
         logger._offline_grace_seconds = 600
@@ -543,11 +545,15 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
         initial_device = {
             "device_type": {"id": 0x002D},
             "clusters": {
-                "air_quality_measurement": {"attributes": {"airQuality": 1, "aqiRating": 1}}
+                "air_quality_measurement": {
+                    "attributes": {"airQuality": 1, "aqiRating": 1}
+                }
             },
         }
         logger._sensor_cache = {
-            282168: CachedSensor(data=initial_device, last_seen=now - 200, is_stale=False)
+            282168: CachedSensor(
+                data=initial_device, last_seen=now - 200, is_stale=False
+            )
         }
 
         res = logger._poll_and_convert_sensor(282168)
@@ -563,7 +569,9 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
         """Sensor exceeding offline grace period is marked offline with airQuality 0."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
         logger._purpleair_api_obj = Mock()
-        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError("fail")
+        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError(
+            "fail"
+        )
         logger._max_retries = 1
         logger._retry_backoff_factor = 0.001
         logger._offline_grace_seconds = 600
@@ -572,11 +580,15 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
         initial_device = {
             "device_type": {"id": 0x002D},
             "clusters": {
-                "air_quality_measurement": {"attributes": {"airQuality": 2, "aqiRating": 2}}
+                "air_quality_measurement": {
+                    "attributes": {"airQuality": 2, "aqiRating": 2}
+                }
             },
         }
         logger._sensor_cache = {
-            282168: CachedSensor(data=initial_device, last_seen=now - 700, is_stale=False)
+            282168: CachedSensor(
+                data=initial_device, last_seen=now - 700, is_stale=False
+            )
         }
 
         res = logger._poll_and_convert_sensor(282168)
@@ -619,7 +631,9 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
         """Sensor polling retries configured number of times with backoff before giving up."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
         logger._purpleair_api_obj = Mock()
-        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError("retry error")
+        logger._purpleair_api_obj.request_sensor_data.side_effect = PurpleAirAPIError(
+            "retry error"
+        )
         logger._max_retries = 3
         logger._retry_backoff_factor = 0.001
 
@@ -631,7 +645,9 @@ class PurpleAirMatterDataLoggerResilienceTest(unittest.TestCase):
     def test_poll_and_convert_multiple_handles_unexpected_exception(self):
         """Unexpected exception in _poll_and_convert_sensor is logged and loop continues."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        logger._poll_and_convert_sensor = Mock(side_effect=RuntimeError("unexpected crash"))
+        logger._poll_and_convert_sensor = Mock(
+            side_effect=RuntimeError("unexpected crash")
+        )
 
         results = logger._poll_and_convert_multiple([282168])
         self.assertEqual(results, {})
@@ -682,8 +698,8 @@ class PollAndConvertLocalTest(unittest.TestCase):
         """An unexpected error while polling local sensors yields {}."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
         logger._purpleair_api_obj = Mock()
-        logger._purpleair_api_obj.request_local_sensor_data.side_effect = (
-            RuntimeError("unexpected local fail")
+        logger._purpleair_api_obj.request_local_sensor_data.side_effect = RuntimeError(
+            "unexpected local fail"
         )
 
         self.assertEqual(logger._poll_and_convert_local(), {})
@@ -737,28 +753,24 @@ class PollAndConvertLocalTest(unittest.TestCase):
     def test_fallback_per_sensor_polling_on_bulk_error(self):
         """When 1 of 2 configured local sensors raises PurpleAirDeviceOfflineError, the other is converted."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        mock_api = Mock()
-
-        def side_effect(addr=None):
-            if addr == "192.168.1.50":
-                return {
-                    "192.168.1.50": {
-                        "SensorId": "aa:bb:cc:dd:ee:ff",
-                        "hardwarediscovered": "PMS5003",
-                        "version": "7.0",
-                        "pm2_5_atm": 5.0,
-                    }
-                }
-            elif addr == "192.168.1.51":
-                raise PurpleAirDeviceOfflineError("Device at 192.168.1.51 is offline")
-            raise RuntimeError(f"Unexpected address {addr}")
-
-        mock_api.request_local_sensor_data.side_effect = side_effect
-        mock_api._base_api_local_network_request_string_dict = {
-            "192.168.1.50": "http://192.168.1.50/json",
-            "192.168.1.51": "http://192.168.1.51/json",
+        mock_api_1 = Mock()
+        mock_api_1.request_local_sensor_data.return_value = {
+            "192.168.1.50": {
+                "SensorId": "aa:bb:cc:dd:ee:ff",
+                "hardwarediscovered": "PMS5003",
+                "version": "7.0",
+                "pm2_5_atm": 5.0,
+            }
         }
-        logger._purpleair_api_obj = mock_api
+        mock_api_2 = Mock()
+        mock_api_2.request_local_sensor_data.side_effect = PurpleAirDeviceOfflineError(
+            "Device at 192.168.1.51 is offline"
+        )
+        logger._local_sensor_api_objs = {
+            "192.168.1.50": mock_api_1,
+            "192.168.1.51": mock_api_2,
+        }
+        logger._purpleair_api_obj = Mock()
 
         result = logger._poll_and_convert_local()
 
@@ -766,6 +778,26 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertEqual(len(result), 1)
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["_status"], "online")
+
+    def test_local_sensor_polling_api_error_and_generic_error(self):
+        """When local sensors raise PurpleAirAPIError or generic Exception, errors are handled."""
+        logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
+        mock_api_1 = Mock()
+        mock_api_1.request_local_sensor_data.side_effect = PurpleAirAPIError(
+            "local API error"
+        )
+        mock_api_2 = Mock()
+        mock_api_2.request_local_sensor_data.side_effect = RuntimeError(
+            "unexpected crash"
+        )
+        logger._local_sensor_api_objs = {
+            "192.168.1.50": mock_api_1,
+            "192.168.1.51": mock_api_2,
+        }
+        logger._purpleair_api_obj = Mock()
+
+        result = logger._poll_and_convert_local()
+        self.assertEqual(result, {})
 
     def test_invalid_payload_is_skipped(self):
         """A local sensor payload missing required keys is skipped, not raised."""
@@ -790,11 +822,15 @@ class PollAndConvertLocalTest(unittest.TestCase):
         cached_device = {
             "device_type": {"id": 0x002D},
             "clusters": {
-                "air_quality_measurement": {"attributes": {"airQuality": 1, "aqiRating": 1}}
+                "air_quality_measurement": {
+                    "attributes": {"airQuality": 1, "aqiRating": 1}
+                }
             },
         }
         logger._sensor_cache = {
-            sensor_index: CachedSensor(data=cached_device, last_seen=now - 100, is_stale=False)
+            sensor_index: CachedSensor(
+                data=cached_device, last_seen=now - 100, is_stale=False
+            )
         }
 
         # Within grace period: status is stale
@@ -802,7 +838,9 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(sensor_index, result)
         self.assertEqual(result[sensor_index]["_status"], "stale")
         self.assertEqual(
-            result[sensor_index]["clusters"]["air_quality_measurement"]["attributes"]["airQuality"],
+            result[sensor_index]["clusters"]["air_quality_measurement"]["attributes"][
+                "airQuality"
+            ],
             1,
         )
 
@@ -812,9 +850,9 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(sensor_index, result_offline)
         self.assertEqual(result_offline[sensor_index]["_status"], "offline")
         self.assertEqual(
-            result_offline[sensor_index]["clusters"]["air_quality_measurement"]["attributes"][
-                "airQuality"
-            ],
+            result_offline[sensor_index]["clusters"]["air_quality_measurement"][
+                "attributes"
+            ]["airQuality"],
             0,
         )
 

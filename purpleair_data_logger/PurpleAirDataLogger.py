@@ -52,6 +52,14 @@ class PurpleAirDataLogger:
             your_ipv4_address=PurpleAirApiIpv4Address,
         )
 
+        if isinstance(PurpleAirApiIpv4Address, list):
+            self._local_sensor_api_objs = {
+                addr: PurpleAirAPI(your_ipv4_address=[addr])
+                for addr in PurpleAirApiIpv4Address
+            }
+        else:
+            self._local_sensor_api_objs = {}
+
         # Define how often we send requests
         self._send_request_every_x_seconds = 65
 
