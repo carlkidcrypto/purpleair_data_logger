@@ -753,6 +753,24 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         logic_for_storing_local_sensors_data(padl, json_config_file)
         padl.store_sensor_data.assert_not_called()
 
+    def test_logic_for_storing_local_sensors_data_bulk_generic_exception(self):
+        """Test generic exception handling when bulk local sensor request fails."""
+        padl = MagicMock()
+        padl._purpleair_api_obj = MagicMock()
+        padl._purpleair_api_obj.request_local_sensor_data.side_effect = RuntimeError(
+            "unexpected local error"
+        )
+        padl._purpleair_api_obj._base_api_local_network_request_string_dict = {
+            "192.168.1.2": "http://192.168.1.2/json",
+        }
+        padl.store_sensor_data = MagicMock(name="store_sensor_data")
+        json_config_file = {
+            "sensor_ip_list": ["192.168.1.2"],
+            "poll_interval_seconds": 1,
+        }
+        logic_for_storing_local_sensors_data(padl, json_config_file)
+        padl.store_sensor_data.assert_not_called()
+
     def test_logic_for_storing_group_sensors_data_with_add_sensors_false(self):
         """
         Test the branch where add_sensors_to_group is False — sensors should NOT be added.
