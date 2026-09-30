@@ -50,12 +50,11 @@ from time import sleep
 from typing import Any
 from urllib.parse import urlsplit
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPI, PurpleAirAPIError
-
-try:
-    from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
-except ImportError:  # pragma: no cover
-    PurpleAirDeviceOfflineError = PurpleAirAPIError
+from purpleair_api.PurpleAirAPI import PurpleAirAPI
+from purpleair_api.PurpleAirAPIError import (
+    PurpleAirAPIError,
+    PurpleAirDeviceOfflineError,
+)
 from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
@@ -315,6 +314,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._sensor_indexes: list[int] = list(sensor_indexes or [])
         self._sensor_names: dict[int, str] = dict(sensor_names or {})
         self._read_keys: dict[int, str] = dict(read_keys or {})
+        self._sensor_ip_list: list[str] = list(PurpleAirApiIpv4Address or [])
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
@@ -501,7 +501,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             return primary_value
         return (float(primary_value) + float(secondary_value)) / 2
 
-    def _poll_and_convert_local(self) -> dict[int, dict[str, Any]]:
+    def _poll_and_convert_local(
+        self, sensor_ip_list: list[str] | None = None
+    ) -> dict[int, dict[str, Any]]:
         """Poll configured local sensors and convert their payloads to Matter JSON."""
         now = time.time()
         results: dict[int, dict[str, Any]] = {}
@@ -510,6 +512,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             cache = {}
             self._sensor_cache = cache
         grace_seconds = getattr(self, "_offline_grace_seconds", 600)
+
+        if sensor_ip_list is None:
+            sensor_ip_list = getattr(self, "_sensor_ip_list", [])
 
         local_sensors = {}
         try:
@@ -521,17 +526,8 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         except Exception as exc:
             logger.warning("PurpleAir local API unexpected error: %s", exc)
 
-        configured_addrs = getattr(
-            self._purpleair_api_obj,
-            "_base_api_local_network_request_string_dict",
-            {},
-        )
-        if (
-            not local_sensors
-            and isinstance(configured_addrs, dict)
-            and len(configured_addrs) > 1
-        ):
-            for address in configured_addrs.keys():
+        if not local_sensors and len(sensor_ip_list) > 1:
+            for address in sensor_ip_list:
                 try:
                     single_api = PurpleAirAPI(your_ipv4_address=[address])
                     single_data = single_api.request_local_sensor_data()
@@ -652,7 +648,13 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         sensor_indexes: list[int] = json_config_file.get(
             "sensor_indexes", self._sensor_indexes
         )
-        local_mode = bool(json_config_file.get("sensor_ip_list"))
+        sensor_ip_list: list[str] = list(
+            json_config_file.get(
+                "sensor_ip_list", getattr(self, "_sensor_ip_list", [])
+            )
+            or []
+        )
+        local_mode = bool(sensor_ip_list)
         sensor_names: dict[int, str] = {
             int(k): v
             for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
@@ -663,9 +665,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         }
 
         configured_sensor_count = (
-            len(json_config_file["sensor_ip_list"])
-            if local_mode
-            else len(sensor_indexes)
+            len(sensor_ip_list) if local_mode else len(sensor_indexes)
         )
         logger.info(
             "Starting Matter conversion loop for %d sensor(s)",
@@ -679,7 +679,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 self._poll_interval,
             )
             devices = (
-                self._poll_and_convert_local()
+                self._poll_and_convert_local(sensor_ip_list)
                 if local_mode
                 else self._poll_and_convert_multiple(
                     sensor_indexes, sensor_names, primary_keys

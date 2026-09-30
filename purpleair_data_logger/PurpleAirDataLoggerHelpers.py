@@ -5,15 +5,15 @@ Copyright 2023 carlkidcrypto, All rights reserved.
 A helper file that contains functions for PurpleAirDataLogger* files.
 """
 
-from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
-from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError, PurpleAirAPI
-
-try:
-    from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
-except ImportError:  # pragma: no cover
-    PurpleAirDeviceOfflineError = PurpleAirAPIError
 import argparse
 import time
+
+from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
+from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log
+from purpleair_api.PurpleAirAPIError import (
+    PurpleAirAPIError,
+    PurpleAirDeviceOfflineError,
+)
 
 
 def generate_common_arg_parser(argparse_description=""):
@@ -434,17 +434,9 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     except Exception as exc:
         debug_log(f"Local sensor unexpected error: {exc}")
 
-    configured_addrs = getattr(
-        padl_obj._purpleair_api_obj,
-        "_base_api_local_network_request_string_dict",
-        {},
-    )
-    if (
-        not local_sensor_dict
-        and isinstance(configured_addrs, dict)
-        and len(configured_addrs) > 1
-    ):
-        for addr in configured_addrs.keys():
+    sensor_ip_list = json_config_file.get("sensor_ip_list", [])
+    if not local_sensor_dict and len(sensor_ip_list) > 1:
+        for addr in sensor_ip_list:
             try:
                 single_api = PurpleAirAPI(your_ipv4_address=[addr])
                 single_data = single_api.request_local_sensor_data()

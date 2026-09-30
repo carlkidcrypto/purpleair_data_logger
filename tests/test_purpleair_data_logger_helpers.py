@@ -24,12 +24,10 @@ from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
 )
 
 from purpleair_data_logger.PurpleAirDataLogger import PurpleAirDataLogger
-from purpleair_api.PurpleAirAPI import PurpleAirAPIError
-
-try:
-    from purpleair_api.PurpleAirAPIError import PurpleAirDeviceOfflineError
-except ImportError:  # pragma: no cover
-    PurpleAirDeviceOfflineError = PurpleAirAPIError
+from purpleair_api.PurpleAirAPIError import (
+    PurpleAirAPIError,
+    PurpleAirDeviceOfflineError,
+)
 
 from helpers import (
     DATA_IN_1,
@@ -681,10 +679,6 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         padl._purpleair_api_obj.request_local_sensor_data.side_effect = (
             PurpleAirDeviceOfflineError("Device 192.168.1.3 offline")
         )
-        padl._purpleair_api_obj._base_api_local_network_request_string_dict = {
-            "192.168.1.2": "http://192.168.1.2/json",
-            "192.168.1.3": "http://192.168.1.3/json",
-        }
         padl.store_sensor_data = MagicMock(name="store_sensor_data")
 
         mock_single_2 = MagicMock()
@@ -722,10 +716,6 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         padl._purpleair_api_obj.request_local_sensor_data.side_effect = (
             PurpleAirAPIError("bulk failed")
         )
-        padl._purpleair_api_obj._base_api_local_network_request_string_dict = {
-            "192.168.1.2": "http://192.168.1.2/json",
-            "192.168.1.3": "http://192.168.1.3/json",
-        }
         padl.store_sensor_data = MagicMock(name="store_sensor_data")
 
         mock_single_2 = MagicMock()
@@ -760,9 +750,6 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         padl._purpleair_api_obj.request_local_sensor_data.side_effect = RuntimeError(
             "unexpected local error"
         )
-        padl._purpleair_api_obj._base_api_local_network_request_string_dict = {
-            "192.168.1.2": "http://192.168.1.2/json",
-        }
         padl.store_sensor_data = MagicMock(name="store_sensor_data")
         json_config_file = {
             "sensor_ip_list": ["192.168.1.2"],

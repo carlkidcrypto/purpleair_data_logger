@@ -758,10 +758,7 @@ class PollAndConvertLocalTest(unittest.TestCase):
         bulk_api.request_local_sensor_data.side_effect = PurpleAirDeviceOfflineError(
             "Device at 192.168.1.51 is offline"
         )
-        bulk_api._base_api_local_network_request_string_dict = {
-            "192.168.1.50": "http://192.168.1.50/json",
-            "192.168.1.51": "http://192.168.1.51/json",
-        }
+        logger._sensor_ip_list = ["192.168.1.50", "192.168.1.51"]
         logger._purpleair_api_obj = bulk_api
 
         mock_single_50 = Mock()
@@ -802,10 +799,7 @@ class PollAndConvertLocalTest(unittest.TestCase):
         bulk_api.request_local_sensor_data.side_effect = PurpleAirAPIError(
             "bulk failed"
         )
-        bulk_api._base_api_local_network_request_string_dict = {
-            "192.168.1.50": "http://192.168.1.50/json",
-            "192.168.1.51": "http://192.168.1.51/json",
-        }
+        logger._sensor_ip_list = ["192.168.1.50", "192.168.1.51"]
         logger._purpleair_api_obj = bulk_api
 
         mock_single_50 = Mock()
