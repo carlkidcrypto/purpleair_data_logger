@@ -425,23 +425,29 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
 
     # Ask for our local sensor data
     local_sensor_dict = {}
-    local_api_objs = getattr(padl_obj, "_local_sensor_api_objs", None)
-    if not local_api_objs:
-        configured_addrs = getattr(
-            padl_obj._purpleair_api_obj,
-            "_base_api_local_network_request_string_dict",
-            {},
-        )
-        if isinstance(configured_addrs, dict) and len(configured_addrs) > 1:
-            local_api_objs = {
-                addr: PurpleAirAPI(your_ipv4_address=[addr])
-                for addr in configured_addrs.keys()
-            }
+    try:
+        local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
+    except PurpleAirDeviceOfflineError as exc:
+        debug_log(f"Local sensor is offline: {exc}")
+    except PurpleAirAPIError as exc:
+        debug_log(f"Local sensor API error: {exc}")
+    except Exception as exc:
+        debug_log(f"Local sensor unexpected error: {exc}")
 
-    if local_api_objs:
-        for addr, api_obj in local_api_objs.items():
+    configured_addrs = getattr(
+        padl_obj._purpleair_api_obj,
+        "_base_api_local_network_request_string_dict",
+        {},
+    )
+    if (
+        not local_sensor_dict
+        and isinstance(configured_addrs, dict)
+        and len(configured_addrs) > 1
+    ):
+        for addr in configured_addrs.keys():
             try:
-                single_data = api_obj.request_local_sensor_data()
+                single_api = PurpleAirAPI(your_ipv4_address=[addr])
+                single_data = single_api.request_local_sensor_data()
                 if single_data and addr in single_data:
                     local_sensor_dict[addr] = single_data[addr]
             except PurpleAirDeviceOfflineError as exc:
@@ -450,15 +456,6 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
                 debug_log(f"Local sensor {addr} API error: {exc}")
             except Exception as exc:
                 debug_log(f"Local sensor {addr} unexpected error: {exc}")
-    else:
-        try:
-            local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
-        except PurpleAirDeviceOfflineError as exc:
-            debug_log(f"Local sensor is offline: {exc}")
-        except PurpleAirAPIError as exc:
-            debug_log(f"Local sensor API error: {exc}")
-        except Exception as exc:
-            debug_log(f"Local sensor unexpected error: {exc}")
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to

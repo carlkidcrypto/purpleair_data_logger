@@ -750,11 +750,22 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["_status"], "online")
 
-    def test_fallback_per_sensor_polling_on_bulk_error(self):
+    @patch("purpleair_data_logger.PurpleAirMatterDataLogger.PurpleAirAPI")
+    def test_fallback_per_sensor_polling_on_bulk_error(self, mock_paa_cls):
         """When 1 of 2 configured local sensors raises PurpleAirDeviceOfflineError, the other is converted."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        mock_api_1 = Mock()
-        mock_api_1.request_local_sensor_data.return_value = {
+        bulk_api = Mock()
+        bulk_api.request_local_sensor_data.side_effect = PurpleAirDeviceOfflineError(
+            "Device at 192.168.1.51 is offline"
+        )
+        bulk_api._base_api_local_network_request_string_dict = {
+            "192.168.1.50": "http://192.168.1.50/json",
+            "192.168.1.51": "http://192.168.1.51/json",
+        }
+        logger._purpleair_api_obj = bulk_api
+
+        mock_single_50 = Mock()
+        mock_single_50.request_local_sensor_data.return_value = {
             "192.168.1.50": {
                 "SensorId": "aa:bb:cc:dd:ee:ff",
                 "hardwarediscovered": "PMS5003",
@@ -762,15 +773,19 @@ class PollAndConvertLocalTest(unittest.TestCase):
                 "pm2_5_atm": 5.0,
             }
         }
-        mock_api_2 = Mock()
-        mock_api_2.request_local_sensor_data.side_effect = PurpleAirDeviceOfflineError(
-            "Device at 192.168.1.51 is offline"
+        mock_single_51 = Mock()
+        mock_single_51.request_local_sensor_data.side_effect = (
+            PurpleAirDeviceOfflineError("Device at 192.168.1.51 is offline")
         )
-        logger._local_sensor_api_objs = {
-            "192.168.1.50": mock_api_1,
-            "192.168.1.51": mock_api_2,
-        }
-        logger._purpleair_api_obj = Mock()
+
+        def paa_side_effect(your_ipv4_address=None, **kwargs):
+            if your_ipv4_address == ["192.168.1.50"]:
+                return mock_single_50
+            elif your_ipv4_address == ["192.168.1.51"]:
+                return mock_single_51
+            return Mock()
+
+        mock_paa_cls.side_effect = paa_side_effect
 
         result = logger._poll_and_convert_local()
 
@@ -779,22 +794,37 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["_status"], "online")
 
-    def test_local_sensor_polling_api_error_and_generic_error(self):
+    @patch("purpleair_data_logger.PurpleAirMatterDataLogger.PurpleAirAPI")
+    def test_local_sensor_polling_api_error_and_generic_error(self, mock_paa_cls):
         """When local sensors raise PurpleAirAPIError or generic Exception, errors are handled."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        mock_api_1 = Mock()
-        mock_api_1.request_local_sensor_data.side_effect = PurpleAirAPIError(
+        bulk_api = Mock()
+        bulk_api.request_local_sensor_data.side_effect = PurpleAirAPIError(
+            "bulk failed"
+        )
+        bulk_api._base_api_local_network_request_string_dict = {
+            "192.168.1.50": "http://192.168.1.50/json",
+            "192.168.1.51": "http://192.168.1.51/json",
+        }
+        logger._purpleair_api_obj = bulk_api
+
+        mock_single_50 = Mock()
+        mock_single_50.request_local_sensor_data.side_effect = PurpleAirAPIError(
             "local API error"
         )
-        mock_api_2 = Mock()
-        mock_api_2.request_local_sensor_data.side_effect = RuntimeError(
+        mock_single_51 = Mock()
+        mock_single_51.request_local_sensor_data.side_effect = RuntimeError(
             "unexpected crash"
         )
-        logger._local_sensor_api_objs = {
-            "192.168.1.50": mock_api_1,
-            "192.168.1.51": mock_api_2,
-        }
-        logger._purpleair_api_obj = Mock()
+
+        def paa_side_effect(your_ipv4_address=None, **kwargs):
+            if your_ipv4_address == ["192.168.1.50"]:
+                return mock_single_50
+            elif your_ipv4_address == ["192.168.1.51"]:
+                return mock_single_51
+            return Mock()
+
+        mock_paa_cls.side_effect = paa_side_effect
 
         result = logger._poll_and_convert_local()
         self.assertEqual(result, {})
