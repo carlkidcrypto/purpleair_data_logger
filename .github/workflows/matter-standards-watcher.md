@@ -44,7 +44,7 @@ tools:
   edit:
   bash: true
 
-model: claude-sonnet-5
+model: gpt-6.1-sol
 engine:
   id: copilot
 ---
