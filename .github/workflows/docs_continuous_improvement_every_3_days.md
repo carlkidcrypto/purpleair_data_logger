@@ -20,7 +20,7 @@ safe-outputs:
     base-branch: main
 timeout-minutes: 15
 max-ai-credits: 25
-model: claude-sonnet-5
+model: gpt-6.1-sol
 engine:
   id: copilot
 ---
