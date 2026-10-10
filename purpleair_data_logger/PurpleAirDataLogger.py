@@ -165,9 +165,9 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting local sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
-                                      Unlike the other run loops, the polling interval is not
-                                      set from the config file; the current
-                                      ``send_request_every_x_seconds`` value is kept.
+                                      Unlike the other run loops, ``poll_interval_seconds`` is
+                                      applied directly as the sleep time and is not validated
+                                      against the 60 second minimum.
         :return: None
         """
 
