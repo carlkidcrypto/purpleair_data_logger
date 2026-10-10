@@ -43,6 +43,8 @@ class PurpleAirDataLogger:
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
         :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses for local sensor access
+
+        The polling interval defaults to 65 seconds.
         """
 
         # Make one instance of our PurpleAirAPI class
@@ -163,6 +165,9 @@ class PurpleAirDataLogger:
         A method containing the run loop for inserting local sensors' data into the data logger.
 
         :param dict json_config_file: A dictionary object of the json config file using json load.
+                                      Unlike the other run loops, ``poll_interval_seconds`` is
+                                      applied directly as the sleep time and is not validated
+                                      against the 60 second minimum.
         :return: None
         """
 
@@ -192,6 +197,8 @@ class PurpleAirDataLogger:
                                                         the parameters to send a group sensor request(s).
         :param str paa_local_sensor_request_json_file: The path to a json file containing
                                                         the parameters to send a local sensor request(s).
+        :raises PurpleAirDataLoggerError: If none, or more than one, of the json file
+                                          parameters is provided. Exactly one is required.
         :return: None
         """
 
