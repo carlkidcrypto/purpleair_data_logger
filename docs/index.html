@@ -3,7 +3,18 @@
   <head><meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="Automated data collectors for PurpleAir sensors. Log real-time and historical air quality data into PostgreSQL, SQLite, CSV, Prometheus, and Matter." name="description" />
+<meta content="purple air data logger, purpleair data logger, purpleair_data_logger, padls, purpleair postgresql, purpleair prometheus, purpleair sqlite, purpleair csv, air quality logging, carlkidcrypto" name="keywords" />
+<meta content="Carlos (&#64;carlkidcrypto)" name="author" />
+<meta content="PurpleAir Data Logger (PADLs) — Air Quality Data Collector" property="og:title" />
+<meta content="Automated data loggers for PurpleAir sensors supporting SQLite, PostgreSQL, CSV, Prometheus metrics, and Matter." property="og:description" />
+<meta content="website" property="og:type" />
+<meta content="https://carlkidcrypto.github.io/purpleair_data_logger/" property="og:url" />
+<meta content="summary" name="twitter:card" />
+<meta content="PurpleAir Data Logger (PADLs)" name="twitter:title" />
+<meta content="Automated data loggers for PurpleAir sensors supporting PostgreSQL, SQLite, CSV, and Prometheus." name="twitter:description" />
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html">
+        <link rel="canonical" href="https://carlkidcrypto.github.io/purpleair_data_logger/index.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
         <title>PurpleAir Data Logger Documentation</title>
@@ -34,7 +45,40 @@
       }
     }
   }
-</style></head>
+</style>
+  
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareSourceCode",
+        "@id": "https://carlkidcrypto.github.io/purpleair_data_logger/#software",
+        "name": "PurpleAir Data Logger",
+        "alternateName": ["purpleair_data_logger", "Purple Air Data Logger", "PADLs"],
+        "description": "Automated data collectors and loggers that fetch air quality readings from PurpleAir sensors and store them in PostgreSQL, SQLite, CSV, Prometheus, and Matter.",
+        "url": "https://carlkidcrypto.github.io/purpleair_data_logger/",
+        "codeRepository": "https://github.com/carlkidcrypto/purpleair_data_logger",
+        "programmingLanguage": "Python",
+        "operatingSystem": ["Linux", "macOS", "Windows"],
+        "author": {
+          "@type": "Person",
+          "name": "Carlos",
+          "alternateName": "carlkidcrypto",
+          "url": "https://carlkidcrypto.github.io/"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://carlkidcrypto.github.io/purpleair_data_logger/#website",
+        "url": "https://carlkidcrypto.github.io/purpleair_data_logger/",
+        "name": "PurpleAir Data Logger Documentation",
+        "description": "Official documentation and reference for the PurpleAir Data Logger (PADLs)."
+      }
+    ]
+  }
+  </script>
+</head>
   <body>
     
     <script>
@@ -172,7 +216,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -222,21 +266,46 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section id="purpleair-data-logger-documentation">
 <h1>PurpleAir Data Logger Documentation<a class="headerlink" href="#purpleair-data-logger-documentation" title="Link to this heading">¶</a></h1>
+<p><strong>PurpleAir Data Logger(s) (PADLs)</strong> is an automated suite of data collectors and
+telemetry loggers designed to pull readings from <a class="reference external" href="https://www2.purpleair.com/">PurpleAir</a>
+air quality sensors and archive them into reliable persistent storage. Whether you run a
+single personal sensor or monitor a county-wide sensor network, PADLs keeps your air quality
+history accessible and queryable.</p>
+<section id="key-features">
+<h2>Key Features<a class="headerlink" href="#key-features" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Multiple Storage Backends:</strong> Seamlessly log data to PostgreSQL, SQLite, flat CSV files, or expose Prometheus metrics.</p></li>
+<li><p><strong>Smart Home Integration:</strong> Native export for Matter-enabled smart home systems.</p></li>
+<li><p><strong>Continuous &amp; Scheduled Logging:</strong> Run as a persistent background daemon, containerized service, or cron job.</p></li>
+<li><p><strong>Historical &amp; Real-Time Sync:</strong> Automatically backfill missed timestamps and poll the latest sensor data.</p></li>
+</ul>
+</section>
+<section id="select-a-version">
+<h2>Select a Version<a class="headerlink" href="#select-a-version" title="Link to this heading">¶</a></h2>
 <p>Select a version of the documentation to browse:</p>
 <ul class="simple">
 <li><p><a class="reference external" href="./html/index.html">Latest Version</a></p></li>
 <li><p><a class="reference external" href="./html_v1.6.0a0/index.html">v1.6.0a0</a></p></li>
 <li><p><a class="reference external" href="./html_v1.5.0/index.html">v1.5.0</a></p></li>
 </ul>
-<p>For general project information, installation instructions, and source code,
-see the <a class="reference external" href="https://github.com/carlkidcrypto/purpleair_data_logger">PurpleAir Data Logger GitHub repository</a>.</p>
+</section>
+<section id="project-links">
+<h2>Project Links<a class="headerlink" href="#project-links" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><strong>Source Code:</strong> <a class="reference external" href="https://github.com/carlkidcrypto/purpleair_data_logger">GitHub Repository</a></p></li>
+<li><p><strong>Package:</strong> <a class="reference external" href="https://pypi.org/project/purpleair-data-logger/">PyPI Package</a></p></li>
+<li><p><strong>API Wrapper:</strong> <a class="reference external" href="https://carlkidcrypto.github.io/purpleair_api/">PurpleAir API Library</a></p></li>
+<li><p><strong>Matter Bridge:</strong> <a class="reference external" href="https://carlkidcrypto.github.io/purpleair-matterbridge/">PurpleAir Matterbridge</a></p></li>
+<li><p><strong>Maintainer:</strong> <a class="reference external" href="https://carlkidcrypto.github.io/">Carlos (&#64;carlkidcrypto)</a></p></li>
+</ul>
+</section>
 </section>
 
         </article>
@@ -250,7 +319,7 @@ see the <a class="reference external" href="https://github.com/carlkidcrypto/pur
         <div class="bottom-of-page">
           <div class="left-details">
             <div class="copyright">
-                Copyright &#169; 2024, carlkidcrypto
+                Copyright &#169; 2024-2026, carlkidcrypto
             </div>
             Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
             
@@ -264,8 +333,29 @@ see the <a class="reference external" href="https://github.com/carlkidcrypto/pur
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">PurpleAir Data Logger Documentation</a><ul>
+<li><a class="reference internal" href="#key-features">Key Features</a></li>
+<li><a class="reference internal" href="#select-a-version">Select a Version</a></li>
+<li><a class="reference internal" href="#project-links">Project Links</a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
