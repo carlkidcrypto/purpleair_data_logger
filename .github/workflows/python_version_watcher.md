@@ -34,7 +34,7 @@ tools:
   edit:
   bash: true
 
-model: gpt-6.1-sol
+model: sonnet
 engine:
   id: copilot
 ---
