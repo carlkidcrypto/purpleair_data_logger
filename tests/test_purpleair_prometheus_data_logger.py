@@ -13,7 +13,10 @@ from prometheus_client import CollectorRegistry
 
 sys.path.append("../")
 
-from tests.helpers import DATA_OUT_1
+try:
+    from tests.helpers import DATA_OUT_1
+except ImportError:
+    from helpers import DATA_OUT_1
 
 
 class PurpleAirPrometheusDataLoggerTest(unittest.TestCase):

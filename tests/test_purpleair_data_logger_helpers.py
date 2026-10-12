@@ -669,18 +669,9 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
                 padl.store_sensor_data.return_value = None
                 padl.store_sensor_data.assert_called_once_with(test_data_out[index])
 
-    @patch("purpleair_data_logger.PurpleAirDataLoggerHelpers.PurpleAirAPI")
-    def test_logic_for_storing_local_sensors_data_bulk_failure_fallback(
-        self, mock_paa_cls
-    ):
-        """Test fallback per-sensor polling in logic_for_storing_local_sensors_data when bulk poll raises offline error."""
+    def test_logic_for_storing_local_sensors_data_bulk_failure_fallback(self):
+        """Test per-sensor polling in logic_for_storing_local_sensors_data when one sensor raises offline error."""
         padl = MagicMock()
-        padl._purpleair_api_obj = MagicMock()
-        padl._purpleair_api_obj.request_local_sensor_data.side_effect = (
-            PurpleAirDeviceOfflineError("Device 192.168.1.3 offline")
-        )
-        padl.store_sensor_data = MagicMock(name="store_sensor_data")
-
         mock_single_2 = MagicMock()
         mock_single_2.request_local_sensor_data.return_value = {
             "192.168.1.2": LOCAL_API_DATA_IN_1
@@ -689,15 +680,8 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         mock_single_3.request_local_sensor_data.side_effect = (
             PurpleAirDeviceOfflineError("offline")
         )
-
-        def paa_side_effect(your_ipv4_address=None, **kwargs):
-            if your_ipv4_address == ["192.168.1.2"]:
-                return mock_single_2
-            elif your_ipv4_address == ["192.168.1.3"]:
-                return mock_single_3
-            return MagicMock()
-
-        mock_paa_cls.side_effect = paa_side_effect
+        padl._purpleair_api_obj = [mock_single_2, mock_single_3]
+        padl.store_sensor_data = MagicMock(name="store_sensor_data")
 
         json_config_file = {
             "sensor_ip_list": ["192.168.1.2", "192.168.1.3"],
@@ -706,18 +690,11 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         logic_for_storing_local_sensors_data(padl, json_config_file)
         self.assertEqual(padl.store_sensor_data.call_count, 1)
 
-    @patch("purpleair_data_logger.PurpleAirDataLoggerHelpers.PurpleAirAPI")
     def test_logic_for_storing_local_sensors_data_fallback_api_and_generic_errors(
-        self, mock_paa_cls
+        self,
     ):
-        """Test fallback per-sensor polling in logic_for_storing_local_sensors_data when fallback sensors raise API/generic errors."""
+        """Test per-sensor polling in logic_for_storing_local_sensors_data when sensors raise API/generic errors."""
         padl = MagicMock()
-        padl._purpleair_api_obj = MagicMock()
-        padl._purpleair_api_obj.request_local_sensor_data.side_effect = (
-            PurpleAirAPIError("bulk failed")
-        )
-        padl.store_sensor_data = MagicMock(name="store_sensor_data")
-
         mock_single_2 = MagicMock()
         mock_single_2.request_local_sensor_data.side_effect = PurpleAirAPIError(
             "api err"
@@ -726,15 +703,8 @@ class PurpleAirDataLoggerHelpersTest(unittest.TestCase):
         mock_single_3.request_local_sensor_data.side_effect = RuntimeError(
             "generic err"
         )
-
-        def paa_side_effect(your_ipv4_address=None, **kwargs):
-            if your_ipv4_address == ["192.168.1.2"]:
-                return mock_single_2
-            elif your_ipv4_address == ["192.168.1.3"]:
-                return mock_single_3
-            return MagicMock()
-
-        mock_paa_cls.side_effect = paa_side_effect
+        padl._purpleair_api_obj = [mock_single_2, mock_single_3]
+        padl.store_sensor_data = MagicMock(name="store_sensor_data")
 
         json_config_file = {
             "sensor_ip_list": ["192.168.1.2", "192.168.1.3"],

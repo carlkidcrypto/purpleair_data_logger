@@ -50,7 +50,6 @@ from time import sleep
 from typing import Any
 from urllib.parse import urlsplit
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPI
 from purpleair_api.PurpleAirAPIError import (
     PurpleAirAPIError,
     PurpleAirDeviceOfflineError,
@@ -395,10 +394,15 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             cache = {}
             self._sensor_cache = cache
 
+        api_obj = (
+            self._purpleair_api_obj[0]
+            if isinstance(self._purpleair_api_obj, list)
+            else self._purpleair_api_obj
+        )
         last_exception = None
         for attempt in range(max_retries + 1):
             try:
-                raw = self._purpleair_api_obj.request_sensor_data(
+                raw = api_obj.request_sensor_data(
                     sensor_index,
                     read_key=primary_key,
                 )
@@ -501,9 +505,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             return primary_value
         return (float(primary_value) + float(secondary_value)) / 2
 
-    def _poll_and_convert_local(
-        self, sensor_ip_list: list[str] | None = None
-    ) -> dict[int, dict[str, Any]]:
+    def _poll_and_convert_local(self) -> dict[int, dict[str, Any]]:
         """Poll configured local sensors and convert their payloads to Matter JSON."""
         now = time.time()
         results: dict[int, dict[str, Any]] = {}
@@ -513,34 +515,24 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             self._sensor_cache = cache
         grace_seconds = getattr(self, "_offline_grace_seconds", 600)
 
-        if sensor_ip_list is None:
-            sensor_ip_list = getattr(self, "_sensor_ip_list", [])
+        api_objs = (
+            self._purpleair_api_obj
+            if isinstance(self._purpleair_api_obj, list)
+            else [self._purpleair_api_obj]
+        )
 
         local_sensors = {}
-        try:
-            local_sensors = self._purpleair_api_obj.request_local_sensor_data()
-        except PurpleAirDeviceOfflineError as exc:
-            logger.warning("PurpleAir local sensor offline: %s", exc)
-        except PurpleAirAPIError as exc:
-            logger.warning("PurpleAir local API error: %s", exc)
-        except Exception as exc:
-            logger.warning("PurpleAir local API unexpected error: %s", exc)
-
-        if not local_sensors and len(sensor_ip_list) > 1:
-            for address in sensor_ip_list:
-                try:
-                    single_api = PurpleAirAPI(your_ipv4_address=[address])
-                    single_data = single_api.request_local_sensor_data()
-                    if single_data and address in single_data:
-                        local_sensors[address] = single_data[address]
-                except PurpleAirDeviceOfflineError as exc:
-                    logger.warning("Local sensor %s is offline: %s", address, exc)
-                except PurpleAirAPIError as exc:
-                    logger.warning(
-                        "PurpleAir local API error for sensor %s: %s", address, exc
-                    )
-                except Exception as exc:
-                    logger.warning("Local sensor %s error: %s", address, exc)
+        for api_obj in api_objs:
+            try:
+                single_data = api_obj.request_local_sensor_data()
+                if single_data:
+                    local_sensors.update(single_data)
+            except PurpleAirDeviceOfflineError as exc:
+                logger.warning("PurpleAir local sensor offline: %s", exc)
+            except PurpleAirAPIError as exc:
+                logger.warning("PurpleAir local API error: %s", exc)
+            except Exception as exc:
+                logger.warning("PurpleAir local API unexpected error: %s", exc)
 
         for address, raw in local_sensors.items():
             try:
@@ -649,9 +641,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             "sensor_indexes", self._sensor_indexes
         )
         sensor_ip_list: list[str] = list(
-            json_config_file.get(
-                "sensor_ip_list", getattr(self, "_sensor_ip_list", [])
-            )
+            json_config_file.get("sensor_ip_list", getattr(self, "_sensor_ip_list", []))
             or []
         )
         local_mode = bool(sensor_ip_list)
@@ -679,7 +669,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 self._poll_interval,
             )
             devices = (
-                self._poll_and_convert_local(sensor_ip_list)
+                self._poll_and_convert_local()
                 if local_mode
                 else self._poll_and_convert_multiple(
                     sensor_indexes, sensor_names, primary_keys

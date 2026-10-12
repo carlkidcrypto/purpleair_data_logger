@@ -9,11 +9,18 @@ import argparse
 import time
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
-from purpleair_api.PurpleAirAPI import PurpleAirAPI, debug_log
+from purpleair_api.PurpleAirAPI import debug_log
 from purpleair_api.PurpleAirAPIError import (
     PurpleAirAPIError,
     PurpleAirDeviceOfflineError,
 )
+
+
+def _get_cloud_api_obj(padl_obj):
+    """Return the primary (cloud) PurpleAirAPI instance from padl_obj._purpleair_api_obj."""
+    if isinstance(padl_obj._purpleair_api_obj, list):
+        return padl_obj._purpleair_api_obj[0]
+    return padl_obj._purpleair_api_obj
 
 
 def generate_common_arg_parser(argparse_description=""):
@@ -222,7 +229,7 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
                 {json_config_file['sensor_index']}...""")
 
     sensor_data = None
-    sensor_data = padl_obj._purpleair_api_obj.request_sensor_data(
+    sensor_data = _get_cloud_api_obj(padl_obj).request_sensor_data(
         json_config_file["sensor_index"],
         json_config_file["read_key"],
         json_config_file["fields"],
@@ -257,7 +264,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
                     {json_config_file["fields"]}...""")
 
     sensors_data = None
-    sensors_data = padl_obj._purpleair_api_obj.request_multiple_sensors_data(
+    sensors_data = _get_cloud_api_obj(padl_obj).request_multiple_sensors_data(
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
         read_keys=json_config_file["read_keys"],
@@ -310,10 +317,9 @@ def logic_for_storing_group_sensors_data(
     """
 
     if group_id_to_use is None:
+        group_api = _get_cloud_api_obj(padl_obj)
         # Get a current list of sensors that the API key provided owns
-        group_dict_list_data = padl_obj._purpleair_api_obj.request_group_list_data()[
-            "groups"
-        ]
+        group_dict_list_data = group_api.request_group_list_data()["groups"]
 
         # Now make the sensor_group_name if it doesn't already exist.
         does_sensor_group_name_exist = False
@@ -330,7 +336,7 @@ def logic_for_storing_group_sensors_data(
             print(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created..."
             )
-            retval = padl_obj._purpleair_api_obj.post_create_group_data(
+            retval = group_api.post_create_group_data(
                 json_config_file["sensor_group_name"]
             )
             group_id_to_use = retval["group_id"]
@@ -354,7 +360,7 @@ def logic_for_storing_group_sensors_data(
             )
             for sensor_index_val in json_config_file["sensor_index_list"]:
                 try:
-                    retval = padl_obj._purpleair_api_obj.post_create_member(
+                    retval = group_api.post_create_member(
                         group_id=group_id_to_use, sensor_index=sensor_index_val
                     )
                     print(
@@ -377,7 +383,7 @@ def logic_for_storing_group_sensors_data(
             print(f"No sensors will be added to the `group_id` - {group_id_to_use}...")
 
     assert group_id_to_use is not None
-    members_data = padl_obj._purpleair_api_obj.request_members_data(
+    members_data = _get_cloud_api_obj(padl_obj).request_members_data(
         group_id=group_id_to_use,
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
@@ -423,31 +429,24 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     :return: None
     """
 
-    # Ask for our local sensor data
+    # Ask for our local sensor data from each configured sensor instance
     local_sensor_dict = {}
-    try:
-        local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
-    except PurpleAirDeviceOfflineError as exc:
-        debug_log(f"Local sensor is offline: {exc}")
-    except PurpleAirAPIError as exc:
-        debug_log(f"Local sensor API error: {exc}")
-    except Exception as exc:
-        debug_log(f"Local sensor unexpected error: {exc}")
-
-    sensor_ip_list = json_config_file.get("sensor_ip_list", [])
-    if not local_sensor_dict and len(sensor_ip_list) > 1:
-        for addr in sensor_ip_list:
-            try:
-                single_api = PurpleAirAPI(your_ipv4_address=[addr])
-                single_data = single_api.request_local_sensor_data()
-                if single_data and addr in single_data:
-                    local_sensor_dict[addr] = single_data[addr]
-            except PurpleAirDeviceOfflineError as exc:
-                debug_log(f"Local sensor {addr} is offline: {exc}")
-            except PurpleAirAPIError as exc:
-                debug_log(f"Local sensor {addr} API error: {exc}")
-            except Exception as exc:
-                debug_log(f"Local sensor {addr} unexpected error: {exc}")
+    api_objs = (
+        padl_obj._purpleair_api_obj
+        if isinstance(padl_obj._purpleair_api_obj, list)
+        else [padl_obj._purpleair_api_obj]
+    )
+    for api_obj in api_objs:
+        try:
+            single_data = api_obj.request_local_sensor_data()
+            if single_data:
+                local_sensor_dict.update(single_data)
+        except PurpleAirDeviceOfflineError as exc:
+            debug_log(f"Local sensor is offline: {exc}")
+        except PurpleAirAPIError as exc:
+            debug_log(f"Local sensor API error: {exc}")
+        except Exception as exc:
+            debug_log(f"Local sensor unexpected error: {exc}")
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to

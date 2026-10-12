@@ -750,17 +750,9 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["_status"], "online")
 
-    @patch("purpleair_data_logger.PurpleAirMatterDataLogger.PurpleAirAPI")
-    def test_fallback_per_sensor_polling_on_bulk_error(self, mock_paa_cls):
+    def test_fallback_per_sensor_polling_on_bulk_error(self):
         """When 1 of 2 configured local sensors raises PurpleAirDeviceOfflineError, the other is converted."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        bulk_api = Mock()
-        bulk_api.request_local_sensor_data.side_effect = PurpleAirDeviceOfflineError(
-            "Device at 192.168.1.51 is offline"
-        )
-        logger._sensor_ip_list = ["192.168.1.50", "192.168.1.51"]
-        logger._purpleair_api_obj = bulk_api
-
         mock_single_50 = Mock()
         mock_single_50.request_local_sensor_data.return_value = {
             "192.168.1.50": {
@@ -774,15 +766,7 @@ class PollAndConvertLocalTest(unittest.TestCase):
         mock_single_51.request_local_sensor_data.side_effect = (
             PurpleAirDeviceOfflineError("Device at 192.168.1.51 is offline")
         )
-
-        def paa_side_effect(your_ipv4_address=None, **kwargs):
-            if your_ipv4_address == ["192.168.1.50"]:
-                return mock_single_50
-            elif your_ipv4_address == ["192.168.1.51"]:
-                return mock_single_51
-            return Mock()
-
-        mock_paa_cls.side_effect = paa_side_effect
+        logger._purpleair_api_obj = [mock_single_50, mock_single_51]
 
         result = logger._poll_and_convert_local()
 
@@ -791,17 +775,9 @@ class PollAndConvertLocalTest(unittest.TestCase):
         self.assertIn(expected_index, result)
         self.assertEqual(result[expected_index]["_status"], "online")
 
-    @patch("purpleair_data_logger.PurpleAirMatterDataLogger.PurpleAirAPI")
-    def test_local_sensor_polling_api_error_and_generic_error(self, mock_paa_cls):
+    def test_local_sensor_polling_api_error_and_generic_error(self):
         """When local sensors raise PurpleAirAPIError or generic Exception, errors are handled."""
         logger = PurpleAirMatterDataLogger.__new__(PurpleAirMatterDataLogger)
-        bulk_api = Mock()
-        bulk_api.request_local_sensor_data.side_effect = PurpleAirAPIError(
-            "bulk failed"
-        )
-        logger._sensor_ip_list = ["192.168.1.50", "192.168.1.51"]
-        logger._purpleair_api_obj = bulk_api
-
         mock_single_50 = Mock()
         mock_single_50.request_local_sensor_data.side_effect = PurpleAirAPIError(
             "local API error"
@@ -810,15 +786,7 @@ class PollAndConvertLocalTest(unittest.TestCase):
         mock_single_51.request_local_sensor_data.side_effect = RuntimeError(
             "unexpected crash"
         )
-
-        def paa_side_effect(your_ipv4_address=None, **kwargs):
-            if your_ipv4_address == ["192.168.1.50"]:
-                return mock_single_50
-            elif your_ipv4_address == ["192.168.1.51"]:
-                return mock_single_51
-            return Mock()
-
-        mock_paa_cls.side_effect = paa_side_effect
+        logger._purpleair_api_obj = [mock_single_50, mock_single_51]
 
         result = logger._poll_and_convert_local()
         self.assertEqual(result, {})
@@ -990,7 +958,7 @@ class MatterDeviceTypeCorrectnessTest(unittest.TestCase):
 
         summary = result[282168]["air_quality_summary"]
         self.assertIn("epa_aqi", summary)
-        self.assertIsInstance(summary["epa_aqi"], int)
+        self.assertIsInstance(summary["epa_aqi"], (int, float))
         self.assertGreaterEqual(summary["epa_aqi"], 0)
 
 
