@@ -16,13 +16,6 @@ from purpleair_api.PurpleAirAPIError import (
 )
 
 
-def _get_cloud_api_obj(padl_obj):
-    """Return the primary (cloud) PurpleAirAPI instance from padl_obj._purpleair_api_obj."""
-    if isinstance(padl_obj._purpleair_api_obj, list):
-        return padl_obj._purpleair_api_obj[0]
-    return padl_obj._purpleair_api_obj
-
-
 def generate_common_arg_parser(argparse_description=""):
     """
     A function to generate the common arguments that all data loggers need.
@@ -231,7 +224,7 @@ def logic_for_storing_single_sensor_data(padl_obj, json_config_file) -> None:
                 {json_config_file['sensor_index']}...""")
 
     sensor_data = None
-    sensor_data = _get_cloud_api_obj(padl_obj).request_sensor_data(
+    sensor_data = padl_obj._purpleair_api_obj.request_sensor_data(
         json_config_file["sensor_index"],
         json_config_file["read_key"],
         json_config_file["fields"],
@@ -266,7 +259,7 @@ def logic_for_storing_multiple_sensors_data(padl_obj, json_config_file) -> None:
                     {json_config_file["fields"]}...""")
 
     sensors_data = None
-    sensors_data = _get_cloud_api_obj(padl_obj).request_multiple_sensors_data(
+    sensors_data = padl_obj._purpleair_api_obj.request_multiple_sensors_data(
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],
         read_keys=json_config_file["read_keys"],
@@ -319,9 +312,10 @@ def logic_for_storing_group_sensors_data(
     """
 
     if group_id_to_use is None:
-        group_api = _get_cloud_api_obj(padl_obj)
         # Get a current list of sensors that the API key provided owns
-        group_dict_list_data = group_api.request_group_list_data()["groups"]
+        group_dict_list_data = padl_obj._purpleair_api_obj.request_group_list_data()[
+            "groups"
+        ]
 
         # Now make the sensor_group_name if it doesn't already exist.
         does_sensor_group_name_exist = False
@@ -338,7 +332,7 @@ def logic_for_storing_group_sensors_data(
             print(
                 f"Your provided `sensor_group_name` - `{json_config_file['sensor_group_name']}` doesn't exist. A new one will be created..."
             )
-            retval = group_api.post_create_group_data(
+            retval = padl_obj._purpleair_api_obj.post_create_group_data(
                 json_config_file["sensor_group_name"]
             )
             group_id_to_use = retval["group_id"]
@@ -362,7 +356,7 @@ def logic_for_storing_group_sensors_data(
             )
             for sensor_index_val in json_config_file["sensor_index_list"]:
                 try:
-                    retval = group_api.post_create_member(
+                    retval = padl_obj._purpleair_api_obj.post_create_member(
                         group_id=group_id_to_use, sensor_index=sensor_index_val
                     )
                     print(
@@ -385,7 +379,7 @@ def logic_for_storing_group_sensors_data(
             print(f"No sensors will be added to the `group_id` - {group_id_to_use}...")
 
     assert group_id_to_use is not None
-    members_data = _get_cloud_api_obj(padl_obj).request_members_data(
+    members_data = padl_obj._purpleair_api_obj.request_members_data(
         group_id=group_id_to_use,
         fields=json_config_file["fields"],
         location_type=json_config_file["location_type"],

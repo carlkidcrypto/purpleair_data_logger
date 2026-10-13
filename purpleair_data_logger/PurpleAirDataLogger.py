@@ -47,28 +47,25 @@ class PurpleAirDataLogger:
         The polling interval defaults to 65 seconds.
         """
 
-        # Make a list of PurpleAirAPI class instances.
-        # When IPv4 addresses are provided, create one PurpleAirAPI instance per IP
-        # so that offline sensors do not prevent communication with online sensors.
-        # In cloud mode (no IPv4 addresses provided), create a single PurpleAirAPI instance.
-        self._purpleair_api_obj = []
+        # In local mode (IPv4 addresses provided), create a list of PurpleAirAPI
+        # instances (one per IP) so that offline sensors do not prevent communication
+        # with online sensors. In cloud mode (no IPv4 addresses provided), create a single
+        # PurpleAirAPI instance.
         if PurpleAirApiIpv4Address:
             if not isinstance(PurpleAirApiIpv4Address, list):
                 PurpleAirApiIpv4Address = [PurpleAirApiIpv4Address]
-            for ip in PurpleAirApiIpv4Address:
-                self._purpleair_api_obj.append(
-                    PurpleAirAPI(
-                        your_api_read_key=PurpleAirApiReadKey,
-                        your_api_write_key=PurpleAirApiWriteKey,
-                        your_ipv4_address=[ip],
-                    )
-                )
-        else:
-            self._purpleair_api_obj.append(
+            self._purpleair_api_obj = [
                 PurpleAirAPI(
                     your_api_read_key=PurpleAirApiReadKey,
                     your_api_write_key=PurpleAirApiWriteKey,
+                    your_ipv4_address=[ip],
                 )
+                for ip in PurpleAirApiIpv4Address
+            ]
+        else:
+            self._purpleair_api_obj = PurpleAirAPI(
+                your_api_read_key=PurpleAirApiReadKey,
+                your_api_write_key=PurpleAirApiWriteKey,
             )
 
         # Define how often we send requests

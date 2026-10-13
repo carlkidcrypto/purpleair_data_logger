@@ -394,15 +394,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             cache = {}
             self._sensor_cache = cache
 
-        api_obj = (
-            self._purpleair_api_obj[0]
-            if isinstance(self._purpleair_api_obj, list)
-            else self._purpleair_api_obj
-        )
         last_exception = None
         for attempt in range(max_retries + 1):
             try:
-                raw = api_obj.request_sensor_data(
+                raw = self._purpleair_api_obj.request_sensor_data(
                     sensor_index,
                     read_key=primary_key,
                 )
