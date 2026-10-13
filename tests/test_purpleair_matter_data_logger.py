@@ -487,6 +487,27 @@ class PurpleAirMatterDataLoggerConfigTest(unittest.TestCase):
 
         self.assertTrue(logger._matter_only)
 
+    def test_validate_succeeds_with_constructor_ipv4_address_list(self):
+        """Constructor-provided PurpleAirApiIpv4Address list satisfies validation."""
+        logger = PurpleAirMatterDataLogger(PurpleAirApiIpv4Address=["192.168.1.50"])
+        started = {"value": False}
+        logger._start_http_server = lambda: started.__setitem__("value", True)
+        logger._run_loop_matter = lambda config: None
+
+        logger.validate_parameters_and_run()
+        self.assertTrue(started["value"])
+
+    def test_validate_succeeds_with_constructor_ipv4_address_string(self):
+        """Constructor-provided single string PurpleAirApiIpv4Address satisfies validation."""
+        logger = PurpleAirMatterDataLogger(PurpleAirApiIpv4Address="192.168.1.50")
+        self.assertEqual(logger._sensor_ip_list, ["192.168.1.50"])
+        started = {"value": False}
+        logger._start_http_server = lambda: started.__setitem__("value", True)
+        logger._run_loop_matter = lambda config: None
+
+        logger.validate_parameters_and_run()
+        self.assertTrue(started["value"])
+
 
 class MainCliTest(unittest.TestCase):
     """Tests for the main() CLI entry point."""

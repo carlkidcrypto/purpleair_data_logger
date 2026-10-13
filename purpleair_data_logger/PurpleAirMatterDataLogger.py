@@ -313,7 +313,12 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._sensor_indexes: list[int] = list(sensor_indexes or [])
         self._sensor_names: dict[int, str] = dict(sensor_names or {})
         self._read_keys: dict[int, str] = dict(read_keys or {})
-        self._sensor_ip_list: list[str] = list(PurpleAirApiIpv4Address or [])
+        if isinstance(PurpleAirApiIpv4Address, str):
+            self._sensor_ip_list: list[str] = [PurpleAirApiIpv4Address]
+        elif PurpleAirApiIpv4Address:
+            self._sensor_ip_list: list[str] = list(PurpleAirApiIpv4Address)
+        else:
+            self._sensor_ip_list: list[str] = []
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
@@ -755,7 +760,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         # Validate that we have sensors to poll before starting the server
         sensor_indexes: list[int] = config.get("sensor_indexes", self._sensor_indexes)
-        if not sensor_indexes and not config.get("sensor_ip_list"):
+        sensor_ip_list: list[str] = list(
+            config.get("sensor_ip_list", self._sensor_ip_list) or []
+        )
+        if not sensor_indexes and not sensor_ip_list:
             raise PurpleAirDataLoggerError(
                 "No 'sensor_indexes' or 'sensor_ip_list' provided — nothing to poll."
             )
