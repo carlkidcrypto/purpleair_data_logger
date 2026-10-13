@@ -1,3 +1,74 @@
+Last Updated: 2026-10-13 14:53:57 UTC
+
+<a name="v1.6.0a1"></a>
+## [v1.6.0a1] - 2026-10-13
+
+### Bug Fixes
+
+* **matter:** make local sensor polling resilient to unreachable sensors ([#490](https://github.com/carlkidcrypto/purpleair_data_logger/issues/490))
+
+### Build System
+
+* **deps:** Bump the python-dependencies group across 1 directory with 3 updates ([#503](https://github.com/carlkidcrypto/purpleair_data_logger/issues/503))
+
+### Chores
+
+* **deps:** update Dependabot schedule to weekly ([#505](https://github.com/carlkidcrypto/purpleair_data_logger/issues/505))
+
+### Documentation
+
+* clarify validate_sensor_data_before_insert docstring ([#508](https://github.com/carlkidcrypto/purpleair_data_logger/issues/508))
+* add versioned documentation for v1.6.0a0 ([#485](https://github.com/carlkidcrypto/purpleair_data_logger/issues/485))
+
+### Features
+
+* enhance documentation SEO with metadata, OpenGraph, JSON-LD, and overview ([#507](https://github.com/carlkidcrypto/purpleair_data_logger/issues/507))
+* use model alias sonnet across all gh-aw workflows ([#504](https://github.com/carlkidcrypto/purpleair_data_logger/issues/504))
+* Migrate gh-aw workflows from claude-sonnet-5 to gpt-6.1-sol ([#496](https://github.com/carlkidcrypto/purpleair_data_logger/issues/496))
+
+
+<a name="v1.6.0a0"></a>
+## [v1.6.0a0] - 2026-09-26
+
+### Bug Fixes
+
+* handle offline devices gracefully, extract publish action, and bump version to 1.6.0a0 ([#454](https://github.com/carlkidcrypto/purpleair_data_logger/issues/454)) ([#478](https://github.com/carlkidcrypto/purpleair_data_logger/issues/478))
+* **ci:** invoke pypa publish directly and extract build-distribution action ([#483](https://github.com/carlkidcrypto/purpleair_data_logger/issues/483))
+* **ci:** scope verify_syntax push to main to avoid duplicate concurrent runs on PRs ([#482](https://github.com/carlkidcrypto/purpleair_data_logger/issues/482))
+
+### Build System
+
+* **deps:** bump purpleair_api from 1.5.0 to 1.5.1a0 ([#484](https://github.com/carlkidcrypto/purpleair_data_logger/issues/484))
+* **deps:** Bump coverage from 7.16.0 to 7.16.1 ([#471](https://github.com/carlkidcrypto/purpleair_data_logger/issues/471))
+* **deps:** Bump coverage from 7.16.0 to 7.16.1 in /tests ([#472](https://github.com/carlkidcrypto/purpleair_data_logger/issues/472))
+* **deps:** Bump coverage from 7.15.3 to 7.16.0 ([#460](https://github.com/carlkidcrypto/purpleair_data_logger/issues/460))
+* **deps:** Bump coverage from 7.15.3 to 7.16.0 in /tests ([#461](https://github.com/carlkidcrypto/purpleair_data_logger/issues/461))
+* **deps:** Bump peter-evans/create-pull-request from 7 to 8 ([#437](https://github.com/carlkidcrypto/purpleair_data_logger/issues/437))
+* **deps:** Bump actions/deploy-pages from 4 to 5 ([#435](https://github.com/carlkidcrypto/purpleair_data_logger/issues/435))
+* **deps:** Bump actions/upload-pages-artifact from 4 to 5 ([#434](https://github.com/carlkidcrypto/purpleair_data_logger/issues/434))
+* **deps:** Bump actions/cache from 4 to 6 ([#436](https://github.com/carlkidcrypto/purpleair_data_logger/issues/436))
+
+### Chores
+
+* **docs:** update changelog ([#453](https://github.com/carlkidcrypto/purpleair_data_logger/issues/453))
+
+### Continuous Integration
+
+* remove codeql.yml as repo uses GitHub default CodeQL setup ([#477](https://github.com/carlkidcrypto/purpleair_data_logger/issues/477))
+
+### Documentation
+
+* fix small typos in README and PSQL logger docstring ([#467](https://github.com/carlkidcrypto/purpleair_data_logger/issues/467))
+* add versioned documentation for v1.5.0 ([#441](https://github.com/carlkidcrypto/purpleair_data_logger/issues/441))
+
+### Features
+
+* **ci:** backport workflow optimizations, AIC limits, and helper scripts from ezsnmp ([#475](https://github.com/carlkidcrypto/purpleair_data_logger/issues/475))
+
+### Tests
+
+* cover PurpleAirMatterDataLogger._start_http_server ([#468](https://github.com/carlkidcrypto/purpleair_data_logger/issues/468))
+
 
 <a name="v1.5.0"></a>
 ## [v1.5.0] - 2026-08-11
