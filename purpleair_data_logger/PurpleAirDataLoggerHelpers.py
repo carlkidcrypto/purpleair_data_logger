@@ -5,10 +5,15 @@ Copyright 2023 carlkidcrypto, All rights reserved.
 A helper file that contains functions for PurpleAirDataLogger* files.
 """
 
-from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
-from purpleair_api.PurpleAirAPI import debug_log, PurpleAirAPIError
 import argparse
 import time
+
+from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
+from purpleair_api.PurpleAirAPI import debug_log
+from purpleair_api.PurpleAirAPIError import (
+    PurpleAirAPIError,
+    PurpleAirDeviceOfflineError,
+)
 
 
 def generate_common_arg_parser(argparse_description=""):
@@ -420,8 +425,24 @@ def logic_for_storing_local_sensors_data(padl_obj, json_config_file) -> None:
     :return: None
     """
 
-    # Ask for our local sensor data
-    local_sensor_dict = padl_obj._purpleair_api_obj.request_local_sensor_data()
+    # Ask for our local sensor data from each configured sensor instance
+    local_sensor_dict = {}
+    api_objs = (
+        padl_obj._purpleair_api_obj
+        if isinstance(padl_obj._purpleair_api_obj, list)
+        else [padl_obj._purpleair_api_obj]
+    )
+    for api_obj in api_objs:
+        try:
+            single_data = api_obj.request_local_sensor_data()
+            if single_data:
+                local_sensor_dict.update(single_data)
+        except PurpleAirDeviceOfflineError as exc:
+            debug_log(f"Local sensor is offline: {exc}")
+        except PurpleAirAPIError as exc:
+            debug_log(f"Local sensor API error: {exc}")
+        except Exception as exc:
+            debug_log(f"Local sensor unexpected error: {exc}")
 
     # The data that is returned via an internal network API is different than the data returned via an external network API.
     # With that in mind let's try to map internal network API values to external network API values. That way we don't have to

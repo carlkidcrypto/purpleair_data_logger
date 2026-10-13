@@ -50,7 +50,10 @@ from time import sleep
 from typing import Any
 from urllib.parse import urlsplit
 
-from purpleair_api.PurpleAirAPI import PurpleAirAPIError
+from purpleair_api.PurpleAirAPIError import (
+    PurpleAirAPIError,
+    PurpleAirDeviceOfflineError,
+)
 from purpleair_api.PurpleAirMatterConverter import PurpleAirMatterConverter
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
@@ -310,6 +313,12 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         self._sensor_indexes: list[int] = list(sensor_indexes or [])
         self._sensor_names: dict[int, str] = dict(sensor_names or {})
         self._read_keys: dict[int, str] = dict(read_keys or {})
+        if isinstance(PurpleAirApiIpv4Address, str):
+            self._sensor_ip_list: list[str] = [PurpleAirApiIpv4Address]
+        elif PurpleAirApiIpv4Address:
+            self._sensor_ip_list: list[str] = list(PurpleAirApiIpv4Address)
+        else:
+            self._sensor_ip_list: list[str] = []
 
         # Maps sensor_index (int) → Matter device dict
         self._matter_devices: dict[int, dict[str, Any]] = {}
@@ -413,7 +422,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             except Exception as exc:
                 last_exception = exc
                 if attempt < max_retries:
-                    delay = backoff_factor * (2 ** attempt)
+                    delay = backoff_factor * (2**attempt)
                     if delay > 0:
                         sleep(delay)
 
@@ -470,7 +479,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                 if device is not None:
                     results[idx] = device
             except Exception as exc:
-                logger.warning("Sensor %s: unexpected error during polling: %s", idx, exc)
+                logger.warning(
+                    "Sensor %s: unexpected error during polling: %s", idx, exc
+                )
         return results
 
     @staticmethod
@@ -504,13 +515,24 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             self._sensor_cache = cache
         grace_seconds = getattr(self, "_offline_grace_seconds", 600)
 
+        api_objs = (
+            self._purpleair_api_obj
+            if isinstance(self._purpleair_api_obj, list)
+            else [self._purpleair_api_obj]
+        )
+
         local_sensors = {}
-        try:
-            local_sensors = self._purpleair_api_obj.request_local_sensor_data()
-        except PurpleAirAPIError as exc:
-            logger.warning("PurpleAir local API error: %s", exc)
-        except Exception as exc:
-            logger.warning("PurpleAir local API unexpected error: %s", exc)
+        for api_obj in api_objs:
+            try:
+                single_data = api_obj.request_local_sensor_data()
+                if single_data:
+                    local_sensors.update(single_data)
+            except PurpleAirDeviceOfflineError as exc:
+                logger.warning("PurpleAir local sensor offline: %s", exc)
+            except PurpleAirAPIError as exc:
+                logger.warning("PurpleAir local API error: %s", exc)
+            except Exception as exc:
+                logger.warning("PurpleAir local API unexpected error: %s", exc)
 
         for address, raw in local_sensors.items():
             try:
@@ -618,7 +640,11 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         sensor_indexes: list[int] = json_config_file.get(
             "sensor_indexes", self._sensor_indexes
         )
-        local_mode = bool(json_config_file.get("sensor_ip_list"))
+        sensor_ip_list: list[str] = list(
+            json_config_file.get("sensor_ip_list", getattr(self, "_sensor_ip_list", []))
+            or []
+        )
+        local_mode = bool(sensor_ip_list)
         sensor_names: dict[int, str] = {
             int(k): v
             for k, v in json_config_file.get("sensor_names", self._sensor_names).items()
@@ -629,9 +655,7 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         }
 
         configured_sensor_count = (
-            len(json_config_file["sensor_ip_list"])
-            if local_mode
-            else len(sensor_indexes)
+            len(sensor_ip_list) if local_mode else len(sensor_indexes)
         )
         logger.info(
             "Starting Matter conversion loop for %d sensor(s)",
@@ -736,7 +760,10 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
 
         # Validate that we have sensors to poll before starting the server
         sensor_indexes: list[int] = config.get("sensor_indexes", self._sensor_indexes)
-        if not sensor_indexes and not config.get("sensor_ip_list"):
+        sensor_ip_list: list[str] = list(
+            config.get("sensor_ip_list", self._sensor_ip_list) or []
+        )
+        if not sensor_indexes and not sensor_ip_list:
             raise PurpleAirDataLoggerError(
                 "No 'sensor_indexes' or 'sensor_ip_list' provided — nothing to poll."
             )

@@ -14,6 +14,7 @@ from unittest.mock import MagicMock, patch
 
 sys.path.append("../")
 
+from purpleair_api.PurpleAirAPI import PurpleAirAPI
 from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLoggerError,
     PurpleAirDataLogger,
@@ -300,3 +301,31 @@ class PurpleAirDataLoggerTest(unittest.TestCase):
             with self.assertRaises(StopIteration):
                 padl._run_loop_for_storing_local_sensors_data(config)
         mock_logic.assert_called_once_with(padl, config)
+
+    def test_purpleair_data_logger_init_cloud_api_obj(self):
+        """
+        Test that PurpleAirDataLogger initializes _purpleair_api_obj as a
+        PurpleAirAPI instance in cloud mode.
+        """
+        padl = self._make_padl_with_mock()
+        self.assertIsInstance(padl._purpleair_api_obj, PurpleAirAPI)
+
+    def test_purpleair_data_logger_init_local_api_obj_list(self):
+        """
+        Test that PurpleAirDataLogger initializes _purpleair_api_obj as a list
+        containing one PurpleAirAPI instance per IP when multiple IPs are provided.
+        """
+        padl = PurpleAirDataLogger(
+            PurpleAirApiIpv4Address=["192.168.1.2", "192.168.1.3"]
+        )
+        self.assertIsInstance(padl._purpleair_api_obj, list)
+        self.assertEqual(len(padl._purpleair_api_obj), 2)
+
+    def test_purpleair_data_logger_init_local_api_obj_single_ip_string(self):
+        """
+        Test that PurpleAirDataLogger initializes _purpleair_api_obj as a list
+        containing one PurpleAirAPI instance when a single IP string is provided.
+        """
+        padl = PurpleAirDataLogger(PurpleAirApiIpv4Address="192.168.1.2")
+        self.assertIsInstance(padl._purpleair_api_obj, list)
+        self.assertEqual(len(padl._purpleair_api_obj), 1)
