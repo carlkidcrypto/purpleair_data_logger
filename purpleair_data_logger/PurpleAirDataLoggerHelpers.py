@@ -37,7 +37,7 @@ def generate_common_arg_parser(argparse_description=""):
         default=None,
         dest="paa_write_key",
         type=str,
-        help="""The PurpleAirAPI write key""",
+        help="""The PurpleAirAPI Write key""",
     )
 
     parser.add_argument(
@@ -94,7 +94,9 @@ def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
 
     :param dict the_modified_sensor_data: A single layer dictionary containing a single sensor's data.
 
-    :return: A dictionary with all the data fields filled out.
+    :return: The same dictionary object, modified in place so that every field in
+             ``ACCEPTED_FIELD_NAMES_DICT`` is present. Missing fields are filled with
+             their default values.
     """
 
     # Note: this is a reference, not a copy, since dicts are mutable in Python.
@@ -106,7 +108,7 @@ def validate_sensor_data_before_insert(the_modified_sensor_data) -> dict:
     # Delete some stuff
     del the_modified_sensor_data
 
-    # Then return the modified copy
+    # Then return the (in-place modified) dictionary
     return temp_the_modified_sensor_data
 
 
