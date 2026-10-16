@@ -14,6 +14,8 @@ permissions:
   copilot-requests: write
 
 safe-outputs:
+  noop:
+    report-as-issue: true
   create-pull-request:
     title-prefix: "[matter-data-logger]"
     labels:
