@@ -10,6 +10,8 @@ permissions:
   contents: read
   copilot-requests: write
 safe-outputs:
+  noop:
+    report-as-issue: true
   create-pull-request:
     title-prefix: "[docs-improvement] "
     labels: [documentation, automated-pr]
