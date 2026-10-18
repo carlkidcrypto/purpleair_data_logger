@@ -5,8 +5,8 @@ name: TestPyPI Distributions
 permissions:
   contents: read
 concurrency:
-  group: build_and_publish_to_test_pypi
-  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 on:
   push:
     branches: [ main ]
