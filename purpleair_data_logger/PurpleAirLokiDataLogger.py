@@ -229,7 +229,9 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
         :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param str loki_url: The base URL of the Loki instance (e.g. 'http://localhost:3100').
-        :param str loki_usr: Optional username for Loki basic authentication.
+        :param str loki_usr: Optional username for Loki basic authentication. Basic
+                             authentication is only used if both ``loki_usr`` and
+                             ``loki_pwd`` are provided.
         :param str loki_pwd: Optional password for Loki basic authentication.
         """
 
@@ -254,6 +256,7 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
 
         :param list streams: A list of Loki stream dicts, each containing 'stream' (labels dict)
                              and 'values' (list of [nanosecond_timestamp_str, log_line_str] pairs).
+        :raises requests.HTTPError: If Loki responds with an HTTP error status.
         """
 
         payload = {"streams": streams}
