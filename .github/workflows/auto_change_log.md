@@ -26,12 +26,9 @@ max-ai-credits: 25
 model: sonnet
 engine:
   id: copilot
+  args: ["--allow-all-tools"]
 network:
-  allowed:
-    - defaults
-    - github
-    - "github.com"
-    - "releaseassets.githubusercontent.com"
+  allowed: [defaults, github, go, api.github.com]
 tools:
   bash: true
 ---
@@ -100,6 +97,7 @@ Generate and open a changelog update PR only when substantive changelog content 
    - Base: `main`
    - Title: `Update CHANGELOG.md`
    - Commit message: `chore(docs): update changelog`
+   - Git staging: Explicitly run `git add CHANGELOG.md`. NEVER use blanket staging commands (`git add -A` or `git add .`).
 
 ## Pull Request Body Requirements
 
