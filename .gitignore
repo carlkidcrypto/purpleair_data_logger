@@ -9,3 +9,7 @@
 **.DS_Store**
 **venv**
 behave_tests/behave.ini
+
+# Dynamically extracted gh-aw inline skills
+/.github/skills/*
+!/.github/skills/agentic-workflows/
