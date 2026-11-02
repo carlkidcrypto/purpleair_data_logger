@@ -21,10 +21,10 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v7
 
-      - name: Set up Python 3.12 for Sphinx
+      - name: Set up Python 3.14 for Sphinx
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Cache pip dependencies
         uses: actions/cache@v6
@@ -83,10 +83,10 @@ jobs:
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
 
-      - name: Set up Python 3.12 for Sphinx
+      - name: Set up Python 3.14 for Sphinx
         uses: actions/setup-python@v7
         with:
-          python-version: "3.12"
+          python-version: "3.14"
 
       - name: Install documentation requirements
         run: |
