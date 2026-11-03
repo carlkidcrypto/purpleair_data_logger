@@ -1,4 +1,37 @@
-Last Updated: 2026-10-13 14:53:57 UTC
+Last Updated: 2026-11-03 05:49:44 UTC
+
+
+<a name="v1.6.0"></a>
+## [v1.6.0] - 2026-11-02
+
+### Bug Fixes
+
+* **aw:** allow all tools, add go network preset, and ignore restored skills ([#519](https://github.com/carlkidcrypto/purpleair_data_logger/issues/519))
+
+### Build System
+
+* **deps:** Bump black ([#513](https://github.com/carlkidcrypto/purpleair_data_logger/issues/513))
+* **deps:** Bump carlkidcrypto/os-specific-runner from 2.3.1 to 2.4.0 ([#512](https://github.com/carlkidcrypto/purpleair_data_logger/issues/512))
+
+### Chores
+
+* **github:** sync issue templates with ezsnmp conventions ([#515](https://github.com/carlkidcrypto/purpleair_data_logger/issues/515))
+* **release:** bump version to 1.6.0, pin purpleair_api 1.5.1, and sync supported Python versions ([#525](https://github.com/carlkidcrypto/purpleair_data_logger/issues/525))
+* **sonar:** exclude docs from sonarqube analysis and duplication checks ([#518](https://github.com/carlkidcrypto/purpleair_data_logger/issues/518))
+
+### Continuous Integration
+
+* **aw:** report noop runs to tracking issue and give coverage workflows Codecov data ([#514](https://github.com/carlkidcrypto/purpleair_data_logger/issues/514))
+
+### Documentation
+
+* clarify Loki logger docstrings ([#511](https://github.com/carlkidcrypto/purpleair_data_logger/issues/511))
+* add versioned documentation for v1.6.0a1 ([#509](https://github.com/carlkidcrypto/purpleair_data_logger/issues/509))
+
+### Features
+
+* migrate release scripts to standardized release_tools ([#516](https://github.com/carlkidcrypto/purpleair_data_logger/issues/516))
+
 
 <a name="v1.6.0a1"></a>
 ## [v1.6.0a1] - 2026-10-13
