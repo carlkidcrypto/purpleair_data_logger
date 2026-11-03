@@ -12,7 +12,7 @@ names and JSON field names are case-sensitive.
 Shared data logger requirements
 -------------------------------
 
-**[GEN-001]** The software shall support Python 3.10 through Python 3.14.
+**[GEN-001]** The software shall support Python 3.11 through Python 3.15.
 
 **[GEN-002]** Each executable data logger module shall support invocation with
 ``python -m purpleair_data_logger.<ModuleName>``.
@@ -361,4 +361,14 @@ workflow runs for that workflow shall be cancelled immediately.
 
 **[CICD-004]** When new commits are pushed to the ``main`` branch, any obsolete in-progress
 workflow runs for that workflow shall be cancelled immediately.
+
+**[CICD-005]** The documentation build system shall execute in a dedicated Python 3.14 runner
+environment (supporting dependencies requiring Python >=3.13, such as Sphinx 9.2+) for continuous
+documentation and versioned release builds.
+
+**[CICD-006]** Distribution packaging actions (``build-distribution``) shall execute under Python
+3.14 to compile and validate sdist and wheel artifacts.
+
+**[CICD-007]** CI workflow validation tooling (including workflow syntax validation via
+``verify_syntax.yml``) shall configure and execute in a dedicated Python 3.14 runner environment.
 
