@@ -278,6 +278,11 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         read keys when no config file is provided.
     :param bool matter_only: If True, the forever loop runs without any
         database or file sink (Matter conversion only).
+    :param int offline_grace_seconds: Seconds an unreachable sensor keeps its
+        last-known-good value before being marked offline (default 600).
+    :param int max_retries: Retries after a failed sensor request (default 3).
+    :param float retry_backoff_factor: Backoff factor applied between retries
+        (default 0.05).
     """
 
     def __init__(
