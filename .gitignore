@@ -6,6 +6,8 @@
 **/logs/**
 **.ini
 **.xml
+*_coverage.json
+.coverage.*
 **.DS_Store**
 **venv**
 behave_tests/behave.ini

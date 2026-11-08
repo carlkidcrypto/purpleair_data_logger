@@ -27,6 +27,7 @@ jobs:
         uses: tj-actions/changed-files@v47.0.6
         with:
           files: |
+            codecov.yml
             .github/workflows/tests.yml
             purpleair_data_logger/*.py
             tests/*.py
@@ -55,7 +56,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install python3 requirements...
-        uses: carlkidcrypto/os-specific-runner@v2.4.0
+        uses: carlkidcrypto/os-specific-runner@v2.5.0
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/ ;
                  python -m pip install --upgrade wheel ;
@@ -76,19 +77,23 @@ jobs:
                    python -m pip install -r tests/requirements.txt ;
 
       - name: Run unit tests...
-        uses: carlkidcrypto/os-specific-runner@v2.4.0
+        uses: carlkidcrypto/os-specific-runner@v2.5.0
         with:
           linux: cd /home/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
-                 coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
+                 coverage run -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
           macos: cd /Users/runner/work/purpleair_data_logger/purpleair_data_logger/tests ;
-                 coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
+                 coverage run -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
           windows: cd D:\a\purpleair_data_logger\purpleair_data_logger\tests ;
-                   coverage run -m unittest && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
+                   coverage run -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json;
 
       - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@0565863a31f2c772f9f0395002a31e3f06189574 # v5.4.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: tests/${{matrix.os}}_${{matrix.python-version}}_coverage.xml,tests/coverage.xml
+          flags: python
+          fail_ci_if_error: false
         env:
-          name: ${{matrix.os}}_${{matrix.python-version}}_coverage_report
           CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}

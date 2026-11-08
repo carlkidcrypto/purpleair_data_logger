@@ -377,3 +377,8 @@ Calendar Versioning (CalSemVer) using ``YYYY.M.D`` for stable releases and ``YYY
 pre-releases, omitting leading zeroes in date components to guarantee compatibility with PEP 440
 and SemVer 2.0.0.
 
+**[CICD-009]** Automated test workflows (``tests.yml``) shall generate Cobertura XML and coverage
+reports across matrix runners and upload them to Codecov (``codecov/codecov-action``) using
+repository secret ``CODECOV_TOKEN``, tagged with dedicated flag ``python`` and tracked via
+component ``python_code``.
+
