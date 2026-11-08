@@ -84,7 +84,7 @@ All agentic workflows in this repo follow a consistent **schedule + PR** pattern
 | Source `.md` | Purpose |
 |---|---|
 | `coverage_autofix_every_3_days.md` | Runs coverage checks and proposes test fixes every 3 days |
-| `docs_continuous_improvement_every_3_days.md` | Audits and improves documentation every 3 days |
+| `docs_continuous_improvement.md` | Audits and improves documentation every 3 days |
 | `auto_change_log.md` | Updates `CHANGELOG.md` when a new release is published |
 | `auto_release_notes.md` | Generates release notes when a new release is published |
 | `python_version_watcher.md` | Syncs supported Python versions in `setup.cfg` and `tests.yml` monthly |
