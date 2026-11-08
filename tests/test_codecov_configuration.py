@@ -26,6 +26,15 @@ class CodecovConfigurationTest(unittest.TestCase):
         self.assertIn("flags: python", content)
         self.assertIn("codecov.yml", content)
 
+    def test_sonarcloud_configuration(self):
+        sonar_file = REPO_ROOT / ".sonarcloud.properties"
+        self.assertTrue(sonar_file.is_file(), ".sonarcloud.properties must exist")
+        content = sonar_file.read_text(encoding="utf-8")
+        self.assertIn("sonar.exclusions", content)
+        self.assertIn("sonar.cpd.exclusions", content)
+        self.assertIn(".github/**", content)
+        self.assertIn("docs/**", content)
+
 
 if __name__ == "__main__":
     unittest.main()
