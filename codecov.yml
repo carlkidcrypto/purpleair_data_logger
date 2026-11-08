@@ -1,4 +1,4 @@
-# CodeCov configuration for purpleair_data_logger
+# Codecov configuration for purpleair_data_logger
 # Documentation: https://docs.codecov.com/docs/codecov-yaml
 
 # Coverage configuration
@@ -19,18 +19,43 @@ coverage:
         threshold: 1%
         informational: false
 
-# Ignore paths - exclude test files and configuration from coverage reports
+# Ignore paths - exclude test files, configuration, and docs from coverage reports
 ignore:
   - "tests/**"
   - "behave_tests/**"
+  - "test_*.py"
+  - "**/test_*.py"
+  - "**/*_test.py"
   - "setup.py"
   - "setup.cfg"
+  - "release_tools/**"
   - ".github/**"
+  - "docs/**"
+  - "sphinx_docs_build/**"
+
+# Flag management: unique flags per test suite
+flag_management:
+  default_rules:
+    carryforward: true
+  individual_flags:
+    - name: python
+      paths:
+        - purpleair_data_logger/*.py
+        - purpleair_data_logger/**/*.py
 
 # Comment configuration for pull requests
 comment:
-  layout: "header, diff, files, footer"
+  layout: "header, diff, flags, components, files, footer"
   behavior: default
   require_changes: false
   require_base: false
   require_head: true
+
+# Component configuration to track Python code separately
+component_management:
+  individual_components:
+    - component_id: python_code
+      name: "Python Code"
+      paths:
+        - purpleair_data_logger/*.py
+        - purpleair_data_logger/**/*.py
