@@ -49,7 +49,7 @@ comment:
   behavior: default
   require_changes: false
   require_base: false
-  require_head: true
+  require_head: false
 
 # Component configuration to track Python code separately
 component_management:
