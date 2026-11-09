@@ -78,6 +78,14 @@ Continuous cloud mode recognizes these fields:
 ``http_host`` and ``http_port``
    HTTP bind address and port. Defaults are ``127.0.0.1`` and ``9855``.
 
+``offline_grace_seconds``
+   Optional grace period in seconds before an unreachable sensor is marked
+   offline. The default is 600. The command line equivalent is
+   ``--offline-grace-seconds``.
+
+``max_retries``
+   Optional number of retries after a failed sensor request. The default is 3.
+
 ``matter_only``
    Describes the Matter-only service mode. The current class has no raw-data
    persistence sink, so this option does not change persistence behavior.
