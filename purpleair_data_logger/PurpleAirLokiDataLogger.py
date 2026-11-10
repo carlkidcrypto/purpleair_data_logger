@@ -229,6 +229,8 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
         :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
         :param str loki_url: The base URL of the Loki instance (e.g. 'http://localhost:3100').
+                             The ``/loki/api/v1/push`` path is appended automatically, and
+                             any trailing slash is removed.
         :param str loki_usr: Optional username for Loki basic authentication. Basic
                              authentication is only used if both ``loki_usr`` and
                              ``loki_pwd`` are provided.
@@ -284,6 +286,8 @@ class PurpleAirLokiDataLogger(PurpleAirDataLogger):
                                              a certain field make sure it is ``None`` and part
                                              of the dictionary. This method does no type
                                              or error checking. That is up to the caller.
+                                             Failures are caught, logged to stdout, and
+                                             counted rather than raised.
         """
 
         try:
