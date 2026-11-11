@@ -35,6 +35,20 @@ TEST(DataLoggerLifecycleTest, StartStopRunIngestRecentAndErrors) {
    EXPECT_EQ(dl.config().instance_name, cfg.instance_name);
    EXPECT_FALSE(dl.is_running());
 
+   DataLogger dl_str = DataLogger::from_json_string(cfg.to_json_string());
+   EXPECT_EQ(dl_str.config().instance_name, cfg.instance_name);
+
+   // Run with duration_ms == 0 (stopped by another thread)
+   std::thread stop_thread([&dl]() {
+      std::this_thread::sleep_for(std::chrono::milliseconds(80));
+      dl.stop();
+   });
+   dl.run(0);
+   if (stop_thread.joinable()) {
+      stop_thread.join();
+   }
+   EXPECT_FALSE(dl.is_running());
+
    // Run for 120ms
    dl.run(120);
    dl.stop();
@@ -59,6 +73,18 @@ TEST(DataLoggerLifecycleTest, StartStopRunIngestRecentAndErrors) {
    EXPECT_FALSE(dl.stats_json().empty());
    EXPECT_FALSE(dl.probe_dut_json("outdoor_patio_sensor").empty());
    EXPECT_THROW(dl.probe_dut("unknown_dut_xyz"), ConfigError);
+
+   // Queue drop test when queue_capacity is 1
+   LoggerConfig tiny_cfg = cfg;
+   tiny_cfg.queue_capacity = 1;
+   tiny_cfg.duts[0].poll_interval_ms = 1000;
+   DataLogger dl_tiny(tiny_cfg);
+   dl_tiny.start();
+   for (int i = 0; i < 50; ++i) {
+      dl_tiny.ingest_batch(custom_b);
+   }
+   dl_tiny.stop();
+   EXPECT_GE(dl_tiny.stats().batches_polled, 50u);
 }
 
 TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
@@ -67,14 +93,21 @@ TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
 
    // 1. Help & Version (text & json)
    EXPECT_EQ(CliRunner::execute({}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"-h"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"--help"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"version"}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"-V"}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"-v"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"--version", "--json"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"schema"}).exit_code, 0);
 
-   // 2. init-config (stdout, file text, file json)
+   // 2. init-config (stdout, file text, file json, force flags)
+   EXPECT_EQ(CliRunner::execute({"init-config"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"init-config", "--profile", "minimal"}).exit_code, 0);
-   EXPECT_EQ(CliRunner::execute({"init-config", "--profile", "demo", "-o", cfg_path}).exit_code, 0);
+   EXPECT_EQ(
+       CliRunner::execute({"init-config", "--profile", "demo", "-o", cfg_path, "--force", "-f"})
+           .exit_code,
+       0);
    EXPECT_EQ(
        CliRunner::execute({"init-config", "--profile", "demo", "-o", cfg_path, "--json"}).exit_code,
        0);
@@ -89,6 +122,7 @@ TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
 
    // 3. validate (text & json, valid & invalid)
    EXPECT_EQ(CliRunner::execute({"validate", "-c", cfg_path}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"validate", "--config", cfg_path}).exit_code, 0);
    EXPECT_EQ(
        CliRunner::execute({"validate", "--config-json", cfg.to_json_string(), "--json"}).exit_code,
        0);
@@ -132,6 +166,9 @@ TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--once", "--json"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--cycles", "1", "--json"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--duration-ms", "120"}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--duration", "1", "--json", "extra_field"})
+                 .exit_code,
+             0);
 
    // 8. inspect (text & json)
    EXPECT_EQ(CliRunner::execute({"inspect", "-c", cfg_path, "--limit", "5", "--metric", "pm2.5"})
