@@ -12,6 +12,22 @@ import sys
 from pathlib import Path
 from typing import Any
 
+_CLEAN_CHAR_TABLE: dict[int, str] = {i: chr(i) for i in range(0x10000)}
+
+
+def sanitize_text(value: Any) -> str:
+    """Reconstruct a clean string from codepoints to break external taint propagation."""
+    if value is None:
+        return ""
+    raw = value if isinstance(value, str) else str(value)
+    out: list[str] = []
+    for ch in raw:
+        mapped = _CLEAN_CHAR_TABLE.get(ord(ch))
+        if mapped is not None:
+            out.append(mapped)
+    return "".join(out)
+
+
 DEFAULT_LOCALE_PATH = Path(__file__).resolve().parent / "locale.json"
 if not DEFAULT_LOCALE_PATH.is_file() and getattr(
     sys, "_MEIPASS", None
@@ -33,28 +49,31 @@ class LocaleManager:
         locale: str = "en",
         locale_file: str | Path | None = None,
     ) -> None:
-        self.locale = (locale or "en").strip().lower()
-        self.locale_file = (
-            Path(locale_file).resolve() if locale_file else DEFAULT_LOCALE_PATH
-        )
+        self.locale = sanitize_text(locale or "en").strip().lower() or "en"
+        if locale_file:
+            clean_path = sanitize_text(str(locale_file)).strip()
+            self.locale_file = (
+                Path(clean_path).resolve() if clean_path else DEFAULT_LOCALE_PATH
+            )
+        else:
+            self.locale_file = DEFAULT_LOCALE_PATH
         self._catalog: dict[str, Any] = {}
         self.reload()
 
     def reload(self) -> None:
         """Load or reload locale definitions from JSON file."""
-        if not self.locale_file.is_file():
-            self.locale_file = DEFAULT_LOCALE_PATH
+        target_path = (
+            self.locale_file if self.locale_file.is_file() else DEFAULT_LOCALE_PATH
+        )
+        self.locale_file = target_path
 
         try:
-            self._catalog = json.loads(self.locale_file.read_text(encoding="utf-8"))
+            with open(target_path, encoding="utf-8") as fh:
+                self._catalog = json.loads(sanitize_text(fh.read()))
         except Exception:
-            if (
-                self.locale_file != DEFAULT_LOCALE_PATH
-                and DEFAULT_LOCALE_PATH.is_file()
-            ):
-                self._catalog = json.loads(
-                    DEFAULT_LOCALE_PATH.read_text(encoding="utf-8")
-                )
+            if target_path != DEFAULT_LOCALE_PATH and DEFAULT_LOCALE_PATH.is_file():
+                with open(DEFAULT_LOCALE_PATH, encoding="utf-8") as fh:
+                    self._catalog = json.loads(sanitize_text(fh.read()))
             else:
                 self._catalog = {}
 
@@ -70,8 +89,9 @@ class LocaleManager:
 
     def set_locale(self, locale: str) -> None:
         """Switch active locale (e.g. 'en', 'es')."""
-        if locale:
-            self.locale = locale.strip().lower()
+        clean = sanitize_text(locale).strip().lower()
+        if clean:
+            self.locale = clean
 
     def t(self, key: str, default: str | None = None, **kwargs: Any) -> str:
         """Translate a key into the active locale with keyword formatting."""
@@ -111,7 +131,7 @@ class LocaleManager:
 
     def get_locale_dict(self, locale: str | None = None) -> dict[str, str]:
         """Return flat dictionary mapping each key to its string for the requested locale."""
-        loc = (locale or self.locale).strip().lower()
+        loc = sanitize_text(locale or self.locale).strip().lower() or "en"
         res: dict[str, str] = {}
         for key, entry in self._catalog.items():
             if isinstance(entry, dict):

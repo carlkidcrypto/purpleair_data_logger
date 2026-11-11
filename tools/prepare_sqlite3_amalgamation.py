@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import shutil
+import subprocess
 import sys
 import urllib.request
 import zipfile
@@ -19,7 +20,38 @@ SQLITE_YEAR = "2025"
 SQLITE_VERSION_FOLDER = "sqlite-amalgamation-3490100"
 SQLITE_ZIP_NAME = f"{SQLITE_VERSION_FOLDER}.zip"
 SQLITE_URL = f"https://www.sqlite.org/{SQLITE_YEAR}/{SQLITE_ZIP_NAME}"
-SQLITE_SHA256 = "e7a2ef6ebce2fbffbd1ceb2fdbe4fd27c3d3f321ec332d2d29a4f8a22f3c4223"
+SQLITE_SHA256 = "6cebd1d8403fc58c30e93939b246f3e6e58d0765a5cd50546f16c00fd805d2c3"
+
+
+def _download_archive(url: str, dest: Path) -> None:
+    curl_bin = shutil.which("curl")
+    if curl_bin:
+        res = subprocess.run(
+            [
+                curl_bin,
+                "--proto",
+                "=https",
+                "-fsSL",
+                "--retry",
+                "3",
+                "--retry-delay",
+                "2",
+                "-o",
+                str(dest),
+                url,
+            ],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if res.returncode == 0 and dest.is_file():
+            return
+    req = urllib.request.Request(
+        url,
+        headers={"User-Agent": "purpleair_data_logger-build/1.0"},
+    )
+    with urllib.request.urlopen(req, timeout=60) as resp, open(dest, "wb") as out:
+        shutil.copyfileobj(resp, out)
 
 
 def ensure_sqlite3_amalgamation(repo_root: Path | None = None) -> Path:
@@ -48,15 +80,10 @@ def ensure_sqlite3_amalgamation(repo_root: Path | None = None) -> Path:
     zip_path = dest_dir / SQLITE_ZIP_NAME
 
     print(f"[sqlite3] Downloading {SQLITE_URL} ...")
-    req = urllib.request.Request(
-        SQLITE_URL,
-        headers={"User-Agent": "purpleair_data_logger-build/1.0"},
-    )
-    with urllib.request.urlopen(req, timeout=60) as resp, open(zip_path, "wb") as out:
-        shutil.copyfileobj(resp, out)
+    _download_archive(SQLITE_URL, zip_path)
 
     digest = hashlib.sha256(zip_path.read_bytes()).hexdigest()
-    if digest != SQLITE_SHA256:
+    if digest.lower() != SQLITE_SHA256.lower():
         zip_path.unlink(missing_ok=True)
         raise RuntimeError(
             f"SQLite3 amalgamation SHA-256 mismatch: expected {SQLITE_SHA256}, got {digest}"

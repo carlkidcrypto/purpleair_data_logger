@@ -91,16 +91,16 @@ jobs:
         uses: carlkidcrypto/os-specific-runner@v2.5.0
         with:
           linux: |
-            xvfb-run -a python -m pytest python_tests/ -v
+            xvfb-run -a coverage run --data-file=tests/.coverage -m pytest python_tests/ -v
             cd tests
-            coverage run -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
+            coverage run --append -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
           macos: |
-            python -m pytest python_tests/ -v
+            coverage run --data-file=tests/.coverage -m pytest python_tests/ -v
             cd tests
-            coverage run -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
+            coverage run --append -m unittest && coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml && coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
           windows: |
-            python -m pytest python_tests/ -v
-            cd tests ; coverage run -m unittest ; coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml ; coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
+            coverage run --data-file=tests/.coverage -m pytest python_tests/ -v
+            cd tests ; coverage run --append -m unittest ; coverage xml -o ${{matrix.os}}_${{matrix.python-version}}_coverage.xml ; coverage json -o ${{matrix.os}}_${{matrix.python-version}}_coverage.json
 
       - name: Upload coverage reports to Codecov
         if: always()

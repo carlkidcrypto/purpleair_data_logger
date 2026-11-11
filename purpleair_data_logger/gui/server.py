@@ -17,7 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from .cli_bridge import CliSubprocessBridge
-from .locale_manager import LocaleManager, get_default_locale_manager
+from .locale_manager import LocaleManager, get_default_locale_manager, sanitize_text
 
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 if not STATIC_DIR.is_dir() and getattr(sys, "_MEIPASS", None):  # pragma: no cover
@@ -28,6 +28,32 @@ mimetypes.add_type("image/x-icon", ".ico")
 mimetypes.add_type("image/svg+xml", ".svg")
 mimetypes.add_type("image/png", ".png")
 mimetypes.add_type("image/x-icns", ".icns")
+
+_STATIC_MIME_BY_SUFFIX: dict[str, str] = {
+    ".html": "text/html; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".js": "application/javascript; charset=utf-8",
+    ".json": "application/json; charset=utf-8",
+    ".svg": "image/svg+xml",
+    ".png": "image/png",
+    ".ico": "image/x-icon",
+    ".icns": "image/x-icns",
+}
+
+
+def _load_static_catalog() -> dict[str, tuple[bytes, str]]:
+    """Enumerate bundled static assets directly from STATIC_DIR without user input."""
+    catalog: dict[str, tuple[bytes, str]] = {}
+    if not STATIC_DIR.is_dir():
+        return catalog
+    for entry in STATIC_DIR.rglob("*"):
+        if entry.is_file():
+            rel_key = entry.relative_to(STATIC_DIR).as_posix()
+            ctype = _STATIC_MIME_BY_SUFFIX.get(
+                entry.suffix.lower(), "application/octet-stream"
+            )
+            catalog[rel_key] = (entry.read_bytes(), ctype)
+    return catalog
 
 
 class StudioHttpServer(ThreadingHTTPServer):
@@ -55,7 +81,8 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
         return
 
     def _send_json(self, payload: Any, status: int = HTTPStatus.OK) -> None:
-        body = (json.dumps(payload, indent=2) + "\n").encode("utf-8")
+        clean_json = sanitize_text(json.dumps(payload, indent=2) + "\n")
+        body = clean_json.encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json; charset=utf-8")
         self.send_header("Content-Length", str(len(body)))
@@ -65,31 +92,29 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
 
     def _read_json_body(self) -> dict[str, Any]:
         length = int(self.headers.get("Content-Length", "0") or "0")
-        raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
+        raw_input = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
+        raw = sanitize_text(raw_input)
         data = json.loads(raw) if raw.strip() else {}
         if not isinstance(data, dict):
             raise ValueError("JSON request body must be an object")
         return data
 
     def _serve_static(self, rel_path: str) -> None:
-        clean = rel_path.lstrip("/") or "index.html"
-        target = (STATIC_DIR / clean).resolve()
-        if (
-            not str(target).startswith(str(STATIC_DIR.resolve()))
-            or not target.is_file()
-        ):
+        clean = sanitize_text(rel_path).lstrip("/") or "index.html"
+        asset = _load_static_catalog().get(clean)
+        if asset is None:
             self.send_error(HTTPStatus.NOT_FOUND, "Not Found")
             return
-        content = target.read_bytes()
-        ctype, _ = mimetypes.guess_type(str(target))
+        content, ctype = asset
         self.send_response(HTTPStatus.OK)
-        self.send_header("Content-Type", ctype or "application/octet-stream")
+        self.send_header("Content-Type", ctype)
         self.send_header("Content-Length", str(len(content)))
         self.end_headers()
         self.wfile.write(content)
 
     def do_GET(self) -> None:  # noqa: N802
-        parsed = urllib.parse.urlparse(self.path)
+        clean_url = sanitize_text(self.path)
+        parsed = urllib.parse.urlparse(clean_url)
         qs = urllib.parse.parse_qs(parsed.query)
         bridge = self.server.bridge
 
@@ -98,7 +123,9 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
                 self._send_json({"ok": True, **bridge.snapshot()})
                 return
             if parsed.path == "/api/locale":
-                req_locale = qs.get("locale", [self.server.locale_mgr.locale])[0]
+                req_locale = sanitize_text(
+                    qs.get("locale", [self.server.locale_mgr.locale])[0]
+                )
                 self._send_json(
                     {
                         "ok": True,
@@ -133,7 +160,7 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
                 )
                 return
             if parsed.path == "/api/template":
-                tpl = qs.get("name", ["demo"])[0]
+                tpl = sanitize_text(qs.get("name", ["demo"])[0])
                 res = bridge.init_config_template(tpl)
                 self._send_json(
                     {
@@ -146,19 +173,21 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
                 return
             if parsed.path == "/api/inspect":
                 limit = int(qs.get("limit", ["50"])[0])
-                dut = qs.get("dut", [""])[0]
-                metric = qs.get("metric", [""])[0]
+                dut = sanitize_text(qs.get("dut", [""])[0])
+                metric = sanitize_text(qs.get("metric", [""])[0])
                 self._send_json(bridge.inspect(limit=limit, dut=dut, metric=metric))
                 return
 
             self._serve_static(parsed.path)
         except Exception as exc:
             self._send_json(
-                {"ok": False, "error": str(exc)}, status=HTTPStatus.BAD_REQUEST
+                {"ok": False, "error": sanitize_text(str(exc))},
+                status=HTTPStatus.BAD_REQUEST,
             )
 
     def do_POST(self) -> None:  # noqa: N802
-        parsed = urllib.parse.urlparse(self.path)
+        clean_url = sanitize_text(self.path)
+        parsed = urllib.parse.urlparse(clean_url)
         bridge = self.server.bridge
 
         try:
@@ -214,7 +243,7 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
                 self._send_json(bridge.run_once())
                 return
             if parsed.path == "/api/locale":
-                req_locale = str(body.get("locale", "")).strip()
+                req_locale = sanitize_text(str(body.get("locale", ""))).strip()
                 if req_locale:
                     self.server.locale_mgr.set_locale(req_locale)
                 self._send_json(
@@ -235,7 +264,8 @@ class StudioRequestHandler(BaseHTTPRequestHandler):
             )
         except Exception as exc:
             self._send_json(
-                {"ok": False, "error": str(exc)}, status=HTTPStatus.BAD_REQUEST
+                {"ok": False, "error": sanitize_text(str(exc))},
+                status=HTTPStatus.BAD_REQUEST,
             )
 
 

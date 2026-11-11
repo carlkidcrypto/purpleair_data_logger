@@ -21,6 +21,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from .locale_manager import sanitize_text
+
 
 def _utc_iso_now() -> str:
     return dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%S.%f")[:-3] + "Z"
@@ -28,8 +30,12 @@ def _utc_iso_now() -> str:
 
 def resolve_cli_command(cli_override: str = "") -> list[str]:
     """Locate the purpleair-data-logger CLI command across Linux, macOS, and Windows."""
-    if cli_override.strip():
-        return shlex.split(cli_override, posix=(os.name != "nt"))
+    clean_override = sanitize_text(cli_override).strip()
+    if clean_override:
+        return [
+            sanitize_text(part)
+            for part in shlex.split(clean_override, posix=(os.name != "nt"))
+        ]
 
     if getattr(sys, "frozen", False):
         return [sys.executable, "cli"]
@@ -51,9 +57,10 @@ class CliSubprocessBridge:
     """Thread-safe controller that drives `purpleair-data-logger` strictly via CLI + JSON."""
 
     def __init__(self, config_path: str | Path, cli_override: str = "") -> None:
-        self.config_path = Path(config_path).expanduser().resolve()
+        clean_cfg_path = sanitize_text(str(config_path)).strip()
+        self.config_path: Path = Path(clean_cfg_path).expanduser().resolve()
         self._lock = threading.RLock()
-        self._cli_override = cli_override
+        self._cli_override = sanitize_text(cli_override)
         self._audit_log: collections.deque[dict[str, Any]] = collections.deque(
             maxlen=250
         )
@@ -129,13 +136,12 @@ class CliSubprocessBridge:
                 },
                 "gui": {"frontend": "auto", "theme": "dark"},
             }
-            self.config_path.write_text(
-                json.dumps(default_doc, indent=2) + "\n", encoding="utf-8"
-            )
+            with open(self.config_path, "w", encoding="utf-8") as fh:
+                fh.write(json.dumps(default_doc, indent=2) + "\n")
 
     def _sync_gui_preferences(self) -> None:
         try:
-            cfg = json.loads(self.config_path.read_text(encoding="utf-8"))
+            cfg = json.loads(self.load_config_text())
             gui = cfg.get("gui", {}) if isinstance(cfg, dict) else {}
             max_lines = int(gui.get("max_log_lines", 500))
             if max_lines >= 50:
@@ -145,7 +151,7 @@ class CliSubprocessBridge:
                     )
             if not self._cli_override and isinstance(gui.get("cli_executable"), str):
                 if gui["cli_executable"].strip():
-                    self._cli_override = gui["cli_executable"].strip()
+                    self._cli_override = sanitize_text(gui["cli_executable"].strip())
         except Exception:
             pass
 
@@ -154,9 +160,10 @@ class CliSubprocessBridge:
 
     @staticmethod
     def _format_cmd_display(cmd: list[str]) -> str:
+        clean_parts = [sanitize_text(part) for part in cmd]
         if os.name == "nt":
-            return subprocess.list2cmdline(cmd)
-        return " ".join(shlex.quote(part) for part in cmd)
+            return subprocess.list2cmdline(clean_parts)
+        return " ".join(shlex.quote(part) for part in clean_parts)
 
     def _record_audit(
         self,
@@ -165,20 +172,21 @@ class CliSubprocessBridge:
         duration_ms: float,
         note: str = "",
     ) -> dict[str, Any]:
+        clean_cmd = [sanitize_text(part) for part in cmd]
         entry = {
             "timestamp": _utc_iso_now(),
-            "command": self._format_cmd_display(cmd),
-            "argv": list(cmd),
+            "command": self._format_cmd_display(clean_cmd),
+            "argv": clean_cmd,
             "exit_code": exit_code,
             "duration_ms": round(duration_ms, 2),
-            "note": note,
+            "note": sanitize_text(note),
         }
         with self._lock:
             self._audit_log.appendleft(entry)
         return entry
 
     def _exec_cli(self, sub_args: list[str], timeout: float = 30.0) -> dict[str, Any]:
-        cmd = self.cli_base_command() + sub_args
+        cmd = [sanitize_text(arg) for arg in (self.cli_base_command() + sub_args)]
         t0 = time.perf_counter()
         proc = subprocess.run(
             cmd,
@@ -216,7 +224,8 @@ class CliSubprocessBridge:
     # --- JSON Configuration File Access ---
 
     def load_config_text(self) -> str:
-        return self.config_path.read_text(encoding="utf-8")
+        with open(self.config_path, encoding="utf-8") as fh:
+            return sanitize_text(fh.read())
 
     def load_config_dict(self) -> dict[str, Any]:
         data = json.loads(self.load_config_text())
@@ -225,11 +234,13 @@ class CliSubprocessBridge:
         return data
 
     def save_config_text(self, raw_json: str) -> dict[str, Any]:
-        parsed = json.loads(raw_json)
-        formatted = json.dumps(parsed, indent=2) + "\n"
+        clean_input = sanitize_text(raw_json)
+        parsed = json.loads(clean_input)
+        formatted = sanitize_text(json.dumps(parsed, indent=2) + "\n")
         self.config_path.parent.mkdir(parents=True, exist_ok=True)
         tmp_path = self.config_path.with_suffix(self.config_path.suffix + ".tmp")
-        tmp_path.write_text(formatted, encoding="utf-8")
+        with open(tmp_path, "w", encoding="utf-8") as fh:
+            fh.write(formatted)
         os.replace(tmp_path, self.config_path)
         self._sync_gui_preferences()
         return self.validate()
@@ -246,19 +257,22 @@ class CliSubprocessBridge:
         return self._exec_cli(["schema"])
 
     def init_config_template(self, template_name: str = "demo") -> dict[str, Any]:
-        return self._exec_cli(["init-config", "--template", template_name])
+        return self._exec_cli(
+            ["init-config", "--template", sanitize_text(template_name)]
+        )
 
     def validate(self, config_text: str | None = None) -> dict[str, Any]:
         if config_text is not None:
             return self._exec_cli(
-                ["validate", "--config-string", config_text, "--json"]
+                ["validate", "--config-string", sanitize_text(config_text), "--json"]
             )
         return self._exec_cli(["validate", "--config", str(self.config_path), "--json"])
 
     def probe(self, dut_name: str = "") -> dict[str, Any]:
         args = ["probe", "--config", str(self.config_path), "--json"]
-        if dut_name.strip():
-            args.extend(["--dut", dut_name.strip()])
+        clean_dut = sanitize_text(dut_name).strip()
+        if clean_dut:
+            args.extend(["--dut", clean_dut])
         return self._exec_cli(args, timeout=60.0)
 
     def request(
@@ -274,16 +288,17 @@ class CliSubprocessBridge:
             "--config",
             str(self.config_path),
             "--dut",
-            dut_name,
+            sanitize_text(dut_name),
             "--op",
-            operation,
+            sanitize_text(operation),
             "--max-repeaters",
             str(int(max_repeaters)),
             "--json",
         ]
         for oid in oids:
-            if oid.strip():
-                args.extend(["--oid", oid.strip()])
+            clean_oid = sanitize_text(oid).strip()
+            if clean_oid:
+                args.extend(["--oid", clean_oid])
         if record:
             args.append("--record")
         res = self._exec_cli(args, timeout=60.0)
@@ -301,18 +316,19 @@ class CliSubprocessBridge:
         value: str,
         record: bool = False,
     ) -> dict[str, Any]:
+        clean_type = sanitize_text(set_type).strip() or "s"
         args = [
             "set",
             "--config",
             str(self.config_path),
             "--dut",
-            dut_name,
+            sanitize_text(dut_name),
             "--oid",
-            oid.strip(),
+            sanitize_text(oid).strip(),
             "--type",
-            set_type.strip() or "s",
+            clean_type,
             "--value",
-            value,
+            sanitize_text(value),
             "--json",
         ]
         if record:
@@ -352,10 +368,12 @@ class CliSubprocessBridge:
             str(max(1, int(limit))),
             "--json",
         ]
-        if dut.strip():
-            args.extend(["--dut", dut.strip()])
-        if metric.strip():
-            args.extend(["--metric", metric.strip()])
+        clean_dut = sanitize_text(dut).strip()
+        clean_metric = sanitize_text(metric).strip()
+        if clean_dut:
+            args.extend(["--dut", clean_dut])
+        if clean_metric:
+            args.extend(["--metric", clean_metric])
         return self._exec_cli(args)
 
     # --- Streaming Background CLI `run --json` Process Management ---
@@ -369,11 +387,17 @@ class CliSubprocessBridge:
             if self._run_proc is not None and self._run_proc.poll() is None:
                 return {"ok": True, "already_running": True, "pid": self._run_proc.pid}
 
-            cmd = self.cli_base_command() + [
-                "run",
-                "--config",
-                str(self.config_path),
-                "--json",
+            cmd = [
+                sanitize_text(part)
+                for part in (
+                    self.cli_base_command()
+                    + [
+                        "run",
+                        "--config",
+                        str(self.config_path),
+                        "--json",
+                    ]
+                )
             ]
             popen_kwargs: dict[str, Any] = {
                 "stdout": subprocess.PIPE,
