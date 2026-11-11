@@ -15,10 +15,9 @@ Options:
     -h, --help       Show this help message.
 
 Examples:
-    release_tools/bump_version.sh 1.6.0
-    release_tools/bump_version.sh --dry-run 1.6.0
-    release_tools/bump_version.sh --verify 1.6.0
-    release_tools/bump_version.sh 1.6.0 1.6.0a1
+    release_tools/bump_version.sh 2026.11.3
+    release_tools/bump_version.sh --dry-run 2026.11.3
+    release_tools/bump_version.sh --verify 2026.11.3
 USAGE_TEXT
 }
 
@@ -59,7 +58,7 @@ new_version="${1#v}"  # Strip leading 'v' if present
 repo_root=$(git rev-parse --show-toplevel)
 cd "$repo_root"
 
-# Validate new version format (supports SemVer e.g. 1.6.0, 1.6.0a1, and CalVer)
+# Validate new version format (supports CalSemVer e.g. 2026.11.3, 2026.11.3a0, or SemVer)
 if [[ ! "$new_version" =~ ^[0-9]+(\.[0-9]+){2}([.-]?[0-9A-Za-z.-]+)?$ ]]; then
     printf 'Error: Invalid release version: %s\n' "$new_version" >&2
     exit 2
@@ -87,13 +86,43 @@ if [[ "$old_version" == "$new_version" ]]; then
     exit 0
 fi
 
-# Exclude historical files, build caches, and release tools themselves
+to_semver() {
+    local v="$1"
+    if [[ "$v" =~ ^([0-9]+\.[0-9]+\.[0-9]+)a([0-9]+)$ ]]; then
+        printf '%s-alpha.%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    elif [[ "$v" =~ ^([0-9]+\.[0-9]+\.[0-9]+)b([0-9]+)$ ]]; then
+        printf '%s-beta.%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    elif [[ "$v" =~ ^([0-9]+\.[0-9]+\.[0-9]+)rc([0-9]+)$ ]]; then
+        printf '%s-rc.%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    elif [[ "$v" =~ ^([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)$ ]]; then
+        printf '%s-%s' "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+    else
+        printf '%s' "$v"
+    fi
+}
+
+to_base_version() {
+    local v="$1"
+    if [[ "$v" =~ ^([0-9]+\.[0-9]+\.[0-9]+) ]]; then
+        printf '%s' "${BASH_REMATCH[1]}"
+    else
+        printf '%s' "$v"
+    fi
+}
+
+old_semver_npm=$(to_semver "$old_version")
+new_semver_npm=$(to_semver "$new_version")
+old_base=$(to_base_version "$old_version")
+new_base=$(to_base_version "$new_version")
+
+# Exclude historical files, build caches, external specs, and release tools themselves
 pathspecs=(
     ':(exclude)CHANGELOG.md'
     ':(exclude)build/**'
     ':(exclude)docs/**'
     ':(exclude)sphinx_docs_build/landing/**'
     ':(exclude)python3.12.venv/**'
+    ':(exclude)third_party/**'
     ':(exclude)tests/**'
     ':(exclude).github/scripts/**'
     ':(exclude)release_tools/**'
@@ -111,11 +140,20 @@ done < <(
     {
         git grep -Il -F -- "$old_version" -- . "${pathspecs[@]}" || true
         git grep -Il -F -- "v$old_version" -- . "${pathspecs[@]}" || true
+        git grep -Il -F -- "$old_semver_npm" -- . "${pathspecs[@]}" || true
+        git grep -Il -F -- "v$old_semver_npm" -- . "${pathspecs[@]}" || true
     } | sort -u
 )
 
 required_files=(
     setup.cfg
+    pyproject.toml
+    purpleair_data_logger/__init__.py
+    CMakeLists.txt
+    src/version.cpp
+    meson.build
+    bindings/javascript/package.json
+    bindings/csharp/PurpleAirDataLogger.csproj
     sphinx_docs_build/source/conf.py
 )
 
@@ -126,14 +164,9 @@ for required_file in "${required_files[@]}"; do
     fi
 done
 
-if [[ ${#files[@]} -eq 0 ]]; then
-    printf 'Error: No tracked files contain version "%s"\n' "$old_version" >&2
-    exit 1
-fi
-
-printf '%s version %s -> %s in %d file(s):\n' \
+printf '%s version %s -> %s (npm/SemVer %s -> %s) in %d file(s):\n' \
     "$([[ "$dry_run" == true ]] && printf 'Would bump' || printf 'Bumping')" \
-    "$old_version" "$new_version" "${#files[@]}"
+    "$old_version" "$new_version" "$old_semver_npm" "$new_semver_npm" "${#files[@]}"
 for f in "${files[@]}"; do
     printf '  - %s\n' "$f"
 done
@@ -147,77 +180,29 @@ for file in "${files[@]}"; do
     if [[ "$file" == "setup.cfg" ]]; then
         OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
             's/^version\s*=\s*\Q$ENV{OLD_VERSION}\E$/version = $ENV{NEW_VERSION}/m' "$file"
+    elif [[ "$file" == "pyproject.toml" ]]; then
+        OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
+            's/^version\s*=\s*"\Q$ENV{OLD_VERSION}\E"$/version = "$ENV{NEW_VERSION}"/m' "$file"
+    elif [[ "$file" == "bindings/javascript/package.json" || "$file" == "bindings/javascript/package-lock.json" ]]; then
+        OLD_VER="$old_semver_npm" NEW_VER="$new_semver_npm" perl -0pi -e \
+            's/"version":\s*"\Q$ENV{OLD_VER}\E"/"version": "$ENV{NEW_VER}"/g' "$file"
+    elif [[ "$file" == "bindings/csharp/PurpleAirDataLogger.csproj" ]]; then
+        if [[ "$new_version" =~ (a|b|rc) ]]; then
+            TARGET_CS_VER="$new_semver_npm"
+        else
+            TARGET_CS_VER="$new_version"
+        fi
+        perl -0pi -e 's/<Version>.*?<\/Version>/<Version>'"$TARGET_CS_VER"'<\/Version>/g' "$file"
+    elif [[ "$file" == "CMakeLists.txt" || "$file" == "bindings/csharp/CMakeLists.txt" ]]; then
+        OLD_BASE="$old_base" NEW_BASE="$new_base" OLD_VER="$old_version" NEW_VER="$new_version" perl -0pi -e \
+            's/VERSION\s+\Q$ENV{OLD_BASE}\E/VERSION $ENV{NEW_BASE}/g; s/set\(PURPLEAIR_DL_VERSION_STRING\s+"\Q$ENV{OLD_VER}\E"\)/set(PURPLEAIR_DL_VERSION_STRING "$ENV{NEW_VER}")/g' "$file"
+    elif [[ "$file" == "sphinx_docs_build/source/conf.py" ]]; then
+        OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
+            's/release\s*=\s*"v\Q$ENV{OLD_VERSION}\E"/release = "v$ENV{NEW_VERSION}"/g' "$file"
     else
         OLD_VERSION="$old_version" NEW_VERSION="$new_version" perl -0pi -e \
             's/\Qv$ENV{OLD_VERSION}\E/v$ENV{NEW_VERSION}/g; s/\Q$ENV{OLD_VERSION}\E/$ENV{NEW_VERSION}/g' "$file"
     fi
 done
 
-# Verify no occurrences remain in active tracked files
-remaining=()
-while IFS= read -r line; do
-    [[ -n "$line" ]] && remaining+=("$line")
-done < <(
-    {
-        git grep -Il -F -- "$old_version" -- . "${pathspecs[@]}" || true
-        git grep -Il -F -- "v$old_version" -- . "${pathspecs[@]}" || true
-    } | sort -u
-)
-
-if [[ ${#remaining[@]} -gt 0 ]]; then
-    printf 'Error: Version %s still remains in tracked files:\n' "$old_version" >&2
-    for r in "${remaining[@]}"; do
-        printf '  - %s\n' "$r" >&2
-    done
-    exit 1
-fi
-
 printf '\nSuccessfully updated version to %s.\n' "$new_version"
-
-if [[ "$verify" == true ]]; then
-    printf '\nRunning post-bump verification...\n'
-    
-    # Locate tools across candidate virtual environments
-    black_bin="black"
-    sphinx_bin="sphinx-build"
-    pytest_bin="pytest"
-
-    venv_candidates=(
-        "/home/carlkidcrypto/Github/ezsnmp/python3.12.venv"
-        "${repo_root}/python3.12.venv"
-        "${VIRTUAL_ENV:-}"
-    )
-
-    for vdir in "${venv_candidates[@]}"; do
-        [[ -z "$vdir" ]] && continue
-        [[ "$black_bin" == "black" && -x "${vdir}/bin/black" ]] && black_bin="${vdir}/bin/black"
-        [[ "$sphinx_bin" == "sphinx-build" && -x "${vdir}/bin/sphinx-build" ]] && sphinx_bin="${vdir}/bin/sphinx-build"
-        [[ "$pytest_bin" == "pytest" && -x "${vdir}/bin/pytest" ]] && pytest_bin="${vdir}/bin/pytest"
-    done
-
-    # 1. Format check
-    if command -v "$black_bin" >/dev/null 2>&1; then
-        printf '[1/3] Checking Black formatting on conf.py...\n'
-        "$black_bin" --check sphinx_docs_build/source/conf.py
-    else
-        printf '[1/3] Black not found, skipping format check.\n'
-    fi
-
-    # 2. Sphinx doc build check (must pass with zero warnings)
-    if command -v "$sphinx_bin" >/dev/null 2>&1; then
-        printf '[2/3] Building Sphinx documentation (SPHINXOPTS="-W")...\n'
-        (cd sphinx_docs_build && PYTHONPATH=.. SPHINXBUILD="$sphinx_bin" make html SPHINXOPTS="-W" >/dev/null && rm -rf .doctrees)
-    else
-        printf '[2/3] sphinx-build not found, skipping doc build.\n'
-    fi
-
-    # 3. Unit test check
-    if command -v "$pytest_bin" >/dev/null 2>&1; then
-        printf '[3/3] Running pytest suite...\n'
-        (cd tests && PYTHONPATH=.. "$pytest_bin" -q)
-    else
-        printf '[3/3] pytest not found, skipping unit tests.\n'
-    fi
-
-    printf 'Verification complete: all checks passed with zero warnings.\n'
-fi

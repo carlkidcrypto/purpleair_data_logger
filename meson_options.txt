@@ -1,0 +1,6 @@
+option('with_sqlite3', type: 'feature', value: 'enabled', description: 'Enable SQLite3 sink')
+option('with_libpq', type: 'feature', value: 'auto', description: 'Enable PostgreSQL/TimescaleDB sink via libpq')
+option('with_purpleair_api', type: 'feature', value: 'auto', description: 'Compile with live purpleair_api C++17 layer')
+option('purpleair_api_src_dir', type: 'string', value: '', description: 'Path to purpleair_api repository root')
+option('build_cli', type: 'boolean', value: true, description: 'Build purpleair-data-logger CLI executable')
+option('build_tests', type: 'boolean', value: true, description: 'Build GoogleTest C++ unit tests')

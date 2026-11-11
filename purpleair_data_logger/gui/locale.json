@@ -1,0 +1,494 @@
+{
+  "app.header_title": {
+    "en": "PurpleAir Data Logger — Cross-Platform CLI Studio"
+  },
+  "app.json_config": {
+    "en": "JSON Config: {path}"
+  },
+  "app.json_config_prefix": {
+    "en": "JSON Config: "
+  },
+  "app.loading_config": {
+    "en": "Loading JSON configuration..."
+  },
+  "app.schema_title": {
+    "en": "JSON Schema (Draft 2020-12) — CLI `schema`"
+  },
+  "app.window_title": {
+    "en": "PurpleAir Data Logger Studio — {filename}"
+  },
+  "buttons.add_dut": {
+    "en": "+ Add Sensor"
+  },
+  "buttons.add_metric": {
+    "en": "+ Add Metric"
+  },
+  "buttons.apply_dut_changes": {
+    "en": "Apply Sensor Changes to JSON"
+  },
+  "buttons.execute_via_cli": {
+    "en": "Execute via CLI"
+  },
+  "buttons.load_template": {
+    "en": "Load CLI Template"
+  },
+  "buttons.open_json": {
+    "en": "Open JSON..."
+  },
+  "buttons.probe_all_duts": {
+    "en": "Probe All Sensors (CLI probe)"
+  },
+  "buttons.probe_duts_web": {
+    "en": "Probe Sensors"
+  },
+  "buttons.probe_selected_dut": {
+    "en": "Probe This Sensor via CLI"
+  },
+  "buttons.query_sinks_via_cli": {
+    "en": "Query Sinks via CLI"
+  },
+  "buttons.query_stored_samples": {
+    "en": "Query Stored Samples (CLI inspect)"
+  },
+  "buttons.remove_dut": {
+    "en": "- Remove"
+  },
+  "buttons.remove_metric": {
+    "en": "- Delete Selected"
+  },
+  "buttons.run_1_cycle_web": {
+    "en": "Run 1 Cycle (--once)"
+  },
+  "buttons.run_single_cycle": {
+    "en": "Run Single Cycle (CLI --once)"
+  },
+  "buttons.save_editor_json": {
+    "en": "Save Editor JSON"
+  },
+  "buttons.save_json": {
+    "en": "Save JSON"
+  },
+  "buttons.save_json_config": {
+    "en": "Save JSON Config"
+  },
+  "buttons.save_settings": {
+    "en": "Save Runtime, Sink & GUI Settings to JSON"
+  },
+  "buttons.show_json_schema": {
+    "en": "Show JSON Schema"
+  },
+  "buttons.start_logger": {
+    "en": "Start CLI Logger"
+  },
+  "buttons.stop_logger": {
+    "en": "Stop CLI Logger"
+  },
+  "buttons.toggle_theme": {
+    "en": "Toggle Theme"
+  },
+  "buttons.validate_config": {
+    "en": "Validate Config (CLI validate)"
+  },
+  "buttons.validate_editor_json": {
+    "en": "Validate Editor JSON via CLI"
+  },
+  "buttons.validate_via_cli": {
+    "en": "Validate via CLI"
+  },
+  "cards.batches": {
+    "en": "Batches"
+  },
+  "cards.cli_engine": {
+    "en": "CLI Engine"
+  },
+  "cards.cli_state": {
+    "en": "CLI State"
+  },
+  "cards.cycles": {
+    "en": "Cycles"
+  },
+  "cards.poll_sink_errors": {
+    "en": "Poll / Sink Errors"
+  },
+  "cards.queue_depth": {
+    "en": "Queue Depth"
+  },
+  "cards.samples": {
+    "en": "Samples"
+  },
+  "dialogs.filetype_all": {
+    "en": "All Files"
+  },
+  "dialogs.filetype_json": {
+    "en": "JSON Configuration"
+  },
+  "dialogs.invalid_json_title": {
+    "en": "Invalid JSON Syntax"
+  },
+  "dialogs.open_config_title": {
+    "en": "Open purpleair_data_logger JSON Config"
+  },
+  "dialogs.select_dut_and_oid": {
+    "en": "Select a Sensor and specify at least one Field."
+  },
+  "labels.bounded_queue_depth": {
+    "en": "Bounded Queue Depth:"
+  },
+  "labels.community_colon": {
+    "en": "API Read Key:"
+  },
+  "labels.csv_directory": {
+    "en": "CSV Directory:"
+  },
+  "labels.dut": {
+    "en": "Sensor"
+  },
+  "labels.dut_colon": {
+    "en": "Sensor:"
+  },
+  "labels.dut_enabled_check": {
+    "en": "Sensor Enabled"
+  },
+  "labels.dut_name_colon": {
+    "en": "Sensor Name:"
+  },
+  "labels.enable_csv": {
+    "en": "Enable CSV Sink"
+  },
+  "labels.enable_jsonl": {
+    "en": "Enable JSONL Sink"
+  },
+  "labels.enable_prometheus": {
+    "en": "Enable Prometheus Sink"
+  },
+  "labels.enable_sqlite3": {
+    "en": "Enable SQLite3 Sink"
+  },
+  "labels.filter_dut": {
+    "en": "Sensor Filter"
+  },
+  "labels.filter_dut_colon": {
+    "en": "Filter Sensor:"
+  },
+  "labels.filter_metric": {
+    "en": "Metric Filter"
+  },
+  "labels.filter_metric_colon": {
+    "en": "Filter Metric:"
+  },
+  "labels.gui_frontend": {
+    "en": "GUI Frontend (auto|tk|web):"
+  },
+  "labels.gui_locale": {
+    "en": "GUI Locale / Language (en|es):"
+  },
+  "labels.gui_refresh": {
+    "en": "GUI Refresh (ms):"
+  },
+  "labels.gui_theme": {
+    "en": "GUI Theme (dark|light):"
+  },
+  "labels.host_ip_colon": {
+    "en": "Host / IP:"
+  },
+  "labels.jsonl_directory": {
+    "en": "JSONL Directory:"
+  },
+  "labels.limit": {
+    "en": "Limit"
+  },
+  "labels.limit_colon": {
+    "en": "Limit:"
+  },
+  "labels.logger_poll_interval": {
+    "en": "Logger Poll Interval (ms):"
+  },
+  "labels.max_cycles": {
+    "en": "Max Cycles (0=continuous):"
+  },
+  "labels.metric_name_colon": {
+    "en": "Name:"
+  },
+  "labels.metric_oid_colon": {
+    "en": "Field:"
+  },
+  "labels.oids_comma_sep": {
+    "en": "Field(s) (comma-sep):"
+  },
+  "labels.oids_comma_separated": {
+    "en": "Field(s) (comma-separated)"
+  },
+  "labels.operation_colon": {
+    "en": "Operation:"
+  },
+  "labels.persist_to_sinks_check": {
+    "en": "Also persist response to enabled sinks (--record)"
+  },
+  "labels.persist_to_sinks_short": {
+    "en": "Persist to sinks (--record)"
+  },
+  "labels.poll_ms_colon": {
+    "en": "Poll ms (0=global):"
+  },
+  "labels.prometheus_port": {
+    "en": "Prometheus HTTP Port:"
+  },
+  "labels.retries_colon": {
+    "en": "Retries:"
+  },
+  "labels.set_type": {
+    "en": "SET Type"
+  },
+  "labels.set_type_colon": {
+    "en": "SET Type:"
+  },
+  "labels.set_value": {
+    "en": "SET Value"
+  },
+  "labels.set_value_colon": {
+    "en": "SET Value:"
+  },
+  "labels.snmp_mode_colon": {
+    "en": "PurpleAir Mode:"
+  },
+  "labels.snmp_version_colon": {
+    "en": "API Version:"
+  },
+  "labels.sqlite3_path": {
+    "en": "SQLite3 Path:"
+  },
+  "labels.template": {
+    "en": "Template"
+  },
+  "labels.template_colon": {
+    "en": "Template:"
+  },
+  "labels.timeout_colon": {
+    "en": "Timeout (s):"
+  },
+  "labels.udp_port_colon": {
+    "en": "Sensor Index:"
+  },
+  "labels.v3_authpass_colon": {
+    "en": "API Write Key:"
+  },
+  "labels.v3_authproto_colon": {
+    "en": "Group ID:"
+  },
+  "labels.v3_privpass_colon": {
+    "en": "Member ID:"
+  },
+  "labels.v3_privproto_colon": {
+    "en": "Location Type:"
+  },
+  "labels.v3_seclevel_colon": {
+    "en": "Endpoint:"
+  },
+  "labels.v3_username_colon": {
+    "en": "Owner Key:"
+  },
+  "labels.web_studio_port": {
+    "en": "Web Studio Port:"
+  },
+  "labels.worker_threads": {
+    "en": "Worker Threads:"
+  },
+  "sections.command_audit": {
+    "en": "Behind-the-Scenes CLI Command Audit:"
+  },
+  "sections.command_audit_web": {
+    "en": "Behind-the-Scenes CLI Command Audit Trail"
+  },
+  "sections.configured_duts": {
+    "en": "Configured Sensors:"
+  },
+  "sections.dut_polled_metrics": {
+    "en": "Sensor Polled Metrics (PurpleAir Fields):"
+  },
+  "sections.live_event_stream": {
+    "en": "Live CLI JSON Event Stream:"
+  },
+  "sections.live_event_stream_web": {
+    "en": "Live CLI JSON Event Stream"
+  },
+  "sections.ondemand_studio": {
+    "en": "On-Demand PurpleAir Request / SET (executed via `purpleair-data-logger request|set`)"
+  },
+  "sections.realtime_series": {
+    "en": "Real-Time PurpleAir Numeric Series (streamed from `purpleair-data-logger run --json`):"
+  },
+  "sections.realtime_telemetry_web": {
+    "en": "Real-Time PurpleAir Numeric Telemetry (streamed from purpleair-data-logger run --json)"
+  },
+  "sections.stored_explorer": {
+    "en": "Stored Telemetry Explorer (executed via `purpleair-data-logger inspect --json`)"
+  },
+  "sections.unified_json": {
+    "en": "Unified JSON Configuration (100% of Engine, Sensor, Sink & GUI Settings)"
+  },
+  "status_bar.all_config_lives_json": {
+    "en": "All configuration lives in JSON."
+  },
+  "status_bar.all_config_stored_json": {
+    "en": "All configuration is stored in JSON."
+  },
+  "status_bar.audit_ready": {
+    "en": "CLI Audit: Ready"
+  },
+  "status_bar.backend_cli": {
+    "en": "Backend CLI: {cli_command}"
+  },
+  "status_bar.chart_empty": {
+    "en": "Start CLI Logger or click 'Run Single Cycle' to stream real-time PurpleAir series"
+  },
+  "status_bar.chart_empty_web": {
+    "en": "Start CLI Logger or click \"Run 1 Cycle (--once)\" to stream PurpleAir telemetry"
+  },
+  "status_bar.ezsnmp_error": {
+    "en": "Error: {error}"
+  },
+  "status_bar.ezsnmp_ok": {
+    "en": "OK: {op} on {dut} returned {samples} sample(s) in {ms:.2f} ms."
+  },
+  "status_bar.last_command": {
+    "en": "Last CLI Command [{exit_code}, {duration_ms} ms]: {command}"
+  },
+  "status_bar.probe_summary": {
+    "en": "CLI probe completed across {count} sensor(s) -> {total} sample(s)."
+  },
+  "status_bar.ready": {
+    "en": "Ready."
+  },
+  "status_bar.ready_ondemand": {
+    "en": "Ready to run on-demand PurpleAir request/set via CLI."
+  },
+  "status_bar.saved_json_invalid": {
+    "en": "Saved JSON with validation errors: {errors}"
+  },
+  "status_bar.saved_json_valid": {
+    "en": "Saved JSON configuration and verified VALID via CLI."
+  },
+  "status_bar.select_dut_and_oid": {
+    "en": "Select a Sensor and specify at least one Field."
+  },
+  "status_bar.template_loaded": {
+    "en": "Loaded '{template}' template from CLI — click 'Save Editor JSON' to apply."
+  },
+  "status_bar.validation_failed": {
+    "en": "CLI Validation FAILED: {errors}"
+  },
+  "status_bar.validation_passed": {
+    "en": "CLI Validation PASSED ({duts} sensors, {sinks} sinks)."
+  },
+  "table_headers.command": {
+    "en": "Executed CLI Command"
+  },
+  "table_headers.duration_ms": {
+    "en": "Duration (ms)"
+  },
+  "table_headers.dut": {
+    "en": "Sensor"
+  },
+  "table_headers.exit": {
+    "en": "Exit"
+  },
+  "table_headers.exit_code": {
+    "en": "Exit Code"
+  },
+  "table_headers.index": {
+    "en": "Sensor Index"
+  },
+  "table_headers.max_repeaters": {
+    "en": "Max Repeaters"
+  },
+  "table_headers.metric": {
+    "en": "Metric"
+  },
+  "table_headers.metric_name": {
+    "en": "Metric Name"
+  },
+  "table_headers.ms": {
+    "en": "ms"
+  },
+  "table_headers.normalized": {
+    "en": "Normalized"
+  },
+  "table_headers.normalized_type": {
+    "en": "Normalized Type"
+  },
+  "table_headers.oid": {
+    "en": "Field"
+  },
+  "table_headers.oid_symbolic": {
+    "en": "PurpleAir Field Key"
+  },
+  "table_headers.operation": {
+    "en": "Operation"
+  },
+  "table_headers.raw_value": {
+    "en": "Raw Value (purpleair_api)"
+  },
+  "table_headers.raw_value_short": {
+    "en": "Raw Value"
+  },
+  "table_headers.sink": {
+    "en": "Sink"
+  },
+  "table_headers.snmp_type": {
+    "en": "Value Type"
+  },
+  "table_headers.status": {
+    "en": "Status"
+  },
+  "table_headers.timestamp_ns": {
+    "en": "Timestamp (ns)"
+  },
+  "table_headers.utc_time": {
+    "en": "UTC Time"
+  },
+  "table_headers.utc_timestamp": {
+    "en": "UTC Timestamp"
+  },
+  "table_headers.value": {
+    "en": "Value"
+  },
+  "tabs.cli_command_audit_web": {
+    "en": "5. CLI Command Audit"
+  },
+  "tabs.data_explorer": {
+    "en": "5. Data Explorer"
+  },
+  "tabs.data_explorer_web": {
+    "en": "3. Data Explorer"
+  },
+  "tabs.duts_and_metrics": {
+    "en": "2. Sensors & Metrics"
+  },
+  "tabs.ezsnmp_studio": {
+    "en": "3. PurpleAir Query / SET"
+  },
+  "tabs.json_settings_web": {
+    "en": "4. JSON Settings & Schema"
+  },
+  "tabs.live_dashboard": {
+    "en": "1. Live Dashboard"
+  },
+  "tabs.raw_json_schema": {
+    "en": "6. Raw JSON & Schema"
+  },
+  "tabs.sinks_and_settings": {
+    "en": "4. Sinks & JSON Settings"
+  },
+  "labels.visible_series": {
+    "en": "Visible Series:"
+  },
+  "buttons.select_all": {
+    "en": "Select All"
+  },
+  "buttons.clear_all": {
+    "en": "Clear All"
+  },
+  "status_bar.no_series_selected": {
+    "en": "No series selected. Select one or more fields above to view telemetry."
+  }
+}

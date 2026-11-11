@@ -37,6 +37,27 @@ updates:
           - "*"
     open-pull-requests-limit: 10
 
+  # Maintain JavaScript/Node.js dependencies
+  - package-ecosystem: "npm"
+    directory: "/bindings/javascript"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Maintain C#/.NET dependencies
+  - package-ecosystem: "nuget"
+    directory: "/bindings/csharp"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
+  # Maintain Go dependencies
+  - package-ecosystem: "gomod"
+    directory: "/bindings/go"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+
   # Maintain dependencies for pip (sphinx_docs_build)
   - package-ecosystem: "pip"
     directory: "/sphinx_docs_build"

@@ -382,3 +382,79 @@ reports across matrix runners and upload them to Codecov (``codecov/codecov-acti
 repository secret ``CODECOV_TOKEN``, tagged with dedicated flag ``python`` and tracked via
 component ``python_code``.
 
+C++17 core engine & ``purpleair_api`` base layer requirements
+-------------------------------------------------------------
+
+**[CPP-001]** The high-performance core telemetry engine, RFC-8259 JSON configuration parser and
+validator, bounded queue, storage sinks, and CLI dispatcher shall be implemented in portable
+**ISO C++17** under ``include/purpleair_data_logger/`` and ``src/``.
+
+**[CPP-002]** ``purpleair_data_logger`` shall integrate directly with the ``purpleair_api`` C++17
+base layer (``PurpleAirAPI::PurpleAirAPI``, ``PurpleAirAPI::PurpleAirReadAPI``,
+``PurpleAirAPI::PurpleAirWriteAPI``, ``PurpleAirAPI::PurpleAirLocalAPI``,
+``PurpleAirAPI::PurpleAirAPIHelpers``, and ``PurpleAirAPI::PurpleAirAPIError``) to execute live
+cloud single-sensor, multiple-sensor, sensor-history, group-sensor, and local-network HTTP/JSON
+telemetry requests.
+
+**[CPP-003]** ``PurpleAirPoller`` shall parse ``purpleair_api`` JSON responses into normalized,
+typed ``Sample`` records preserving sensor index, field name (``oid``), value type, raw string
+payload, and typed scalar value (``Int64``, ``Float64``, ``Str``, or ``Null``), capturing transport
+or API exceptions as structured error ``Sample`` records without crashing polling worker threads.
+
+**[CPP-004]** ``StubPurpleAirPoller`` shall provide deterministic synthetic PurpleAir air-quality
+and environmental telemetry (including ``pm2.5_atm``, ``pm2.5_cf_1``, ``pm1.0_atm``, ``pm10.0_atm``,
+``temperature``, ``humidity``, ``pressure``, ``voc``, ``rssi``, and ``uptime``) when ``mode`` is set
+to ``"stub"`` for offline testing, demos, and CI validation.
+
+**[CPP-005]** ``DataLogger`` shall decouple multi-sensor polling worker threads from sink
+persistence using a thread-safe ``BoundedQueue<Batch>`` enforcing bounded memory under
+back-pressure and draining queued batches prior to shutdown.
+
+**[CPP-006]** The C++17 engine shall provide five native storage sinks: ``SqliteSink`` (embedded
+SQLite3 WAL mode with normalized ``series`` and ``samples`` tables), ``CsvSink`` (per-target
+RFC-4180 CSV), ``JsonlSink`` (per-target newline-delimited JSON), ``PsqlSink`` (PostgreSQL and
+optional TimescaleDB hypertables via ``libpq``), and ``PrometheusSink`` (embedded HTTP ``/metrics``
+endpoint supporting ephemeral port ``0`` binding).
+
+**[CPP-007]** ``inspect_configured_sinks`` shall query recent stored telemetry rows across SQLite3,
+JSONL, and CSV sinks with optional sensor target and metric filters.
+
+Multi-language SWIG 4.x & self-contained packaging requirements
+---------------------------------------------------------------
+
+**[SWIG-001]** Modular SWIG 4.x interface files in ``interface/`` (``purpleair_data_logger.i``,
+``exceptions.i``, ``datatypes.i``, ``config.i``, ``data_logger.i``) and
+``tools/generate_swig_bindings.py`` shall generate and package bindings exclusively for the 4
+supported target languages: ``python``, ``javascript`` (Node.js N-API), ``csharp`` (.NET 8+
+P/Invoke), and ``go`` (cgo).
+
+**[SWIG-002]** In Python bindings, blocking C++ operations (``run``, ``run_once``, ``stop``,
+``probe``, ``request_json``, ``set_json``, ``CliRunner::run``, ``CliRunner::execute``) shall release
+Python's GIL via ``%thread``.
+
+**[PKG-001]** ``tools/prepare_sqlite3_amalgamation.py`` shall provision a SHA-256-verified SQLite3 C
+amalgamation (``third_party/sqlite3/sqlite3.c`` and ``sqlite3.h``) compiled directly into the
+native library, and ``tools/prepare_purpleair_api_source.py`` shall locate or provision the
+``purpleair_api`` C++17 source tree (``third_party/purpleair_api`` or sibling checkout).
+
+**[PKG-002]** ``tools/package_desktop_app.py`` shall package standalone desktop distributions named
+``PurpleAirDataLogger`` across Linux (``.deb``, ``.rpm``, ``.tar.gz``), macOS
+(``PurpleAirDataLogger.app``, ``PurpleAirDataLogger-macOS-<arch>.dmg``), and Windows
+(``PurpleAirDataLogger-Windows-x64.exe``, ``PurpleAirDataLogger-Windows-x64-Setup.exe``).
+
+Unified CLI & cross-platform Studio GUI requirements
+----------------------------------------------------
+
+**[UCLI-001]** The ``purpleair-data-logger`` CLI shall provide ``run``, ``validate``, ``probe``,
+``request``, ``set``, ``inspect``, ``init-config``, ``gui``, ``schema``, ``version``, and ``help``
+subcommands with ``--json`` machine-readable output support, while preserving all existing
+``python -m purpleair_data_logger.<ModuleName>`` entry points.
+
+**[GUI-001]** Both Cross-Platform Graphical User Interfaces — Native Desktop Studio
+(``tkinter.ttk``) and Browser Web Studio (``http.server.ThreadingHTTPServer`` + HTML5/SVG) — shall
+act strictly as frontends driving the ``purpleair-data-logger`` CLI via ``CliSubprocessBridge``,
+featuring live telemetry charting, ad-hoc sensor diagnostics, sink data inspection, JSON
+configuration editing, a live CLI Command Audit Trail, ``LocaleManager`` internationalization
+(``purpleair_data_logger/gui/locale.json``), and custom branding icon assets.
+
+
