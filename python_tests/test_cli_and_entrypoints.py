@@ -100,6 +100,10 @@ def test_cli_dispatch_and_gui_forwarding(monkeypatch: pytest.MonkeyPatch) -> Non
     assert rc == 99
     assert captured == [["--port", "1234"]]
 
+    rc_gui = cli.main_gui(["--port", "5678"])
+    assert rc_gui == 99
+    assert captured[-1] == ["--port", "5678"]
+
 
 def test_entry_desktop_all_branches(monkeypatch: pytest.MonkeyPatch) -> None:
     gui_captured: list[list[str]] = []

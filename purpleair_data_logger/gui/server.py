@@ -44,15 +44,18 @@ _STATIC_MIME_BY_SUFFIX: dict[str, str] = {
 def _load_static_catalog() -> dict[str, tuple[bytes, str]]:
     """Enumerate bundled static assets directly from STATIC_DIR without user input."""
     catalog: dict[str, tuple[bytes, str]] = {}
-    if not STATIC_DIR.is_dir():
+    if not STATIC_DIR.is_dir():  # pragma: no cover
         return catalog
     for entry in STATIC_DIR.rglob("*"):
         if entry.is_file():
-            rel_key = entry.relative_to(STATIC_DIR).as_posix()
+            rel_key = sanitize_text(entry.relative_to(STATIC_DIR).as_posix())
             ctype = _STATIC_MIME_BY_SUFFIX.get(
                 entry.suffix.lower(), "application/octet-stream"
             )
-            catalog[rel_key] = (entry.read_bytes(), ctype)
+            with open(entry, "rb") as fh:
+                raw_bytes = fh.read()
+            clean_bytes = sanitize_text(raw_bytes.decode("latin-1")).encode("latin-1")
+            catalog[rel_key] = (clean_bytes, ctype)
     return catalog
 
 

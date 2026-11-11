@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import os
+import platform
 import shutil
 import subprocess
 import sys
@@ -11,6 +12,16 @@ from pathlib import Path
 from setuptools import Extension, setup
 from setuptools.command.build_ext import build_ext
 from setuptools.command.build_py import build_py
+
+if sys.platform == "darwin":
+    os.environ.setdefault("ARCHFLAGS", f"-arch {platform.machine()}")
+    mac_ver = platform.mac_ver()[0]
+    if mac_ver:
+        major = mac_ver.split(".")[0]
+        if major.isdigit() and int(major) >= 11:
+            os.environ["MACOSX_DEPLOYMENT_TARGET"] = f"{major}.0"
+    else:
+        os.environ["MACOSX_DEPLOYMENT_TARGET"] = "11.0"
 
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT / "tools"))
@@ -125,7 +136,10 @@ def _configure_extension() -> list[Extension]:
     else:
         extra_compile_args.extend(["-std=c++17", "-O2"])
         if sys.platform == "darwin":
-            extra_link_args.append("-Wl,-rpath,@loader_path/.dylibs")
+            extra_compile_args.append("-mmacosx-version-min=11.0")
+            extra_link_args.extend(
+                ["-mmacosx-version-min=11.0", "-Wl,-rpath,@loader_path/.dylibs"]
+            )
         else:
             extra_link_args.append("-Wl,-rpath,$ORIGIN/libs")
 

@@ -15,12 +15,15 @@ from purpleair_data_logger.gui.launcher import (
 from purpleair_data_logger.gui.locale_manager import (
     DEFAULT_LOCALE_PATH,
     LocaleManager,
+    sanitize_text,
 )
 
 
 def test_launcher_meipass_and_platform_shortcuts(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    assert sanitize_text(None) == ""
+    assert sanitize_text("hello") == "hello"
     fake_meipass = tmp_path / "meipass"
     fake_static = fake_meipass / "purpleair_data_logger" / "gui" / "static"
     fake_static.mkdir(parents=True, exist_ok=True)

@@ -28,6 +28,7 @@ def test_calsemver_version_and_capabilities() -> None:
     assert pdl.is_valid_calsemver("0.1.0") is False
     assert pdl.has_sqlite3_support() is True
     assert pdl.has_embedded_sqlite3() is True
+    assert isinstance(pdl.has_psql_support(), bool)
     assert pdl.has_native_engine() is True
     if sys.platform != "win32":
         assert pdl.has_purpleair_api_support() is True

@@ -140,7 +140,16 @@ if get_option('build_tests')
   if gtest_dep.found()
     test_exe = executable(
       'purpleair_data_logger_tests',
-      'cpp_tests/test_main.cpp',
+      files(
+        'cpp_tests/test_main.cpp',
+        'cpp_tests/test_json_utils.cpp',
+        'cpp_tests/test_config_and_datatypes.cpp',
+        'cpp_tests/test_queue_and_sinks.cpp',
+        'cpp_tests/test_sink_inspector.cpp',
+        'cpp_tests/test_purpleair_poller.cpp',
+        'cpp_tests/test_data_logger_and_cli.cpp',
+        'cpp_tests/test_main_binary.cpp',
+      ),
       dependencies: [purpleair_dl_dep, gtest_dep],
       build_by_default: true,
     )

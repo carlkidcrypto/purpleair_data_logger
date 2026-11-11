@@ -100,7 +100,7 @@ jobs:
             set +e
             meson test -C build -v
             TEST_EXIT_CODE=$?
-            gcovr -r . --xml -o coverage.xml --exclude-throw-branches --exclude-unreachable-branches || ninja -C build coverage-xml || true
+            gcovr -r . --filter "src/" --filter "include/" --xml -o coverage.xml --exclude-throw-branches --exclude-unreachable-branches || ninja -C build coverage-xml || true
             cp coverage.xml build/meson-logs/coverage.xml 2>/dev/null || true
             exit $TEST_EXIT_CODE
           macos: |

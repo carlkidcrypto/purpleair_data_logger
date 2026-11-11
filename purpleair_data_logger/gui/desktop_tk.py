@@ -1342,33 +1342,6 @@ class DesktopLoggerStudio:
             if isinstance(pr, dict) and pr:
                 self.settings_vars["prom_enabled"].set(bool(pr.get("enabled", True)))
                 self.settings_vars["prom_port"].set(str(pr.get("port", 9102)))
-        elif isinstance(raw_sinks, list):
-            for s in raw_sinks:
-                if not isinstance(s, dict):
-                    continue
-                stype = s.get("type")
-                if stype in ("sqlite3", "sqlite"):
-                    self.settings_vars["sqlite_enabled"].set(
-                        bool(s.get("enabled", True))
-                    )
-                    self.settings_vars["sqlite_path"].set(
-                        str(s.get("path", "./data/purpleair_demo.sqlite3"))
-                    )
-                elif stype == "csv":
-                    self.settings_vars["csv_enabled"].set(bool(s.get("enabled", True)))
-                    self.settings_vars["csv_dir"].set(
-                        str(s.get("directory") or s.get("dir", "./data/csv"))
-                    )
-                elif stype == "jsonl":
-                    self.settings_vars["jsonl_enabled"].set(
-                        bool(s.get("enabled", True))
-                    )
-                    self.settings_vars["jsonl_dir"].set(
-                        str(s.get("directory") or s.get("dir", "./data/jsonl"))
-                    )
-                elif stype == "prometheus":
-                    self.settings_vars["prom_enabled"].set(bool(s.get("enabled", True)))
-                    self.settings_vars["prom_port"].set(str(s.get("port", 9102)))
 
         gui = (
             self.config_doc.get("gui", {})

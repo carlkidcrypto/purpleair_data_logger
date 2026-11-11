@@ -122,7 +122,16 @@ if(PURPLEAIR_DL_BUILD_TESTS)
   find_package(GTest QUIET)
   if(GTest_FOUND)
     enable_testing()
-    add_executable(purpleair_data_logger_tests cpp_tests/test_main.cpp)
+    add_executable(purpleair_data_logger_tests
+      cpp_tests/test_main.cpp
+      cpp_tests/test_json_utils.cpp
+      cpp_tests/test_config_and_datatypes.cpp
+      cpp_tests/test_queue_and_sinks.cpp
+      cpp_tests/test_sink_inspector.cpp
+      cpp_tests/test_purpleair_poller.cpp
+      cpp_tests/test_data_logger_and_cli.cpp
+      cpp_tests/test_main_binary.cpp
+    )
     target_link_libraries(purpleair_data_logger_tests PRIVATE purpleair_data_logger GTest::gtest)
     add_test(NAME purpleair_data_logger_tests COMMAND purpleair_data_logger_tests)
   endif()
