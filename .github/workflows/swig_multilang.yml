@@ -74,7 +74,7 @@ jobs:
           python-version: "3.13"
 
       - name: Install SWIG 4.x
-        uses: carlkidcrypto/os-specific-runner@d6494ebfd6437452a44d3f9d6633339772e95070 # v2.4.0
+        uses: carlkidcrypto/os-specific-runner@8bf8551e08c48d9b72f768392e692fad5bb169e7 # v2.5.0
         with:
           linux: sudo apt-get update && sudo apt-get install -y swig
           macos: brew install swig
