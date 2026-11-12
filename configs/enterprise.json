@@ -1,0 +1,79 @@
+{
+  "instance_name": "purpleair-enterprise",
+  "queue_capacity": 16384,
+  "max_poll_cycles": 0,
+  "log_level": "info",
+  "duts": [
+    {
+      "name": "cloud-sensor-fleet",
+      "dut_ip": "api.purpleair.com",
+      "poll_interval_ms": 60000,
+      "enabled": true,
+      "purpleair": {
+        "mode": "cloud",
+        "version": "v1",
+        "api_read_key": "YOUR-PURPLEAIR-READ-KEY",
+        "sensor_index": 131075,
+        "sensor_indices": [131075, 131079],
+        "endpoint": "multiple"
+      },
+      "metrics": [
+        {
+          "name": "pm2.5_atm",
+          "field": "pm2.5_atm",
+          "oid": "pm2.5_atm",
+          "operation": "multiple",
+          "max_repeaters": 50
+        },
+        {
+          "name": "pm10.0_atm",
+          "field": "pm10.0_atm",
+          "oid": "pm10.0_atm",
+          "operation": "multiple",
+          "max_repeaters": 50
+        },
+        {
+          "name": "humidity",
+          "field": "humidity",
+          "oid": "humidity",
+          "operation": "multiple",
+          "max_repeaters": 50
+        },
+        {
+          "name": "temperature",
+          "field": "temperature",
+          "oid": "temperature",
+          "operation": "multiple",
+          "max_repeaters": 50
+        }
+      ]
+    }
+  ],
+  "sinks": {
+    "sqlite": {
+      "enabled": true,
+      "path": "./data/purpleair_enterprise.sqlite3",
+      "batch_commit_size": 64,
+      "busy_timeout_ms": 5000,
+      "wal_mode": true
+    },
+    "csv": {
+      "enabled": true,
+      "directory": "./data/csv",
+      "file_prefix": "purpleair_enterprise",
+      "flush_every_batch": true
+    },
+    "jsonl": {
+      "enabled": true,
+      "directory": "./data/jsonl",
+      "file_prefix": "purpleair_enterprise",
+      "flush_every_batch": true
+    },
+    "prometheus": {
+      "enabled": true,
+      "bind_host": "127.0.0.1",
+      "port": 9102,
+      "namespace_prefix": "purpleair_logger"
+    }
+  }
+}

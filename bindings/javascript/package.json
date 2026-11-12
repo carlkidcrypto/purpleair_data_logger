@@ -1,0 +1,33 @@
+{
+  "name": "purpleair-data-logger",
+  "version": "2026.11.3-alpha.0",
+  "description": "Self-contained Node.js N-API bindings for the C++17 PurpleAir Data Logger engine (backed by purpleair_api and embedded SQLite3)",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/carlkidcrypto/purpleair_data_logger.git"
+  },
+  "scripts": {
+    "prepare-deps": "python3 ../../tools/prepare_sqlite3_amalgamation.py && python3 ../../tools/prepare_purpleair_api_source.py && python3 ../../tools/generate_swig_bindings.py --languages javascript --out-dir ./generated",
+    "build": "npm run prepare-deps && npx node-gyp rebuild && python3 ../../tools/bundle_native_package.py build/Release/purpleair_data_logger.node",
+    "test": "node -e \"console.log('purpleair-data-logger N-API package structure valid')\""
+  },
+  "keywords": [
+    "purpleair",
+    "air-quality",
+    "purpleair-api",
+    "telemetry",
+    "data-logger",
+    "sqlite3",
+    "swig",
+    "c++17"
+  ],
+  "author": "carlkidcrypto",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "node-addon-api": "^8.0.0"
+  }
+}

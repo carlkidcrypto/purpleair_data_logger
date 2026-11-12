@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="app.header_title">
+      PurpleAir Data Logger — Cross-Platform CLI Studio
+    </title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body data-theme="dark">
+    <header class="topbar">
+      <div class="brand">
+        <img
+          src="/favicon.svg"
+          class="brand-icon"
+          alt="PurpleAir Logo"
+          width="38"
+          height="38"
+        />
+        <div>
+          <h1 data-i18n="app.header_title">PurpleAir Data Logger Studio</h1>
+          <p
+            id="config-subtitle"
+            class="subtitle"
+            data-i18n="app.loading_config"
+          >
+            Loading JSON configuration...
+          </p>
+        </div>
+      </div>
+      <div class="toolbar">
+        <select
+          id="lang-select"
+          class="btn"
+          title="Language / Locale"
+          aria-label="Language / Locale"
+        ></select>
+        <button id="btn-theme" class="btn" data-i18n="buttons.toggle_theme">
+          Toggle Theme
+        </button>
+        <button id="btn-once" class="btn" data-i18n="buttons.run_1_cycle_web">
+          Run 1 Cycle (--once)
+        </button>
+        <button
+          id="btn-probe-all"
+          class="btn"
+          data-i18n="buttons.probe_duts_web"
+        >
+          Probe Sensors
+        </button>
+        <button
+          id="btn-start"
+          class="btn btn-accent"
+          data-i18n="buttons.start_logger"
+        >
+          Start CLI Logger
+        </button>
+        <button
+          id="btn-stop"
+          class="btn btn-danger"
+          data-i18n="buttons.stop_logger"
+        >
+          Stop CLI Logger
+        </button>
+      </div>
+    </header>
+
+    <nav class="tabs">
+      <button
+        class="tab active"
+        data-tab="dashboard"
+        data-i18n="tabs.live_dashboard"
+      >
+        1. Live Dashboard
+      </button>
+      <button class="tab" data-tab="studio" data-i18n="tabs.ezsnmp_studio">
+        2. PurpleAir Query / SET
+      </button>
+      <button
+        class="tab"
+        data-tab="explorer"
+        data-i18n="tabs.data_explorer_web"
+      >
+        3. Data Explorer
+      </button>
+      <button class="tab" data-tab="json" data-i18n="tabs.json_settings_web">
+        4. JSON Settings &amp; Schema
+      </button>
+      <button
+        class="tab"
+        data-tab="audit"
+        data-i18n="tabs.cli_command_audit_web"
+      >
+        5. CLI Command Audit
+      </button>
+    </nav>
+
+    <main class="container">
+      <!-- Tab 1: Dashboard -->
+      <section id="tab-dashboard" class="tab-panel active">
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span data-i18n="cards.cli_state">CLI State</span
+            ><strong id="kpi-state">IDLE</strong>
+          </div>
+          <div class="kpi-card">
+            <span data-i18n="cards.cycles">Cycles</span
+            ><strong id="kpi-cycles">0</strong>
+          </div>
+          <div class="kpi-card">
+            <span data-i18n="cards.batches">Batches</span
+            ><strong id="kpi-batches">0</strong>
+          </div>
+          <div class="kpi-card">
+            <span data-i18n="cards.samples">Samples</span
+            ><strong id="kpi-samples">0</strong>
+          </div>
+          <div class="kpi-card">
+            <span data-i18n="cards.queue_depth">Queue Depth</span
+            ><strong id="kpi-queue">0</strong>
+          </div>
+          <div class="kpi-card">
+            <span data-i18n="cards.poll_sink_errors">Poll / Sink Errors</span
+            ><strong id="kpi-errors">0 / 0</strong>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="chart-header">
+            <h3 data-i18n="sections.realtime_telemetry_web">
+              Real-Time PurpleAir Numeric Telemetry (streamed from
+              <code>purpleair-data-logger run --json</code>)
+            </h3>
+            <div class="chart-actions">
+              <span class="chart-filter-label" data-i18n="labels.visible_series"
+                >Visible Series:</span
+              >
+              <button
+                id="btn-chart-all"
+                class="btn btn-sm"
+                data-i18n="buttons.select_all"
+              >
+                Select All
+              </button>
+              <button
+                id="btn-chart-none"
+                class="btn btn-sm"
+                data-i18n="buttons.clear_all"
+              >
+                Clear All
+              </button>
+            </div>
+          </div>
+          <div id="chart-series-selector" class="series-pills"></div>
+          <svg
+            id="telemetry-chart"
+            viewBox="0 0 900 240"
+            preserveAspectRatio="none"
+          ></svg>
+        </div>
+
+        <div class="card">
+          <h3 data-i18n="sections.live_event_stream_web">
+            Live CLI JSON Event Stream
+          </h3>
+          <pre id="cli-log" class="code-box"></pre>
+        </div>
+      </section>
+
+      <!-- Tab 2: PurpleAir Request / SET Studio -->
+      <section id="tab-studio" class="tab-panel">
+        <div class="card">
+          <h3 data-i18n="sections.ondemand_studio">
+            On-Demand PurpleAir Request / SET (executed via
+            <code>purpleair-data-logger request|set</code>)
+          </h3>
+          <div class="form-row">
+            <label
+              ><span data-i18n="labels.dut">Sensor</span>
+              <select id="req-dut"></select
+            ></label>
+            <label
+              ><span data-i18n="table_headers.operation">Operation</span>
+              <select id="req-op">
+                <option value="get">get</option>
+                <option value="single">single</option>
+                <option value="multiple">multiple</option>
+                <option value="history">history</option>
+                <option value="local">local</option>
+                <option value="set">set</option>
+              </select>
+            </label>
+            <label class="grow"
+              ><span data-i18n="labels.oids_comma_separated"
+                >Field(s) (comma-separated)</span
+              >
+              <input
+                id="req-oids"
+                type="text"
+                value="pm2.5_atm, humidity, temperature"
+              />
+            </label>
+          </div>
+          <div class="form-row">
+            <label
+              ><span data-i18n="labels.set_type">SET Type</span>
+              <select id="req-set-type">
+                <option value="s">s (String)</option>
+                <option value="i">i (Integer)</option>
+                <option value="d">d (Float)</option>
+              </select>
+            </label>
+            <label class="grow"
+              ><span data-i18n="labels.set_value">SET Value</span>
+              <input id="req-set-val" type="text" placeholder="Value for SET"
+            /></label>
+            <label class="checkbox-label"
+              ><input id="req-record" type="checkbox" />
+              <span data-i18n="labels.persist_to_sinks_short"
+                >Persist to sinks (--record)</span
+              ></label
+            >
+            <button
+              id="btn-exec-req"
+              class="btn btn-accent"
+              data-i18n="buttons.execute_via_cli"
+            >
+              Execute via CLI
+            </button>
+          </div>
+          <p id="req-status" class="status-note" data-i18n="status_bar.ready">
+            Ready.
+          </p>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="table_headers.oid">Field</th>
+                  <th data-i18n="table_headers.index">Sensor Index</th>
+                  <th data-i18n="table_headers.snmp_type">Value Type</th>
+                  <th data-i18n="table_headers.raw_value">Raw Value</th>
+                  <th data-i18n="table_headers.normalized">Normalized</th>
+                  <th data-i18n="table_headers.status">Status</th>
+                </tr>
+              </thead>
+              <tbody id="req-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 3: Data Explorer -->
+      <section id="tab-explorer" class="tab-panel">
+        <div class="card">
+          <h3 data-i18n="sections.stored_explorer">
+            Stored Telemetry Explorer (executed via
+            <code>purpleair-data-logger inspect --json</code>)
+          </h3>
+          <div class="form-row">
+            <label
+              ><span data-i18n="labels.filter_dut">Sensor Filter</span>
+              <input id="exp-dut" type="text" placeholder="optional"
+            /></label>
+            <label
+              ><span data-i18n="labels.filter_metric">Metric Filter</span>
+              <input id="exp-metric" type="text" placeholder="optional"
+            /></label>
+            <label
+              ><span data-i18n="labels.limit">Limit</span>
+              <input id="exp-limit" type="number" value="50" min="1" max="1000"
+            /></label>
+            <button
+              id="btn-inspect"
+              class="btn btn-accent"
+              data-i18n="buttons.query_sinks_via_cli"
+            >
+              Query Sinks via CLI
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="table_headers.timestamp_ns">Timestamp (ns)</th>
+                  <th data-i18n="table_headers.dut">Sensor</th>
+                  <th data-i18n="table_headers.metric">Metric</th>
+                  <th data-i18n="table_headers.oid">Field</th>
+                  <th data-i18n="table_headers.snmp_type">Value Type</th>
+                  <th data-i18n="table_headers.value">Value</th>
+                  <th data-i18n="table_headers.sink">Sink</th>
+                </tr>
+              </thead>
+              <tbody id="exp-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Tab 4: JSON Config Editor -->
+      <section id="tab-json" class="tab-panel">
+        <div class="card">
+          <h3 data-i18n="sections.unified_json">
+            Unified JSON Configuration (100% of Engine, Sensor, Sink &amp; GUI
+            Settings)
+          </h3>
+          <div class="form-row">
+            <label
+              ><span data-i18n="labels.template">Template</span>
+              <select id="tpl-select">
+                <option value="demo">demo</option>
+                <option value="minimal">minimal</option>
+                <option value="enterprise">enterprise</option>
+                <option value="local">local</option>
+              </select>
+            </label>
+            <button
+              id="btn-load-tpl"
+              class="btn"
+              data-i18n="buttons.load_template"
+            >
+              Load CLI Template
+            </button>
+            <button
+              id="btn-validate-json"
+              class="btn"
+              data-i18n="buttons.validate_via_cli"
+            >
+              Validate via CLI
+            </button>
+            <button
+              id="btn-save-json"
+              class="btn btn-accent"
+              data-i18n="buttons.save_json_config"
+            >
+              Save JSON Config
+            </button>
+          </div>
+          <p
+            id="json-status"
+            class="status-note"
+            data-i18n="status_bar.all_config_lives_json"
+          >
+            All configuration lives in JSON.
+          </p>
+          <textarea
+            id="json-editor"
+            rows="22"
+            spellcheck="false"
+            aria-label="JSON Configuration Editor"
+          ></textarea>
+        </div>
+      </section>
+
+      <!-- Tab 5: CLI Audit -->
+      <section id="tab-audit" class="tab-panel">
+        <div class="card">
+          <h3 data-i18n="sections.command_audit_web">
+            Behind-the-Scenes CLI Command Audit Trail
+          </h3>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th data-i18n="table_headers.utc_timestamp">UTC Timestamp</th>
+                  <th data-i18n="table_headers.exit_code">Exit Code</th>
+                  <th data-i18n="table_headers.duration_ms">Duration (ms)</th>
+                  <th data-i18n="table_headers.command">
+                    Executed CLI Command
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="audit-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <span id="footer-audit" data-i18n="status_bar.audit_ready"
+        >CLI Audit: Ready</span
+      >
+      <span id="footer-cli">CLI Binary: purpleair-data-logger</span>
+    </footer>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

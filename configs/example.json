@@ -1,0 +1,104 @@
+{
+  "instance_name": "purpleair-demo",
+  "queue_capacity": 4096,
+  "max_poll_cycles": 0,
+  "log_level": "info",
+  "duts": [
+    {
+      "name": "demo-sensor-01",
+      "dut_ip": "127.0.0.1",
+      "poll_interval_ms": 1000,
+      "enabled": true,
+      "purpleair": {
+        "mode": "stub",
+        "version": "v1",
+        "api_read_key": "",
+        "api_write_key": "",
+        "sensor_index": 131075,
+        "timeout_seconds": 10,
+        "retries": 2,
+        "endpoint": "single"
+      },
+      "metrics": [
+        {
+          "name": "pm2.5_atm",
+          "field": "pm2.5_atm",
+          "oid": "pm2.5_atm",
+          "operation": "get",
+          "max_repeaters": 25
+        },
+        {
+          "name": "humidity",
+          "field": "humidity",
+          "oid": "humidity",
+          "operation": "get",
+          "max_repeaters": 25
+        },
+        {
+          "name": "temperature",
+          "field": "temperature",
+          "oid": "temperature",
+          "operation": "get",
+          "max_repeaters": 25
+        },
+        {
+          "name": "pressure",
+          "field": "pressure",
+          "oid": "pressure",
+          "operation": "get",
+          "max_repeaters": 25
+        },
+        {
+          "name": "sensor_name",
+          "field": "name",
+          "oid": "name",
+          "operation": "get",
+          "max_repeaters": 25
+        }
+      ]
+    }
+  ],
+  "sinks": {
+    "sqlite": {
+      "enabled": true,
+      "path": "./data/purpleair_demo.sqlite3",
+      "batch_commit_size": 32,
+      "busy_timeout_ms": 5000,
+      "wal_mode": true
+    },
+    "csv": {
+      "enabled": true,
+      "directory": "./data/csv",
+      "file_prefix": "purpleair_samples",
+      "flush_every_batch": true
+    },
+    "jsonl": {
+      "enabled": true,
+      "directory": "./data/jsonl",
+      "file_prefix": "purpleair_batches",
+      "flush_every_batch": true
+    },
+    "psql": {
+      "enabled": false,
+      "conninfo": "host=127.0.0.1 port=5432 dbname=purpleair user=postgres",
+      "schema": "public",
+      "batch_commit_size": 32
+    },
+    "prometheus": {
+      "enabled": false,
+      "bind_host": "127.0.0.1",
+      "port": 9102,
+      "namespace_prefix": "purpleair_logger"
+    }
+  },
+  "gui": {
+    "frontend": "auto",
+    "host": "127.0.0.1",
+    "port": 8765,
+    "refresh_interval_ms": 1000,
+    "theme": "dark",
+    "locale": "en",
+    "window_title": "PurpleAir Data Logger Studio",
+    "open_browser": true
+  }
+}

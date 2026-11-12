@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <PackageId>PurpleAirDataLogger</PackageId>
+    <Version>2026.11.3-alpha.0</Version>
+    <Authors>carlkidcrypto</Authors>
+    <Description>Self-contained C# (.NET 8+) bindings for the C++17 PurpleAir Data Logger engine (backed by purpleair_api and embedded SQLite3).</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/carlkidcrypto/purpleair_data_logger</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="generated\csharp\*.cs" Condition="Exists('generated\csharp')" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="runtimes\**\*" Pack="true" PackagePath="runtimes" Condition="Exists('runtimes')" />
+  </ItemGroup>
+
+</Project>

@@ -1,16 +1,30 @@
 **/.pyc/**
 **/dist/**
 **/build/**
+**/build_pyinstaller/**
 **/__pycache__/**
+**/.pytest_cache/**
 **/purpleair_data_logger.egg-info/**
 **/logs/**
 **.ini
 **.xml
 *_coverage.json
+.coverage
 .coverage.*
 **.DS_Store**
 **venv**
 behave_tests/behave.ini
+
+# SWIG & C++17 build artifacts
+src/purpleair_data_logger_wrap.cxx
+purpleair_data_logger/purpleair_data_logger.py
+purpleair_data_logger/purpleair_data_logger_swig.py
+purpleair_data_logger/_purpleair_data_logger*
+purpleair_data_logger/.dylibs/
+purpleair_data_logger/libs/
+generated_swig/
+third_party/
+*.spec
 
 # Dynamically extracted gh-aw inline skills
 /.github/skills/*

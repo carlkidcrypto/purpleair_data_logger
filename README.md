@@ -31,6 +31,42 @@ cd purpleair_data_logger
 python3 -m pip install .
 ```
 
+## C++17 Telemetry Engine, SWIG 4-Language Bindings & Cross-Platform Studio GUI
+
+In addition to the Python data logger classes below, `purpleair_data_logger` includes a self-contained **C++17 air-quality telemetry engine** built on top of [`purpleair_api`](https://github.com/carlkidcrypto/purpleair_api)'s C++17 core (`PurpleAirAPI`, `PurpleAirReadAPI`, `PurpleAirWriteAPI`, `PurpleAirLocalAPI`) with an embedded SQLite3 amalgamation (`third_party/sqlite3/sqlite3.c`), **SWIG 4.x bindings** across 4 target languages (**Python**, **JavaScript/Node.js**, **C#/.NET**, **Go**), a unified JSON-driven CLI (`purpleair-data-logger`), and cross-platform Desktop (`tkinter.ttk`) and Browser Studio (`ThreadingHTTPServer`) GUIs (`purpleair-data-logger-gui`).
+
+### Unified CLI (`purpleair-data-logger`)
+
+```bash
+# Generate a starter JSON configuration (demo | minimal | enterprise | local)
+purpleair-data-logger init-config --template demo --output ./configs/example.json
+
+# Validate a JSON configuration file
+purpleair-data-logger validate --config ./configs/example.json --json
+
+# Probe configured PurpleAir sensors
+purpleair-data-logger probe --config ./configs/example.json --json
+
+# Execute an on-demand sensor field request
+purpleair-data-logger request --config ./configs/example.json --dut outdoor_patio_sensor --op get --oid pm2.5_atm --json
+
+# Run one polling cycle or continuous streaming telemetry
+purpleair-data-logger run --config ./configs/example.json --once --json
+
+# Inspect recent samples stored in configured SQLite3 / CSV / JSONL sinks
+purpleair-data-logger inspect --config ./configs/example.json --limit 25 --json
+```
+
+### Cross-Platform Desktop & Web Studio GUI (`purpleair-data-logger-gui`)
+
+```bash
+# Auto-select native Desktop Tk Studio (or fallback to Browser Studio in headless environments)
+purpleair-data-logger-gui -c ./configs/example.json
+
+# Explicitly launch Browser Web Studio on http://127.0.0.1:8765
+purpleair-data-logger gui -c ./configs/example.json --frontend web --port 8765
+```
+
 ## Usage PurpleAirPSQLDataLogger.py
 
 ```bash

@@ -1,0 +1,78 @@
+[build-system]
+requires = [
+    "setuptools>=75.0.0",
+    "wheel>=0.45.0",
+]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "purpleair_data_logger"
+version = "2026.11.3a0"
+description = "Self-contained C++17 and Python PurpleAir Air-Quality Telemetry Engine & Studio GUI powered by purpleair_api with SWIG bindings (Python, Node.js, C#, Go), CLI, and cross-platform GUI."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+authors = [
+    {name = "carlkidcrypto"}
+]
+keywords = ["purpleair", "purpleair_api", "air-quality", "telemetry", "data-logger", "swig", "c++17", "gui", "cli", "calsemver"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Operating System :: MacOS",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: C++",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Scientific/Engineering :: Atmospheric Science",
+    "Topic :: System :: Monitoring",
+]
+dependencies = [
+    "purpleair_api>=2026.11.11a2",
+    "pg8000>=1.29.4",
+    "requests>=2.32.3",
+    "prometheus_client>=0.20.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "black>=24.0.0",
+    "yamllint>=1.35.0",
+    "sphinx>=7.0.0",
+    "furo",
+]
+
+[project.scripts]
+purpleair-data-logger = "purpleair_data_logger.cli:main"
+purpleair-data-logger-gui = "purpleair_data_logger.cli:main_gui"
+
+[project.urls]
+Homepage = "https://github.com/carlkidcrypto/purpleair_data_logger"
+Documentation = "https://carlkidcrypto.github.io/purpleair_data_logger/"
+Repository = "https://github.com/carlkidcrypto/purpleair_data_logger"
+Issues = "https://github.com/carlkidcrypto/purpleair_data_logger/issues"
+
+[tool.black]
+target-version = ["py38"]
+extend-exclude = '''
+(
+    ^/purpleair_data_logger/purpleair_data_logger\.py$
+  | ^/purpleair_data_logger/purpleair_data_logger_swig\.py$
+  | ^/build/
+  | ^/docs/
+  | ^/third_party/
+  | ^/generated_swig/
+  | ^/bindings/.*/generated/
+)
+'''
+
+[tool.pytest.ini_options]
+testpaths = ["python_tests", "tests"]
+pythonpath = ["."]

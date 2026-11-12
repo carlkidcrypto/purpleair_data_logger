@@ -1,5 +1,17 @@
 [run]
-omit = */tests/*
+omit =
+    */tests/*
+    */python_tests/*
+    */purpleair_data_logger/purpleair_data_logger.py
+    */purpleair_data_logger/purpleair_data_logger_swig.py
+    */generated_swig/*
+    */third_party/*
 
 [report]
-omit = */tests/*
+omit =
+    */tests/*
+    */python_tests/*
+    */purpleair_data_logger/purpleair_data_logger.py
+    */purpleair_data_logger/purpleair_data_logger_swig.py
+    */generated_swig/*
+    */third_party/*

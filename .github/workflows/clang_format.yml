@@ -1,0 +1,51 @@
+name: Clang-format
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'include/**/*.h'
+      - 'src/**/*.cpp'
+      - 'cpp_tests/**/*.h'
+      - 'cpp_tests/**/*.cpp'
+      - '.clang-format'
+      - '.github/workflows/clang_format.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'include/**/*.h'
+      - 'src/**/*.cpp'
+      - 'cpp_tests/**/*.h'
+      - 'cpp_tests/**/*.cpp'
+      - '.clang-format'
+      - '.github/workflows/clang_format.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify-syntax:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/verify_syntax.yml
+  check-formatting:
+    needs: verify-syntax
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Install Clang-Format 20
+        run: sudo apt-get update && sudo apt-get install -y clang-format-20
+
+      - name: Check C++17 Formatting
+        run: |
+          set -e
+          find include src cpp_tests -type f \( -name '*.h' -o -name '*.cpp' \) \
+            ! -name 'purpleair_data_logger_wrap.cxx' \
+            -exec clang-format-20 --dry-run --Werror {} +
