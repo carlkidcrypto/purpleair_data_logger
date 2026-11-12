@@ -2,7 +2,7 @@
 Self-Contained Multi-Language SWIG Bindings & Packages
 ======================================================
 
-``purpleair_data_logger`` distributes its **C++17** PurpleAir telemetry engine, ``purpleair_api`` C++17 base layer (`PurpleAirAPI`, `PurpleAirReadAPI`, `PurpleAirWriteAPI`, `PurpleAirLocalAPI`), embedded **SQLite3** C amalgamation, JSON configuration validator, and CLI runner as **self-contained packages** across **4 SWIG 4.x target languages**:
+``purpleair_data_logger`` distributes its **C++17** PurpleAir telemetry engine, ``purpleair_api`` C++17 base layer (`v2026.11.11a2` CalSemVer alpha baseline; `PurpleAirAPI`, `PurpleAirReadAPI`, `PurpleAirWriteAPI`, `PurpleAirLocalAPI`), embedded **SQLite3** C amalgamation, JSON configuration validator, and CLI runner as **self-contained packages** across **4 SWIG 4.x target languages**:
 
 1. **Python** (``-python``, self-contained PyPI wheels built via ``cibuildwheel`` + ``auditwheel`` / ``delocate-wheel`` / ``delvewheel``)
 2. **JavaScript / Node.js N-API** (``-javascript -napi``, self-contained addon in ``bindings/javascript/``)

@@ -18,7 +18,7 @@ from tools import bundle_native_package
 def test_calsemver_version_and_capabilities() -> None:
     assert pdl.__version__ == "2026.11.3a0"
     assert pdl.version() == "2026.11.3a0"
-    assert pdl.purpleair_api_target_version() == "2026.11.3"
+    assert pdl.purpleair_api_target_version() == "2026.11.11a2"
     assert pdl.is_valid_calsemver(pdl.__version__) is True
     assert pdl.is_valid_calsemver(pdl.purpleair_api_target_version()) is True
     assert pdl.is_valid_calsemver("2026.11.1") is True

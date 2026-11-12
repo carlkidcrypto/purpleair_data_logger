@@ -11,7 +11,8 @@ import time
 from pathlib import Path
 
 PURPLEAIR_API_REPO_URL = "https://github.com/carlkidcrypto/purpleair_api.git"
-PURPLEAIR_API_REF = os.environ.get("PURPLEAIR_API_GIT_REF", "main")
+PURPLEAIR_API_CALSEMVER_TAG = "v2026.11.11a2"
+PURPLEAIR_API_REF = os.environ.get("PURPLEAIR_API_GIT_REF", PURPLEAIR_API_CALSEMVER_TAG)
 
 
 def _has_purpleair_cpp_sources(root: Path) -> bool:
@@ -23,11 +24,14 @@ def _has_purpleair_cpp_sources(root: Path) -> bool:
     )
 
 
-def ensure_purpleair_api_source(repo_root: Path | None = None) -> Path:
+def ensure_purpleair_api_source(
+    repo_root: Path | None = None, tag: str = PURPLEAIR_API_CALSEMVER_TAG
+) -> Path:
     """Locate or clone purpleair_api and return its root directory."""
     if repo_root is None:
         repo_root = Path(__file__).resolve().parent.parent
 
+    target_ref = os.environ.get("PURPLEAIR_API_GIT_REF", tag)
     env_dir = os.environ.get("PURPLEAIR_API_SRC_DIR", "").strip()
     candidates = []
     if env_dir:
@@ -51,7 +55,7 @@ def ensure_purpleair_api_source(repo_root: Path | None = None) -> Path:
     max_attempts = 4
     for attempt in range(1, max_attempts + 1):
         print(
-            f"[purpleair_api] Cloning {PURPLEAIR_API_REPO_URL}@{PURPLEAIR_API_REF} into {dest_dir} "
+            f"[purpleair_api] Cloning {PURPLEAIR_API_REPO_URL}@{target_ref} into {dest_dir} "
             f"(attempt {attempt}/{max_attempts})..."
         )
         try:
@@ -62,7 +66,7 @@ def ensure_purpleair_api_source(repo_root: Path | None = None) -> Path:
                     "--depth",
                     "1",
                     "--branch",
-                    PURPLEAIR_API_REF,
+                    target_ref,
                     PURPLEAIR_API_REPO_URL,
                     str(dest_dir),
                 ],
@@ -84,9 +88,23 @@ def ensure_purpleair_api_source(repo_root: Path | None = None) -> Path:
     return dest_dir.resolve()
 
 
+def main(argv: list[str] | None = None) -> int:
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Ensure pinned CalSemVer alpha purpleair_api C++17 sources are available."
+    )
+    parser.add_argument("--tag", default=PURPLEAIR_API_CALSEMVER_TAG)
+    args = parser.parse_args(argv)
+
+    resolved = ensure_purpleair_api_source(tag=args.tag)
+    print(f"purpleair_api C++17 source ready ({args.tag}): {resolved}")
+    return 0
+
+
 if __name__ == "__main__":
     try:
-        print(str(ensure_purpleair_api_source()))
+        sys.exit(main())
     except Exception as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         sys.exit(1)

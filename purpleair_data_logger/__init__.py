@@ -61,7 +61,7 @@ except ImportError:  # pragma: no cover
         return __version__
 
     def purpleair_api_target_version() -> str:
-        return "2026.11.3"
+        return "2026.11.11a2"
 
     def build_info() -> str:
         return f"purpleair_data_logger {__version__} (pure-python fallback)"

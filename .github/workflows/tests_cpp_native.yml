@@ -71,10 +71,11 @@ jobs:
       - name: Checkout purpleair_data_logger
         uses: actions/checkout@v7
 
-      - name: Checkout purpleair_api C++17 base layer
+      - name: Checkout purpleair_api C++17 base layer (CalSemVer alpha v2026.11.11a2)
         uses: actions/checkout@v7
         with:
           repository: carlkidcrypto/purpleair_api
+          ref: v2026.11.11a2
           path: third_party/purpleair_api
 
       - name: Provision embedded SQLite3 amalgamation

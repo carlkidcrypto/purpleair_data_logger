@@ -56,10 +56,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v7
 
-      - name: Checkout purpleair_api C++17 base layer
+      - name: Checkout purpleair_api C++17 base layer (CalSemVer alpha v2026.11.11a2)
         uses: actions/checkout@v7
         with:
           repository: carlkidcrypto/purpleair_api
+          ref: v2026.11.11a2
           path: third_party/purpleair_api
 
       - name: Set up Python env for running unit tests...
@@ -74,17 +75,17 @@ jobs:
             sudo apt-get update
             sudo apt-get install -y swig libcurl4-openssl-dev pkg-config xvfb tk-dev python3-tk
             python -m pip install --upgrade pip setuptools wheel pytest
-            python -m pip install -r tests/requirements.txt
+            python -m pip install --pre -r tests/requirements.txt || (python -m pip install ./third_party/purpleair_api/python && python -m pip install -r tests/requirements.txt --no-deps)
             python setup.py build_ext --inplace
           macos: |
             brew install swig pkg-config
             python -m pip install --upgrade pip setuptools wheel pytest
-            python -m pip install -r tests/requirements.txt
+            python -m pip install --pre -r tests/requirements.txt || (python -m pip install ./third_party/purpleair_api/python && python -m pip install -r tests/requirements.txt --no-deps)
             python setup.py build_ext --inplace
           windows: |
             choco install swig -y
             python -m pip install --upgrade pip setuptools wheel pytest
-            python -m pip install -r tests/requirements.txt
+            python -m pip install --pre -r tests/requirements.txt || (python -m pip install ./third_party/purpleair_api/python && python -m pip install -r tests/requirements.txt --no-deps)
             python setup.py build_ext --inplace
 
       - name: Run C++17/SWIG/GUI pytest suite and legacy unittest suite
