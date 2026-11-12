@@ -82,7 +82,7 @@ jobs:
         run: python3 tools/prepare_sqlite3_amalgamation.py
 
       - name: Install dependencies
-        uses: carlkidcrypto/os-specific-runner@d6494ebfd6437452a44d3f9d6633339772e95070 # v2.4.0
+        uses: carlkidcrypto/os-specific-runner@8bf8551e08c48d9b72f768392e692fad5bb169e7 # v2.5.0
         with:
           linux: |
             sudo apt-get update
@@ -92,7 +92,7 @@ jobs:
             brew install meson ninja pkg-config googletest
 
       - name: Configure, Build & Run GoogleTest Suite
-        uses: carlkidcrypto/os-specific-runner@d6494ebfd6437452a44d3f9d6633339772e95070 # v2.4.0
+        uses: carlkidcrypto/os-specific-runner@8bf8551e08c48d9b72f768392e692fad5bb169e7 # v2.5.0
         with:
           linux: |
             python3 -m pip install --upgrade pip gcovr
