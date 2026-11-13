@@ -103,11 +103,16 @@ HTTP API
    Returns ``{"status": "ok", "sensor_count": N}``.
 
 ``GET /matter/sensors``
-   Returns all current devices and their sensor indexes, plus a ``count``.
+   Returns a ``sensors`` list and a ``count``. Each entry contains
+   ``sensor_index``, ``device``, ``_status`` and ``_last_seen``.
 
 ``GET /matter/sensor/<sensor_index>``
-   Returns one device. A non-integer index returns 400 and an unavailable index
-   returns 404. Query parameters do not affect route matching.
+   Returns an object with ``device``, ``_status`` and ``_last_seen``. A
+   non-integer index returns 400, and an index that is unavailable or not yet
+   polled returns 404. Query parameters do not affect route matching.
+
+``HEAD`` requests
+   Any ``HEAD`` request returns ``204 No Content`` with no body.
 
 Security
 --------
