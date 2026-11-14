@@ -35,6 +35,40 @@ std::string trim_numeric_prefix(std::string const& raw) {
    }
    return has_digit ? raw.substr(start, pos - start) : "";
 }
+
+bool is_floating_type(std::string const& upper_type) {
+   return upper_type == "OPAQUE" || upper_type == "FLOAT" || upper_type == "DOUBLE" ||
+          upper_type == "REAL";
+}
+
+bool is_integer_type(std::string const& upper_type) {
+   return upper_type == "INTEGER" || upper_type == "INT" || upper_type == "INT64" ||
+          upper_type == "COUNTER32" || upper_type == "COUNTER64" || upper_type == "GAUGE32" ||
+          upper_type == "UNSIGNED32" || upper_type == "TIMETICKS";
+}
+
+void set_int64(Sample& s, int64_t value) {
+   s.i64 = value;
+   s.f64 = static_cast<double>(value);
+   s.type_tag = TypeTag::Int64;
+}
+
+void set_float64(Sample& s, double value) {
+   s.f64 = value;
+   s.i64 = static_cast<int64_t>(value);
+   s.type_tag = TypeTag::Float64;
+}
+
+// Parses SNMP-style "Timeticks: (12345) 0:02:03.45" into the raw tick count.
+bool parse_timeticks(std::string const& raw_value, Sample& s) {
+   size_t const lp = raw_value.find('(');
+   size_t const rp = raw_value.find(')', lp == std::string::npos ? 0 : lp);
+   if (lp == std::string::npos || rp == std::string::npos || rp <= lp + 1) {
+      return false;
+   }
+   set_int64(s, std::strtoll(raw_value.substr(lp + 1, rp - lp - 1).c_str(), nullptr, 10));
+   return true;
+}
 } // namespace
 
 Sample Sample::from_purpleair_field(std::string const& metric_name,
@@ -77,50 +111,25 @@ Sample Sample::from_ezsnmp_result(std::string const& metric_name,
       return s;
    }
 
-   if (upper_type == "INTEGER" || upper_type == "INT" || upper_type == "INT64" ||
-       upper_type == "COUNTER32" || upper_type == "COUNTER64" || upper_type == "GAUGE32" ||
-       upper_type == "UNSIGNED32" || upper_type == "TIMETICKS") {
-      if (upper_type == "TIMETICKS") {
-         size_t lp = raw_value.find('(');
-         size_t rp = raw_value.find(')', lp == std::string::npos ? 0 : lp);
-         if (lp != std::string::npos && rp != std::string::npos && rp > lp + 1) {
-            std::string ticks = raw_value.substr(lp + 1, rp - lp - 1);
-            s.i64 = std::strtoll(ticks.c_str(), nullptr, 10);
-            s.f64 = static_cast<double>(s.i64);
-            s.type_tag = TypeTag::Int64;
-            return s;
-         }
-      }
-      std::string num_str = trim_numeric_prefix(raw_value);
-      if (!num_str.empty()) {
-         s.i64 = std::strtoll(num_str.c_str(), nullptr, 10);
-         s.f64 = static_cast<double>(s.i64);
-         s.type_tag = TypeTag::Int64;
-         return s;
-      }
-   }
+   std::string const num_str = trim_numeric_prefix(raw_value);
+   bool const has_num = !num_str.empty();
 
-   if (upper_type == "OPAQUE" || upper_type == "FLOAT" || upper_type == "DOUBLE" ||
-       upper_type == "REAL") {
-      std::string num_str = trim_numeric_prefix(raw_value);
-      if (!num_str.empty()) {
-         s.f64 = std::strtod(num_str.c_str(), nullptr);
-         s.i64 = static_cast<int64_t>(s.f64);
-         s.type_tag = TypeTag::Float64;
-         return s;
-      }
+   if (upper_type == "TIMETICKS" && parse_timeticks(raw_value, s)) {
+      return s;
    }
-
-   std::string candidate = trim_numeric_prefix(raw_value);
-   if (!candidate.empty() && candidate.size() == raw_value.size()) {
-      if (candidate.find('.') != std::string::npos) {
-         s.f64 = std::strtod(candidate.c_str(), nullptr);
-         s.i64 = static_cast<int64_t>(s.f64);
-         s.type_tag = TypeTag::Float64;
+   if (has_num && is_integer_type(upper_type)) {
+      set_int64(s, std::strtoll(num_str.c_str(), nullptr, 10));
+      return s;
+   }
+   if (has_num && is_floating_type(upper_type)) {
+      set_float64(s, std::strtod(num_str.c_str(), nullptr));
+      return s;
+   }
+   if (has_num && num_str.size() == raw_value.size()) {
+      if (num_str.find('.') != std::string::npos) {
+         set_float64(s, std::strtod(num_str.c_str(), nullptr));
       } else {
-         s.i64 = std::strtoll(candidate.c_str(), nullptr, 10);
-         s.f64 = static_cast<double>(s.i64);
-         s.type_tag = TypeTag::Int64;
+         set_int64(s, std::strtoll(num_str.c_str(), nullptr, 10));
       }
       return s;
    }

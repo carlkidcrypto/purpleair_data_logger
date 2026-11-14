@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <string>
+#include <thread>
 
 #ifdef _WIN32
 #include <winsock2.h>
@@ -12,6 +13,8 @@
 #include <sys/socket.h>
 #include <unistd.h>
 #endif
+
+#include <sqlite3.h>
 
 #include "purpleair_data_logger/csv_sink.h"
 #include "purpleair_data_logger/exceptions.h"
@@ -83,20 +86,42 @@ TEST(CsvAndJsonlSinksTest, DisabledEnabledEscapingAndFlush) {
    csv_en.directory = (tmp.path() / "csv").string();
    csv_en.flush_every_n_batches = 2;
    CsvSink s_csv(csv_en);
+   EXPECT_EQ(s_csv.name(), "csv");
    s_csv.write_batch(b);
    s_csv.write_batch(b);
    s_csv.write_batch(b_empty_name);
    s_csv.flush();
+
+   // File open failure: create a directory named "blocked_sensor.csv" inside csv dir
+   std::filesystem::create_directories(tmp.path() / "csv" / "blocked_sensor.csv");
+   Batch b_blocked = b;
+   b_blocked.dut_name = "blocked_sensor";
+   EXPECT_THROW(s_csv.write_batch(b_blocked), SinkError);
+
+   // Directory creation failure
+   CsvSinkConfig csv_bad_dir;
+   csv_bad_dir.enabled = true;
+   csv_bad_dir.directory = (tmp.path() / "csv" / "sensor.csv" / "invalid").string();
+   EXPECT_THROW({ CsvSink s_bad(csv_bad_dir); }, SinkError);
 
    JsonlSinkConfig jl_en;
    jl_en.enabled = true;
    jl_en.directory = (tmp.path() / "jsonl").string();
    jl_en.flush_every_n_batches = 2;
    JsonlSink s_jl(jl_en);
+   EXPECT_EQ(s_jl.name(), "jsonl");
    s_jl.write_batch(b);
    s_jl.write_batch(b);
    s_jl.write_batch(b_empty_name);
    s_jl.flush();
+
+   std::filesystem::create_directories(tmp.path() / "jsonl" / "blocked_sensor.jsonl");
+   EXPECT_THROW(s_jl.write_batch(b_blocked), SinkError);
+
+   JsonlSinkConfig jl_bad_dir;
+   jl_bad_dir.enabled = true;
+   jl_bad_dir.directory = (tmp.path() / "jsonl" / "sensor.jsonl" / "invalid").string();
+   EXPECT_THROW({ JsonlSink s_jl_bad(jl_bad_dir); }, SinkError);
 }
 
 TEST(SqliteAndPsqlSinksTest, TransactionsTypesAndErrorPaths) {
@@ -126,6 +151,7 @@ TEST(SqliteAndPsqlSinksTest, TransactionsTypesAndErrorPaths) {
    sq_en.wal_mode = true;
    sq_en.commit_batch_size = 2;
    SqliteSink s_sq(sq_en);
+   EXPECT_EQ(s_sq.name(), "sqlite");
    s_sq.write_batch(b);
    // Second write hits series_cache!
    s_sq.write_batch(b);
@@ -137,10 +163,89 @@ TEST(SqliteAndPsqlSinksTest, TransactionsTypesAndErrorPaths) {
    sq_bad.path = tmp.path().string();
    EXPECT_THROW(SqliteSink{sq_bad}, SinkError);
 
+   // SQLite error in exec_sql (conflicting table schema triggers index error)
+   std::string bad_exec_db = (tmp.path() / "bad_exec.db").string();
+   {
+      sqlite3* db = nullptr;
+      sqlite3_open(bad_exec_db.c_str(), &db);
+      sqlite3_exec(db, "CREATE TABLE samples(dummy INT);", nullptr, nullptr, nullptr);
+      sqlite3_close(db);
+   }
+   SqliteSinkConfig sq_bad_exec;
+   sq_bad_exec.enabled = true;
+   sq_bad_exec.path = bad_exec_db;
+   EXPECT_THROW(SqliteSink{sq_bad_exec}, SinkError);
+
+   // SQLite error in prepare statements (conflicting series schema)
+   std::string bad_schema_db = (tmp.path() / "bad_schema.db").string();
+   {
+      sqlite3* db = nullptr;
+      sqlite3_open(bad_schema_db.c_str(), &db);
+      sqlite3_exec(db, "CREATE TABLE series(dummy INT);", nullptr, nullptr, nullptr);
+      sqlite3_close(db);
+   }
+   SqliteSinkConfig sq_bad_schema;
+   sq_bad_schema.enabled = true;
+   sq_bad_schema.path = bad_schema_db;
+   EXPECT_THROW(SqliteSink{sq_bad_schema}, SinkError);
+
+   // insert_series prepares, but select_series fails (series table lacks series_id)
+   std::string bad_select_db = (tmp.path() / "bad_select.db").string();
+   {
+      sqlite3* db = nullptr;
+      sqlite3_open(bad_select_db.c_str(), &db);
+      sqlite3_exec(db,
+                   "CREATE TABLE series(dut_name TEXT, dut_ip TEXT, metric_name TEXT, oid TEXT, "
+                   "oid_index TEXT, snmp_type TEXT);",
+                   nullptr, nullptr, nullptr);
+      sqlite3_close(db);
+   }
+   SqliteSinkConfig sq_bad_select;
+   sq_bad_select.enabled = true;
+   sq_bad_select.path = bad_select_db;
+   EXPECT_THROW(SqliteSink{sq_bad_select}, SinkError);
+
+   // series statements prepare, but insert_sample fails (samples table lacks value columns)
+   std::string bad_sample_db = (tmp.path() / "bad_sample.db").string();
+   {
+      sqlite3* db = nullptr;
+      sqlite3_open(bad_sample_db.c_str(), &db);
+      sqlite3_exec(db, "CREATE TABLE samples(ts_ns INTEGER, series_id INTEGER);", nullptr, nullptr,
+                   nullptr);
+      sqlite3_close(db);
+   }
+   SqliteSinkConfig sq_bad_sample;
+   sq_bad_sample.enabled = true;
+   sq_bad_sample.path = bad_sample_db;
+   EXPECT_THROW(SqliteSink{sq_bad_sample}, SinkError);
+
+   // SQLite error in sqlite3_step (trigger that aborts insert)
+   std::string trigger_db = (tmp.path() / "trigger.db").string();
+   SqliteSinkConfig sq_trig_cfg;
+   sq_trig_cfg.enabled = true;
+   sq_trig_cfg.path = trigger_db;
+   {
+      SqliteSink sq_trig(sq_trig_cfg);
+      sq_trig.write_batch(b);
+      sq_trig.flush();
+   }
+   {
+      sqlite3* db = nullptr;
+      sqlite3_open(trigger_db.c_str(), &db);
+      sqlite3_exec(db,
+                   "CREATE TRIGGER fail_ins BEFORE INSERT ON samples BEGIN SELECT RAISE(ABORT, "
+                   "'forced'); END;",
+                   nullptr, nullptr, nullptr);
+      sqlite3_close(db);
+   }
+   SqliteSink sq_failing(sq_trig_cfg);
+   EXPECT_THROW(sq_failing.write_batch(b), SinkError);
+
    // Disabled PsqlSink
    PsqlSinkConfig pg_dis;
    pg_dis.enabled = false;
    PsqlSink s_pg_dis(pg_dis);
+   EXPECT_EQ(s_pg_dis.name(), "psql");
    s_pg_dis.write_batch(b);
    s_pg_dis.flush();
 
@@ -149,6 +254,25 @@ TEST(SqliteAndPsqlSinksTest, TransactionsTypesAndErrorPaths) {
    pg_en.enabled = true;
    pg_en.conninfo = "host=127.0.0.1 port=1 dbname=nonexistent connect_timeout=1";
    EXPECT_THROW(PsqlSink{pg_en}, SinkError);
+
+   // PsqlSink stub and error testing
+   PsqlSinkConfig pg_stub;
+   pg_stub.enabled = true;
+   pg_stub.conninfo = "stub_for_testing";
+   PsqlSink s_pg_stub(pg_stub);
+   s_pg_stub.write_batch(b);
+   s_pg_stub.flush();
+
+   PsqlSinkConfig pg_ins_err;
+   pg_ins_err.enabled = true;
+   pg_ins_err.conninfo = "stub_insert_error";
+   PsqlSink s_pg_ins_err(pg_ins_err);
+   EXPECT_THROW(s_pg_ins_err.write_batch(b), SinkError);
+
+   PsqlSinkConfig pg_sch_err;
+   pg_sch_err.enabled = true;
+   pg_sch_err.conninfo = "stub_schema_error";
+   EXPECT_THROW(PsqlSink{pg_sch_err}, SinkError);
 }
 
 TEST(PrometheusSinkTest, ScrapeEndpointAndMetricFormatting) {
@@ -172,6 +296,7 @@ TEST(PrometheusSinkTest, ScrapeEndpointAndMetricFormatting) {
    pr_en.port = 0;
    pr_en.metric_prefix = "99_pa-dl";
    PrometheusSink s_en(pr_en);
+   EXPECT_EQ(s_en.name(), "prometheus");
    s_en.write_batch(b);
    s_en.flush();
 
@@ -212,4 +337,23 @@ TEST(PrometheusSinkTest, ScrapeEndpointAndMetricFormatting) {
 #endif
       }
    }
+
+   // Allow at least one 100ms select() timeout iteration before stop_server()
+   std::this_thread::sleep_for(std::chrono::milliseconds(150));
+
+   // Port collision / bind error handling
+   PrometheusSinkConfig pr_bad;
+   pr_bad.enabled = true;
+   pr_bad.port = 1; // Privileged port requires root
+   pr_bad.bind_host = "127.0.0.1";
+   PrometheusSink s_pr_bad(pr_bad);
+   EXPECT_EQ(s_pr_bad.bound_port(), 0);
+
+   // Non-local RFC 5737 TEST-NET-3 address deterministically fails bind() across OSes
+   PrometheusSinkConfig pr_unavail;
+   pr_unavail.enabled = true;
+   pr_unavail.port = 0;
+   pr_unavail.bind_host = "203.0.113.1";
+   PrometheusSink s_pr_unavail(pr_unavail);
+   EXPECT_EQ(s_pr_unavail.bound_port(), 0);
 }

@@ -206,7 +206,8 @@ LoggerConfig LoggerConfig::from_json_string(std::string const& json_str) {
 }
 
 LoggerConfig LoggerConfig::from_json_file(std::string const& path) {
-   return from_json_string(read_file_text(path));
+   std::string text = read_file_text(path);
+   return from_json_string(text);
 }
 
 std::string LoggerConfig::to_json_string(int indent) const {
@@ -511,15 +512,10 @@ std::string generate_template_config_json(std::string const& profile) {
    dut1.poll_interval_ms = 2000;
    dut1.snmp.mode = "stub";
    dut1.snmp.sensor_index = 53;
-   dut1.metrics = {
-       {"name", "name", "get", 25},
-       {"pm2.5_atm", "pm2.5_atm", "get", 25},
-       {"pm2.5_cf_1", "pm2.5_cf_1", "get", 25},
-       {"pm10.0_atm", "pm10.0_atm", "get", 25},
-       {"temperature", "temperature", "get", 25},
-       {"humidity", "humidity", "get", 25},
-       {"pressure", "pressure", "get", 25},
-   };
+   for (char const* field :
+        {"name", "pm2.5_atm", "pm2.5_cf_1", "pm10.0_atm", "temperature", "humidity", "pressure"}) {
+      dut1.metrics.push_back({field, field, "get", 25});
+   }
    cfg.duts.push_back(dut1);
 
    if (profile == "demo" || profile == "enterprise") {
@@ -530,14 +526,9 @@ std::string generate_template_config_json(std::string const& profile) {
       dut2.snmp.mode = "stub";
       dut2.snmp.sensor_index = 108;
       dut2.snmp.ipv4_address = "192.168.1.50";
-      dut2.metrics = {
-          {"name", "name", "get", 25},
-          {"pm2.5_atm", "pm2.5_atm", "get", 25},
-          {"temperature", "temperature", "get", 25},
-          {"humidity", "humidity", "get", 25},
-          {"voc", "voc", "get", 25},
-          {"rssi", "rssi", "get", 25},
-      };
+      for (char const* field : {"name", "pm2.5_atm", "temperature", "humidity", "voc", "rssi"}) {
+         dut2.metrics.push_back({field, field, "get", 25});
+      }
       cfg.duts.push_back(dut2);
       cfg.sinks.csv.enabled = true;
       cfg.sinks.jsonl.enabled = true;

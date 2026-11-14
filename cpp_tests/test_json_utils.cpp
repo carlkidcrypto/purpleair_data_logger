@@ -98,6 +98,15 @@ TEST(JsonUtilsTest, MutatorsAndDumping) {
    EXPECT_NE(compact.find("\\u0005"), std::string::npos);
    EXPECT_NE(pretty.find("\"alpha\": 2"), std::string::npos);
 
+   // Dumping standalone Null value
+   Value v_null;
+   EXPECT_EQ(v_null.dump(), "null");
+
+   // Parsing multiline JSON, lowercase hex unicode, and overflow number
+   Value ml = Value::parse(
+       "{\n  \"hex\": \"\\u00ab\",\n  \"big\": 9999999999999999999999999999999999999999.0\n}");
+   EXPECT_TRUE(ml.is_object());
+
    Value reparsed = Value::parse(pretty);
    EXPECT_EQ(reparsed.get("alpha").as_int(), 2);
    EXPECT_TRUE(reparsed.get("beta").is_null());

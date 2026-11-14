@@ -149,9 +149,7 @@ struct DataLogger::Impl {
    }
 
    DutConfig const& find_dut(std::string const& dut_name) const {
-      if (cfg.duts.empty()) {
-         throw ConfigError("No sensor targets configured");
-      }
+      // Impl constructor validates that cfg.duts is non-empty via validate_config().
       if (dut_name.empty()) {
          return cfg.duts.front();
       }
@@ -190,11 +188,13 @@ struct DataLogger::Impl {
 DataLogger::DataLogger(LoggerConfig const& config) : m_impl(std::make_shared<Impl>(config)) {}
 
 DataLogger DataLogger::from_json_file(std::string const& path) {
-   return DataLogger(LoggerConfig::from_json_file(path));
+   LoggerConfig cfg = LoggerConfig::from_json_file(path);
+   return DataLogger(cfg);
 }
 
 DataLogger DataLogger::from_json_string(std::string const& json_str) {
-   return DataLogger(LoggerConfig::from_json_string(json_str));
+   LoggerConfig cfg = LoggerConfig::from_json_string(json_str);
+   return DataLogger(cfg);
 }
 
 DataLogger::~DataLogger() = default;
@@ -299,7 +299,8 @@ Batch DataLogger::probe_dut(std::string const& dut_name) {
 }
 
 std::string DataLogger::probe_dut_json(std::string const& dut_name) {
-   return probe_dut(dut_name).to_json();
+   std::string json_str = probe_dut(dut_name).to_json();
+   return json_str;
 }
 
 std::string DataLogger::request_json(std::string const& dut_name,

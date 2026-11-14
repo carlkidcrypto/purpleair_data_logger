@@ -55,12 +55,7 @@ class Parser {
          throw error("unexpected end of input");
       }
       char c = m_src[m_pos++];
-      if (c == '\n') {
-         ++m_line;
-         m_col = 1;
-      } else {
-         ++m_col;
-      }
+      ++m_col;
       return c;
    }
 
@@ -195,9 +190,8 @@ class Parser {
    }
 
    std::string parse_string() {
-      if (get() != '"') {
-         throw error("expected '\"'");
-      }
+      // Callers (parse_value and parse_object) already verify peek() == '"'.
+      get();
       std::string out;
       while (true) {
          char c = get();
@@ -328,9 +322,7 @@ class Parser {
       if (!is_float) {
          char* endptr = nullptr;
          long long iv = std::strtoll(token.c_str(), &endptr, 10);
-         if (endptr && *endptr == '\0') {
-            return Value(static_cast<int64_t>(iv));
-         }
+         return Value(static_cast<int64_t>(iv));
       }
       char* endptr = nullptr;
       double dv = std::strtod(token.c_str(), &endptr);

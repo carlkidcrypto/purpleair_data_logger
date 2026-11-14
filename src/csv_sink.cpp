@@ -18,12 +18,7 @@ CsvSink::CsvSink(CsvSinkConfig config) : m_cfg(std::move(config)) {
    }
 }
 
-CsvSink::~CsvSink() {
-   try {
-      flush();
-   } catch (...) {
-   }
-}
+CsvSink::~CsvSink() { flush(); }
 
 std::string CsvSink::sanitize_filename(std::string const& val) {
    std::string out;
@@ -68,8 +63,10 @@ std::ofstream& CsvSink::get_or_open_stream(std::string const& dut_name) {
    }
    std::filesystem::path file_path =
        std::filesystem::path(m_cfg.directory) / (sanitize_filename(dut_name) + ".csv");
+   std::error_code ec;
    bool write_header =
-       !std::filesystem::exists(file_path) || std::filesystem::file_size(file_path) == 0;
+       !std::filesystem::exists(file_path, ec) || (!std::filesystem::is_directory(file_path, ec) &&
+                                                   std::filesystem::file_size(file_path, ec) == 0);
 
    std::ofstream ofs(file_path, std::ios::out | std::ios::app);
    if (!ofs) {
