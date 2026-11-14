@@ -74,6 +74,11 @@ class PurpleAirPoller : public ISnmpPoller {
 
 using EzSnmpPoller = PurpleAirPoller;
 
+std::vector<Sample> parse_purpleair_json_payload(
+    std::string const& raw_json,
+    std::string const& default_sensor_idx,
+    std::vector<std::pair<std::string, std::string>> const& requested_metrics);
+
 std::unique_ptr<ISnmpPoller> create_poller(DutConfig const& dut);
 
 } // namespace purpleair_data_logger

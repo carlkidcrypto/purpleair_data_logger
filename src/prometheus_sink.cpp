@@ -84,8 +84,9 @@ struct PrometheusSink::Impl {
       WSAStartup(MAKEWORD(2, 2), &wsaData);
 #endif
       listen_fd = static_cast<int>(socket(AF_INET, SOCK_STREAM, 0));
-      if (listen_fd < 0) {
-         return;
+      // Kernel-level socket() failure (fd exhaustion) cannot be induced portably in unit tests.
+      if (listen_fd < 0) { // GCOVR_EXCL_BR_LINE
+         return;           // GCOVR_EXCL_LINE
       }
       int opt = 1;
 #ifdef _WIN32
@@ -114,10 +115,13 @@ struct PrometheusSink::Impl {
       if (getsockname(listen_fd, reinterpret_cast<sockaddr*>(&bound), &len) == 0) {
          actual_port = ntohs(bound.sin_port);
       }
-      if (listen(listen_fd, 8) < 0) {
+      // listen() on a freshly bound TCP socket only fails on kernel resource exhaustion.
+      if (listen(listen_fd, 8) < 0) { // GCOVR_EXCL_BR_LINE
+         // GCOVR_EXCL_START
          close_socket_fd(listen_fd);
          listen_fd = -1;
          return;
+         // GCOVR_EXCL_STOP
       }
 
       server_thread = std::thread([this]() {
@@ -140,8 +144,9 @@ struct PrometheusSink::Impl {
 #endif
             int cfd =
                 static_cast<int>(accept(listen_fd, reinterpret_cast<sockaddr*>(&cli), &clilen));
-            if (cfd < 0) {
-               continue;
+            // accept() after a successful select() only fails on a client-side RST race.
+            if (cfd < 0) { // GCOVR_EXCL_BR_LINE
+               continue;   // GCOVR_EXCL_LINE
             }
             char buf[1024];
 #ifdef _WIN32

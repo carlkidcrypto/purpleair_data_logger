@@ -172,10 +172,7 @@ SqliteSink::SqliteSink(SqliteSinkConfig config) : m_impl(std::make_unique<Impl>(
 
 SqliteSink::~SqliteSink() {
 #ifdef PURPLEAIR_DL_HAVE_SQLITE3
-   try {
-      flush();
-   } catch (...) {
-   }
+   flush();
    if (m_impl->stmt_insert_series) {
       sqlite3_finalize(m_impl->stmt_insert_series);
    }

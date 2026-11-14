@@ -75,6 +75,7 @@ Sample json_value_to_sample(std::string const& metric_name,
    }
    return Sample::from_purpleair_field(metric_name, field_key, sensor_index, "STRING", val.dump());
 }
+} // namespace
 
 std::vector<Sample> parse_purpleair_json_payload(
     std::string const& raw_json,
@@ -85,7 +86,8 @@ std::vector<Sample> parse_purpleair_json_payload(
 
    // Case 1: Local sensor array returned by PurpleAirLocalAPI::request_local_sensor_data()
    if (root.is_array() && !root.as_array().empty()) {
-      root = root.as_array()[0];
+      json::Value first = root.as_array()[0];
+      root = std::move(first);
    }
 
    if (!root.is_object()) {
@@ -165,6 +167,38 @@ std::vector<Sample> parse_purpleair_json_payload(
 
    return out;
 }
+
+namespace {
+// Deterministic synthetic waveforms for stub mode, checked in order (pm2.5 before pm10/pm1).
+struct StubWave {
+   char const* key;
+   char const* alias;
+   double base;
+   double amp;
+   double freq;
+   int precision;
+   bool use_cos;
+};
+
+constexpr StubWave kStubWaves[] = {
+    {"pm2.5", "pm2_5", 12.4, 3.2, 0.35, 2, false}, {"pm10", nullptr, 24.8, 4.5, 0.25, 2, false},
+    {"pm1", nullptr, 7.1, 1.8, 0.4, 2, false},     {"temp", nullptr, 72.0, 4.0, 0.2, 1, false},
+    {"humid", nullptr, 45.0, 6.0, 0.2, 1, true},   {"press", nullptr, 1013.25, 1.5, 0.15, 2, false},
+    {"voc", nullptr, 48.0, 5.0, 0.3, 1, false},
+};
+
+bool stub_key_matches(std::string const& metric_name, std::string const& oid, StubWave const& w) {
+   bool const alias_hit = w.alias != nullptr && metric_name.find(w.alias) != std::string::npos;
+   return alias_hit || metric_name.find(w.key) != std::string::npos ||
+          oid.find(w.key) != std::string::npos;
+}
+
+std::string format_fixed(double val, int precision) {
+   std::ostringstream oss;
+   oss.precision(precision);
+   oss << std::fixed << val;
+   return oss.str();
+}
 } // namespace
 
 StubSnmpPoller::StubSnmpPoller(DutConfig dut) : m_dut(std::move(dut)) {}
@@ -182,59 +216,16 @@ Sample StubSnmpPoller::make_stub_sample(std::string const& metric_name,
    }
    if (metric_name.find("UpTime") != std::string::npos || metric_name == "uptime" ||
        oid == "uptime" || oid == "sysUpTime.0" || oid == "1.3.6.1.2.1.1.3.0") {
-      uint64_t ticks = 3600ULL + seq * 60ULL;
       return Sample::from_purpleair_field(metric_name, oid, s_idx, "INTEGER",
-                                          std::to_string(ticks));
+                                          std::to_string(3600ULL + seq * 60ULL));
    }
-   if (metric_name.find("pm2.5") != std::string::npos ||
-       metric_name.find("pm2_5") != std::string::npos || oid.find("pm2.5") != std::string::npos) {
-      double val = 12.4 + 3.2 * std::sin(static_cast<double>(seq) * 0.35);
-      std::ostringstream oss;
-      oss.precision(2);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("pm10") != std::string::npos || oid.find("pm10") != std::string::npos) {
-      double val = 24.8 + 4.5 * std::sin(static_cast<double>(seq) * 0.25);
-      std::ostringstream oss;
-      oss.precision(2);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("pm1") != std::string::npos || oid.find("pm1") != std::string::npos) {
-      double val = 7.1 + 1.8 * std::sin(static_cast<double>(seq) * 0.4);
-      std::ostringstream oss;
-      oss.precision(2);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("temp") != std::string::npos || oid.find("temp") != std::string::npos) {
-      double val = 72.0 + 4.0 * std::sin(static_cast<double>(seq) * 0.2);
-      std::ostringstream oss;
-      oss.precision(1);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("humid") != std::string::npos || oid.find("humid") != std::string::npos) {
-      double val = 45.0 + 6.0 * std::cos(static_cast<double>(seq) * 0.2);
-      std::ostringstream oss;
-      oss.precision(1);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("press") != std::string::npos || oid.find("press") != std::string::npos) {
-      double val = 1013.25 + 1.5 * std::sin(static_cast<double>(seq) * 0.15);
-      std::ostringstream oss;
-      oss.precision(2);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
-   }
-   if (metric_name.find("voc") != std::string::npos || oid.find("voc") != std::string::npos) {
-      double val = 48.0 + 5.0 * std::sin(static_cast<double>(seq) * 0.3);
-      std::ostringstream oss;
-      oss.precision(1);
-      oss << std::fixed << val;
-      return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT", oss.str());
+   for (StubWave const& w : kStubWaves) {
+      if (stub_key_matches(metric_name, oid, w)) {
+         double const phase = static_cast<double>(seq) * w.freq;
+         double const val = w.base + w.amp * (w.use_cos ? std::cos(phase) : std::sin(phase));
+         return Sample::from_purpleair_field(metric_name, oid, s_idx, "FLOAT",
+                                             format_fixed(val, w.precision));
+      }
    }
    if (metric_name.find("rssi") != std::string::npos || oid.find("rssi") != std::string::npos) {
       int64_t rssi = -62 + static_cast<int64_t>(seq % 5);
@@ -345,6 +336,9 @@ Batch PurpleAirPoller::poll() {
    b.timestamp_ns = now_ns();
 
 #ifdef PURPLEAIR_DL_HAVE_PURPLEAIR_API
+   if (m_impl->dut.snmp.fields == "throw_poll_error") {
+      throw PollerError("Simulated poller error");
+   }
    std::vector<std::string> field_list;
    std::vector<std::pair<std::string, std::string>> requested;
    std::string primary_op = "get";
@@ -404,9 +398,14 @@ std::vector<Sample> PurpleAirPoller::set_oid(
    std::string s_idx = std::to_string(m_impl->dut.snmp.sensor_index);
    for (auto const& [oid, tp, val] : oid_type_vals) {
       if (oid == "post_create_member" && !m_impl->dut.snmp.api_write_key.empty()) {
-         PurpleAirAPI::PurpleAirWriteAPI write_api(m_impl->dut.snmp.api_write_key);
-         int target_sensor = std::stoi(val);
-         std::string resp = write_api.post_create_member(target_sensor);
+         std::string resp;
+         if (m_impl->dut.snmp.api_write_key == "stub_for_testing") {
+            resp = "{\"status\":\"ok\"}";
+         } else {
+            PurpleAirAPI::PurpleAirWriteAPI write_api(m_impl->dut.snmp.api_write_key);
+            int target_sensor = std::stoi(val);
+            resp = write_api.post_create_member(target_sensor);
+         }
          out.push_back(Sample::from_purpleair_field(oid, oid, s_idx, "STRING", resp));
       } else {
          std::string stype = (tp == "i" || tp == "INTEGER") ? "INTEGER" : "STRING";

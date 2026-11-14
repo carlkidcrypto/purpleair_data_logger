@@ -415,9 +415,7 @@ int CliRunner::run_streams(std::vector<std::string> const& args,
 
          auto t_start = std::chrono::steady_clock::now();
          uint64_t last_written = 0;
-         while (engine.is_running()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
-            LoggerStats st = engine.stats();
+         auto emit_recent_batches = [&](LoggerStats const& st) {
             if (f.json_output && st.batches_written > last_written) {
                auto recent =
                    engine.recent_batches(static_cast<size_t>(st.batches_written - last_written));
@@ -431,6 +429,12 @@ int CliRunner::run_streams(std::vector<std::string> const& args,
                out.flush();
                last_written = st.batches_written;
             }
+         };
+
+         while (engine.is_running()) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            LoggerStats st = engine.stats();
+            emit_recent_batches(st);
             if (f.duration_ms > 0) {
                auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(
                                   std::chrono::steady_clock::now() - t_start)
@@ -451,17 +455,7 @@ int CliRunner::run_streams(std::vector<std::string> const& args,
 
          LoggerStats final_st = engine.stats();
          if (f.json_output) {
-            if (final_st.batches_written > last_written) {
-               auto recent = engine.recent_batches(
-                   static_cast<size_t>(final_st.batches_written - last_written));
-               for (auto const& b : recent) {
-                  json::Value bev = json::Value::make_object();
-                  bev.set("event", json::Value("batch"));
-                  bev.set("batch", json::Value::parse(b.to_json()));
-                  bev.set("stats", json::Value::parse(final_st.to_json()));
-                  out << bev.dump() << "\n";
-               }
-            }
+            emit_recent_batches(final_st);
             json::Value stop_ev = json::Value::make_object();
             stop_ev.set("event", json::Value("stopped"));
             stop_ev.set("stats", json::Value::parse(final_st.to_json()));

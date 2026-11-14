@@ -43,6 +43,15 @@ TEST(SinkInspectorTest, InspectSqliteJsonlAndCsvWithFiltersAndQuotes) {
       s->flush();
    }
 
+   // Exercise create_sinks with PSQL and Prometheus enabled
+   SinksConfig all_sinks = cfg.sinks;
+   all_sinks.psql.enabled = true;
+   all_sinks.psql.conninfo = "stub_for_testing";
+   all_sinks.prometheus.enabled = true;
+   all_sinks.prometheus.port = 0;
+   auto all_sinks_vec = create_sinks(all_sinks);
+   EXPECT_EQ(all_sinks_vec.size(), 5u);
+
    // Add corrupt line & non-matching extension files to JSONL and CSV dirs
    {
       std::ofstream bad_jl(tmp.path() / "jsonl" / "extra.jsonl", std::ios::app);

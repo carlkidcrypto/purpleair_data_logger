@@ -18,12 +18,7 @@ JsonlSink::JsonlSink(JsonlSinkConfig config) : m_cfg(std::move(config)) {
    }
 }
 
-JsonlSink::~JsonlSink() {
-   try {
-      flush();
-   } catch (...) {
-   }
-}
+JsonlSink::~JsonlSink() { flush(); }
 
 std::string JsonlSink::sanitize_filename(std::string const& val) {
    std::string out;

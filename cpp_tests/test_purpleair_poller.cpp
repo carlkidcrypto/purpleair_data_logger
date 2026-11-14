@@ -101,6 +101,20 @@ TEST(PurpleAirLivePollerTest, LocalJsonVariantsAndCloudErrorHandling) {
    Batch b2 = p2->poll();
    EXPECT_EQ(b2.samples.size(), 8u);
 
+   // 2b. Direct payload parser testing: Array JSON response, SensorId, metric name fallback
+   std::string json_arr = R"([
+      {
+         "SensorId": "184291",
+         "name": "Array PA",
+         "pm25": 8.5
+      }
+   ])";
+   auto arr_samples =
+       parse_purpleair_json_payload(json_arr, "184291", {{"pm25", "pm2.5_field_not_found"}});
+   ASSERT_EQ(arr_samples.size(), 1u);
+   EXPECT_EQ(arr_samples[0].metric_name, "pm25");
+   EXPECT_EQ(arr_samples[0].oid_index, "184291");
+
    // 3. Non-object JSON payload triggers PollerError caught in poll() and thrown in request()
    purpleair_dl_test::LoopbackHttpJsonServer srv3("12345");
    DutConfig d3 = d1;
@@ -122,8 +136,14 @@ TEST(PurpleAirLivePollerTest, LocalJsonVariantsAndCloudErrorHandling) {
    Batch b_cloud = p_cloud->poll();
    EXPECT_EQ(b_cloud.samples.size(), 1u);
 
-   EXPECT_THROW(p_cloud->request("multiple", {}, 10), PollerError);
-   EXPECT_THROW(p_cloud->request("history", {"pm2.5_atm"}, 10), PollerError);
+   EXPECT_THROW(p_cloud->request("multiple", {"pm2.5_atm", "humidity"}, 10), PollerError);
+   EXPECT_THROW(p_cloud->request("history", {"pm2.5_atm", "humidity"}, 10), PollerError);
+
+   DutConfig d_multi = d_cloud;
+   d_multi.dut_ip = "custom.endpoint.local";
+   d_multi.snmp.mode = "cloud_multiple";
+   auto p_multi = create_poller(d_multi);
+   EXPECT_THROW(p_multi->request("multiple", {"pm2.5_atm"}, 10), PollerError);
 
    auto set_local = p_cloud->set_oid({{"custom_field", "i", "10"}});
    ASSERT_EQ(set_local.size(), 1u);
@@ -132,5 +152,15 @@ TEST(PurpleAirLivePollerTest, LocalJsonVariantsAndCloudErrorHandling) {
    d_cloud.snmp.api_write_key = "invalid-key";
    auto p_write = create_poller(d_cloud);
    EXPECT_THROW(p_write->set_oid({{"post_create_member", "i", "53"}}), std::exception);
+
+   // Fallback fields on empty fields query (throws 403 on cloud without API key)
+   EXPECT_THROW(p_cloud->request("get", {}, 10), PollerError);
+
+   // Set OID with stub write key
+   d_cloud.snmp.api_write_key = "stub_for_testing";
+   auto p_stub_write = create_poller(d_cloud);
+   auto res_member = p_stub_write->set_oid({{"post_create_member", "i", "53"}});
+   ASSERT_EQ(res_member.size(), 1u);
+   EXPECT_EQ(res_member[0].metric_name, "post_create_member");
 }
 #endif

@@ -43,6 +43,8 @@ TEST(VersionCompleteTest, AllCalSemVerBranches) {
    EXPECT_FALSE(is_valid_calsemver("2026.11.3a"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3-unknown"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3-"));
+   EXPECT_FALSE(is_valid_calsemver("2026..1"));
+   EXPECT_FALSE(is_valid_calsemver("2026.a.1"));
 }
 
 TEST(DatatypesCompleteTest, SampleBatchStatsReportAndRowConversions) {
@@ -64,6 +66,30 @@ TEST(DatatypesCompleteTest, SampleBatchStatsReportAndRowConversions) {
 
    Sample s_auto_i = Sample::from_ezsnmp_result("cnt", "cnt", "53", "UNKNOWN", "88");
    EXPECT_EQ(s_auto_i.type_tag, TypeTag::Int64);
+
+   // Leading whitespace in trim_numeric_prefix
+   Sample s_space = Sample::from_ezsnmp_result("sp", "oid", "0", "INTEGER", "   42");
+   EXPECT_EQ(s_space.i64, 42);
+
+   // TIMETICKS without parentheses
+   Sample s_tt_no_paren = Sample::from_ezsnmp_result("tt", "oid", "0", "TIMETICKS", "12345");
+   EXPECT_EQ(s_tt_no_paren.i64, 12345);
+
+   // OPAQUE with non-numeric string and numeric string
+   Sample s_op_bad = Sample::from_ezsnmp_result("op", "oid", "0", "OPAQUE", "not_a_number");
+   EXPECT_EQ(s_op_bad.type_tag, TypeTag::Str);
+   Sample s_op_num = Sample::from_ezsnmp_result("op", "oid", "0", "OPAQUE", "12.34");
+   EXPECT_EQ(s_op_num.type_tag, TypeTag::Float64);
+
+   // UNKNOWN with non-numeric string
+   Sample s_unk_bad = Sample::from_ezsnmp_result("unk", "oid", "0", "UNKNOWN", "not_a_number");
+   EXPECT_EQ(s_unk_bad.type_tag, TypeTag::Str);
+
+   // DOUBLE and REAL types
+   Sample s_dbl = Sample::from_ezsnmp_result("d", "oid", "0", "DOUBLE", "3.14159");
+   EXPECT_EQ(s_dbl.type_tag, TypeTag::Float64);
+   Sample s_real = Sample::from_ezsnmp_result("r", "oid", "0", "REAL", "2.71828");
+   EXPECT_EQ(s_real.type_tag, TypeTag::Float64);
 
    Sample s_err = Sample::from_ezsnmp_result("err", "oid", "0", "ERROR", "failed");
    EXPECT_EQ(s_err.status, SampleStatus::Error);
@@ -208,4 +234,7 @@ TEST(ConfigCompleteTest, AllProfilesSinksAndValidationErrors) {
    LoggerConfig good = LoggerConfig::from_json_string(generate_template_config_json("minimal"));
    good.save_json_file(valid_file, 2);
    EXPECT_TRUE(validate_config_file(valid_file).valid);
+
+   // Test save_json_file failure when path cannot be written (directory path)
+   EXPECT_THROW(good.save_json_file(tmp.path().string()), ConfigError);
 }

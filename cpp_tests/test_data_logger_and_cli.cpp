@@ -85,6 +85,61 @@ TEST(DataLoggerLifecycleTest, StartStopRunIngestRecentAndErrors) {
    }
    dl_tiny.stop();
    EXPECT_GE(dl_tiny.stats().batches_polled, 50u);
+
+   // Poll error, drop, and sink error handling in DataLogger
+   LoggerConfig drop_cfg = cfg;
+   drop_cfg.queue_capacity = 1;
+   drop_cfg.duts[0].poll_interval_ms = 50;
+   drop_cfg.sinks.psql.enabled = true;
+   drop_cfg.sinks.psql.conninfo = "stub_sleep_250ms";
+   DataLogger dl_drop(drop_cfg);
+   dl_drop.start();
+   for (int i = 0; i < 5; ++i) {
+      dl_drop.ingest_batch(custom_b);
+   }
+   dl_drop.stop();
+   EXPECT_GE(dl_drop.stats().batches_dropped, 1u);
+
+   // Flush error handling in DataLogger
+   LoggerConfig flush_err_cfg = cfg;
+   flush_err_cfg.queue_capacity = 10;
+   flush_err_cfg.duts[0].poll_interval_ms = 1000;
+   flush_err_cfg.sinks.psql.enabled = true;
+   flush_err_cfg.sinks.psql.conninfo = "stub_flush_error";
+   DataLogger dl_flush_err(flush_err_cfg);
+   dl_flush_err.start();
+   dl_flush_err.ingest_batch(custom_b);
+   dl_flush_err.stop();
+   EXPECT_GE(dl_flush_err.stats().sink_errors, 1u);
+
+   // Cloud poller error in DataLogger worker thread
+   LoggerConfig poll_err_cfg = cfg;
+   poll_err_cfg.duts[0].poll_interval_ms = 50;
+   poll_err_cfg.duts[0].snmp.mode = "cloud_single";
+   poll_err_cfg.max_poll_Cycles = 1;
+   DataLogger dl_poll_err(poll_err_cfg);
+   dl_poll_err.run(80);
+   dl_poll_err.stop();
+   EXPECT_GE(dl_poll_err.stats().poll_errors, 1u);
+
+   // Sink write error handling in DataLogger
+   LoggerConfig sink_err_cfg = cfg;
+   sink_err_cfg.sinks.psql.enabled = true;
+   sink_err_cfg.sinks.psql.conninfo = "stub_insert_error";
+   DataLogger dl_sink_err(sink_err_cfg);
+   dl_sink_err.ingest_batch(custom_b);
+   EXPECT_GE(dl_sink_err.stats().sink_errors, 1u);
+
+   // Outer poll error handling when poller throws
+   LoggerConfig poll_throw_cfg = cfg;
+   poll_throw_cfg.duts[0].poll_interval_ms = 50;
+   poll_throw_cfg.duts[0].snmp.mode = "cloud_single";
+   poll_throw_cfg.duts[0].snmp.fields = "throw_poll_error";
+   poll_throw_cfg.max_poll_Cycles = 1;
+   DataLogger dl_poll_throw(poll_throw_cfg);
+   dl_poll_throw.run(80);
+   dl_poll_throw.stop();
+   EXPECT_GE(dl_poll_throw.stats().poll_errors, 1u);
 }
 
 TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
@@ -163,6 +218,7 @@ TEST(CliRunnerCompleteTest, AllSubcommandsFlagsAndTextAndJsonModes) {
 
    // 7. run (--once text & json, continuous with --cycles and --duration-ms in text & json)
    EXPECT_EQ(CliRunner::execute({"-c", cfg_path, "--once"}).exit_code, 0);
+   EXPECT_EQ(CliRunner::execute({"-c", cfg_path, "run", "--once"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--once", "--json"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--cycles", "1", "--json"}).exit_code, 0);
    EXPECT_EQ(CliRunner::execute({"run", "-c", cfg_path, "--duration-ms", "120"}).exit_code, 0);
