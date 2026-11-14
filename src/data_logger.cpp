@@ -149,9 +149,7 @@ struct DataLogger::Impl {
    }
 
    DutConfig const& find_dut(std::string const& dut_name) const {
-      if (cfg.duts.empty()) {
-         throw ConfigError("No sensor targets configured");
-      }
+      // Impl constructor validates that cfg.duts is non-empty via validate_config().
       if (dut_name.empty()) {
          return cfg.duts.front();
       }

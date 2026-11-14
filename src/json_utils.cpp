@@ -190,9 +190,8 @@ class Parser {
    }
 
    std::string parse_string() {
-      if (get() != '"') {
-         throw error("expected '\"'");
-      }
+      // Callers (parse_value and parse_object) already verify peek() == '"'.
+      get();
       std::string out;
       while (true) {
          char c = get();
