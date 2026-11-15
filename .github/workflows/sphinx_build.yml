@@ -7,27 +7,47 @@ concurrency:
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   release:
     types: [published]
   workflow_dispatch:
 
 jobs:
+  verify-syntax:
+    permissions:
+      contents: read
+    uses: ./.github/workflows/verify_syntax.yml
+
   sphinx_docs_build:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    needs: verify-syntax
+    if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
       contents: read
     steps:
       - name: Check out repository code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Check out purpleair_api C++17 base layer (v2026.11.11a2)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: carlkidcrypto/purpleair_api
+          ref: v2026.11.11a2
+          path: third_party/purpleair_api
 
       - name: Set up Python 3.14 for Sphinx
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
 
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config
+
       - name: Cache pip dependencies
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
@@ -37,10 +57,11 @@ jobs:
 
       - name: Install documentation requirements
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           python -m pip install -r sphinx_docs_build/requirements.txt
           python -m pip install -r sphinx_docs_build/landing/requirements.txt
-          python -m pip install .
+          python -m pip install ./third_party/purpleair_api/python
+          python -m pip install --no-build-isolation .
 
       - name: Build latest documentation
         run: |
@@ -50,14 +71,16 @@ jobs:
           make -C sphinx_docs_build html SPHINXOPTS="-W"
           make -C sphinx_docs_build/landing clean
           make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
+          touch docs/.nojekyll
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v5
+        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: docs/
 
   deploy_pages:
-    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
     needs: sphinx_docs_build
     runs-on: ubuntu-latest
     permissions:
@@ -67,9 +90,10 @@ jobs:
       name: github-pages
     steps:
       - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
 
   sphinx_docs_build_release:
+    needs: verify-syntax
     if: github.event_name == 'release'
     runs-on: ubuntu-latest
     permissions:
@@ -77,76 +101,78 @@ jobs:
       pull-requests: write
     steps:
       - name: Check out repository code at release tag
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
 
+      - name: Check out purpleair_api C++17 base layer (v2026.11.11a2)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: carlkidcrypto/purpleair_api
+          ref: v2026.11.11a2
+          path: third_party/purpleair_api
+
       - name: Set up Python 3.14 for Sphinx
-        uses: actions/setup-python@v7
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
           python-version: "3.14"
 
+      - name: Install native build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config
+
+      - name: Cache pip dependencies
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-sphinx-
+            ${{ runner.os }}-pip-
+
       - name: Install documentation requirements
         run: |
-          python -m pip install --upgrade pip
+          python -m pip install --upgrade pip setuptools wheel
           python -m pip install -r sphinx_docs_build/requirements.txt
           python -m pip install -r sphinx_docs_build/landing/requirements.txt
-          python -m pip install .
+          python -m pip install ./third_party/purpleair_api/python
+          python -m pip install --no-build-isolation .
 
       - name: Build versioned documentation
         env:
           VERSION: ${{ github.event.release.tag_name }}
-        run: sphinx-build -b html -W sphinx_docs_build/source "/tmp/html_${VERSION}/"
+        run: |
+          mkdir -p sphinx_docs_build/source/_static sphinx_docs_build/source/_templates
+          sphinx-build -b html -W sphinx_docs_build/source "/tmp/html_${VERSION}/"
 
       - name: Switch to main branch and copy versioned documentation
         env:
           VERSION: ${{ github.event.release.tag_name }}
         run: |
+          CLEAN_VER=$(echo "${VERSION}" | sed -E 's/^[vV]//')
+          NORM_VERSION="html_v${CLEAN_VER}"
           git fetch origin main
           git checkout main
           git pull origin main
-          rm -rf "docs/html_${VERSION}"
-          cp -r "/tmp/html_${VERSION}" "docs/html_${VERSION}"
+          mkdir -p docs
+          rm -rf "docs/${NORM_VERSION}"
+          cp -r "/tmp/html_${VERSION}" "docs/${NORM_VERSION}"
 
       - name: Update landing page version list
-        run: |
-          python - <<'PY'
-          import pathlib
-          import re
-
-          docs_dir = pathlib.Path("docs")
-          index_rst = pathlib.Path("sphinx_docs_build/landing/source/index.rst")
-          versions = sorted(
-              (directory.name for directory in docs_dir.iterdir()
-               if directory.is_dir() and directory.name.startswith("html_v")),
-              reverse=True,
-          )
-          entries = ["* `Latest Version <./html/index.html>`_"]
-          entries.extend(
-              f"* `{version.removeprefix('html_')} <./{version}/index.html>`_"
-              for version in versions
-          )
-          content = index_rst.read_text(encoding="utf-8")
-          updated, replacements = re.subn(
-              r"\.\. VERSION_LIST_START\n.*?\.\. VERSION_LIST_END",
-              ".. VERSION_LIST_START\n\n" + "\n".join(entries) + "\n\n.. VERSION_LIST_END",
-              content,
-              flags=re.DOTALL,
-          )
-          if replacements != 1:
-              raise SystemExit("Version list sentinels not found exactly once")
-          index_rst.write_text(updated, encoding="utf-8")
-          PY
+        run: python .github/scripts/update_landing_versions.py
 
       - name: Build landing page with updated version list
         run: |
+          mkdir -p sphinx_docs_build/landing/source/_static sphinx_docs_build/landing/source/_templates
           make -C sphinx_docs_build/landing clean
           make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
+          touch docs/.nojekyll
 
       - name: Create pull request with versioned docs
-        uses: peter-evans/create-pull-request@v8
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs: add versioned documentation for ${{ github.event.release.tag_name }}"

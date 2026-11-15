@@ -81,9 +81,12 @@ def _configure_extension() -> list[Extension]:
         "src/sink_inspector.cpp",
         "src/data_logger.cpp",
         "src/cli_runner.cpp",
-        str(sqlite_dir.relative_to(ROOT) / "sqlite3.c"),
+        (sqlite_dir.resolve().relative_to(ROOT.resolve()) / "sqlite3.c").as_posix(),
     ]
-    include_dirs = ["include", str(sqlite_dir.relative_to(ROOT))]
+    include_dirs = [
+        "include",
+        sqlite_dir.resolve().relative_to(ROOT.resolve()).as_posix(),
+    ]
     library_dirs: list[str] = []
     libraries: list[str] = []
     define_macros: list[tuple[str, str | None]] = [
@@ -113,17 +116,29 @@ def _configure_extension() -> list[Extension]:
             or Path("/usr/include/x86_64-linux-gnu/curl/curl.h").is_file()
         )
         if has_curl:
-            include_dirs.append(str(pa_root / "swig" / "include"))
+            resolved_pa = pa_root.resolve()
+            resolved_root = ROOT.resolve()
+            if resolved_pa.is_relative_to(resolved_root):
+                pa_rel_posix = resolved_pa.relative_to(resolved_root).as_posix()
+            else:
+                staged_swig = resolved_root / "third_party" / "purpleair_api" / "swig"
+                if not (staged_swig / "src" / "PurpleAirAPI.cpp").is_file():
+                    staged_swig.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copytree(
+                        resolved_pa / "swig", staged_swig, dirs_exist_ok=True
+                    )
+                pa_rel_posix = "third_party/purpleair_api"
+            include_dirs.append(f"{pa_rel_posix}/swig/include")
             include_dirs.extend(curl_inc)
             library_dirs.extend(curl_libdirs)
             libraries.extend(curl_libs if curl_libs else ["curl"])
             sources.extend(
                 [
-                    str(pa_root / "swig" / "src" / "PurpleAirAPI.cpp"),
-                    str(pa_root / "swig" / "src" / "PurpleAirAPIHelpers.cpp"),
-                    str(pa_root / "swig" / "src" / "PurpleAirReadAPI.cpp"),
-                    str(pa_root / "swig" / "src" / "PurpleAirWriteAPI.cpp"),
-                    str(pa_root / "swig" / "src" / "PurpleAirLocalAPI.cpp"),
+                    f"{pa_rel_posix}/swig/src/PurpleAirAPI.cpp",
+                    f"{pa_rel_posix}/swig/src/PurpleAirAPIHelpers.cpp",
+                    f"{pa_rel_posix}/swig/src/PurpleAirReadAPI.cpp",
+                    f"{pa_rel_posix}/swig/src/PurpleAirWriteAPI.cpp",
+                    f"{pa_rel_posix}/swig/src/PurpleAirLocalAPI.cpp",
                 ]
             )
             define_macros.append(("PURPLEAIR_DL_HAVE_PURPLEAIR_API", "1"))
