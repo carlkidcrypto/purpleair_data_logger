@@ -1,30 +1,37 @@
-{{ range .Versions }}
+# Changelog
+
+{{ range .Versions -}}
 <a name="{{ .Tag.Name }}"></a>
-## {{ if .Tag.Previous }}[{{ .Tag.Name }}]{{ else }}{{ .Tag.Name }}{{ end }} - {{ datetime "2006-01-02" .Tag.Date }}
-
-{{ range .CommitGroups -}}
-### {{ .Title }}
-
-{{ range .Commits -}}
-* {{ if .Scope }}**{{ .Scope }}:** {{ end }}{{ .Subject }}
+## {{ if .Tag.Previous }}[{{ .Tag.Name }}]({{ $.Info.RepositoryURL }}/compare/{{ .Tag.Previous.Name }}...{{ .Tag.Name }}){{ else }}{{ .Tag.Name }}{{ end }} ({{ datetime "2006-01-02" .Tag.Date }})
+{{ if .CommitGroups }}
+### Changes
+{{ range .CommitGroups }}
+#### {{ .Title }}
+{{ range .Commits }}
+- {{ .Subject -}}
 {{ end }}
 {{ end -}}
-
-{{- if .RevertCommits -}}
-### Reverts
-
-{{ range .RevertCommits -}}
-* {{ .Revert.Header }}
+{{ end -}}
+{{ if .RevertCommits }}
+### Reverted Changes
+{{ range .RevertCommits }}
+- {{ .Revert.Header -}}
 {{ end }}
 {{ end -}}
-
-{{- if .NoteGroups -}}
-{{ range .NoteGroups -}}
-### {{ .Title }}
-
+{{ if .MergeCommits }}
+### Merged Pull Requests
+{{ range .MergeCommits }}
+- {{ .Header -}}
+{{ end }}
+{{ end -}}
+{{ if .NoteGroups }}
+### Release Notes
+{{ range .NoteGroups }}
+#### {{ .Title }}
 {{ range .Notes }}
-{{ .Body }}
+- {{ .Body -}}
 {{ end }}
 {{ end -}}
-{{ end -}}
+{{ end }}
+---
 {{ end -}}

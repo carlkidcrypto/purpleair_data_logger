@@ -1,39 +1,57 @@
 ---
 name: Update Changelog
+
 concurrency:
-  group: ${{ github.workflow }}
+  group: auto_change_log
   cancel-in-progress: false
+
 on:
   release:
     types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Optional tag to validate/include in the changelog range"
+        required: false
+        type: string
   skip-if-match:
     query: 'is:pr is:open head:automation/update-changelog label:documentation label:automated-pr'
+
 permissions:
   actions: read
   contents: read
   copilot-requests: write
+
 safe-outputs:
   noop:
     report-as-issue: true
   create-pull-request:
     title-prefix: "[changelog] "
-    labels: [documentation, automated-pr]
+    base-branch: main
+    protected-files: allowed
+    labels:
+      - documentation
+      - automated-pr
     draft: false
     preserve-branch-name: true
-    if-no-changes: "ignore"
+    if-no-changes: ignore
+
 timeout-minutes: 15
 max-ai-credits: 25
+
+network:
+  allowed: [defaults, github, go, api.github.com]
+
+tools:
+  bash: true
+
 model: sonnet
 engine:
   id: copilot
   args: ["--allow-all-tools"]
-network:
-  allowed: [defaults, github, go, api.github.com]
-tools:
-  bash: true
 ---
 
-# Smart Changelog Update
+## Smart Changelog Update
 
 Generate and open a changelog update PR only when substantive changelog content has changed.
 
@@ -60,18 +78,19 @@ Generate and open a changelog update PR only when substantive changelog content 
    - After installation, verify it works: `git-chglog --version`
    - **If git-chglog cannot be installed by either method, stop immediately with a clear error message. Do NOT attempt to re-implement changelog generation using Python, shell, or any other scripting language.**
 
-2. Generate candidate changelog content:
+2. Generate candidate changelog content and validate non-empty output:
    - `git-chglog --config .chglog/config.yml -o CHANGELOG.tmp`
+   - Verify that the latest tag section in `CHANGELOG.tmp` (between the first `<a name=` heading and the first `---` separator) is non-empty and contains at least one commit bullet (`^- `). If the latest section is empty, stop immediately with a clear error message and do not open a PR.
 
 3. Build commit intelligence context for summary quality:
-   - Identify the current release tag from the triggering release.
+   - Identify the current release tag from the triggering release (or from `workflow_dispatch` `inputs.tag` if provided, otherwise the latest git tag).
    - Determine whether the triggering release is a prerelease (`prerelease: true|false`) from the GitHub release payload.
    - Select a comparison base using this priority order (first match wins):
-     1) If the release body contains `<!-- BASE_TAG: <tag> -->`, use `<tag>`.
-     2) For stable releases, use the most recent earlier stable release tag by publish date.
-     3) For prereleases, use the most recent earlier release tag (stable or prerelease) by publish date.
-     4) Fallback: choose the nearest lower semantic-version tag from git.
-     5) Final fallback: use the repository root commit (`git rev-list --max-parents=0 HEAD`).
+     1. If the release body contains `<!-- BASE_TAG: <tag> -->`, use `<tag>`.
+     2. For stable releases, use the most recent earlier stable release tag by publish date.
+     3. For prereleases, use the most recent earlier release tag (stable or prerelease) by publish date.
+     4. Fallback: choose the nearest lower semantic-version tag from git.
+     5. Final fallback: use the repository root commit (`git rev-list --max-parents=0 HEAD`).
    - Validate that base and current are not equal; if equal, walk backward one more release/tag.
    - Extract commit titles and full commit messages from `<base>..<current>` using local git only:
      - `git log <base>..<current> --pretty=format:"%H%x09%s%x09%b"`
