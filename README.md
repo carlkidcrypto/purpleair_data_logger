@@ -2,10 +2,9 @@
 
 A set of data logger(s) that will query PurpleAir sensor(s) for data. That data can be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, or a Grafana Loki instance; exposed as Prometheus metrics; or converted to Matter-shaped device JSON over HTTP. Cloud requests require a PurpleAir API key. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to. Local-network requests use sensor IPv4 addresses instead.
 
-[![Tests](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml)
-[![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml)
-[![Sphinx Docs](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml)
-[![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment)
+[![Tests](https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/tests.yml?branch=main&style=flat-square&label=Tests)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml)
+[![Black](https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/black.yml?branch=main&style=flat-square&label=Black)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml)
+[![Sphinx Docs](https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/sphinx_build.yml?branch=main&style=flat-square&label=Sphinx%20Docs)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml)
 
 [![Codecov](https://img.shields.io/codecov/c/github/carlkidcrypto/purpleair_data_logger/main?style=flat-square&label=Codecov)](https://codecov.io/gh/carlkidcrypto/purpleair_data_logger)
 [![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger)
@@ -15,10 +14,9 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 
 [![PyPI Version](https://img.shields.io/pypi/v/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
 [![PyPI Downloads](https://img.shields.io/pypi/dm/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
-[![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
-[![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml)
+[![PyPI Distributions](https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_pypi.yml?style=flat-square&label=PyPI%20Distributions)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
+[![TestPyPI Distributions](https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_test_pypi.yml?branch=main&style=flat-square&label=TestPyPI%20Distributions)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml)
 
-[![Python Versions](https://img.shields.io/pypi/pyversions/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
 [![License](https://img.shields.io/github/license/carlkidcrypto/purpleair_data_logger?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/LICENSE)
 
 ## How to Support This Project
