@@ -62,8 +62,8 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
         :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses with no CIDRs.
-        :param str path_to_save_csv_files_in: A string directory path
-                                                 to save files in.
+        :param str path_to_save_csv_files_in: A directory path to save the CSV files in.
+                                              It is created if it does not exist.
         """
 
         # Inherit everything from the parent base class: PurpleAirDataLogger
@@ -103,7 +103,7 @@ class PurpleAirCSVDataLogger(PurpleAirDataLogger):
 
     def store_sensor_data(self, single_sensor_data_dict):
         """
-        Insert the sensor data into CSV files.
+        Append the sensor data to the CSV files in ``path_to_save_csv_files_in``.
 
         :param dict single_sensor_data_dict: A python dictionary containing all fields
                                              for insertion. If a sensor doesn't support
