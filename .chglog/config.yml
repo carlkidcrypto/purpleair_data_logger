@@ -4,39 +4,36 @@ info:
   title: CHANGELOG
   repository_url: https://github.com/carlkidcrypto/purpleair_data_logger
 options:
-  commits:
-    filters:
-      Type:
-        - feat
-        - fix
-        - perf
-        - refactor
-        - docs
-        - test
-        - build
-        - ci
-        - chore
-        - style
-        - revert
   commit_groups:
     title_maps:
       feat: Features
       fix: Bug Fixes
       perf: Performance Improvements
       refactor: Code Refactoring
-      docs: Documentation
-      test: Tests
+      docs: Documentation Updates
+      chore: Maintenance
       build: Build System
       ci: Continuous Integration
-      chore: Chores
+      test: Tests
       style: Styles
       revert: Reverts
+      Bump: Dependency Updates
+      Release: Releases
+      Add: Additions
+      Fix: Bug Fixes
+      Update: Updates
+      Refactor: Code Refactoring
+      Document: Documentation Updates
+      Enhance: Enhancements
+      Hotfix: Hotfixes
+      Initial: Initial Commits
+      Merge: Merges
+      other: Other Changes
   header:
-    pattern: "^(\\w*)(?:\\(([\\w\\$\\.\\-\\*\\s]*)\\))?\\:\\s(.*)$"
+    pattern: "^\\s*((?:\\[[^\\]]+\\]\\s*)?([\\w]*)(?:\\([^)]*\\))?!?.*)$"
     pattern_maps:
-      - Type
-      - Scope
       - Subject
+      - Type
   notes:
     keywords:
       - BREAKING CHANGE
