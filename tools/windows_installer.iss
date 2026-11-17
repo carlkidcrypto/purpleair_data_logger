@@ -44,7 +44,7 @@ Source: "{#SourceExe}"; DestDir: "{app}"; DestName: "PurpleAirDataLogger.exe"; F
 Source: "{#SourceExe}"; DestDir: "{app}"; DestName: "purpleair-data-logger.exe"; Flags: ignoreversion
 Source: "..\purpleair_data_logger\gui\static\app_icon.ico"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "..\README.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "..\README.rst"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 Name: "{autoprograms}\PurpleAir Data Logger"; Filename: "{app}\PurpleAirDataLogger.exe"; IconFilename: "{app}\app_icon.ico"

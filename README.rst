@@ -1,0 +1,520 @@
+Purple Air Data Logger(s) (PADLs)
+=================================
+
+A set of data logger(s) that will query PurpleAir sensor(s) for data. That data can be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, or a Grafana Loki instance; exposed as Prometheus metrics; or converted to Matter-shaped device JSON over HTTP. Cloud requests require a PurpleAir API key. You can get API keys by sending an email to ``contact@purpleair.com`` with a first and last name to assign them to. Local-network requests use sensor IPv4 addresses instead.
+
+|Tests| |Black| |Sphinx Docs|
+
+|Codecov| |SonarCloud Quality Gate| |SonarCloud Security Rating| |SonarCloud Maintainability Rating| |CodeQL|
+
+|PyPI Version| |PyPI Downloads| |PyPI Distributions| |TestPyPI Distributions|
+
+|License|
+
+.. |Tests| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/tests.yml?branch=main&style=flat-square&label=Tests
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml
+   :alt: Tests
+.. |Black| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/black.yml?branch=main&style=flat-square&label=Black
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml
+   :alt: Black
+.. |Sphinx Docs| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/sphinx_build.yml?branch=main&style=flat-square&label=Sphinx%20Docs
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml
+   :alt: Sphinx Docs
+.. |Codecov| image:: https://img.shields.io/codecov/c/github/carlkidcrypto/purpleair_data_logger/main?style=flat-square&label=Codecov
+   :target: https://codecov.io/gh/carlkidcrypto/purpleair_data_logger
+   :alt: Codecov
+.. |SonarCloud Quality Gate| image:: https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=alert_status
+   :target: https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger
+   :alt: SonarCloud Quality Gate
+.. |SonarCloud Security Rating| image:: https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=security_rating
+   :target: https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger
+   :alt: SonarCloud Security Rating
+.. |SonarCloud Maintainability Rating| image:: https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=sqale_rating
+   :target: https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger
+   :alt: SonarCloud Maintainability Rating
+.. |CodeQL| image:: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql
+   :alt: CodeQL
+.. |PyPI Version| image:: https://img.shields.io/pypi/v/purpleair_data_logger?style=flat-square
+   :target: https://pypi.org/project/purpleair_data_logger/
+   :alt: PyPI Version
+.. |PyPI Downloads| image:: https://img.shields.io/pypi/dm/purpleair_data_logger?style=flat-square
+   :target: https://pypi.org/project/purpleair_data_logger/
+   :alt: PyPI Downloads
+.. |PyPI Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_pypi.yml?style=flat-square&label=PyPI%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml
+   :alt: PyPI Distributions
+.. |TestPyPI Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_test_pypi.yml?branch=main&style=flat-square&label=TestPyPI%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml
+   :alt: TestPyPI Distributions
+.. |License| image:: https://img.shields.io/github/license/carlkidcrypto/purpleair_data_logger?style=flat-square
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/LICENSE
+   :alt: License
+
+How to Support This Project
+---------------------------
+
+.. image:: https://cdn.buymeacoffee.com/buttons/default-orange.png
+   :target: https://www.buymeacoffee.com/carlkidcrypto
+   :alt: Buy Me A Coffee
+   :height: 41px
+   :width: 174px
+
+Installation
+------------
+
+You can install the PurpleAir Data Logger via pip.
+
+.. code-block:: bash
+
+   python3 -m pip install purpleair_data_logger
+
+You can install PurpleAir Data Logger by cloning down this repo.
+
+.. code-block:: bash
+
+   git clone https://github.com/carlkidcrypto/purpleair_data_logger.git
+   cd purpleair_data_logger
+   python3 -m pip install .
+
+C++17 Telemetry Engine, SWIG 4-Language Bindings & Cross-Platform Studio GUI
+----------------------------------------------------------------------------
+
+In addition to the Python data logger classes below, ``purpleair_data_logger`` includes a self-contained **C++17 air-quality telemetry engine** built on top of `purpleair_api <https://github.com/carlkidcrypto/purpleair_api>`_\ 's C++17 core (``PurpleAirAPI``, ``PurpleAirReadAPI``, ``PurpleAirWriteAPI``, ``PurpleAirLocalAPI``) with an embedded SQLite3 amalgamation (``third_party/sqlite3/sqlite3.c``), **SWIG 4.x bindings** across 4 target languages (**Python**, **JavaScript/Node.js**, **C#/.NET**, **Go**), a unified JSON-driven CLI (``purpleair-data-logger``), and cross-platform Desktop (``tkinter.ttk``) and Browser Studio (``ThreadingHTTPServer``) GUIs (``purpleair-data-logger-gui``).
+
+Unified CLI (``purpleair-data-logger``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   # Generate a starter JSON configuration (demo | minimal | enterprise | local)
+   purpleair-data-logger init-config --template demo --output ./configs/example.json
+
+   # Validate a JSON configuration file
+   purpleair-data-logger validate --config ./configs/example.json --json
+
+   # Probe configured PurpleAir sensors
+   purpleair-data-logger probe --config ./configs/example.json --json
+
+   # Execute an on-demand sensor field request
+   purpleair-data-logger request --config ./configs/example.json --dut outdoor_patio_sensor --op get --oid pm2.5_atm --json
+
+   # Run one polling cycle or continuous streaming telemetry
+   purpleair-data-logger run --config ./configs/example.json --once --json
+
+   # Inspect recent samples stored in configured SQLite3 / CSV / JSONL sinks
+   purpleair-data-logger inspect --config ./configs/example.json --limit 25 --json
+
+Cross-Platform Desktop & Web Studio GUI (``purpleair-data-logger-gui``)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   # Auto-select native Desktop Tk Studio (or fallback to Browser Studio in headless environments)
+   purpleair-data-logger-gui -c ./configs/example.json
+
+   # Explicitly launch Browser Web Studio on http://127.0.0.1:8765
+   purpleair-data-logger gui -c ./configs/example.json --frontend web --port 8765
+
+Usage PurpleAirPSQLDataLogger.py
+--------------------------------
+
+.. code-block:: bash
+
+   usage: PurpleAirPSQLDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                     [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                     [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] [-db_drop_all_tables] -db_usr DB_USR [-db_host DB_HOST] -db DB [-db_port DB_PORT]
+                                     [-db_pwd DB_PWD]
+
+   Collect data from PurpleAir sensors and insert into a database!
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -paa_read_key PAA_READ_KEY
+                           The PurpleAirAPI Read key
+     -paa_write_key PAA_WRITE_KEY
+                           The PurpleAirAPI write key
+     -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a single sensor request.
+     -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a multiple sensor request.
+     -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a group sensor request.
+     -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a local sensor request.
+     -db_drop_all_tables   Set this flag if you wish to drop all tables before loading in new data. Useful if a database change has happened. Note: Make sure to provide a db_usr with DROP rights.
+                           WARNING: ALL COLLECTED DATA WILL BE LOST!
+     -db_usr DB_USR        The PSQL database user
+     -db_host DB_HOST      The PSQL database host
+     -db DB                The PSQL database name
+     -db_port DB_PORT      The PSQL database port number
+     -db_pwd DB_PWD        The PSQL database password
+
+Using it with single sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Using it with multiple sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirPSQLDataLogger -db_usr USER -db_host localhost -db DB_NAME -db_port 5432 -db_pwd PASSWORD -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+
+High Level Design
+^^^^^^^^^^^^^^^^^
+
+.. image:: /diagrams/PAA_Data_Logger_Software_Stack.drawio.png
+   :alt: PAA_Data_Logger_Software_Stack.drawio.png
+
+Getting Started
+^^^^^^^^^^^^^^^
+
+1. Grab and install Postgresql for your platform. https://www.postgresql.org/download/
+2. Create two database users. One for Grafana with select only privileges. The other for the data logger with only insert/create privileges. https://medium.com/coding-blocks/creating-user-database-and-adding-access-on-postgresql-8bfcd2f4a91e, https://www.techonthenet.com/postgresql/grant_revoke.php
+3. Install and configure TimescaleDB. https://docs.timescale.com/install/latest/self-hosted/
+4. Install and configure Grafana. https://grafana.com/docs/grafana/latest/setup-grafana/installation/
+5. Import into your local Grafana instance the dashboard file found `here <./grafana_dashboards/PurpleAirAPI%20(PAA)%20Data%20Logger%20Grafana%20Dashboard-1660355898051.json>`_
+
+Usage PurpleAirCSVDataLogger.py
+-------------------------------
+
+.. code-block:: bash
+
+   usage: PurpleAirCSVDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                    [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                    [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -save_file_path SAVE_FILE_PATH
+
+   Collect data from PurpleAir sensors and store it in CSV files!
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -paa_read_key PAA_READ_KEY
+                           The PurpleAirAPI Read key
+     -paa_write_key PAA_WRITE_KEY
+                           The PurpleAirAPI write key
+     -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a single sensor request.
+     -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a multiple sensor request.
+     -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a group sensor request.
+     -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a local sensor request.
+     -save_file_path SAVE_FILE_PATH
+                           The path to save CSV files in.
+
+Using it with single sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Using it with multiple sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirCSVDataLogger -save_file_path SAVE_FILE_PATH -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Usage PurpleAirSQLiteDataLogger.py
+----------------------------------
+
+.. code-block:: bash
+
+   usage: PurpleAirSQLiteDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                       [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                       [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -db_name DB_NAME
+
+   Collect data from PurpleAir sensors and store it in a SQLite3 database file!
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -paa_read_key PAA_READ_KEY
+                           The PurpleAirAPI Read key
+     -paa_write_key PAA_WRITE_KEY
+                           The PurpleAirAPI write key
+     -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a single sensor request.
+     -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a multiple sensor request.
+     -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a group sensor request.
+     -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a local sensor request.
+     -db_name DB_NAME      The path and name for the SQLite3 database file! i.e database_name.db
+
+Using it with single sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Using it with multiple sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirSQLiteDataLogger -db_name DB_NAME -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Usage PurpleAirLokiDataLogger.py
+--------------------------------
+
+.. code-block:: bash
+
+   usage: PurpleAirLokiDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                      [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                      [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] -loki_url LOKI_URL [-loki_usr LOKI_USR] [-loki_pwd LOKI_PWD]
+
+   Collect data from PurpleAir sensors and push it to a Grafana Loki instance!
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -paa_read_key PAA_READ_KEY
+                           The PurpleAirAPI Read key
+     -paa_write_key PAA_WRITE_KEY
+                           The PurpleAirAPI write key
+     -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a single sensor request.
+     -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a multiple sensor request.
+     -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a group sensor request.
+     -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a local sensor request.
+     -loki_url LOKI_URL    The base URL of the Loki instance (e.g. 'http://localhost:3100').
+     -loki_usr LOKI_USR    The Loki username for basic authentication.
+     -loki_pwd LOKI_PWD    The Loki password for basic authentication.
+
+Using it with single sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirLokiDataLogger -loki_url http://localhost:3100 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Using it with multiple sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirLokiDataLogger -loki_url http://localhost:3100 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Usage PurpleAirPrometheusDataLogger.py
+--------------------------------------
+
+.. code-block:: bash
+
+   usage: PurpleAirPrometheusDataLogger.py [-h] [-paa_read_key PAA_READ_KEY] [-paa_write_key PAA_WRITE_KEY] [-paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE]
+                                            [-paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE] [-paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE]
+                                            [-paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE] [-prometheus_port PROMETHEUS_PORT]
+
+   Collect data from PurpleAir sensors and expose it as Prometheus metrics!
+
+   optional arguments:
+     -h, --help            show this help message and exit
+     -paa_read_key PAA_READ_KEY
+                           The PurpleAirAPI Read key
+     -paa_write_key PAA_WRITE_KEY
+                           The PurpleAirAPI write key
+     -paa_single_sensor_request_json_file PAA_SINGLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a single sensor request.
+     -paa_multiple_sensor_request_json_file PAA_MULTIPLE_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a multiple sensor request.
+     -paa_group_sensor_request_json_file PAA_GROUP_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a group sensor request.
+     -paa_local_sensor_request_json_file PAA_LOCAL_SENSOR_REQUEST_JSON_FILE
+                           The path to a json file containing the parameters to send a local sensor request.
+     -prometheus_port PROMETHEUS_PORT
+                           The port number the Prometheus HTTP metrics endpoint will listen on. Defaults to 9760.
+
+Using it with single sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirPrometheusDataLogger -prometheus_port 9760 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_single_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Using it with multiple sensor requests...
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirPrometheusDataLogger -prometheus_port 9760 -paa_read_key 12345678-1234-1234-1234-123456789123 -paa_write_key 12345678-1234-1234-1234-123456789123 -paa_multiple_sensor_request_json_file PATH_TO_YOUR_FILE
+
+Usage PurpleAirMatterDataLogger.py
+----------------------------------
+
+``PurpleAirMatterDataLogger`` converts PurpleAir readings to Matter 1.5.1 Air Quality Sensor-shaped JSON and serves the latest readings through an embedded HTTP API. It does not implement Matter transport, discovery, commissioning, fabrics, or certification.
+
+.. code-block:: text
+
+   usage: PurpleAirMatterDataLogger.py [-h] [-paa_read_key PAA_READ_KEY]
+                                       [-paa_write_key PAA_WRITE_KEY]
+                                       [-paa_single_sensor_request_json_file FILE]
+                                       [-paa_multiple_sensor_request_json_file FILE]
+                                       [-paa_group_sensor_request_json_file FILE]
+                                       [-paa_local_sensor_request_json_file FILE]
+                                       [--http-host HTTP_HOST]
+                                       [--http-port HTTP_PORT] [--matter-only]
+                                       [-save_file_path SAVE_FILE_PATH]
+
+Run the continuous HTTP service with the Matter sample configuration:
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirMatterDataLogger -paa_read_key YOUR_READ_KEY -paa_multiple_sensor_request_json_file ./sample_json_config_files/sample_matter_request_json_file.json --matter-only
+
+Run against sensors on the local network without a cloud API key:
+
+.. code-block:: bash
+
+   python3 -m purpleair_data_logger.PurpleAirMatterDataLogger -paa_local_sensor_request_json_file ./sample_json_config_files/sample_local_sensor_request_json_file.json --matter-only
+
+The service binds to ``127.0.0.1:9855`` by default and provides:
+
+- ``GET /`` or ``GET /health`` for service status and converted sensor count.
+- ``GET /matter/sensors`` for all current Matter-shaped devices.
+- ``GET /matter/sensor/<sensor_index>`` for one current device.
+
+Use ``--http-host`` and ``--http-port`` to override the bind address. Binding to ``0.0.0.0`` exposes the unauthenticated, unencrypted HTTP API to reachable networks. The compatibility option ``-save_file_path`` is ignored because Matter output is served over HTTP.
+
+For one-shot conversion without an HTTP server or polling loop, use the Python API:
+
+.. code-block:: python
+
+   from purpleair_data_logger.PurpleAirMatterDataLogger import PurpleAirMatterDataLogger
+
+   matter_logger = PurpleAirMatterDataLogger(PurpleAirApiReadKey="YOUR_READ_KEY")
+   devices = matter_logger.run_once([123456])
+
+Continuous cloud configuration requires ``sensor_indexes``; local configuration requires ``sensor_ip_list``. Only one JSON configuration file may be supplied. Poll intervals below 60 seconds are clamped to 60 seconds. Individual polling failures retain the last-known-good device reading.
+
+Sample JSON Configuration File(s)
+---------------------------------
+
+The following sample json configuration files can be used with any of the data loggers.
+
+PAA Single Sensor Request Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Out of the parameters in the file below, "sensor_index" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it ``null``.
+
+See this `file <./sample_json_config_files/sample_single_sensor_request_json_file.json>`__ for an example.
+
+.. note::
+
+   ``poll_interval_seconds`` is also required. It cannot be lower than ``60``. This is a custom field not defined by the PAA documentation.
+
+   Refer to the PurpleAirAPI (PAA) documentation for more information: https://api.purpleair.com/#api-sensors-get-sensor-data
+
+PAA Multiple Sensor Request Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Out of the parameters in the file below, "fields" is required. The others are all optional according to PurpleAirAPI (PAA) documentation. If a field is not being used, mark it ``null``.
+
+See this `file <./sample_json_config_files/sample_multiple_sensor_request_json_file.json>`__ for an example.
+
+.. note::
+
+   ``poll_interval_seconds`` is also required. It cannot be lower than ``60``. This is a custom field not defined by the PAA documentation.
+
+   Refer to the PurpleAirAPI (PAA) documentation for more information: https://api.purpleair.com/#api-sensors-get-sensors-data
+
+The below snippet is taken from the PurpleAirAPI (PAA) documentation:
+
+.. code-block:: text
+
+     Field Type Description
+     fields String
+     The 'Fields' parameter specifies which 'sensor data fields' to include in the response. It is a comma separated list with one or more of the following:
+
+     Station information and status fields:
+     name, icon, model, hardware, location_type, private, latitude, longitude, altitude, position_rating, led_brightness, firmware_version, firmware_upgrade, rssi, uptime, pa_latency, memory, last_seen, last_modified, date_created, channel_state, channel_flags, channel_flags_manual, channel_flags_auto, confidence, confidence_manual, confidence_auto
+
+     Environmental fields:
+     humidity, humidity_a, humidity_b, temperature, temperature_a, temperature_b, pressure, pressure_a, pressure_b
+
+     Miscellaneous fields:
+     voc, voc_a, voc_b, ozone1, analog_input
+
+     PM1.0 fields:
+     pm1.0, pm1.0_a, pm1.0_b, pm1.0_atm, pm1.0_atm_a, pm1.0_atm_b, pm1.0_cf_1, pm1.0_cf_1_a, pm1.0_cf_1_b
+
+     PM2.5 fields:
+     pm2.5_alt, pm2.5_alt_a, pm2.5_alt_b, pm2.5, pm2.5_a, pm2.5_b, pm2.5_atm, pm2.5_atm_a, pm2.5_atm_b, pm2.5_cf_1, pm2.5_cf_1_a, pm2.5_cf_1_b
+
+     PM2.5 pseudo (simple running) average fields:
+     pm2.5_10minute, pm2.5_10minute_a, pm2.5_10minute_b, pm2.5_30minute, pm2.5_30minute_a, pm2.5_30minute_b, pm2.5_60minute, pm2.5_60minute_a, pm2.5_60minute_b, pm2.5_6hour, pm2.5_6hour_a, pm2.5_6hour_b, pm2.5_24hour, pm2.5_24hour_a, pm2.5_24hour_b, pm2.5_1week, pm2.5_1week_a, pm2.5_1week_b
+
+     PM10.0 fields:
+     pm10.0, pm10.0_a, pm10.0_b, pm10.0_atm, pm10.0_atm_a, pm10.0_atm_b, pm10.0_cf_1, pm10.0_cf_1_a, pm10.0_cf_1_b
+
+     Visibility fields:
+     scattering_coefficient, scattering_coefficient_a, scattering_coefficient_b, deciviews, deciviews_a, deciviews_b, visual_range, visual_range_a, visual_range_b
+
+     Particle count fields:
+     0.3_um_count, 0.3_um_count_a, 0.3_um_count_b, 0.5_um_count, 0.5_um_count_a, 0.5_um_count_b, 1.0_um_count, 1.0_um_count_a, 1.0_um_count_b, 2.5_um_count, 2.5_um_count_a, 2.5_um_count_b, 5.0_um_count, 5.0_um_count_a, 5.0_um_count_b, 10.0_um_count, 10.0_um_count_a, 10.0_um_count_b
+
+     ThingSpeak fields, used to retrieve data from api.thingspeak.com:
+     primary_id_a, primary_key_a, secondary_id_a, secondary_key_a, primary_id_b, primary_key_b, secondary_id_b, secondary_key_b
+
+     For field descriptions, please see the 'sensor data fields'. section.
+
+     location_type optional Number
+     The location_type of the sensors.
+     Possible values are: 0 = Outside or 1 = Inside.
+
+     read_keys optional String
+     A read_key is required for private devices. It is separate to the api_key and each sensor has its own read_key. Submit multiple keys by separating them with a comma (,) character for example: key-one,key-two,key-three.
+
+     show_only optional String
+     A comma (,) separated list of sensor_index values. When provided, the results are limited only to the sensors included in this list.
+
+     modified_since optional long
+     The modified_since parameter causes only sensors modified after the provided time stamp to be included in the results. Using the time_stamp value from a previous call (recommended) will limit results to those with new values since the last request. Using a value of 0 will match sensors modified at any time.
+
+     max_age optional Integer
+     Filter results to only include sensors modified or updated within the last number of seconds. Using a value of 0 will match sensors of any age.
+
+     Default value: 604800
+
+     nwlng optional Number
+     A north west longitude for the bounding box.
+
+     Use a bounding box to limit the sensors returned to a specific geographic area. The bounding box is defined by two points, a north west latitude/longitude and a south east latitude/longitude.
+
+     nwlat optional Number
+     A north west latitude for the bounding box.
+
+     selng optional Number
+     A south east longitude for the bounding box.
+
+     selat optional Number
+     A south east latitude for the bounding box.
+
+PAA Group Sensor Request Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Out of the parameters in the file below ``sensor_group_name``, ``add_sensors_to_group``, and ``sensor_index_list`` are custom settings not defined in the official PAA documentation. These three setting help drive the ``group`` request feature.
+
+``sensor_group_name`` - This will be the name assigned to your group. If it doesn't exist already, it will be created.
+Otherwise, the first group matching the name will be used.
+
+``add_sensors_to_group`` - If true, adds the sensors in the ``sensor_index_list`` to the group. If false, ``sensor_index_list`` is ignored.
+
+``sensor_index_list`` - A list of sensor indexes that will be added to your group if they don't already exist.
+
+The rest of the settings are official PAA settings. They are the same as the `PAA Multiple Sensor Request Example`_. Refer above for details.
+
+.. note::
+
+   ``poll_interval_seconds`` is also required. It cannot be lower than ``60``. This is a custom field not defined by the PAA documentation.
+
+See this `file <./sample_json_config_files/sample_group_sensor_request_json_file.json>`__ for an example.
+
+PAA Local Sensor Request Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Out of the parameters in the file below all are custom settings and are required.
+
+``sensor_ip_list`` - A string list of IPv4 addresses with no CIDR.
+
+``poll_interval_seconds`` - The poll interval to get information from local sensors on the network.
+
+See this `file <./sample_json_config_files/sample_local_sensor_request_json_file.json>`__ for an example.
