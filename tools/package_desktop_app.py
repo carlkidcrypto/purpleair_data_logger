@@ -323,9 +323,9 @@ def package_windows_artifacts(
             license_file = REPO_ROOT / "LICENSE"
             if license_file.is_file():
                 zf.write(license_file, arcname="LICENSE")
-            readme_file = REPO_ROOT / "README.md"
+            readme_file = REPO_ROOT / "README.rst"
             if readme_file.is_file():
-                zf.write(readme_file, arcname="README.md")
+                zf.write(readme_file, arcname="README.rst")
         results.append(zpath)
 
     if not skip_installer:
@@ -439,7 +439,7 @@ StartupWMClass=PurpleAirDataLogger
 
     icon_src = REPO_ROOT / "purpleair_data_logger" / "gui" / "static" / "app_icon.png"
     license_src = REPO_ROOT / "LICENSE"
-    readme_src = REPO_ROOT / "README.md"
+    readme_src = REPO_ROOT / "README.rst"
 
     tar_path = dist_dir / f"PurpleAirDataLogger-Linux-{arch}.tar.gz"
     with tarfile.open(tar_path, "w:gz") as tar:
@@ -450,7 +450,7 @@ StartupWMClass=PurpleAirDataLogger
         if license_src.is_file():
             tar.add(license_src, arcname="LICENSE")
         if readme_src.is_file():
-            tar.add(readme_src, arcname="README.md")
+            tar.add(readme_src, arcname="README.rst")
     results.append(tar_path)
 
     deb_arch = "amd64" if arch in ("x64", "x86_64") else arch
@@ -513,7 +513,12 @@ Homepage: https://carlkidcrypto.github.io/purpleair_data_logger/
         if readme_src.is_file():
             shutil.copy2(
                 readme_src,
-                staging / "usr" / "share" / "doc" / "PurpleAirDataLogger" / "README.md",
+                staging
+                / "usr"
+                / "share"
+                / "doc"
+                / "PurpleAirDataLogger"
+                / "README.rst",
             )
 
         build_deb_package(staging, deb_out)
