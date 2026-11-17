@@ -2,14 +2,24 @@
 
 A set of data logger(s) that will query PurpleAir sensor(s) for data. That data can be stored in a TimescaleDB PostgreSQL database, CSV files, a SQLite3 database, or a Grafana Loki instance; exposed as Prometheus metrics; or converted to Matter-shaped device JSON over HTTP. Cloud requests require a PurpleAir API key. You can get API keys by sending an email to `contact@purpleair.com` with a first and last name to assign them to. Local-network requests use sensor IPv4 addresses instead.
 
-| [![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml) | [![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml) | [![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml) |
-| --------------- | --------------- | --------------- |
+[![Tests](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/tests.yml)
+[![Black](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/black.yml)
+[![Sphinx Docs](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml)
+[![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment)
 
-| [![Pull Request Sphinx Docs Check](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/sphinx_build.yml) | [![pages-build-deployment](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/pages/pages-build-deployment) | [![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql) | [![total download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/total.svg?style=flat-square&label=all%20downloads)](https://github.com/carlkidcrypto/purpleair_data_logger/releases) |
-| --------------- | --------------- | --------------- | --------------- |
+[![Codecov](https://img.shields.io/codecov/c/github/carlkidcrypto/purpleair_data_logger/main?style=flat-square&label=Codecov)](https://codecov.io/gh/carlkidcrypto/purpleair_data_logger)
+[![SonarCloud Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger)
+[![SonarCloud Security Rating](https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=security_rating)](https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger)
+[![SonarCloud Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=carlkidcrypto_purpleair_data_logger&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=carlkidcrypto_purpleair_data_logger)
+[![CodeQL](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/github-code-scanning/codeql)
 
-[![latest release download count](https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/v2026.11.3a0/total.svg?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/releases/tag/v2026.11.3a0) |
-| --------------- |
+[![PyPI Version](https://img.shields.io/pypi/v/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
+[![PyPI Downloads](https://img.shields.io/pypi/dm/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
+[![PyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_pypi.yml)
+[![TestPyPI Distributions](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml/badge.svg)](https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml)
+
+[![Python Versions](https://img.shields.io/pypi/pyversions/purpleair_data_logger?style=flat-square)](https://pypi.org/project/purpleair_data_logger/)
+[![License](https://img.shields.io/github/license/carlkidcrypto/purpleair_data_logger?style=flat-square)](https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/LICENSE)
 
 ## How to Support This Project
 
