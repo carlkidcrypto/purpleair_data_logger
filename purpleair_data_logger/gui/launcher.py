@@ -73,9 +73,9 @@ def _install_macos_app_bundle(target_dir: Path | None = None) -> Path:
     <key>CFBundleIdentifier</key>
     <string>com.carlkidcrypto.purpleair-data-logger-studio</string>
     <key>CFBundleVersion</key>
-    <string>2026.11.3a0</string>
+    <string>2026.11.18</string>
     <key>CFBundleShortVersionString</key>
-    <string>2026.11.3a0</string>
+    <string>2026.11.18</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleExecutable</key>

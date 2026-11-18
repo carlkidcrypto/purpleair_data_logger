@@ -2,7 +2,7 @@
 ; Cross-platform PurpleAir Air-Quality Telemetry Engine
 
 #ifndef AppVersion
-#define AppVersion "2026.11.3a0"
+#define AppVersion "2026.11.18"
 #endif
 
 #ifndef SourceExe
