@@ -38,7 +38,7 @@ TEST(VersionCompleteTest, AllCalSemVerBranches) {
    EXPECT_FALSE(is_valid_calsemver("2026.11.03"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.32"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3.01"));
-   EXPECT_FALSE(is_valid_calsemver("2026.11.18-alpha.0"));
+   EXPECT_FALSE(is_valid_calsemver("2025.11.3a0-alpha.0"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3x0"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3a"));
    EXPECT_FALSE(is_valid_calsemver("2026.11.3-unknown"));
