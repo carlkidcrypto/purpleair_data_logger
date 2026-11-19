@@ -22,6 +22,10 @@ class PurpleAirDataLoggerError(Exception):
     """
 
     def __init__(self, message_string):
+        """
+        :param str message_string: A human readable description of the error.
+        """
+
         self.message = message_string
         super().__init__(self.message)
 
@@ -29,7 +33,7 @@ class PurpleAirDataLoggerError(Exception):
 class PurpleAirDataLogger:
     """
     The Base Data Logger class. Will define common methods used by other data loggers. For
-    example, PSQLDataLogger, CSVDataLogger, or SQLiteDataLogger. Inheritors of this class
+    example, PurpleAirPSQLDataLogger, PurpleAirCSVDataLogger, or PurpleAirSQLiteDataLogger. Inheritors of this class
     will only need to define their own 'store_sensor_data' method.
     """
 
@@ -42,7 +46,9 @@ class PurpleAirDataLogger:
         """
         :param str PurpleAirApiReadKey: A valid PurpleAirAPI Read key
         :param str PurpleAirApiWriteKey: A valid PurpleAirAPI Write key
-        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses for local sensor access
+        :param list PurpleAirApiIpv4Address: A list of valid IPv4 string addresses for local sensor access.
+                                             A single string is also accepted and is wrapped in a list.
+                                             When provided, one PurpleAirAPI instance is created per address.
 
         The polling interval defaults to 65 seconds.
         """
