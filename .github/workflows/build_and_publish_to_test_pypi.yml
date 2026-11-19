@@ -1,53 +1,35 @@
+---
 # Refer to the following link for help
 # https://packaging.python.org/en/latest/guides/publishing-package-distribution-releases-using-github-actions-ci-cd-workflows/
 
 name: TestPyPI Distributions
-permissions:
-  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  check-source-changes:
-    runs-on: ubuntu-latest
-    outputs:
-      run_job: ${{ steps.changed-files.outputs.any_changed }}
-    steps:
-      - name: Checkout Sourcecode
-        uses: actions/checkout@v7
-
-      - name: Check for changes in setup.py/cfg
-        id: changed-files
-        uses: tj-actions/changed-files@v47.0.6
-        with:
-          files: |
-            .github/workflows/build_and_publish_to_test_pypi.yml
-            .github/actions/build-distribution/action.yml
-            setup.py
-            setup.cfg
-
-  build-n-publish-test-pypi:
-    name: Build and Publish To Test PyPi
-    runs-on: ubuntu-latest
-    environment: build_and_publish_to_test_pypi
+  publish-test-pypi:
     permissions:
+      contents: read
       id-token: write
-    needs: check-source-changes
-    if: needs.check-source-changes.outputs.run_job == 'true' || github.event_name == 'workflow_dispatch'
-
-    steps:
-      - uses: actions/checkout@v7
-      - name: Build distribution
-        uses: ./.github/actions/build-distribution
-
-      - name: Publish distribution 📦 to Test PyPI
-        uses: pypa/gh-action-pypi-publish@release/v1.14
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
-          print-hash: true
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_pypi_publish.yml@14e025f6c182b7b20718538f533ca467a9ff9c6c
+    with:
+      target: testpypi
+      environment-name: build_and_publish_to_test_pypi
+      build-mode: pure-python
+      python-version: '3.14'
+      check-changes: true
+      changed-files-patterns: |
+        .github/workflows/build_and_publish_to_test_pypi.yml
+        setup.py
+        setup.cfg
+      skip-existing: true

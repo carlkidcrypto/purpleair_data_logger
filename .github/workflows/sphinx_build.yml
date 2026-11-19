@@ -1,3 +1,4 @@
+---
 name: Sphinx Docs Build
 
 concurrency:
@@ -13,6 +14,9 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   verify-syntax:
     permissions:
@@ -22,75 +26,26 @@ jobs:
   sphinx_docs_build:
     needs: verify-syntax
     if: github.event_name == 'push' || github.event_name == 'pull_request' || github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
     permissions:
       contents: read
-    steps:
-      - name: Check out repository code
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Check out purpleair_api C++17 base layer (v2026.11.11a2)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.11a2
-          path: third_party/purpleair_api
-
-      - name: Set up Python 3.14 for Sphinx
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
-        with:
-          python-version: "3.14"
-
-      - name: Install native build dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config
-
-      - name: Cache pip dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-sphinx-
-            ${{ runner.os }}-pip-
-
-      - name: Install documentation requirements
-        run: |
-          python -m pip install --upgrade pip setuptools wheel
-          python -m pip install -r sphinx_docs_build/requirements.txt
-          python -m pip install -r sphinx_docs_build/landing/requirements.txt
-          python -m pip install ./third_party/purpleair_api/python
-          python -m pip install --no-build-isolation .
-
-      - name: Build latest documentation
-        run: |
-          mkdir -p sphinx_docs_build/source/_static sphinx_docs_build/source/_templates
-          mkdir -p sphinx_docs_build/landing/source/_static sphinx_docs_build/landing/source/_templates
-          make -C sphinx_docs_build clean
-          make -C sphinx_docs_build html SPHINXOPTS="-W"
-          make -C sphinx_docs_build/landing clean
-          make -C sphinx_docs_build/landing html SPHINXOPTS="-W"
-          touch docs/.nojekyll
-
-      - name: Upload artifact for GitHub Pages
-        if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
-        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
-        with:
-          path: docs/
-
-  deploy_pages:
-    if: (github.event_name == 'push' && github.ref == 'refs/heads/main') || github.event_name == 'workflow_dispatch'
-    needs: sphinx_docs_build
-    runs-on: ubuntu-latest
-    permissions:
       pages: write
       id-token: write
-    environment:
-      name: github-pages
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@14e025f6c182b7b20718538f533ca467a9ff9c6c
+    with:
+      python-version: '3.14'
+      docs-dir: sphinx_docs_build
+      requirements-file: sphinx_docs_build/requirements.txt
+      extra-requirements-file: sphinx_docs_build/landing/requirements.txt
+      output-dir: docs
+      landing-dir: sphinx_docs_build/landing
+      deploy-pages: true
+      pre-build-cmd: >-
+        git clone --depth 1 --branch v2026.11.11a2 https://github.com/carlkidcrypto/purpleair_api.git third_party/purpleair_api &&
+        sudo apt-get update &&
+        sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config &&
+        python -m pip install --upgrade pip setuptools wheel &&
+        python -m pip install ./third_party/purpleair_api/python &&
+        python -m pip install --no-build-isolation .
 
   sphinx_docs_build_release:
     needs: verify-syntax
@@ -101,21 +56,21 @@ jobs:
       pull-requests: write
     steps:
       - name: Check out repository code at release tag
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           fetch-depth: 0
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
 
       - name: Check out purpleair_api C++17 base layer (v2026.11.11a2)
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: carlkidcrypto/purpleair_api
           ref: v2026.11.11a2
           path: third_party/purpleair_api
 
       - name: Set up Python 3.14 for Sphinx
-        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0  # v7.1.0
         with:
           python-version: "3.14"
 
@@ -125,7 +80,7 @@ jobs:
           sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config
 
       - name: Cache pip dependencies
-        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9  # v6.1.0
         with:
           path: ~/.cache/pip
           key: ${{ runner.os }}-pip-sphinx-${{ hashFiles('sphinx_docs_build/requirements.txt', 'sphinx_docs_build/landing/requirements.txt') }}
@@ -172,7 +127,7 @@ jobs:
           touch docs/.nojekyll
 
       - name: Create pull request with versioned docs
-        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1 # v8
+        uses: peter-evans/create-pull-request@3ffccacd46053766916f087ce41d627c0b8cf2d1  # v8
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "docs: add versioned documentation for ${{ github.event.release.tag_name }}"
