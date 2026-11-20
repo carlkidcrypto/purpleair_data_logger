@@ -13,7 +13,6 @@ on:
       - '!.github/workflows/*.lock.yml'
       - '!.github/workflows/*.lock.yaml'
       - '!.github/workflows/agentics-maintenance.yml'
-      - 'tools/actionlint-version.txt'
       - '.yamllint'
   pull_request:
     branches: [main]
@@ -23,7 +22,6 @@ on:
       - '!.github/workflows/*.lock.yml'
       - '!.github/workflows/*.lock.yaml'
       - '!.github/workflows/agentics-maintenance.yml'
-      - 'tools/actionlint-version.txt'
       - '.yamllint'
   workflow_dispatch:
   workflow_call:
