@@ -45,7 +45,7 @@ jobs:
 
       - name: Check for changes in C++ native code
         id: changed-files
-        uses: carlkidcrypto/shared-workflows/actions/check-source-changes@873e1fea29bbd9dc73651d85a28920cb0797cb85
+        uses: carlkidcrypto/shared-workflows/actions/check-source-changes@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
         with:
           files: |
             codecov.yml
@@ -64,7 +64,7 @@ jobs:
     if: needs.check-source-changes.outputs.run_job == 'true' || github.event_name == 'workflow_dispatch'
     permissions:
       contents: read
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_tests_cpp_native.yml@873e1fea29bbd9dc73651d85a28920cb0797cb85
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_tests_cpp_native.yml@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
     with:
       install-netsnmp: false
       codecov-flags: 'cpp'

@@ -37,10 +37,10 @@ tools:
   bash: true
 
 model: sonnet
-engine:
-  id: copilot
 imports:
-  - carlkidcrypto/shared-workflows/shared/pr-preflight-checklist.md@873e1fea29bbd9dc73651d85a28920cb0797cb85
+  - carlkidcrypto/shared-workflows/shared/safe-outputs-pr.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/python-version-watcher-core.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/pr-preflight-checklist.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
 ---
 
 ## Python Version Watcher and Auto-Sync
