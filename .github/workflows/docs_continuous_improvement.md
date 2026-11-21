@@ -23,8 +23,10 @@ safe-outputs:
 timeout-minutes: 15
 max-ai-credits: 25
 model: sonnet
-engine:
-  id: copilot
+imports:
+  - carlkidcrypto/shared-workflows/shared/safe-outputs-pr.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/docs-continuous-improvement-core.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/pr-preflight-checklist.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
 ---
 
 # Documentation Continuous Improvement

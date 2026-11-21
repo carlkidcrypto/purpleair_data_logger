@@ -28,12 +28,12 @@ safe-outputs:
 timeout-minutes: 20
 max-ai-credits: 40
 model: sonnet
-engine:
-  id: copilot
 network:
   allowed: [defaults, github, python]
 tools:
   bash: true
+imports:
+  - carlkidcrypto/shared-workflows/shared/auto-release-notes-core.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
 ---
 
 # Auto Update Release Notes

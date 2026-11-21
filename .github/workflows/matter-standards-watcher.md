@@ -47,8 +47,10 @@ tools:
   bash: true
 
 model: sonnet
-engine:
-  id: copilot
+imports:
+  - carlkidcrypto/shared-workflows/shared/copilot-defaults.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/safe-outputs-pr.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+  - carlkidcrypto/shared-workflows/shared/pr-preflight-checklist.md@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
 ---
 
 ## Matter Data Logger Standards Watcher
