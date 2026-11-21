@@ -13,7 +13,6 @@ on:
       - '!.github/workflows/*.lock.yml'
       - '!.github/workflows/*.lock.yaml'
       - '!.github/workflows/agentics-maintenance.yml'
-      - 'tools/actionlint-version.txt'
       - '.yamllint'
   pull_request:
     branches: [main]
@@ -23,7 +22,6 @@ on:
       - '!.github/workflows/*.lock.yml'
       - '!.github/workflows/*.lock.yaml'
       - '!.github/workflows/agentics-maintenance.yml'
-      - 'tools/actionlint-version.txt'
       - '.yamllint'
   workflow_dispatch:
   workflow_call:
@@ -35,4 +33,4 @@ jobs:
   validate:
     permissions:
       contents: read
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_verify_syntax.yml@14e025f6c182b7b20718538f533ca467a9ff9c6c
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_verify_syntax.yml@3538efdfabdbcf0ae956cfc5685fd4c21a59696b

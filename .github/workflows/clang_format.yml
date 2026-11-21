@@ -35,17 +35,12 @@ jobs:
     uses: ./.github/workflows/verify_syntax.yml
   check-formatting:
     needs: verify-syntax
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Install Clang-Format 20
-        run: sudo apt-get update && sudo apt-get install -y clang-format-20
-
-      - name: Check C++17 Formatting
-        run: |
-          set -e
-          find include src cpp_tests -type f \( -name '*.h' -o -name '*.cpp' \) \
-            ! -name 'purpleair_data_logger_wrap.cxx' \
-            -exec clang-format-20 --dry-run --Werror {} +
+    permissions:
+      contents: read
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_clang_format.yml@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+    with:
+      target-dirs: 'include src cpp_tests'
+      file-extensions: 'h cpp'
+      clang-format-version: '20'
+      exclude-files: 'purpleair_data_logger_wrap.cxx'
+      auto-fix-pr: false

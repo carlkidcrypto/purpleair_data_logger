@@ -21,7 +21,11 @@ class CodecovConfigurationTest(unittest.TestCase):
             tests_workflow.is_file(), ".github/workflows/tests.yml must exist"
         )
         content = tests_workflow.read_text(encoding="utf-8")
-        self.assertIn("codecov/codecov-action", content)
+        self.assertTrue(
+            "codecov/codecov-action" in content
+            or "carlkidcrypto/shared-workflows/actions/upload-codecov" in content,
+            ".github/workflows/tests.yml must upload coverage via codecov-action or shared-workflows upload-codecov",
+        )
         self.assertIn("CODECOV_TOKEN", content)
         self.assertIn("flags: python", content)
         self.assertIn("codecov.yml", content)
