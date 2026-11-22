@@ -17,14 +17,37 @@ permissions:
   contents: read
 
 jobs:
-  publish-pypi:
+  build-pypi:
     permissions:
       contents: read
-      id-token: write
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_pypi_publish.yml@3538efdfabdbcf0ae956cfc5685fd4c21a59696b
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_pypi_publish.yml@22f04e222fa07048891327e4d34bb174d36e7bfa
     with:
       target: pypi
       environment-name: build_and_publish_to_pypi
       build-mode: pure-python
       python-version: '3.14'
       skip-existing: true
+      skip-publish: true
+
+  publish:
+    needs: build-pypi
+    if: ${{ needs.build-pypi.outputs.artifacts-built == 'true' }}
+    name: Publish distribution to PyPI
+    runs-on: ubuntu-latest
+    environment: build_and_publish_to_pypi
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - name: Download distribution artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          name: sdist
+          path: dist/
+
+      - name: Publish distribution to PyPI (OIDC)
+        uses: pypa/gh-action-pypi-publish@7245906fb61fa33a13554f9d5fb856fe61758086  # release/v1.14
+        with:
+          packages-dir: dist/
+          skip-existing: true
+          print-hash: true
