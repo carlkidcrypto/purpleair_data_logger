@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "2026.11.18"
+__version__ = "2026.11.22b0"
 
 try:
     from .purpleair_data_logger_swig import (
