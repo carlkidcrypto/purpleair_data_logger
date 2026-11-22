@@ -25,13 +25,25 @@ jobs:
     with:
       target: testpypi
       environment-name: build_and_publish_to_test_pypi
-      build-mode: pure-python
-      python-version: '3.14'
+      build-mode: cibuildwheel
+      matrix-json: >-
+        [{"os":"ubuntu-latest","arch":"x86_64","cibw-build":"cp311-* cp312-* cp313-* cp314-*"},
+        {"os":"windows-latest","arch":"AMD64","cibw-build":"cp311-* cp312-* cp313-* cp314-*"},
+        {"os":"macos-latest","arch":"arm64","cibw-build":"cp311-* cp312-* cp313-* cp314-*"}]
+      python-version: '3.11'
+      third-party-repo: carlkidcrypto/purpleair_api
+      third-party-ref: v2026.11.11a2
+      third-party-path: third_party/purpleair_api
       check-changes: true
       changed-files-patterns: |
         .github/workflows/build_and_publish_to_test_pypi.yml
+        pyproject.toml
         setup.py
         setup.cfg
+        purpleair_data_logger/**
+        include/**
+        src/**
+        interface/**
       skip-existing: true
       skip-publish: true
 
@@ -45,6 +57,13 @@ jobs:
       id-token: write
       contents: read
     steps:
+      - name: Download wheel artifacts
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
+        with:
+          pattern: cibw-wheels-*
+          merge-multiple: true
+          path: dist/
+
       - name: Download distribution artifacts
         uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333  # v8.0.2
         with:
