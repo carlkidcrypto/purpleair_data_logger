@@ -7,7 +7,7 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 
 |Codecov| |SonarCloud Quality Gate| |SonarCloud Security Rating| |SonarCloud Maintainability Rating| |CodeQL|
 
-|PyPI Version| |PyPI Downloads| |PyPI Distributions| |TestPyPI Distributions|
+|PyPI Version| |TestPyPI Version| |PyPI Downloads| |PyPI Distributions| |TestPyPI Distributions|
 
 |License|
 
@@ -38,6 +38,9 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 .. |PyPI Version| image:: https://img.shields.io/pypi/v/purpleair_data_logger?style=flat-square
    :target: https://pypi.org/project/purpleair_data_logger/
    :alt: PyPI Version
+.. |TestPyPI Version| image:: https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Ftest.pypi.org%2Fpypi%2Fpurpleair-data-logger%2Fjson&query=%24.info.version&label=TestPyPI&style=flat-square&color=blue
+   :target: https://test.pypi.org/project/purpleair-data-logger/
+   :alt: TestPyPI Version
 .. |PyPI Downloads| image:: https://img.shields.io/pypi/dm/purpleair_data_logger?style=flat-square
    :target: https://pypi.org/project/purpleair_data_logger/
    :alt: PyPI Downloads
