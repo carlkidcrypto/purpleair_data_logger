@@ -32,7 +32,7 @@ jobs:
         {"os":"macos-latest","arch":"arm64","cibw-build":"cp311-* cp312-* cp313-* cp314-*"}]
       python-version: '3.11'
       third-party-repo: carlkidcrypto/purpleair_api
-      third-party-ref: v2026.11.11a2
+      third-party-ref: v2026.11.22b0
       third-party-path: third_party/purpleair_api
       check-changes: true
       changed-files-patterns: |
