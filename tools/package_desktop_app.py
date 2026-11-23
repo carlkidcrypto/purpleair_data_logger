@@ -40,7 +40,7 @@ def read_version() -> str:
         for line in text.splitlines():
             if "PROJECT_VERSION_STRING" in line and '"' in line:
                 return line.split('"')[1].strip()
-    return "2026.11.18"
+    return "2026.11.22b0"
 
 
 def resolve_platform(requested: str) -> str:

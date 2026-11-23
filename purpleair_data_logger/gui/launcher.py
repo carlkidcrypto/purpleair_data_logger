@@ -73,9 +73,9 @@ def _install_macos_app_bundle(target_dir: Path | None = None) -> Path:
     <key>CFBundleIdentifier</key>
     <string>com.carlkidcrypto.purpleair-data-logger-studio</string>
     <key>CFBundleVersion</key>
-    <string>2026.11.18</string>
+    <string>2026.11.22b0</string>
     <key>CFBundleShortVersionString</key>
-    <string>2026.11.18</string>
+    <string>2026.11.22b0</string>
     <key>CFBundlePackageType</key>
     <string>APPL</string>
     <key>CFBundleExecutable</key>
@@ -91,10 +91,14 @@ def _install_macos_app_bundle(target_dir: Path | None = None) -> Path:
 """
     (contents_dir / "Info.plist").write_text(plist_content, encoding="utf-8")
 
+    python_bin_dir = str(Path(sys.executable).resolve().parent)
     launcher_exec = macos_dir / "PurpleAir Data Logger Studio"
     script_content = f"""#!/bin/bash
 # PurpleAir Data Logger Studio Launcher
-export PATH="/opt/homebrew/bin:/usr/local/bin:$PATH"
+export PATH="{python_bin_dir}:/opt/homebrew/bin:/usr/local/bin:$PATH"
+WORK_DIR="$HOME/.purpleair_data_logger"
+mkdir -p "$WORK_DIR"
+cd "$WORK_DIR" || exit 1
 exec "{sys.executable}" -m purpleair_data_logger.gui "$@"
 """
     launcher_exec.write_text(script_content, encoding="utf-8")

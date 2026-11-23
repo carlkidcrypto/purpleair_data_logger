@@ -56,11 +56,11 @@ jobs:
       - name: Check out repository code
         uses: actions/checkout@v7
 
-      - name: Checkout purpleair_api C++17 base layer (CalSemVer alpha v2026.11.11a2)
+      - name: Checkout purpleair_api C++17 base layer (CalSemVer beta v2026.11.22b0)
         uses: actions/checkout@v7
         with:
           repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.11a2
+          ref: v2026.11.22b0
           path: third_party/purpleair_api
 
       - name: Set up Python env for running unit tests...
