@@ -43,6 +43,16 @@ def test_launcher_meipass_and_platform_shortcuts(
     path_linux = install_desktop_launcher(linux_out)
     assert path_linux.suffix == ".desktop"
 
+    monkeypatch.setattr(sys, "platform", "darwin")
+    mac_out = tmp_path / "mac_out"
+    path_mac = install_desktop_launcher(mac_out)
+    assert path_mac.suffix == ".app"
+    mac_exec = path_mac / "Contents" / "MacOS" / "PurpleAir Data Logger Studio"
+    mac_script = mac_exec.read_text(encoding="utf-8")
+    assert 'WORK_DIR="$HOME/.purpleair_data_logger"' in mac_script
+    assert 'cd "$WORK_DIR" || exit 1' in mac_script
+    assert str(Path(sys.executable).resolve().parent) in mac_script
+
 
 def test_locale_manager_complete_coverage(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
