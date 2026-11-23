@@ -382,6 +382,18 @@ reports across matrix runners and upload them to Codecov (``codecov/codecov-acti
 repository secret ``CODECOV_TOKEN``, tagged with dedicated flag ``python`` and tracked via
 component ``python_code``.
 
+**[CICD-010]** PyPI and TestPyPI distribution workflows (``build_and_publish_to_pypi.yml`` and
+``build_and_publish_to_test_pypi.yml``) shall build multi-platform native SWIG binary wheels via
+``cibuildwheel`` across Linux (``x86_64``), Windows (``AMD64``), and macOS (``arm64``) for
+Python 3.11–3.14 alongside source distributions (``sdist``), pre-provisioning
+``third_party/purpleair_api`` and skipping existing distribution artifacts idempotently.
+
+**[CICD-011]** PyPI and TestPyPI distribution workflows shall decouple artifact building
+(``reusable_pypi_publish.yml`` with ``skip-publish: true``) from publishing, running a caller-side
+``publish`` job (``permissions: id-token: write``, ``contents: read``) that downloads
+``cibw-wheels-*`` and ``sdist`` artifacts and publishes via ``pypa/gh-action-pypi-publish``
+using OIDC Trusted Publishing.
+
 C++17 core engine & ``purpleair_api`` base layer requirements
 -------------------------------------------------------------
 
