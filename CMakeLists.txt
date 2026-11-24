@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
-project(purpleair_data_logger VERSION 2026.11.22 LANGUAGES C CXX)
-set(PURPLEAIR_DL_VERSION_STRING "2026.11.22b0")
+project(purpleair_data_logger VERSION 2026.11.24 LANGUAGES C CXX)
+set(PURPLEAIR_DL_VERSION_STRING "2026.11.24b0")
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)

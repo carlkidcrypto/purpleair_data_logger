@@ -1,6 +1,6 @@
 {
   "name": "purpleair-data-logger",
-  "version": "2026.11.22-beta.0",
+  "version": "2026.11.24-beta.0",
   "description": "Self-contained Node.js N-API bindings for the C++17 PurpleAir Data Logger engine (backed by purpleair_api and embedded SQLite3)",
   "main": "index.js",
   "repository": {
