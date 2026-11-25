@@ -30,7 +30,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@22f04e222fa07048891327e4d34bb174d36e7bfa
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@eeefdd5c0a594d59ae86a09437b2de9bb57618a3
     with:
       python-version: '3.14'
       docs-dir: sphinx_docs_build
