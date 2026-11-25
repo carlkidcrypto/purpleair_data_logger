@@ -1,0 +1,40 @@
+---
+name: npm Distributions
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    permissions:
+      contents: read
+      id-token: write
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_npm_publish.yml@eeefdd5c0a594d59ae86a09437b2de9bb57618a3
+    with:
+      working-directory: 'bindings/javascript'
+      node-version: '24'
+      needs-python: true
+      python-version: '3.13'
+      setup-cmd: |
+        sudo apt-get update
+        sudo apt-get install -y swig libcurl4-openssl-dev pkg-config patchelf build-essential
+        python3 tools/prepare_sqlite3_amalgamation.py
+        python3 tools/prepare_purpleair_api_source.py
+        python3 tools/generate_swig_bindings.py --languages javascript --out-dir bindings/javascript/generated
+      install-cmd: 'npm ci --ignore-scripts'
+      build-cmd: |
+        npx node-gyp rebuild -j "$(nproc)"
+        python3 ../../tools/bundle_native_package.py build/Release/purpleair_data_logger.node
+      validate-release-tag: true
+      pack-and-upload-artifact: true
+      run-verify-syntax: true
