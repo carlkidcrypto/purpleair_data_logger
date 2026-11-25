@@ -1,7 +1,30 @@
-Last Updated: 2026-11-23 21:54:20 UTC
+Last Updated: 2026-11-25 23:44:01 UTC
 
 # Changelog
 
+<a name="v2026.11.24b0"></a>
+## [v2026.11.24b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.22b0...v2026.11.24b0) (2026-11-25)
+
+### Changes
+
+#### Bug Fixes
+
+- fix(ci): add missing gh-aw runtime imports for shared-workflows 22f04e2 ([#573](https://github.com/carlkidcrypto/purpleair_data_logger/issues/573))
+
+#### Documentation Updates
+
+- docs: add versioned documentation for v2026.11.22b0 ([#572](https://github.com/carlkidcrypto/purpleair_data_logger/issues/572))
+
+#### Maintenance
+
+- chore(release): prepare beta release v2026.11.24b0 ([#575](https://github.com/carlkidcrypto/purpleair_data_logger/issues/575))
+- chore(ci): bump shared-workflows to eeefdd5 ([#574](https://github.com/carlkidcrypto/purpleair_data_logger/issues/574))
+
+#### Updates
+
+- [changelog] Update CHANGELOG.md ([#571](https://github.com/carlkidcrypto/purpleair_data_logger/issues/571))
+
+---
 <a name="v2026.11.22b0"></a>
 ## [v2026.11.22b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v1.6.0...v2026.11.22b0) (2026-11-23)
 
