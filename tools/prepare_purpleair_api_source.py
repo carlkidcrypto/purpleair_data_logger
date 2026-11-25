@@ -11,7 +11,7 @@ import time
 from pathlib import Path
 
 PURPLEAIR_API_REPO_URL = "https://github.com/carlkidcrypto/purpleair_api.git"
-PURPLEAIR_API_CALSEMVER_TAG = "v2026.11.22b0"
+PURPLEAIR_API_CALSEMVER_TAG = "v2026.11.24b0"
 PURPLEAIR_API_REF = os.environ.get("PURPLEAIR_API_GIT_REF", PURPLEAIR_API_CALSEMVER_TAG)
 
 

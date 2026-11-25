@@ -34,7 +34,7 @@ classifiers = [
     "Topic :: System :: Monitoring",
 ]
 dependencies = [
-    "purpleair_api>=2026.11.22b0",
+    "purpleair_api>=2026.11.24b0",
     "pg8000>=1.31.6",
     "requests>=2.34.2",
     "prometheus_client>=0.20.0",

@@ -40,7 +40,7 @@ jobs:
       landing-dir: sphinx_docs_build/landing
       deploy-pages: true
       pre-build-cmd: >-
-        git clone --depth 1 --branch v2026.11.22b0 https://github.com/carlkidcrypto/purpleair_api.git third_party/purpleair_api &&
+        git clone --depth 1 --branch v2026.11.24b0 https://github.com/carlkidcrypto/purpleair_api.git third_party/purpleair_api &&
         sudo apt-get update &&
         sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config &&
         python -m pip install --upgrade pip setuptools wheel &&
@@ -62,11 +62,11 @@ jobs:
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
 
-      - name: Check out purpleair_api C++17 base layer (v2026.11.22b0)
+      - name: Check out purpleair_api C++17 base layer (v2026.11.24b0)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.22b0
+          ref: v2026.11.24b0
           path: third_party/purpleair_api
 
       - name: Set up Python 3.14 for Sphinx
