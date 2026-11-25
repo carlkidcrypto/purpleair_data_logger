@@ -16,9 +16,9 @@ from tools import bundle_native_package
 
 
 def test_calsemver_version_and_capabilities() -> None:
-    assert pdl.__version__ == "2026.11.22b0"
-    assert pdl.version() == "2026.11.22b0"
-    assert pdl.purpleair_api_target_version() == "2026.11.22b0"
+    assert pdl.__version__ == "2026.11.24b0"
+    assert pdl.version() == "2026.11.24b0"
+    assert pdl.purpleair_api_target_version() == "2026.11.24b0"
     assert pdl.is_valid_calsemver(pdl.__version__) is True
     assert pdl.is_valid_calsemver(pdl.purpleair_api_target_version()) is True
     assert pdl.is_valid_calsemver("2026.11.1") is True
@@ -37,7 +37,7 @@ def test_calsemver_version_and_capabilities() -> None:
     assert langs == ["python", "javascript", "csharp", "go"]
 
     info = pdl.build_info()
-    assert "purpleair_data_logger 2026.11.22b0" in info
+    assert "purpleair_data_logger 2026.11.24b0" in info
     assert "C++17" in info
     assert "sqlite3=enabled" in info
 
@@ -197,4 +197,4 @@ def test_data_logger_lifecycle_and_cli_runner(tmp_path: Path) -> None:
 
     cli_res = pdl.CliRunner.execute(pdl.StringVector(["version", "--json"]))
     assert cli_res.exit_code == 0
-    assert json.loads(cli_res.stdout_text)["version"] == "2026.11.22b0"
+    assert json.loads(cli_res.stdout_text)["version"] == "2026.11.24b0"

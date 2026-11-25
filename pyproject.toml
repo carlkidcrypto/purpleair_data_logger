@@ -7,7 +7,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "purpleair_data_logger"
-version = "2026.11.22b0"
+version = "2026.11.24b0"
 description = "Self-contained C++17 and Python PurpleAir Air-Quality Telemetry Engine & Studio GUI powered by purpleair_api with SWIG bindings (Python, Node.js, C#, Go), CLI, and cross-platform GUI."
 readme = "README.rst"
 license = "MIT"
@@ -34,7 +34,7 @@ classifiers = [
     "Topic :: System :: Monitoring",
 ]
 dependencies = [
-    "purpleair_api>=2026.11.22b0",
+    "purpleair_api>=2026.11.24b0",
     "pg8000>=1.31.6",
     "requests>=2.34.2",
     "prometheus_client>=0.20.0",
