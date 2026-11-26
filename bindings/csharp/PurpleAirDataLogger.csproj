@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PackageId>PurpleAirDataLogger</PackageId>
-    <Version>2026.11.25-beta.0</Version>
+    <Version>2026.11.25-beta.1</Version>
     <Authors>carlkidcrypto</Authors>
     <Description>Self-contained C# (.NET 8+) bindings for the C++17 PurpleAir Data Logger engine (backed by purpleair_api and embedded SQLite3).</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
