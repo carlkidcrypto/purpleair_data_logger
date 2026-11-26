@@ -1,7 +1,30 @@
-Last Updated: 2026-11-26 00:37:05 UTC
+Last Updated: 2026-11-26 06:19:49 UTC
 
 # Changelog
 
+<a name="v2026.11.25b1"></a>
+## [v2026.11.25b1](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.25b0...v2026.11.25b1) (2026-11-25)
+
+### Changes
+
+#### Bug Fixes
+
+- fix(security): remediate all 16 SonarCloud security vulnerabilities (S5145, S8706, S8707) ([#588](https://github.com/carlkidcrypto/purpleair_data_logger/issues/588))
+- fix(distribution): resolve NuGet NETSDK1022 duplicate Compile items and npm PURPLEAIR_DL_HAVE_LIBPQ macro ([#587](https://github.com/carlkidcrypto/purpleair_data_logger/issues/587))
+
+#### Documentation Updates
+
+- docs: add versioned documentation for v2026.11.25b0 ([#585](https://github.com/carlkidcrypto/purpleair_data_logger/issues/585))
+
+#### Maintenance
+
+- chore(release): prepare beta release v2026.11.25b1 ([#589](https://github.com/carlkidcrypto/purpleair_data_logger/issues/589))
+
+#### Updates
+
+- [changelog] Update CHANGELOG.md ([#584](https://github.com/carlkidcrypto/purpleair_data_logger/issues/584))
+
+---
 <a name="v2026.11.25b0"></a>
 ## [v2026.11.25b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.24b0...v2026.11.25b0) (2026-11-25)
 
