@@ -61,9 +61,19 @@ jobs:
 
       - name: Verify Go module
         working-directory: ./bindings/go
+        env:
+          CGO_CXXFLAGS: >-
+            -std=c++17
+            -I${{ github.workspace }}/include
+            -I${{ github.workspace }}/third_party/purpleair_api/include
+          CGO_LDFLAGS: >-
+            -L${{ github.workspace }}/bindings/go/lib
+            -lpurpleair_data_logger
+            -Wl,-rpath,${{ github.workspace }}/bindings/go/lib
+            -pthread
         run: |
-          go vet ./...
-          go test -v ./...
+          go vet .
+          go test -v .
 
       - name: Package Go module archive
         run: |
