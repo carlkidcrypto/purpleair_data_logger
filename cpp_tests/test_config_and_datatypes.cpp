@@ -10,14 +10,14 @@
 using namespace purpleair_data_logger;
 
 TEST(VersionCompleteTest, AllCalSemVerBranches) {
-   EXPECT_EQ(version(), "2026.11.25b0");
+   EXPECT_EQ(version(), "2026.11.25b1");
    EXPECT_EQ(purpleair_api_target_version(), "2026.11.24b0");
    EXPECT_NE(build_info().find("purpleair_data_logger"), std::string::npos);
 
    EXPECT_TRUE(is_valid_calsemver("2026.11.3"));
    EXPECT_TRUE(is_valid_calsemver("v2026.11.3"));
    EXPECT_TRUE(is_valid_calsemver("V2026.11.3.1"));
-   EXPECT_TRUE(is_valid_calsemver("2026.11.25b0"));
+   EXPECT_TRUE(is_valid_calsemver("2026.11.25b1"));
    EXPECT_TRUE(is_valid_calsemver("2026.11.3b1"));
    EXPECT_TRUE(is_valid_calsemver("2026.11.3rc2"));
    EXPECT_TRUE(is_valid_calsemver("2026.11.3.1a0"));
