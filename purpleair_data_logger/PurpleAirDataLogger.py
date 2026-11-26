@@ -7,13 +7,13 @@ A Python base Data Logger class.
 
 from purpleair_api.PurpleAirAPI import PurpleAirAPI
 from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
+    load_json_config_file,
     logic_for_storing_single_sensor_data,
     logic_for_storing_multiple_sensors_data,
     logic_for_storing_group_sensors_data,
     logic_for_storing_local_sensors_data,
 )
 from time import sleep
-import json
 
 
 class PurpleAirDataLoggerError(Exception):
@@ -231,9 +231,7 @@ class PurpleAirDataLogger:
             and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
-            file_obj = open(paa_multiple_sensor_request_json_file, "r")
-            the_json_file = json.load(file_obj)
-            file_obj.close()
+            the_json_file = load_json_config_file(paa_multiple_sensor_request_json_file)
             self._run_loop_for_storing_multiple_sensors_data(the_json_file)
 
         elif (
@@ -243,9 +241,7 @@ class PurpleAirDataLogger:
             and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
-            file_obj = open(paa_single_sensor_request_json_file, "r")
-            the_json_file = json.load(file_obj)
-            file_obj.close()
+            the_json_file = load_json_config_file(paa_single_sensor_request_json_file)
             self._run_loop_for_storing_single_sensor_data(the_json_file)
 
         elif (
@@ -255,9 +251,7 @@ class PurpleAirDataLogger:
             and paa_local_sensor_request_json_file is None
         ):
             # Now load up that json file
-            file_obj = open(paa_group_sensor_request_json_file, "r")
-            the_json_file = json.load(file_obj)
-            file_obj.close()
+            the_json_file = load_json_config_file(paa_group_sensor_request_json_file)
             self._run_loop_for_storing_group_sensors_data(the_json_file)
 
         elif (
@@ -267,9 +261,7 @@ class PurpleAirDataLogger:
             and paa_local_sensor_request_json_file is not None
         ):
             # Now load up that json file
-            file_obj = open(paa_local_sensor_request_json_file, "r")
-            the_json_file = json.load(file_obj)
-            file_obj.close()
+            the_json_file = load_json_config_file(paa_local_sensor_request_json_file)
             self._run_loop_for_storing_local_sensors_data(the_json_file)
 
         elif (

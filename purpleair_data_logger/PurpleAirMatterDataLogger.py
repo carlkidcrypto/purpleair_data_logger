@@ -59,7 +59,11 @@ from purpleair_data_logger.PurpleAirDataLogger import (
     PurpleAirDataLogger,
     PurpleAirDataLoggerError,
 )
-from purpleair_data_logger.PurpleAirDataLoggerHelpers import generate_common_arg_parser
+from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
+    generate_common_arg_parser,
+    load_json_config_file,
+    sanitize_log_value,
+)
 from purpleair_data_logger.PurpleAirMatterDataLoggerConstants import (
     MATTER_DATA_LOGGER_DEFAULT_HOST,
     MATTER_DATA_LOGGER_DEFAULT_PORT,
@@ -353,25 +357,25 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             daemon=True,
         )
         self._http_thread.start()
-        logger.info(
-            "Matter HTTP server started on %s:%d", self._http_host, self._http_port
-        )
+        safe_host = sanitize_log_value(self._http_host)
+        safe_port = int(self._http_port)
+        logger.info("Matter HTTP server started on %s:%d", safe_host, safe_port)
         logger.info(
             "  → All sensors:   GET http://%s:%d%s",
-            self._http_host,
-            self._http_port,
+            safe_host,
+            safe_port,
             MATTER_ALL_SENSORS_PATH,
         )
         logger.info(
             "  → Single sensor: GET http://%s:%d%s/<sensor_index>",
-            self._http_host,
-            self._http_port,
+            safe_host,
+            safe_port,
             MATTER_SENSOR_PATH_PREFIX,
         )
         logger.info(
             "  → Health check:  GET http://%s:%d%s",
-            self._http_host,
-            self._http_port,
+            safe_host,
+            safe_port,
             HEALTH_PATH,
         )
 
@@ -432,7 +436,11 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                         sleep(delay)
 
         # All attempts failed — handle offline / stale fallback
-        logger.warning("Sensor %s offline: %s", sensor_index, last_exception)
+        logger.warning(
+            "Sensor %s offline: %s",
+            sanitize_log_value(sensor_index),
+            sanitize_log_value(last_exception),
+        )
         now = time.time()
         cached = cache.get(sensor_index)
         if cached:
@@ -485,7 +493,9 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
                     results[idx] = device
             except Exception as exc:
                 logger.warning(
-                    "Sensor %s: unexpected error during polling: %s", idx, exc
+                    "Sensor %s: unexpected error during polling: %s",
+                    sanitize_log_value(idx),
+                    sanitize_log_value(exc),
                 )
         return results
 
@@ -670,8 +680,8 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
         while True:
             logger.info(
                 "Polling %d sensor(s) at poll interval %ds...",
-                configured_sensor_count,
-                self._poll_interval,
+                int(configured_sensor_count),
+                int(self._poll_interval),
             )
             devices = (
                 self._poll_and_convert_local()
@@ -752,11 +762,12 @@ class PurpleAirMatterDataLogger(PurpleAirDataLogger):
             )
 
         if provided:
-            with open(provided[0]) as fh:
-                config = json.load(fh)
-            self._poll_interval = max(60, config.get("poll_interval_seconds", 65))
-            self._http_port = config.get("http_port", self._http_port)
-            self._http_host = config.get("http_host", self._http_host)
+            config = load_json_config_file(provided[0])
+            self._poll_interval = max(60, int(config.get("poll_interval_seconds", 65)))
+            self._http_port = int(config.get("http_port", self._http_port))
+            self._http_host = sanitize_log_value(
+                config.get("http_host", self._http_host)
+            )
             self._matter_only = config.get("matter_only", self._matter_only)
             self._offline_grace_seconds = config.get(
                 "offline_grace_seconds", self._offline_grace_seconds
@@ -816,8 +827,7 @@ def main(argv: list[str] | None = None) -> None:
 
     ipv4_addresses: list[str] = []
     if args.paa_local_sensor_request_json_file:
-        with open(args.paa_local_sensor_request_json_file) as config_file:
-            local_config = json.load(config_file)
+        local_config = load_json_config_file(args.paa_local_sensor_request_json_file)
         ipv4_addresses = local_config.get("sensor_ip_list", [])
 
     matter_logger = PurpleAirMatterDataLogger(

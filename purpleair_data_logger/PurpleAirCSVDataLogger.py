@@ -19,6 +19,7 @@ from purpleair_data_logger.PurpleAirDataLogger import (
 
 from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     generate_common_arg_parser,
+    load_json_config_file,
 )
 
 
@@ -526,13 +527,8 @@ if __name__ == "__main__":
     # Second make an instance of our data logger
     ipv4_address_list = []
     if args.paa_local_sensor_request_json_file:
-        # This is a temp working solution. We will need to redo this at some point.
-        import json
-
-        file_obj = open(args.paa_local_sensor_request_json_file, "r")
-        the_json_file = json.load(file_obj)
-        file_obj.close()
-        ipv4_address_list = the_json_file["sensor_ip_list"]  # LOAD THIS IN MAYBE ???
+        the_json_file = load_json_config_file(args.paa_local_sensor_request_json_file)
+        ipv4_address_list = the_json_file["sensor_ip_list"]
         del the_json_file
 
     the_paa_csv_data_logger = PurpleAirCSVDataLogger(
