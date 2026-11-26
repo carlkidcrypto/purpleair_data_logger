@@ -1,0 +1,41 @@
+---
+name: WinGet Distributions (FUTURE / WIP)
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+on:
+  release:
+    types: [published]
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/generate_winget_manifest.py'
+      - '.github/workflows/build_and_publish_to_winget.yml'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: "Release tag for WinGet distribution (e.g. v2026.11.24b0)"
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    permissions:
+      contents: read
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_winget_publish.yml@eeefdd5c0a594d59ae86a09437b2de9bb57618a3
+    with:
+      package-identifier: 'carlkidcrypto.PurpleAirDataLogger'
+      installer-filename: 'PurpleAirDataLogger-Windows-x64-Setup.exe'
+      release-tag: ${{ github.event.inputs.release_tag || '' }}
+      python-version: '3.13'
+      version-reader-fn: '_read_current_calsemver'
+      manifest-generator-script: 'tools/generate_winget_manifest.py'
+      installer-type: 'inno'
+      run-verify-syntax: true
+    secrets:
+      winget-acc-token: ${{ secrets.WINGET_CREATE_PAT || secrets.WINGET_TOKEN || secrets.WINGET_ACC_TOKEN }}

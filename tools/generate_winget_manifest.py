@@ -28,11 +28,18 @@ def _read_current_calsemver() -> str:
         for line in text.splitlines():
             if "PROJECT_VERSION_STRING" in line and '"' in line:
                 raw = line.split('"')[1].strip()
-                if "a" in raw and "-" not in raw:
-                    prefix, num = raw.split("a", 1)
-                    return f"{prefix}-alpha.{num}"
+                if "-" not in raw:
+                    if "rc" in raw:
+                        prefix, num = raw.split("rc", 1)
+                        return f"{prefix}-rc.{num}"
+                    if "b" in raw:
+                        prefix, num = raw.split("b", 1)
+                        return f"{prefix}-beta.{num}"
+                    if "a" in raw:
+                        prefix, num = raw.split("a", 1)
+                        return f"{prefix}-alpha.{num}"
                 return raw
-    return "2026.11.3-alpha.0"
+    return "2026.11.24-beta.0"
 
 
 def get_canonical_manifest_dir(

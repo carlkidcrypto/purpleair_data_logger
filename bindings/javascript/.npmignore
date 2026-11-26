@@ -1,0 +1,7 @@
+build/Release/obj.target/
+build/Release/.deps/
+build/Makefile
+build/*.mk
+build/config.gypi
+generated/
+*.tgz
