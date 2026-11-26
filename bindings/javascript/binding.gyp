@@ -27,7 +27,6 @@
       "defines": [
         "PURPLEAIR_DL_HAVE_SQLITE3=1",
         "PURPLEAIR_DL_EMBEDDED_SQLITE3=1",
-        "PURPLEAIR_DL_HAVE_LIBPQ=0",
         "SQLITE_THREADSAFE=1",
         "SQLITE_ENABLE_FTS5=1",
         "SQLITE_ENABLE_JSON1=1",
