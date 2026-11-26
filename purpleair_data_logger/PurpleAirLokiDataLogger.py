@@ -19,6 +19,7 @@ from purpleair_data_logger.PurpleAirDataLogger import (
 
 from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     generate_common_arg_parser,
+    load_json_config_file,
 )
 
 import json
@@ -361,9 +362,8 @@ if __name__ == "__main__":  # pragma: no cover
     # Second make an instance of our data logger
     ipv4_address_list = []
     if args.paa_local_sensor_request_json_file:
-        with open(args.paa_local_sensor_request_json_file, "r") as file_obj:
-            the_json_file = json.load(file_obj)
-            ipv4_address_list = the_json_file["sensor_ip_list"]
+        the_json_file = load_json_config_file(args.paa_local_sensor_request_json_file)
+        ipv4_address_list = the_json_file["sensor_ip_list"]
 
     the_paa_loki_data_logger = PurpleAirLokiDataLogger(
         args.paa_read_key,

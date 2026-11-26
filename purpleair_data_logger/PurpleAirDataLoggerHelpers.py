@@ -6,6 +6,9 @@ A helper file that contains functions for PurpleAirDataLogger* files.
 """
 
 import argparse
+import json
+from pathlib import Path
+import re
 import time
 
 from purpleair_api.PurpleAirAPIConstants import ACCEPTED_FIELD_NAMES_DICT
@@ -14,6 +17,49 @@ from purpleair_api.PurpleAirAPIError import (
     PurpleAirAPIError,
     PurpleAirDeviceOfflineError,
 )
+
+
+def sanitize_log_value(value) -> str:
+    """Strip CR, LF, and ASCII control characters from a value before logging."""
+    return re.sub(r"[\r\n\x00-\x1f\x7f]+", " ", str(value))
+
+
+def _resolve_safe_path(file_path: str, label: str) -> Path:
+    """Validate and canonicalize a filesystem path against traversal attacks."""
+    if not isinstance(file_path, str) or not file_path or "\x00" in file_path:
+        raise ValueError(f"Invalid {label} path.")
+    raw_path = Path(file_path)
+    if ".." in raw_path.parts:
+        raise ValueError(
+            f"Path traversal ('..') is not allowed in {label} path: {file_path}"
+        )
+    base_dir = (
+        raw_path.parent.resolve() if raw_path.is_absolute() else Path.cwd().resolve()
+    )
+    resolved = raw_path.resolve()
+    if not resolved.is_relative_to(base_dir):
+        raise ValueError(
+            f"Resolved {label} path escapes allowed directory: {file_path}"
+        )
+    return resolved
+
+
+def load_json_config_file(file_path: str) -> dict:
+    """Safely validate a JSON config path (CWE-22 / S8707) and load its contents."""
+    resolved = _resolve_safe_path(file_path, "JSON configuration")
+    with open(resolved, "r", encoding="utf-8") as file_obj:
+        return json.load(file_obj)
+
+
+def validate_sqlite_database_path(db_path: str) -> str:
+    """Validate a SQLite database path against URI/connection injection (S8706)."""
+    if not isinstance(db_path, str) or not db_path or "\x00" in db_path:
+        raise ValueError("Invalid SQLite database path.")
+    if db_path == ":memory:":
+        return db_path
+    if db_path.lower().startswith("file:") or "?" in db_path:
+        raise ValueError(f"SQLite URI connection strings are not permitted: {db_path}")
+    return str(_resolve_safe_path(db_path, "SQLite database"))
 
 
 def generate_common_arg_parser(argparse_description=""):

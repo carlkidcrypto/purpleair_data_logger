@@ -19,6 +19,7 @@ from purpleair_data_logger.PurpleAirDataLogger import (
 
 from purpleair_data_logger.PurpleAirDataLoggerHelpers import (
     generate_common_arg_parser,
+    validate_sqlite_database_path,
 )
 
 from purpleair_data_logger.PurpleAirSQLiteQueryStatements import (
@@ -63,7 +64,8 @@ class PurpleAirSQLiteDataLogger(PurpleAirDataLogger):
         # Inherit everything from the parent base class: PurpleAirDataLogger
         super().__init__(PurpleAirAPIReadKey, PurpleAirAPIWriteKey)
 
-        self._db_conn = sqlite3.connect(sqlite_data_base_name)
+        validated_db_path = validate_sqlite_database_path(sqlite_data_base_name)
+        self._db_conn = sqlite3.connect(validated_db_path, uri=False)
 
         # Make our SQLite Tables
         self._create_sqlite_db_tables()
