@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-__version__ = "2026.11.24b0"
+__version__ = "2026.11.25b0"
 
 try:
     from .purpleair_data_logger_swig import (
@@ -61,7 +61,7 @@ except ImportError:  # pragma: no cover
         return __version__
 
     def purpleair_api_target_version() -> str:
-        return "2026.11.24b0"
+        return "2026.11.25b0"
 
     def build_info() -> str:
         return f"purpleair_data_logger {__version__} (pure-python fallback)"

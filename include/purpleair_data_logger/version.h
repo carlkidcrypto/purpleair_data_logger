@@ -5,7 +5,7 @@
 namespace purpleair_data_logger {
 
 /**
- * @brief Return the current purpleair_data_logger CalSemVer string (e.g. "2026.11.24b0").
+ * @brief Return the current purpleair_data_logger CalSemVer string (e.g. "2026.11.25b0").
  *
  * CalSemVer format: YYYY.M.D (stable) or YYYY.M.DaN / YYYY.M.DbN / YYYY.M.DrcN (pre-release)
  * with no zero-padding on month or day segments.
