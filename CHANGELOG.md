@@ -1,7 +1,29 @@
-Last Updated: 2026-11-25 23:44:01 UTC
+Last Updated: 2026-11-26 00:37:05 UTC
 
 # Changelog
 
+<a name="v2026.11.25b0"></a>
+## [v2026.11.25b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.24b0...v2026.11.25b0) (2026-11-25)
+
+### Changes
+
+#### Documentation Updates
+
+- docs: add versioned documentation for v2026.11.24b0 ([#579](https://github.com/carlkidcrypto/purpleair_data_logger/issues/579))
+
+#### Features
+
+- feat(distribution): add npm, NuGet, Go, WinGet, and Desktop Apps release publish workflows ([#582](https://github.com/carlkidcrypto/purpleair_data_logger/issues/582))
+
+#### Maintenance
+
+- chore(release): prepare beta release v2026.11.25b0 ([#583](https://github.com/carlkidcrypto/purpleair_data_logger/issues/583))
+
+#### Updates
+
+- [changelog] Update CHANGELOG.md ([#578](https://github.com/carlkidcrypto/purpleair_data_logger/issues/578))
+
+---
 <a name="v2026.11.24b0"></a>
 ## [v2026.11.24b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.22b0...v2026.11.24b0) (2026-11-25)
 
