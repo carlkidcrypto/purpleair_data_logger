@@ -30,7 +30,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@eeefdd5c0a594d59ae86a09437b2de9bb57618a3
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@c67e7638c0e62b38b715d0e9334dc39fe6cfe5a6
     with:
       python-version: '3.14'
       docs-dir: sphinx_docs_build
@@ -40,7 +40,7 @@ jobs:
       landing-dir: sphinx_docs_build/landing
       deploy-pages: true
       pre-build-cmd: >-
-        git clone --depth 1 --branch v2026.11.24b0 https://github.com/carlkidcrypto/purpleair_api.git third_party/purpleair_api &&
+        git clone --depth 1 --branch v2026.11.26 https://github.com/carlkidcrypto/purpleair_api.git third_party/purpleair_api &&
         sudo apt-get update &&
         sudo apt-get install -y g++ python3-dev python3-tk swig libcurl4-openssl-dev pkg-config &&
         python -m pip install --upgrade pip setuptools wheel &&
@@ -62,11 +62,11 @@ jobs:
           fetch-tags: true
           ref: ${{ github.event.release.tag_name }}
 
-      - name: Check out purpleair_api C++17 base layer (v2026.11.24b0)
+      - name: Check out purpleair_api C++17 base layer (v2026.11.26)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.24b0
+          ref: v2026.11.26
           path: third_party/purpleair_api
 
       - name: Set up Python 3.14 for Sphinx
@@ -116,8 +116,12 @@ jobs:
           rm -rf "docs/${NORM_VERSION}"
           cp -r "/tmp/html_${VERSION}" "docs/${NORM_VERSION}"
 
-      - name: Update landing page version list
-        run: python .github/scripts/update_landing_versions.py
+      - name: Update landing page version list and prune superseded prereleases
+        uses: carlkidcrypto/shared-workflows/actions/update-versioned-docs@c67e7638c0e62b38b715d0e9334dc39fe6cfe5a6
+        with:
+          docs-dir: docs
+          landing-index: sphinx_docs_build/landing/source/index.rst
+          latest-label: 'Latest Version'
 
       - name: Build landing page with updated version list
         run: |

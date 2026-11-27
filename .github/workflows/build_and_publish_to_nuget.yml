@@ -43,11 +43,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
-      - name: Checkout purpleair_api C++17 base layer (v2026.11.24b0)
+      - name: Checkout purpleair_api C++17 base layer (v2026.11.26)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.24b0
+          ref: v2026.11.26
           path: third_party/purpleair_api
 
       - name: Set up Python
