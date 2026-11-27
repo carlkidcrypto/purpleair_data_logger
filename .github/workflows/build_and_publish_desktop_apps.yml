@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       release_tag:
-        description: "Release tag to attach desktop assets to (e.g. v2026.11.25b1)"
+        description: "Release tag to attach desktop assets to (e.g. v2026.11.27)"
         required: false
         default: ""
 
@@ -77,11 +77,11 @@ jobs:
       - name: Checkout purpleair_data_logger
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
 
-      - name: Checkout purpleair_api C++17 base layer (v2026.11.24b0)
+      - name: Checkout purpleair_api C++17 base layer (v2026.11.26)
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
         with:
           repository: carlkidcrypto/purpleair_api
-          ref: v2026.11.24b0
+          ref: v2026.11.26
           path: third_party/purpleair_api
 
       - name: Set up Python 3.13
@@ -108,16 +108,16 @@ jobs:
         uses: carlkidcrypto/os-specific-runner@8bf8551e08c48d9b72f768392e692fad5bb169e7  # v2.5.0
         with:
           linux: |
-            python -m pip install --pre --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.24b0"
+            python -m pip install --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.26"
             python setup.py build_ext --inplace
             python tools/package_desktop_app.py --platform linux
           macos: |
-            python -m pip install --pre --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.24b0"
+            python -m pip install --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.26"
             python setup.py build_ext --inplace
             python tools/package_desktop_app.py --platform macos
           windows: |
             $ErrorActionPreference = 'Stop'
-            python -m pip install --pre --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.24b0"
+            python -m pip install --upgrade pip setuptools wheel pyinstaller "purpleair_api>=2026.11.26"
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
             python setup.py build_ext --inplace
             if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

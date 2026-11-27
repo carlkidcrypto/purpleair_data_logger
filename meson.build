@@ -1,7 +1,7 @@
 project(
   'purpleair_data_logger',
   ['c', 'cpp'],
-  version: '2026.11.25b1',
+  version: '2026.11.27',
   license: 'MIT',
   default_options: [
     'c_std=c11',

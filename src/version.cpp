@@ -7,8 +7,8 @@
 namespace purpleair_data_logger {
 
 namespace {
-constexpr char const* PROJECT_VERSION_STRING = "2026.11.25b1";
-constexpr char const* PURPLEAIR_API_TARGET_VERSION_STRING = "2026.11.24b0";
+constexpr char const* PROJECT_VERSION_STRING = "2026.11.27";
+constexpr char const* PURPLEAIR_API_TARGET_VERSION_STRING = "2026.11.26";
 
 bool is_non_zero_padded_digits(std::string const& s) {
    if (s.empty()) {
