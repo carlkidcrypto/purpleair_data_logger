@@ -30,7 +30,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@c67e7638c0e62b38b715d0e9334dc39fe6cfe5a6
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_sphinx_build.yml@f1f9056d69addcc7b59be128e417a9e7338cbdab
     with:
       python-version: '3.14'
       docs-dir: sphinx_docs_build
@@ -117,7 +117,7 @@ jobs:
           cp -r "/tmp/html_${VERSION}" "docs/${NORM_VERSION}"
 
       - name: Update landing page version list and prune superseded prereleases
-        uses: carlkidcrypto/shared-workflows/actions/update-versioned-docs@c67e7638c0e62b38b715d0e9334dc39fe6cfe5a6
+        uses: carlkidcrypto/shared-workflows/actions/update-versioned-docs@f1f9056d69addcc7b59be128e417a9e7338cbdab
         with:
           docs-dir: docs
           landing-index: sphinx_docs_build/landing/source/index.rst
