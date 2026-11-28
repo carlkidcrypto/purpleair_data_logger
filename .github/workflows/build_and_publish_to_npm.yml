@@ -38,3 +38,5 @@ jobs:
       validate-release-tag: true
       pack-and-upload-artifact: true
       run-verify-syntax: true
+    secrets:
+      npm-token: ${{ secrets.NPM_TOKEN }}
