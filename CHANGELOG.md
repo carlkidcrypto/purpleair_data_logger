@@ -1,7 +1,31 @@
-Last Updated: 2026-11-26 06:19:49 UTC
+Last Updated: 2026-11-27 23:59:33 UTC
 
 # Changelog
 
+<a name="v2026.11.27"></a>
+## [v2026.11.27](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.25b1...v2026.11.27) (2026-11-27)
+
+### Changes
+
+#### Build System
+
+- build(deps): Bump coverage in /tests in the python-dependencies group ([#595](https://github.com/carlkidcrypto/purpleair_data_logger/issues/595))
+- build(deps): Bump coverage ([#594](https://github.com/carlkidcrypto/purpleair_data_logger/issues/594))
+- build(deps): Bump actions/setup-go from 7.0.0 to 7.1.0 ([#593](https://github.com/carlkidcrypto/purpleair_data_logger/issues/593))
+
+#### Documentation Updates
+
+- docs: add versioned documentation for v2026.11.25b1 ([#591](https://github.com/carlkidcrypto/purpleair_data_logger/issues/591))
+
+#### Maintenance
+
+- chore(release): prepare stable release v2026.11.27 ([#596](https://github.com/carlkidcrypto/purpleair_data_logger/issues/596))
+
+#### Updates
+
+- [changelog] Update CHANGELOG.md ([#590](https://github.com/carlkidcrypto/purpleair_data_logger/issues/590))
+
+---
 <a name="v2026.11.25b1"></a>
 ## [v2026.11.25b1](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.25b0...v2026.11.25b1) (2026-11-25)
 
