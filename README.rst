@@ -7,7 +7,13 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 
 |Codecov| |SonarCloud Quality Gate| |SonarCloud Security Rating| |SonarCloud Maintainability Rating| |CodeQL|
 
-|PyPI Version| |TestPyPI Version| |PyPI Downloads| |PyPI Distributions| |TestPyPI Distributions|
+|PyPI Version| |PyPI Downloads| |PyPI Distributions| |TestPyPI Version| |TestPyPI Distributions|
+
+|npm Version| |npm Downloads| |npm Distributions|
+
+|NuGet Version| |NuGet Downloads| |NuGet Distributions|
+
+|Go Version| |Go Distributions| |WinGet Distributions| |Desktop Downloads| |Desktop Distributions|
 
 |License|
 
@@ -50,6 +56,39 @@ A set of data logger(s) that will query PurpleAir sensor(s) for data. That data 
 .. |TestPyPI Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_test_pypi.yml?branch=main&style=flat-square&label=TestPyPI%20Distributions
    :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_test_pypi.yml
    :alt: TestPyPI Distributions
+.. |npm Version| image:: https://img.shields.io/npm/v/purpleair-data-logger?style=flat-square
+   :target: https://www.npmjs.com/package/purpleair-data-logger
+   :alt: npm Version
+.. |npm Downloads| image:: https://img.shields.io/npm/dm/purpleair-data-logger?style=flat-square
+   :target: https://www.npmjs.com/package/purpleair-data-logger
+   :alt: npm Downloads
+.. |npm Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_npm.yml?style=flat-square&label=npm%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_npm.yml
+   :alt: npm Distributions
+.. |NuGet Version| image:: https://img.shields.io/nuget/v/PurpleAirDataLogger?style=flat-square
+   :target: https://www.nuget.org/packages/PurpleAirDataLogger
+   :alt: NuGet Version
+.. |NuGet Downloads| image:: https://img.shields.io/nuget/dt/PurpleAirDataLogger?style=flat-square
+   :target: https://www.nuget.org/packages/PurpleAirDataLogger
+   :alt: NuGet Downloads
+.. |NuGet Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_nuget.yml?style=flat-square&label=NuGet%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_nuget.yml
+   :alt: NuGet Distributions
+.. |Go Version| image:: https://img.shields.io/github/go-mod/go-version/carlkidcrypto/purpleair_data_logger?filename=bindings%2Fgo%2Fgo.mod&style=flat-square&label=Go
+   :target: https://pkg.go.dev/github.com/carlkidcrypto/purpleair_data_logger/bindings/go
+   :alt: Go Version
+.. |Go Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_go.yml?style=flat-square&label=Go%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_go.yml
+   :alt: Go Distributions
+.. |WinGet Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_to_winget.yml?style=flat-square&label=WinGet%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_to_winget.yml
+   :alt: WinGet Distributions
+.. |Desktop Downloads| image:: https://img.shields.io/github/downloads/carlkidcrypto/purpleair_data_logger/total?style=flat-square&label=Desktop%20Downloads
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/releases
+   :alt: Desktop Downloads
+.. |Desktop Distributions| image:: https://img.shields.io/github/actions/workflow/status/carlkidcrypto/purpleair_data_logger/build_and_publish_desktop_apps.yml?style=flat-square&label=Desktop%20Distributions
+   :target: https://github.com/carlkidcrypto/purpleair_data_logger/actions/workflows/build_and_publish_desktop_apps.yml
+   :alt: Desktop Distributions
 .. |License| image:: https://img.shields.io/github/license/carlkidcrypto/purpleair_data_logger?style=flat-square
    :target: https://github.com/carlkidcrypto/purpleair_data_logger/blob/main/LICENSE
    :alt: License
