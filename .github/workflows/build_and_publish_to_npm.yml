@@ -19,7 +19,7 @@ jobs:
     permissions:
       contents: read
       id-token: write
-    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_npm_publish.yml@eeefdd5c0a594d59ae86a09437b2de9bb57618a3
+    uses: carlkidcrypto/shared-workflows/.github/workflows/reusable_npm_publish.yml@f1f9056d69addcc7b59be128e417a9e7338cbdab
     with:
       working-directory: 'bindings/javascript'
       node-version: '24'
