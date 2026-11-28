@@ -1,7 +1,30 @@
-Last Updated: 2026-11-27 23:59:33 UTC
+Last Updated: 2026-11-28 05:19:44 UTC
 
 # Changelog
 
+<a name="v2026.11.28b0"></a>
+## [v2026.11.28b0](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.27...v2026.11.28b0) (2026-11-27)
+
+### Changes
+
+#### Bug Fixes
+
+- fix(ci): pass optional NPM_TOKEN secret to reusable_npm_publish workflow ([#601](https://github.com/carlkidcrypto/purpleair_data_logger/issues/601))
+
+#### Documentation Updates
+
+- docs: add versioned documentation for v2026.11.27 ([#598](https://github.com/carlkidcrypto/purpleair_data_logger/issues/598))
+
+#### Maintenance
+
+- chore(release): prepare beta release v2026.11.28b0 and enable npm ccache ([#603](https://github.com/carlkidcrypto/purpleair_data_logger/issues/603))
+- chore(ci): bump carlkidcrypto/shared-workflows to f1f9056d69ad ([#602](https://github.com/carlkidcrypto/purpleair_data_logger/issues/602))
+
+#### Updates
+
+- [changelog] Update CHANGELOG.md ([#597](https://github.com/carlkidcrypto/purpleair_data_logger/issues/597))
+
+---
 <a name="v2026.11.27"></a>
 ## [v2026.11.27](https://github.com/carlkidcrypto/purpleair_data_logger/compare/v2026.11.25b1...v2026.11.27) (2026-11-27)
 
