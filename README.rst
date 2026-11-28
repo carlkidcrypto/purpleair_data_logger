@@ -105,19 +105,70 @@ How to Support This Project
 Installation
 ------------
 
-You can install the PurpleAir Data Logger via pip.
+``purpleair_data_logger`` distributes self-contained packages across **4 SWIG target languages** (**Python**, **JavaScript/Node.js**, **C#/.NET**, and **Go**), plus standalone Desktop Application installers on `GitHub Releases <https://github.com/carlkidcrypto/purpleair_data_logger/releases>`_.
+
+Python (PyPI)
+^^^^^^^^^^^^^
 
 .. code-block:: bash
 
    python3 -m pip install purpleair_data_logger
 
-You can install PurpleAir Data Logger by cloning down this repo.
+.. code-block:: python
+
+   import purpleair_data_logger as pdl
+
+   print(pdl.version(), pdl.build_info())
+
+JavaScript / Node.js (npm)
+^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   npm install purpleair-data-logger
+
+.. code-block:: javascript
+
+   const pdl = require("purpleair-data-logger");
+
+   console.log(pdl.version(), pdl.build_info());
+
+C# / .NET (NuGet)
+^^^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   dotnet add package PurpleAirDataLogger
+
+.. code-block:: csharp
+
+   using PurpleAirDataLogger;
+
+   Console.WriteLine(purpleair_data_logger.version());
+
+Go (cgo module)
+^^^^^^^^^^^^^^^
+
+.. code-block:: bash
+
+   go get github.com/carlkidcrypto/purpleair_data_logger/bindings/go
+
+.. code-block:: go
+
+   import pdl "github.com/carlkidcrypto/purpleair_data_logger/bindings/go"
+
+   fmt.Println(pdl.Version())
+
+Install From Source
+^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: bash
 
    git clone https://github.com/carlkidcrypto/purpleair_data_logger.git
    cd purpleair_data_logger
    python3 -m pip install .
+
+See `bindings/README.rst <./bindings/README.rst>`_ for building all 4 SWIG target wrappers from source.
 
 C++17 Telemetry Engine, SWIG 4-Language Bindings & Cross-Platform Studio GUI
 ----------------------------------------------------------------------------
